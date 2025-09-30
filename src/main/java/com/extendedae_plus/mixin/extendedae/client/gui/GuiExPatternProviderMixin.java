@@ -5,8 +5,9 @@ import appeng.client.gui.implementations.PatternProviderScreen;
 import appeng.client.gui.style.ScreenStyle;
 import appeng.menu.SlotSemantics;
 import appeng.menu.slot.AppEngSlot;
-import com.extendedae_plus.NewIcon;
 import com.extendedae_plus.api.ExPatternButtonsAccessor;
+import com.extendedae_plus.client.render.Button.EAEActionItems;
+import com.extendedae_plus.client.render.Button.EAEPActionButton;
 import com.extendedae_plus.config.EAEPConfig;
 import com.extendedae_plus.network.ScalePatternsC2SPacket;
 import com.glodblock.github.extendedae.client.button.ActionEPPButton;
@@ -97,23 +98,14 @@ public abstract class GuiExPatternProviderMixin extends PatternProviderScreen<Co
         return null;
     }
 
-    @Unique
-    private static void eap$setIntFieldRecursive(Object obj, String name, int value) {
-        if (obj == null) return;
-        Field f = eap$findFieldRecursive(obj.getClass(), name);
-        if (f != null) {
-            try { f.setAccessible(true); f.set(obj, value); } catch (Throwable ignored) {}
-        }
-    }
-
     public ActionEPPButton nextPage;
     public ActionEPPButton prevPage;
-    public ActionEPPButton x2Button;
-    public ActionEPPButton divideBy2Button;
-    public ActionEPPButton x5Button;
-    public ActionEPPButton divideBy5Button;
-    public ActionEPPButton x10Button;
-    public ActionEPPButton divideBy10Button;
+    public EAEPActionButton x2Button;
+    public EAEPActionButton divideBy2Button;
+    public EAEPActionButton x5Button;
+    public EAEPActionButton divideBy5Button;
+    public EAEPActionButton x10Button;
+    public EAEPActionButton divideBy10Button;
     
     // 在构造器返回后初始化按钮与翻页控制
     @Inject(method = "<init>", at = @At("RETURN"))
@@ -202,41 +194,18 @@ public abstract class GuiExPatternProviderMixin extends PatternProviderScreen<Co
         }
 
         // 倍增/除法按钮：使用自有 C2S 包发送到服务端执行样板缩放
-        this.x2Button = new ActionEPPButton((b) -> {
-            var conn = Minecraft.getInstance().getConnection();
-            if (conn != null) conn.send(new ScalePatternsC2SPacket(ScalePatternsC2SPacket.Operation.MUL2));
-        }, NewIcon.MULTIPLY2);
+        x2Button = new EAEPActionButton(EAEActionItems.MULTIPLY2, () -> eaep$sendAdjustMessage(2, false));
+        x5Button = new EAEPActionButton(EAEActionItems.MULTIPLY5, () -> eaep$sendAdjustMessage(5, false));
+        x10Button = new EAEPActionButton(EAEActionItems.MULTIPLY10, () -> eaep$sendAdjustMessage(10, false));
+        divideBy2Button = new EAEPActionButton(EAEActionItems.DIVIDE2, () -> eaep$sendAdjustMessage(2, true));
+        divideBy5Button = new EAEPActionButton(EAEActionItems.DIVIDE5, () -> eaep$sendAdjustMessage(5, true));
+        divideBy10Button = new EAEPActionButton(EAEActionItems.DIVIDE10, () -> eaep$sendAdjustMessage(10, true));
         this.x2Button.setVisibility(true);
-
-        this.divideBy2Button = new ActionEPPButton((b) -> {
-            var conn = Minecraft.getInstance().getConnection();
-            if (conn != null) conn.send(new ScalePatternsC2SPacket(ScalePatternsC2SPacket.Operation.DIV2));
-        }, NewIcon.DIVIDE2);
-        this.divideBy2Button.setVisibility(true);
-
-        this.x10Button = new ActionEPPButton((b) -> {
-            var conn = Minecraft.getInstance().getConnection();
-            if (conn != null) conn.send(new ScalePatternsC2SPacket(ScalePatternsC2SPacket.Operation.MUL10));
-        }, NewIcon.MULTIPLY10);
-        this.x10Button.setVisibility(true);
-
-        this.divideBy10Button = new ActionEPPButton((b) -> {
-            var conn = Minecraft.getInstance().getConnection();
-            if (conn != null) conn.send(new ScalePatternsC2SPacket(ScalePatternsC2SPacket.Operation.DIV10));
-        }, NewIcon.DIVIDE10);
-        this.divideBy10Button.setVisibility(true);
-
-        this.divideBy5Button = new ActionEPPButton((b) -> {
-            var conn = Minecraft.getInstance().getConnection();
-            if (conn != null) conn.send(new ScalePatternsC2SPacket(ScalePatternsC2SPacket.Operation.DIV5));
-        }, NewIcon.DIVIDE5);
-        this.divideBy5Button.setVisibility(true);
-
-        this.x5Button = new ActionEPPButton((b) -> {
-            var conn = Minecraft.getInstance().getConnection();
-            if (conn != null) conn.send(new ScalePatternsC2SPacket(ScalePatternsC2SPacket.Operation.MUL5));
-        }, NewIcon.MULTIPLY5);
         this.x5Button.setVisibility(true);
+        this.x10Button.setVisibility(true);
+        this.divideBy2Button.setVisibility(true);
+        this.divideBy5Button.setVisibility(true);
+        this.divideBy10Button.setVisibility(true);
 
         // 注册可渲染按钮
         this.addRenderableWidget(this.divideBy2Button);
@@ -245,6 +214,15 @@ public abstract class GuiExPatternProviderMixin extends PatternProviderScreen<Co
         this.addRenderableWidget(this.x5Button);
         this.addRenderableWidget(this.divideBy10Button);
         this.addRenderableWidget(this.x10Button);
+    }
+
+    @Unique
+    private static void eaep$sendAdjustMessage(int size, boolean divide) {
+        var connection = Minecraft.getInstance().getConnection();
+        if (connection != null)
+            connection.send(new ScalePatternsC2SPacket(
+                    ScalePatternsC2SPacket.Operation.valueOf(
+                            (divide ? "DIV" : "MUL") + size)));
     }
 
     @Override
