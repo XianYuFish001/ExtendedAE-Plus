@@ -1,4 +1,4 @@
-package com.extendedae_plus.integration.jei;
+package com.extendedae_plus.integration.recipeViewer.jei;
 
 import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.ae.definitions.upgrades.EntitySpeedCardItem;
@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 
 @JeiPlugin
 public class ExtendedAEJeiPlugin implements IModPlugin {
-    private static final ResourceLocation UID = new ResourceLocation(ExtendedAEPlus.MODID, "jei_plugin");
+    private static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(ExtendedAEPlus.MODID, "jei_plugin");
 
     @Override
     public ResourceLocation getPluginUid() {

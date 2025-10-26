@@ -7,6 +7,7 @@ import appeng.client.gui.style.ScreenStyle;
 import appeng.client.gui.style.WidgetStyle;
 import appeng.client.gui.widgets.IconButton;
 import appeng.menu.AEBaseMenu;
+import com.extendedae_plus.config.ModConfig;
 import com.extendedae_plus.init.ModNetwork;
 import com.extendedae_plus.mixin.accessor.AbstractContainerScreenAccessor;
 import com.extendedae_plus.mixin.accessor.ScreenAccessor;
@@ -35,9 +36,8 @@ public abstract class PatternEncodingTermScreenMixin<T extends AEBaseMenu> {
     @Inject(method = "init", at = @At("TAIL"))
     private void eap$addUploadButton(CallbackInfo ci) {
         // 仅在图样编码终端界面中添加按钮
-        if (!(((Object) this) instanceof PatternEncodingTermScreen)) {
-            return;
-        }
+        if (!(((Object) this) instanceof PatternEncodingTermScreen)) return;
+        if (!ModConfig.INSTANCE.independentUploadingButton) return;
         // 复用已存在的按钮实例，避免重复创建
         if (eap$uploadBtn == null) {
             eap$uploadBtn = new IconButton(btn -> ModNetwork.CHANNEL

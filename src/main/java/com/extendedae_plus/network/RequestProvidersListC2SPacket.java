@@ -36,6 +36,7 @@ public class RequestProvidersListC2SPacket {
                 List<Long> ids = ExtendedAEPatternUploadUtil.getAllProviderIds(accessMenu);
                 List<Long> filteredIds = new ArrayList<>();
                 List<String> names = new ArrayList<>();
+                List<String> i18nKeys = new ArrayList<>();
                 List<Integer> slots = new ArrayList<>();
 
                 for (Long id : ids) {
@@ -45,10 +46,11 @@ public class RequestProvidersListC2SPacket {
                     if (empty <= 0) continue; // 只列出有空位的
                     filteredIds.add(id);
                     names.add(ExtendedAEPatternUploadUtil.getProviderDisplayName(id, accessMenu));
+                    i18nKeys.add(ExtendedAEPatternUploadUtil.getProviderI18nName(id, accessMenu));
                     slots.add(empty);
                 }
 
-                ModNetwork.CHANNEL.sendTo(new ProvidersListS2CPacket(filteredIds, names, slots), player.connection.connection, net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT);
+                ModNetwork.CHANNEL.sendTo(new ProvidersListS2CPacket(filteredIds, names, i18nKeys, slots), player.connection.connection, net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT);
                 return;
             }
 
@@ -56,6 +58,7 @@ public class RequestProvidersListC2SPacket {
             List<PatternContainer> containers = ExtendedAEPatternUploadUtil.listAvailableProvidersFromGrid(encMenu);
             List<Long> idxIds = new ArrayList<>();
             List<String> names = new ArrayList<>();
+            List<String> i18nKeys = new ArrayList<>();
             List<Integer> slots = new ArrayList<>();
             for (int i = 0; i < containers.size(); i++) {
                 var c = containers.get(i);
@@ -65,9 +68,10 @@ public class RequestProvidersListC2SPacket {
                 long encodedId = -1L - i; // 约定：负数代表按索引
                 idxIds.add(encodedId);
                 names.add(ExtendedAEPatternUploadUtil.getProviderDisplayName(c));
+                i18nKeys.add(ExtendedAEPatternUploadUtil.getProviderI18nName(c));
                 slots.add(empty);
             }
-            ModNetwork.CHANNEL.sendTo(new ProvidersListS2CPacket(idxIds, names, slots), player.connection.connection, net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT);
+            ModNetwork.CHANNEL.sendTo(new ProvidersListS2CPacket(idxIds, names, i18nKeys, slots), player.connection.connection, net.minecraftforge.network.NetworkDirection.PLAY_TO_CLIENT);
         });
         ctx.setPacketHandled(true);
     }

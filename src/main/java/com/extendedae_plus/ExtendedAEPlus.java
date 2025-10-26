@@ -33,6 +33,7 @@ public class ExtendedAEPlus {
     // 注意：避免在静态初始化阶段访问注册对象，相关客户端注册改在 FMLClientSetupEvent 中执行。
 
     public ExtendedAEPlus() {
+        @SuppressWarnings("removal")
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         // 客户端的内置模型注册将在客户端事件阶段执行（见 ClientModEvents），不要在构造器中提前执行
@@ -87,7 +88,7 @@ public class ExtendedAEPlus {
      * 便捷方法：生成 ResourceLocation
      */
     public static ResourceLocation id(String path) {
-        return new ResourceLocation(MODID, path);
+        return ResourceLocation.fromNamespaceAndPath(MODID, path);
     }
 
     /**

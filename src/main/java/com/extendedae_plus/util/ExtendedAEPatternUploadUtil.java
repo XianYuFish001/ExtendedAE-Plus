@@ -14,6 +14,7 @@ import appeng.menu.implementations.PatternAccessTermMenu;
 import appeng.menu.me.items.PatternEncodingTermMenu;
 import appeng.util.inv.FilteredInternalInventory;
 import appeng.util.inv.filter.IAEItemFilter;
+import com.extendedae_plus.config.ModConfig;
 import com.extendedae_plus.mixin.ae2.accessor.PatternEncodingTermMenuAccessor;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixBase;
 import com.google.gson.Gson;
@@ -33,10 +34,12 @@ import net.minecraftforge.items.IItemHandler;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
 
 /**
  * ExtendedAE扩展样板管理终端专用的样板上传工具类
@@ -102,7 +105,7 @@ public class ExtendedAEPatternUploadUtil {
                         if (k.contains(":")) {
                             // 形如 namespace:path
                             try {
-                                ResourceLocation rl = new ResourceLocation(k);
+                                ResourceLocation rl = ResourceLocation.parse(k);
                                 map.put(rl, name);
                             } catch (Exception ignored) {}
                         } else {
@@ -121,10 +124,34 @@ public class ExtendedAEPatternUploadUtil {
     }
 
     // 最近一次通过 JEI 填充到编码终端的“处理配方”的中文名称（如：烧炼/高炉/烟熏...）
-    public static volatile String lastProcessingName = null;
+    public static volatile List<String> lastProcessingNameList = new ArrayList<>();
 
-    public static void setLastProcessingName(String name) {
-        lastProcessingName = name;
+    public static void addLastProcessingNameList(String name) {
+        if (lastProcessingNameList.contains(name)) return;
+        lastProcessingNameList.add(name);
+    }
+    public static void addLastProcessingNameList(Collection<String> name) {
+        name.forEach(lastProcessingNameList::remove);
+        lastProcessingNameList.addAll(name);
+    }
+
+    public static String findMapping(String key) {
+        if (key == null || key.isBlank()) return null;
+
+        if (CUSTOM_ALIASES.containsKey(key.toLowerCase()))
+            return CUSTOM_ALIASES.get(key.toLowerCase());
+
+        if (key.contains(":")) {
+            try {
+                ResourceLocation location = ResourceLocation.tryParse(key);
+                if (location != null && CUSTOM_NAMES.containsKey(location))
+                    return CUSTOM_NAMES.get(location);
+            } catch (Exception ignored) {}
+        }
+
+        if (!Pattern.matches(".*[:._/\\-].*", key)) return key;
+
+        return null;
     }
 
     /**
@@ -163,7 +190,7 @@ public class ExtendedAEPatternUploadUtil {
             // 更新内存映射
             if (key.contains(":")) {
                 try {
-                    ResourceLocation rl = new ResourceLocation(key);
+                    ResourceLocation rl = ResourceLocation.parse(key);
                     CUSTOM_NAMES.put(rl, cnValue);
                 } catch (Exception ignored) {}
             } else {
@@ -216,7 +243,7 @@ public class ExtendedAEPatternUploadUtil {
             for (String k : toRemove) {
                 if (k.contains(":")) {
                     try {
-                        ResourceLocation rl = new ResourceLocation(k);
+                        ResourceLocation rl = ResourceLocation.parse(k);
                         // 仅当值匹配才移除（双重保险）
                         String cur = CUSTOM_NAMES.get(rl);
                         if (target.equals(cur)) {
@@ -276,14 +303,14 @@ public class ExtendedAEPatternUploadUtil {
         RecipeType<?> type = recipe.getType();
         ResourceLocation key = BuiltInRegistries.RECIPE_TYPE.getKey(type);
         if (key == null) return null;
-        // 先查别名（按 path 匹配）
-        String alias = CUSTOM_ALIASES.get(key.getPath().toLowerCase());
-        if (alias != null && !alias.isBlank()) return alias;
-        // 再查完整ID映射
-        String custom = CUSTOM_NAMES.get(key);
-        if (custom != null && !custom.isBlank()) {
-            return custom;
-        }
+//        // 先查别名（按 path 匹配）
+//        String alias = CUSTOM_ALIASES.get(key.getPath().toLowerCase());
+//        if (alias != null && !alias.isBlank()) return alias;
+//        // 再查完整ID映射
+//        String custom = CUSTOM_NAMES.get(key);
+//        if (custom != null && !custom.isBlank()) {
+//            return custom;
+//        }
         return key.getPath();
     }
 
@@ -291,22 +318,22 @@ public class ExtendedAEPatternUploadUtil {
      * GTCEu 的 GTRecipe -> 搜索关键字
      * 优先自定义中文映射；其次使用注册ID的 path；最后回退到完整ID字符串。
      */
-    public static String mapGTCEuRecipeToSearchKey(com.gregtechceu.gtceu.api.recipe.GTRecipe gtRecipe) {
+    public static String mapGTCEuJEIRecipeToSearchKey(com.gregtechceu.gtceu.api.recipe.GTRecipe gtRecipe) {
         if (gtRecipe == null) return null;
         try {
             // GTRecipeType.toString() 返回 registryName.toString() 即 namespace:path
             String idStr = String.valueOf(gtRecipe.getType());
             if (idStr == null || idStr.isBlank()) return null;
-            ResourceLocation rl = new ResourceLocation(idStr);
-            // 1) 先查别名（使用 path 作为最终搜索关键字）
+            ResourceLocation rl = ResourceLocation.parse(idStr);
             String path = rl.getPath();
-            if (path != null) {
-                String alias = CUSTOM_ALIASES.get(path.toLowerCase());
-                if (alias != null && !alias.isBlank()) return alias;
-            }
-            // 2) 再查完整ID映射
-            String custom = CUSTOM_NAMES.get(rl);
-            if (custom != null && !custom.isBlank()) return custom;
+//            // 1) 先查别名（使用 path 作为最终搜索关键字）
+//            if (path != null) {
+//                String alias = CUSTOM_ALIASES.get(path.toLowerCase());
+//                if (alias != null && !alias.isBlank()) return alias;
+//            }
+//            // 2) 再查完整ID映射
+//            String custom = CUSTOM_NAMES.get(rl);
+//            if (custom != null && !custom.isBlank()) return custom;
             // 3) 默认返回 path 作为搜索关键字
             return (path != null && !path.isBlank()) ? path : idStr;
         } catch (Throwable t) {
@@ -316,9 +343,9 @@ public class ExtendedAEPatternUploadUtil {
 
     /**
      * 仅使用反射的 GTCEu GTRecipe -> 搜索关键字（避免在运行时直接引用 GTCEu 类）。
-     * 逻辑与 {@link #mapGTCEuRecipeToSearchKey(com.gregtechceu.gtceu.api.recipe.GTRecipe)} 等价。
+     * 逻辑与 {@link #mapGTCEuJEIRecipeToSearchKey(com.gregtechceu.gtceu.api.recipe.GTRecipe)} 等价。
      */
-    public static String mapGTCEuRecipeToSearchKey(Object gtRecipeObj) {
+    public static String mapGTCEuJEIRecipeToSearchKey(Object gtRecipeObj) {
         if (gtRecipeObj == null) return null;
         try {
             // 通过反射调用 getType()，其 toString() 应返回 registryName，即 namespace:path
@@ -326,18 +353,74 @@ public class ExtendedAEPatternUploadUtil {
             Object typeObj = mGetType.invoke(gtRecipeObj);
             String idStr = String.valueOf(typeObj);
             if (idStr == null || idStr.isBlank()) return null;
-            ResourceLocation rl = new ResourceLocation(idStr);
-            // 1) 别名优先（使用 path 作为最终搜索关键字）
+            ResourceLocation rl = ResourceLocation.parse(idStr);
             String path = rl.getPath();
-            if (path != null) {
-                String alias = CUSTOM_ALIASES.get(path.toLowerCase());
-                if (alias != null && !alias.isBlank()) return alias;
-            }
-            // 2) 再查完整ID映射
-            String custom = CUSTOM_NAMES.get(rl);
-            if (custom != null && !custom.isBlank()) return custom;
+//            // 1) 别名优先（使用 path 作为最终搜索关键字）
+//            if (path != null) {
+//                String alias = CUSTOM_ALIASES.get(path.toLowerCase());
+//                if (alias != null && !alias.isBlank()) return alias;
+//            }
+//            // 2) 再查完整ID映射
+//            String custom = CUSTOM_NAMES.get(rl);
+//            if (custom != null && !custom.isBlank()) return custom;
             // 3) 默认返回 path 作为搜索关键字
-            return (path != null && !path.isBlank()) ? path : idStr;
+            return !path.isBlank() ? path : idStr;
+        } catch (Throwable t) {
+            return null;
+        }
+    }
+
+    public static String mapEMICategoryToSearchKey(Object emiRecipe) {
+        if (emiRecipe == null) return null;
+        try {
+            Method getCategoryMethod = emiRecipe.getClass().getMethod("getCategory");
+            Object category = getCategoryMethod.invoke(emiRecipe);
+            if (category == null) return null;
+
+            Method getNameMethod = category.getClass().getMethod("getName");
+            Component nameComponent = (Component) getNameMethod.invoke(category);
+            if (nameComponent == null) return null;
+
+            return nameComponent.getString();
+
+        } catch (Throwable t) {
+            return null;
+        }
+    }
+
+    public static String mapEMIRecipeIDToSearchKey(Object emiRecipe) {
+        if (emiRecipe == null) return null;
+        try {
+            Method getIdMethod = emiRecipe.getClass().getMethod("getId");
+            ResourceLocation location = (ResourceLocation) getIdMethod.invoke(emiRecipe);
+            if (location == null) return null;
+
+            String id = location.toString();
+            if (id.isBlank()) return null;
+
+            String[] parts = id.split("/");
+            return parts.length > 0 ? parts[0] : id;
+
+        } catch (Throwable t) {
+            return null;
+        }
+    }
+
+    public static String mapJEMIRecipeIDToSearchKey(Object jemiRecipe) {
+        if (jemiRecipe == null) return null;
+        try {
+//            Method getIdMethod = jemiRecipe.getClass().getMethod("getId");
+//            ResourceLocation location = (ResourceLocation) getIdMethod.invoke(emiRecipe);
+            Field originalID = jemiRecipe.getClass().getField("originalId");
+            ResourceLocation location = (ResourceLocation) originalID.get(jemiRecipe);
+            if (location == null) return null;
+
+            String id = location.toString();
+            if (id.isBlank()) return null;
+
+            String[] parts = id.split("/");
+            return parts.length > 0 ? parts[0] : id;
+
         } catch (Throwable t) {
             return null;
         }
@@ -367,9 +450,10 @@ public class ExtendedAEPatternUploadUtil {
             if (ns != null && token != null && !token.isBlank()) key = ns + " " + token;
             else key = token != null && !token.isBlank() ? token : ns;
             if (key == null || key.isBlank()) return null;
-            // 尝试别名映射（大小写不敏感）
-            String alias = CUSTOM_ALIASES.get(key.toLowerCase());
-            return (alias != null && !alias.isBlank()) ? alias : key;
+//            // 尝试别名映射（大小写不敏感）
+//            String alias = CUSTOM_ALIASES.get(key.toLowerCase());
+//            return (alias != null && !alias.isBlank()) ? alias : key;
+            return key;
         } catch (Throwable ignored) {
             return null;
         }
@@ -637,6 +721,7 @@ public class ExtendedAEPatternUploadUtil {
      * 传入任意属于该集群的 Tile（如 Pattern/Crafter/Frame 等）。
      */
     private static boolean clusterHasSingleUploadCore(TileAssemblerMatrixBase any) {
+        if (!ModConfig.INSTANCE.needsUploadingCore) return true;
         try {
             if (any == null || any.getCluster() == null) return false;
             int cores = 0;
@@ -1187,6 +1272,21 @@ public class ExtendedAEPatternUploadUtil {
         } catch (Throwable ignored) {
         }
         return "样板供应器";
+    }
+
+    public static String getProviderI18nName(Long providerId, PatternAccessTermMenu menu) {
+        return getProviderI18nName(getPatternContainerById(menu, providerId));
+    }
+
+    /** 获取样板供应器默认选取的方块名称 */
+    public static String getProviderI18nName(PatternContainer container) {
+        if (container == null) return "";
+        try {
+            var group = container.getTerminalGroup();
+            var name = group.name();
+            return name.toString().contains("literal") ? "" : name.toString();
+        } catch (Throwable ignored) {}
+        return "";
     }
 
     /** 计算供应器空槽位数量 */

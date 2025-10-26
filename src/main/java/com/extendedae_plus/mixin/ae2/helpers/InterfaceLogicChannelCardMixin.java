@@ -8,7 +8,6 @@ import com.extendedae_plus.bridge.InterfaceWirelessLinkBridge;
 import com.extendedae_plus.init.ModItems;
 import com.extendedae_plus.wireless.WirelessSlaveLink;
 import com.extendedae_plus.wireless.endpoint.InterfaceNodeEndpointImpl;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

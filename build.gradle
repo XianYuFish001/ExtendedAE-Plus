@@ -60,6 +60,13 @@ repositories {
     }
     maven { url "https://repo.spongepowered.org/maven" }
     maven { url "https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/" }
+    maven {
+        name = "TerraformersMC"
+        url = "https://maven.terraformersmc.com/"
+    }
+    maven { // Registrate
+        url "https://maven.tterrag.com/"
+    }
 }
 
 dependencies {
@@ -80,21 +87,24 @@ dependencies {
     modCompileOnly "mezz.jei:jei-${minecraft_version}-forge:${jei_version}"
 
     annotationProcessor "org.spongepowered:mixin:${mixin_version}:processor"
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.0"))
+    implementation("io.github.llamalad7:mixinextras-forge:0.5.0")
 
     modImplementation "curse.maven:applied-flux-965012:6755986"
     modCompileOnly "curse.maven:mega-cells-622112:${mega_cells_version}"
     modCompileOnly "curse.maven:jade-324717:${jade_version}"
 
     // GregTech
-    modCompileOnly "curse.maven:gregtechceu-modern-890405:${gregtech_version}"
-    modCompileOnly "curse.maven:ldlib-626676:${ldlib_version}"
+    modImplementation "curse.maven:gregtechceu-modern-890405:${gregtech_version}"
+    modImplementation "curse.maven:ldlib-626676:${ldlib_version}"
+
+    modImplementation "com.tterrag.registrate:Registrate:MC1.20-1.3.11"
 
     //curios
     modRuntimeOnly "curse.maven:curios-309927:${curios_version}"
     modCompileOnly "curse.maven:curios-309927:${curios_version}"
 
     // Runtime test
-    modRuntimeOnly "curse.maven:curios-309927:${curios_version}"
     modRuntimeOnly "curse.maven:jade-324717:${jade_version}"
     modRuntimeOnly "curse.maven:architectury-api-419699:${architectury_version}"
     modRuntimeOnly "curse.maven:applied-energistics-2-wireless-terminals-459929:${wireless_terminals_version}"
@@ -120,6 +130,10 @@ dependencies {
     // compileOnly 供代码编译
     include "curse.maven:configuration-444699:4710266"
     modImplementation "curse.maven:configuration-444699:4710266"
+
+    modImplementation "dev.emi:emi-forge:1.1.22+1.20.1"
+    modImplementation "mekanism:Mekanism:1.20.1-10.4.16.80"
+    modImplementation "curse.maven:applied-mekanistics-574300:4842281"
 }
 
 allprojects {
@@ -144,13 +158,6 @@ java {
 
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
-}
-
-// 将 LICENSE 打包进发布的 jar
-tasks.named('jar', Jar).configure {
-    from('.') {
-        include 'LICENSE'
-    }
 }
 
 tasks.withType(JavaCompile).configureEach {

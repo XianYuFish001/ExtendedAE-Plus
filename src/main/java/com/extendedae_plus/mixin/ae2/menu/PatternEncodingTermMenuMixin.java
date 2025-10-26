@@ -1,5 +1,6 @@
 package com.extendedae_plus.mixin.ae2.menu;
 
+import appeng.api.crafting.PatternDetailsHelper;
 import appeng.api.inventories.InternalInventory;
 import appeng.api.networking.energy.IEnergySource;
 import appeng.api.stacks.AEItemKey;
@@ -11,9 +12,18 @@ import appeng.helpers.IPatternTerminalMenuHost;
 import appeng.menu.me.common.MEStorageMenu;
 import appeng.menu.me.items.PatternEncodingTermMenu;
 import appeng.menu.slot.RestrictedInputSlot;
+import appeng.parts.encoding.EncodingMode;
+import com.extendedae_plus.client.HelperCtrlKeyPress;
+import com.extendedae_plus.config.ModConfig;
+import com.extendedae_plus.init.ModNetwork;
 import com.extendedae_plus.mixin.ae2.accessor.MEStorageMenuAccessor;
+import com.extendedae_plus.network.S2CPacketEncodeFinished;
+import com.extendedae_plus.util.ExtendedAEPatternUploadUtil;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.network.PacketDistributor;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,8 +32,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Objects;
+
 @Mixin(PatternEncodingTermMenu.class)
-public abstract class PatternEncodingTermMenuMixin {
+public abstract class PatternEncodingTermMenuMixin implements HelperCtrlKeyPress {
 
     // 防止重复执行
     @Unique
@@ -32,6 +44,17 @@ public abstract class PatternEncodingTermMenuMixin {
     @Final
     @Shadow(remap = false)
     private RestrictedInputSlot blankPatternSlot;
+
+    @Shadow(remap = false)
+    @Final
+    private RestrictedInputSlot encodedPatternSlot;
+    @Unique
+    public boolean eaep$isCtrlPressed;
+
+    @Override
+    public void eaep$setPressed(boolean pressed) {
+        eaep$isCtrlPressed = pressed;
+    }
 
     @Unique
     private void eap$tryFill(IPatternTerminalMenuHost host, Inventory ip) {
@@ -153,5 +176,24 @@ public abstract class PatternEncodingTermMenuMixin {
             StorageHelper.poweredInsert(power, storage, blankKey, leftover, self.getActionSource());
         }
         this.eap$blankAutoFilled = true;
+    }
+
+    @Inject(method = "encode", at = @At("TAIL"), remap = false)
+    private void eaep$onEncode(CallbackInfo ci) {
+        if (ModConfig.INSTANCE.independentUploadingButton) return;
+        var self = (PatternEncodingTermMenu) (Object) this;
+        if (self.isClientSide()) return;
+        if (!eaep$isCtrlPressed) return;
+        eaep$isCtrlPressed = false;
+        ItemStack pattern = this.encodedPatternSlot.getItem();
+        if (pattern == null || !PatternDetailsHelper.isEncodedPattern(pattern)) return;
+        Objects.requireNonNull(self.getPlayer().getServer()).execute(() -> {
+            try {
+                if (self.getMode() == EncodingMode.PROCESSING)
+                    ModNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(
+                            () -> (ServerPlayer) self.getPlayer()), new S2CPacketEncodeFinished());
+                else ExtendedAEPatternUploadUtil.uploadFromEncodingMenuToMatrix((ServerPlayer) self.getPlayer(), self);
+            } catch (Throwable ignored) {}
+        });
     }
 }

@@ -5,7 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class NewIcon {
     @SuppressWarnings("all")
-    private static final ResourceLocation TEXTURE = new ResourceLocation(ExtendedAEPlus.MODID,"textures/gui/nicons.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(ExtendedAEPlus.MODID, "textures/gui/nicons.png");
 
 
 

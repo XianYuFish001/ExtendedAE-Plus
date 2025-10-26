@@ -125,4 +125,26 @@ public final class ModConfig {
     @Configurable.Range(min = 100, max = Integer.MAX_VALUE)
     public int craftingPauseThreshold = 100000;
 
+    @Configurable
+    @Configurable.Comment({
+            "是否覆盖AE2WT使用中键从终端选取方块的逻辑",
+            "开启后选取方块的数量将不被限制在32个"
+    })
+    @Configurable.Synchronized
+    public boolean overrideAE2WTPicking = false;
+
+    @Configurable
+    @Configurable.Comment({
+            "启用后,在样板编码终端会出现一个独立的按钮用于上传样板"
+    })
+    @Configurable.Synchronized
+    public boolean independentUploadingButton = false;
+
+    @Configurable
+    @Configurable.Comment({
+            "启用后, 样板只能被上传到装有上传核心的装配矩阵"
+    })
+    @Configurable.Synchronized
+    public boolean needsUploadingCore = false;
+
 }

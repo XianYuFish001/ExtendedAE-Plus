@@ -2,6 +2,7 @@ package com.extendedae_plus.ae.items;
 
 import appeng.api.config.FuzzyMode;
 import appeng.api.storage.cells.ICellWorkbenchItem;
+import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.ae.api.storage.InfinityBigIntegerCellInventory;
 import com.extendedae_plus.util.storage.InfinityConstants;
 import com.google.common.base.Preconditions;
@@ -87,7 +88,7 @@ public class InfinityBigIntegerCellItem extends Item implements ICellWorkbenchIt
      */
     public static ItemStack withUUID(java.util.UUID uuid) {
         ItemStack stack = new ItemStack(Objects.requireNonNull(
-                ForgeRegistries.ITEMS.getValue(new ResourceLocation("extendedae_plus", "infinity_biginteger_cell")
+                ForgeRegistries.ITEMS.getValue(ResourceLocation.fromNamespaceAndPath(ExtendedAEPlus.MODID, "infinity_biginteger_cell")
         )));
         stack.getOrCreateTag().putUUID(InfinityConstants.INFINITY_CELL_UUID, uuid);
         return stack;

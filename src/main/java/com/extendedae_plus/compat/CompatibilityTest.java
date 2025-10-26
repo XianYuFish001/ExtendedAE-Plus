@@ -1,6 +1,5 @@
 package com.extendedae_plus.compat;
 
-import com.extendedae_plus.util.ExtendedAELogger;
 import net.minecraftforge.fml.ModList;
 
 /**

@@ -10,7 +10,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
 public class ModNetwork {
     private static final String PROTOCOL_VERSION = "1";
     public static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder
-            .named(new ResourceLocation(ExtendedAEPlus.MODID, "main"))
+            .named(ResourceLocation.fromNamespaceAndPath(ExtendedAEPlus.MODID, "main"))
             .networkProtocolVersion(() -> PROTOCOL_VERSION)
             .clientAcceptedVersions(PROTOCOL_VERSION::equals)
             .serverAcceptedVersions(PROTOCOL_VERSION::equals)
@@ -119,6 +119,24 @@ public class ModNetwork {
                 .encoder(CraftingMonitorOpenProviderC2SPacket::encode)
                 .decoder(CraftingMonitorOpenProviderC2SPacket::decode)
                 .consumerNetworkThread(CraftingMonitorOpenProviderC2SPacket::handle)
+                .add();
+
+        CHANNEL.messageBuilder(C2SPacketTargetKeyTriggered.class, nextId(), NetworkDirection.PLAY_TO_SERVER)
+                .encoder(C2SPacketTargetKeyTriggered::encode)
+                .decoder(C2SPacketTargetKeyTriggered::decode)
+                .consumerNetworkThread(C2SPacketTargetKeyTriggered::handle)
+                .add();
+
+        CHANNEL.messageBuilder(S2CPacketEncodeFinished.class, nextId(), NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(S2CPacketEncodeFinished::encode)
+                .decoder(S2CPacketEncodeFinished::decode)
+                .consumerNetworkThread(S2CPacketEncodeFinished::handle)
+                .add();
+
+        CHANNEL.messageBuilder(C2SPacketStoneCuttingID.class, nextId(), NetworkDirection.PLAY_TO_SERVER)
+                .encoder(C2SPacketStoneCuttingID::encode)
+                .decoder(C2SPacketStoneCuttingID::decode)
+                .consumerNetworkThread(C2SPacketStoneCuttingID::handle)
                 .add();
     }
 

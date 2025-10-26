@@ -1,13 +1,16 @@
-package com.extendedae_plus.integration.jei;
+package com.extendedae_plus.integration.recipeViewer.jei;
 
+import appeng.api.stacks.GenericStack;
+import appeng.integration.modules.jei.GenericEntryStackHelper;
+import com.extendedae_plus.mixin.recipeViewer.jei.accessor.BookmarkOverlayAccessor;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.ingredients.ITypedIngredient;
 import mezz.jei.api.runtime.IBookmarkOverlay;
 import mezz.jei.api.runtime.IIngredientListOverlay;
 import mezz.jei.api.runtime.IJeiRuntime;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.ModList;
+import mezz.jei.gui.bookmarks.BookmarkList;
+import mezz.jei.gui.bookmarks.IngredientBookmark;
+import mezz.jei.gui.overlay.elements.IElement;
 import org.spongepowered.asm.mixin.Pseudo;
 
 import javax.annotation.Nullable;
@@ -122,62 +125,29 @@ public final class JeiRuntimeProxy {
         return "";
     }
 
-    /**
-     * 获取 JEI 书签列表。为避免在未安装 JEI GUI 时崩溃，使用反射委托到桥接类。
-     */
     public static List<? extends ITypedIngredient<?>> getBookmarkList() {
         try {
-            Class<?> bridge = Class.forName("com.extendedae_plus.integration.jei.JeiBookmarkBridge");
-            var m = bridge.getMethod("getBookmarkList");
-            @SuppressWarnings("unchecked")
-            List<? extends ITypedIngredient<?>> list = (List<? extends ITypedIngredient<?>>) m.invoke(null);
-            return list == null ? Collections.emptyList() : list;
-        } catch (Throwable ignored) {
-            return Collections.emptyList();
-        }
+            if (RUNTIME == null) return Collections.emptyList();
+            IBookmarkOverlay bookmarkOverlay = RUNTIME.getBookmarkOverlay();
+            if (bookmarkOverlay instanceof BookmarkOverlayAccessor accessor) {
+                BookmarkList bookmarkList = accessor.eap$getBookmarkList();
+                return bookmarkList.getElements().stream().map(IElement::getTypedIngredient).toList();
+            }
+        } catch (Exception ignore) {}
+        return Collections.emptyList();
     }
 
-    public static void addBookmark(ItemStack stack) {
-        try {
-            Class<?> bridge = Class.forName("com.extendedae_plus.integration.jei.JeiBookmarkBridge");
-            var m = bridge.getMethod("addBookmark", ItemStack.class);
-            m.invoke(null, stack);
-        } catch (Throwable ignored) {
-        }
-    }
+    public static void addBookmark(GenericStack stack) {
+        if (RUNTIME == null) return;
 
-    public static void addBookmark(FluidStack fluidStack) {
-        try {
-            Class<?> bridge = Class.forName("com.extendedae_plus.integration.jei.JeiBookmarkBridge");
-            var m = bridge.getMethod("addBookmark", FluidStack.class);
-            m.invoke(null, fluidStack);
-        } catch (Throwable ignored) {
-        }
-    }
-
-    /**
-     * 如果存在 Mekanism/appmek，则将 Mekanism 化学堆栈添加到 JEI 书签。
-     */
-    public static void addBookmark(Object chemicalStack) {
-        try {
-            Class<?> bridge = Class.forName("com.extendedae_plus.integration.jei.JeiBookmarkBridge");
-            var m = bridge.getMethod("addBookmark", Object.class);
-            m.invoke(null, chemicalStack);
-        } catch (Throwable ignored) {
-        }
-    }
-
-    // Note: helper methods moved to bridge to avoid referencing JEI GUI at class load time.
-
-    /**
-     * 从 JEI 书签移除物品（反射委托）
-     */
-    public static void removeBookmark(ItemStack stack) {
-        try {
-            Class<?> bridge = Class.forName("com.extendedae_plus.integration.jei.JeiBookmarkBridge");
-            var m = bridge.getMethod("removeBookmark", ItemStack.class);
-            m.invoke(null, stack);
-        } catch (Throwable ignored) {
+        IBookmarkOverlay overlay = RUNTIME.getBookmarkOverlay();
+        if (overlay instanceof BookmarkOverlayAccessor accessor) {
+            BookmarkList list = accessor.eap$getBookmarkList();
+            ITypedIngredient<?> ingredient =
+                    GenericEntryStackHelper.stackToIngredient(RUNTIME.getIngredientManager(), stack);
+            if (ingredient == null) return;
+            IngredientBookmark<?> bookmark = IngredientBookmark.create(ingredient, RUNTIME.getIngredientManager());
+            list.add(bookmark);
         }
     }
 }

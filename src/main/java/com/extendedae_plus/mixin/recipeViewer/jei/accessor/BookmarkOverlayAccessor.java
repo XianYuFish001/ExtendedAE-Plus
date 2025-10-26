@@ -1,4 +1,4 @@
-package com.extendedae_plus.mixin.jei.accessor;
+package com.extendedae_plus.mixin.recipeViewer.jei.accessor;
 
 import mezz.jei.gui.bookmarks.BookmarkList;
 import mezz.jei.gui.overlay.bookmarks.BookmarkOverlay;

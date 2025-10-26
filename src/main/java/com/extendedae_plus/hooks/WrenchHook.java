@@ -1,10 +1,9 @@
 package com.extendedae_plus.hooks;
 
+import appeng.block.crafting.CraftingUnitBlock;
 import appeng.util.InteractionUtil;
 import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.content.wireless.WirelessTransceiverBlockEntity;
-import appeng.block.crafting.CraftingUnitBlock;
-import appeng.blockentity.crafting.CraftingBlockEntity;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;

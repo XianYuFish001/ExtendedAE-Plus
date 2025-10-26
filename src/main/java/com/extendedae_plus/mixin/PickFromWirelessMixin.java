@@ -1,5 +1,6 @@
 package com.extendedae_plus.mixin;
 
+import com.extendedae_plus.config.ModConfig;
 import com.extendedae_plus.init.ModNetwork;
 import com.extendedae_plus.network.PickFromWirelessC2SPacket;
 import net.minecraft.client.Minecraft;
@@ -25,14 +26,16 @@ public class PickFromWirelessMixin {
 
     @Inject(method = "pickBlock", at = @At("HEAD"), cancellable = true)
     private void eap$pickFromAeWireless(CallbackInfo ci) {
-        if (this.player == null || this.hitResult == null || this.hitResult.getType() != HitResult.Type.BLOCK) {
-            return;
-        }
+        if (!ModConfig.INSTANCE.overrideAE2WTPicking) return;
+        if (this.player == null || this.hitResult == null ||
+                this.hitResult.getType() != HitResult.Type.BLOCK) return;
+
         // 仅生存模式
         GameType type = Minecraft.getInstance().gameMode != null ? Minecraft.getInstance().gameMode.getPlayerMode() : null;
         if (type == null || type.isCreative()) {
             return;
         }
+
         // 若背包已有该物品，让原版逻辑处理（将该物品切换到主手）
         BlockHitResult bhr = (BlockHitResult) this.hitResult;
         var level = Minecraft.getInstance().level;

@@ -27,6 +27,9 @@
   "tooltip.extendedae_plus.infinity_biginteger_cell.summon2": "§b—§4A §dUni§cverse §eWith§ain §6A §bSin§5gle §9Point",
   "tooltip.extendedae_plus.entity_speed_card.multiplier": "Multiplier: %s",
   "tooltip.extendedae_plus.entity_speed_card.max": "Max effective: %s x",
+  "tooltip.extendedae_plus.encode_button.upload_pattern": "§6[Ctrl] §7Encode and Upload a Pattern",
+  "tooltip.bom.extendedae_plus.help": "\n---------§aExtendedAE Plus§r---------\nHold §6[Ctrl]§r and Right click a node,\nto encode & upload a pattern automatic",
+
 
   "block.extendedae_plus.wireless_transceiver": "Wireless Transceiver",
   "block.extendedae_plus.4x_crafting_accelerator": "4x Crafting Accelerator",
@@ -87,6 +90,10 @@
   "config.extendedae_plus.option.entityTickerBlackList": "Entity Ticker Blacklist",
   "config.extendedae_plus.option.entityTickerMultipliers": "Entity Ticker Extra Consumption Multipliers",
   "config.extendedae_plus.option.craftingPauseThreshold": "AE synthesis calculation pause check threshold",
+  "config.extendedae_plus.option.overrideAE2WTPicking": "Override AE2WT Picking",
+  "config.extendedae_plus.option.independentUploadingButton": "Independence Uploading Button",
+  "config.extendedae_plus.option.needsUploadingCore": "Needs Uploading Core",
+
   "block.extendedae_plus.assembler_matrix_upload_core": "Assembler Matrix Upload Core",
 
   "item.extendedae_plus.channel_card": "Channel Card",
