@@ -8,7 +8,7 @@ _(这里也许不应该完完全全列出所有差异, 但是懒癌发作, 引�
   - EMI 适配
   - 配方树/配方界面快速拉起样板编写&上传 _(EMI 独占)_
     - 配方树界面: [`ctrl` + `中键`] 点击节点
-    - 配方界面: [`ctrl` + `左键`] 点击配方转移按钮 _(需要设置项`独立上传按钮`)_
+    - 配方界面: [`ctrl` + `左键`] 点击配方转移按钮 _(需要设置项`独立上传按钮`关闭)_
   - 样板供应器列表过滤功能增强:
     - 支持匹配本地化键名
     - 支持在多个获取到的候选词之间切换
@@ -33,7 +33,7 @@ _(这里也许不应该完完全全列出所有差异, 但是懒癌发作, 引�
   - EMI Support
   - Quick pattern encoding & uploading from the recipe tree/recipe screen _(EMI Exclusive)_
     - Recipe Tree screen: [`Ctrl` + `Middle-Click`] on a node
-    - Recipe screen: [`Ctrl` + `Left-Click`] on the Recipe Transfer Button _(Requires the 'Independent Uploading Button' setting)_
+    - Recipe screen: [`Ctrl` + `Left-Click`] on the Recipe Transfer Button _(Requires the `Independent Uploading Button` setting toggled off)_
   - Pattern Provider List Filtering Enhancements:
     - Supports matching localized key names
     - Supports cycling through multiple matched candidate terms
