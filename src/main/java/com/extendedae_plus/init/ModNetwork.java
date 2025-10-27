@@ -10,7 +10,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
 public class ModNetwork {
     private static final String PROTOCOL_VERSION = "1";
     public static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder
-            .named(ResourceLocation.fromNamespaceAndPath(ExtendedAEPlus.MODID, "main"))
+            .named(new ResourceLocation(ExtendedAEPlus.MODID, "main"))
             .networkProtocolVersion(() -> PROTOCOL_VERSION)
             .clientAcceptedVersions(PROTOCOL_VERSION::equals)
             .serverAcceptedVersions(PROTOCOL_VERSION::equals)

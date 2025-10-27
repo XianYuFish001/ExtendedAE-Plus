@@ -88,7 +88,7 @@ public class ExtendedAEPlus {
      * 便捷方法：生成 ResourceLocation
      */
     public static ResourceLocation id(String path) {
-        return ResourceLocation.fromNamespaceAndPath(MODID, path);
+        return new ResourceLocation(MODID, path);
     }
 
     /**

@@ -105,7 +105,7 @@ public class ExtendedAEPatternUploadUtil {
                         if (k.contains(":")) {
                             // 形如 namespace:path
                             try {
-                                ResourceLocation rl = ResourceLocation.parse(k);
+                                ResourceLocation rl = new ResourceLocation(k);
                                 map.put(rl, name);
                             } catch (Exception ignored) {}
                         } else {
@@ -143,7 +143,7 @@ public class ExtendedAEPatternUploadUtil {
 
         if (key.contains(":")) {
             try {
-                ResourceLocation location = ResourceLocation.tryParse(key);
+                ResourceLocation location = new ResourceLocation(key);
                 if (location != null && CUSTOM_NAMES.containsKey(location))
                     return CUSTOM_NAMES.get(location);
             } catch (Exception ignored) {}
@@ -190,7 +190,7 @@ public class ExtendedAEPatternUploadUtil {
             // 更新内存映射
             if (key.contains(":")) {
                 try {
-                    ResourceLocation rl = ResourceLocation.parse(key);
+                    ResourceLocation rl = new ResourceLocation(key);
                     CUSTOM_NAMES.put(rl, cnValue);
                 } catch (Exception ignored) {}
             } else {
@@ -243,7 +243,7 @@ public class ExtendedAEPatternUploadUtil {
             for (String k : toRemove) {
                 if (k.contains(":")) {
                     try {
-                        ResourceLocation rl = ResourceLocation.parse(k);
+                        ResourceLocation rl = new ResourceLocation(k);
                         // 仅当值匹配才移除（双重保险）
                         String cur = CUSTOM_NAMES.get(rl);
                         if (target.equals(cur)) {
@@ -324,7 +324,7 @@ public class ExtendedAEPatternUploadUtil {
             // GTRecipeType.toString() 返回 registryName.toString() 即 namespace:path
             String idStr = String.valueOf(gtRecipe.getType());
             if (idStr == null || idStr.isBlank()) return null;
-            ResourceLocation rl = ResourceLocation.parse(idStr);
+            ResourceLocation rl = new ResourceLocation(idStr);
             String path = rl.getPath();
 //            // 1) 先查别名（使用 path 作为最终搜索关键字）
 //            if (path != null) {
@@ -353,7 +353,7 @@ public class ExtendedAEPatternUploadUtil {
             Object typeObj = mGetType.invoke(gtRecipeObj);
             String idStr = String.valueOf(typeObj);
             if (idStr == null || idStr.isBlank()) return null;
-            ResourceLocation rl = ResourceLocation.parse(idStr);
+            ResourceLocation rl = new ResourceLocation(idStr);
             String path = rl.getPath();
 //            // 1) 别名优先（使用 path 作为最终搜索关键字）
 //            if (path != null) {

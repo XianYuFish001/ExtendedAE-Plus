@@ -88,7 +88,7 @@ public class InfinityBigIntegerCellItem extends Item implements ICellWorkbenchIt
      */
     public static ItemStack withUUID(java.util.UUID uuid) {
         ItemStack stack = new ItemStack(Objects.requireNonNull(
-                ForgeRegistries.ITEMS.getValue(ResourceLocation.fromNamespaceAndPath(ExtendedAEPlus.MODID, "infinity_biginteger_cell")
+                ForgeRegistries.ITEMS.getValue(new ResourceLocation(ExtendedAEPlus.MODID, "infinity_biginteger_cell")
         )));
         stack.getOrCreateTag().putUUID(InfinityConstants.INFINITY_CELL_UUID, uuid);
         return stack;

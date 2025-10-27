@@ -236,7 +236,7 @@ public abstract class GuiExPatternTerminalMixin extends AEBaseScreen<AEBaseMenu>
             try {
                 ModNetwork.CHANNEL.sendToServer(new OpenProviderUiC2SPacket(
                         posLong,
-                        ResourceLocation.parse(dimStr),
+                        new ResourceLocation(dimStr),
                         faceOrd
                 ));
             } catch (Throwable t) {
