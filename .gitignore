@@ -28,3 +28,7 @@ repo
 othermods
 crashreport
 .cursor
+/build/
+/build/generated/
+/build/generated/sources/
+/build/generated/sources/modMetadata/
