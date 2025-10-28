@@ -25,10 +25,9 @@ import java.util.List;
 
 @Mod.EventBusSubscriber(modid = ExtendedAEPlus.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class InputEvents {
-    private InputEvents() {}
-
     @SubscribeEvent
     public static void onMouseButtonPre(InputEvent.MouseButton.Pre event) {
+        if (Minecraft.getInstance().player == null) return;
         if (event.getAction() != GLFW.GLFW_PRESS) return;
         if (Minecraft.getInstance().screen == null) return;
         // 优先处理：Shift + 左键（拉取或下单）
@@ -54,6 +53,7 @@ public final class InputEvents {
 
     @SubscribeEvent
     public static void onKeyPressedPre(ScreenEvent.KeyPressed.Pre event) {
+        if (Minecraft.getInstance().player == null) return;
         if (event.getKeyCode() == GLFW.GLFW_KEY_F) {
             // 仅当鼠标确实悬停在 JEI 配料上时触发
             // 大概会在一格有多个(?)stack的时候出bug, 但是真的会有那种时候吗?
@@ -86,7 +86,7 @@ public final class InputEvents {
                 } catch (Throwable ignored) {
                 }
             }
-        } else if (event.getKeyCode() == GLFW.GLFW_KEY_LEFT_CONTROL && Minecraft.getInstance().player != null)
+        } else if (event.getKeyCode() == GLFW.GLFW_KEY_LEFT_CONTROL)
             ModNetwork.CHANNEL.sendToServer(new C2SPacketTargetKeyTriggered(C2SPacketTargetKeyTriggered.KeyType.CTRL_DOWN));
     }
 
