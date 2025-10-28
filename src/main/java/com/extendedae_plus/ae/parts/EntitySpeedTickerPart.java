@@ -53,7 +53,7 @@ public class EntitySpeedTickerPart extends UpgradeablePart implements IGridTicka
     // 当前打开的菜单实例（如果有）
     public EntitySpeedTickerMenu menu;
 
-    public static final ResourceLocation MODEL_BASE = ResourceLocation.fromNamespaceAndPath(
+    public static final ResourceLocation MODEL_BASE = new ResourceLocation(
             ExtendedAEPlus.MODID, "part/entity_speed_ticker_part");
 
     @PartModels

@@ -86,13 +86,13 @@ public final class InputEvents {
                 } catch (Throwable ignored) {
                 }
             }
-        } else if (event.getKeyCode() == GLFW.GLFW_KEY_LEFT_CONTROL)
+        } else if (event.getKeyCode() == GLFW.GLFW_KEY_LEFT_CONTROL && Minecraft.getInstance().player != null)
             ModNetwork.CHANNEL.sendToServer(new C2SPacketTargetKeyTriggered(C2SPacketTargetKeyTriggered.KeyType.CTRL_DOWN));
     }
 
     @SubscribeEvent
     public static void onKeyReleasePre(ScreenEvent.KeyReleased.Pre event) {
-        if (event.getKeyCode() == GLFW.GLFW_KEY_LEFT_CONTROL)
+        if (event.getKeyCode() == GLFW.GLFW_KEY_LEFT_CONTROL && Minecraft.getInstance().player != null)
             ModNetwork.CHANNEL.sendToServer(new C2SPacketTargetKeyTriggered(C2SPacketTargetKeyTriggered.KeyType.CTRL_UP));
     }
 }
