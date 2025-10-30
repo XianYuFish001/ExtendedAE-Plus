@@ -10,7 +10,7 @@ import appeng.items.tools.powered.WirelessTerminalItem;
 import appeng.me.helpers.PlayerSource;
 import com.extendedae_plus.menu.locator.CuriosItemLocator;
 import com.extendedae_plus.util.WirelessTerminalLocator;
-import com.extendedae_plus.util.WirelessTerminalLocator.LocatedTerminal;
+import com.extendedae_plus.util.WirelessTerminalLocator.TerminalInfo;
 import de.mari_023.ae2wtlib.api.registration.WTDefinition;
 import de.mari_023.ae2wtlib.api.terminal.WTMenuHost;
 import net.minecraft.core.BlockPos;
@@ -71,14 +71,14 @@ public class PickFromWirelessC2SPacket implements CustomPacketPayload {
             if (state == null || state.isAir()) return;
 
             // 服务端权威：定位玩家任意槽位的无线终端（含 Curios）
-            LocatedTerminal located = WirelessTerminalLocator.find(player);
-            ItemStack terminal = located.stack;
+            TerminalInfo located = WirelessTerminalLocator.find(player);
+            ItemStack terminal = located.stack();
             if (terminal.isEmpty()) return;
 
             IGrid grid;
             boolean usedWtHost = false;
-            String curiosSlotId = located.getCuriosSlotId();
-            int curiosIndex = located.getCuriosIndex();
+            String curiosSlotId = located.curiosSlotId();
+            int curiosIndex = located.curiosIndex();
             if (curiosSlotId != null && curiosIndex >= 0) {
                 // 与 PullFromJeiOrCraftC2SPacket 保持一致：优先走 AE2 原生路径
                 WirelessCraftingTerminalItem wct = terminal.getItem() instanceof WirelessCraftingTerminalItem c ? c : null;

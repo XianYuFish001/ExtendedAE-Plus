@@ -8,11 +8,9 @@ import com.extendedae_plus.integration.RecipeViewer.RecipeViewerHelper;
 import com.extendedae_plus.mixin.ae2.accessor.MEStorageScreenAccessor;
 import com.extendedae_plus.mixin.extendedae.accessor.GuiExPatternTerminalAccessor;
 import com.extendedae_plus.network.C2SPacketTargetKeyTriggered;
-import com.extendedae_plus.network.OpenCraftFromJeiC2SPacket;
-import com.extendedae_plus.network.PullFromJeiOrCraftC2SPacket;
+import com.extendedae_plus.network.CPacketPullFromNetwork;
 import com.glodblock.github.extendedae.client.gui.GuiExPatternTerminal;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -25,35 +23,47 @@ import java.util.List;
 
 @EventBusSubscriber(modid = ExtendedAEPlus.MODID, value = Dist.CLIENT)
 public final class InputEvents {
-	private InputEvents() {}
+    private static boolean isPulled;
 
     @SubscribeEvent
     public static void onMouseButtonPre(InputEvent.MouseButton.Pre event) {
-        if (event.getAction() != GLFW.GLFW_PRESS) return;
+        if (Minecraft.getInstance().player == null) return;
         if (Minecraft.getInstance().screen == null) return;
-        // 优先处理：Shift + 左键（拉取或下单）
-        if (event.getButton() == GLFW.GLFW_MOUSE_BUTTON_LEFT && Screen.hasShiftDown() &&
-                !RecipeViewerHelper.isCheatMode()) {
-            List<GenericStack> stacks = RecipeViewerHelper.getHoveredStacks();
-            GenericStack stack = stacks.isEmpty() ? null : stacks.getFirst();
-            if (stack == null) return;
-            PacketDistributor.sendToServer(new PullFromJeiOrCraftC2SPacket(stack));
+
+
+        if (event.getAction() != GLFW.GLFW_PRESS && isPulled) {
+            isPulled = false;
+            event.setCanceled(true);
+            return;
         }
 
-        // 中键：打开 AE 下单界面（保持原有功能）
-        if (event.getButton() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-            // 优先在 JEI 配方界面基于坐标获取；若无，再从覆盖层/书签获取
+        var pulled = RecipeViewerHelper.getPulled(event.getButton());
+        if (!RecipeViewerHelper.isCheatMode() && pulled.getFirst() > 0) {
             List<GenericStack> stacks = RecipeViewerHelper.getHoveredStacks();
             GenericStack stack = stacks.isEmpty() ? null : stacks.getFirst();
             if (stack == null) return;
 
-			PacketDistributor.sendToServer(new OpenCraftFromJeiC2SPacket(stack));
-			event.setCanceled(true);
-		}
-	}
+            PacketDistributor.sendToServer(new CPacketPullFromNetwork(
+                    new GenericStack(stack.what(), pulled.getFirst()),
+                    true,
+                    pulled.getSecond()));
+            isPulled = true;
+            return;
+        }
+
+        if (event.getButton() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+            List<GenericStack> stacks = RecipeViewerHelper.getHoveredStacks();
+            GenericStack stack = stacks.isEmpty() ? null : stacks.getFirst();
+            if (stack == null) return;
+
+			PacketDistributor.sendToServer(new CPacketPullFromNetwork(stack, false, false));
+            event.setCanceled(true);
+        }
+    }
 
     @SubscribeEvent
     public static void onKeyPressedPre(ScreenEvent.KeyPressed.Pre event) {
+        if (Minecraft.getInstance().player == null) return;
         if (event.getKeyCode() == GLFW.GLFW_KEY_F) {
             // 仅当鼠标确实悬停在 JEI 配料上时触发
             // 大概会在一格有多个(?)stack的时候出bug, 但是真的会有那种时候吗?
@@ -92,6 +102,7 @@ public final class InputEvents {
 
     @SubscribeEvent
     public static void onKeyReleasePre(ScreenEvent.KeyReleased.Pre event) {
+        if (Minecraft.getInstance().player == null) return;
         if (event.getKeyCode() == GLFW.GLFW_KEY_LEFT_CONTROL)
             PacketDistributor.sendToServer(new C2SPacketTargetKeyTriggered(C2SPacketTargetKeyTriggered.KeyType.CTRL_UP));
     }

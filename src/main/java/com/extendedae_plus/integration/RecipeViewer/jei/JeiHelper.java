@@ -5,8 +5,11 @@ import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
 import com.extendedae_plus.integration.RecipeViewer.IRecipeViewerHelper;
+import com.mojang.datafixers.util.Pair;
 import mezz.jei.api.ingredients.ITypedIngredient;
+import net.minecraft.client.gui.screens.Screen;
 import net.neoforged.fml.ModList;
+import org.lwjgl.glfw.GLFW;
 import tamaized.ae2jeiintegration.integration.modules.jei.GenericEntryStackHelper;
 
 import java.lang.reflect.Method;
@@ -31,6 +34,19 @@ public class JeiHelper implements IRecipeViewerHelper {
     public List<GenericStack> getFavorites() {
         return JeiRuntimeProxy.getBookmarkList().stream()
                 .map(GenericEntryStackHelper::ingredientToStack).toList();
+    }
+
+    @Override
+    public Pair<Integer, Boolean> getPulled(int mouseKey) {
+        int amount = 0;
+        boolean toInv = true;
+
+        if (Screen.hasControlDown()) amount = 1;
+        if (amount > 0 && Screen.hasShiftDown()) amount = 64;
+
+        if (mouseKey == GLFW.GLFW_MOUSE_BUTTON_RIGHT) toInv = false;
+
+        return new Pair<>(amount, toInv);
     }
 
     @Override

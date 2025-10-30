@@ -12,7 +12,7 @@ import appeng.helpers.IPatternTerminalMenuHost;
 import appeng.menu.me.items.PatternEncodingTermMenu;
 import appeng.menu.slot.RestrictedInputSlot;
 import appeng.parts.encoding.EncodingMode;
-import com.extendedae_plus.client.PatternEncodingTermMenuMixinHelper;
+import com.extendedae_plus.api.HelperCtrlPressed;
 import com.extendedae_plus.config.EAEPConfig;
 import com.extendedae_plus.mixin.ae2.accessor.MEStorageMenuAccessor;
 import com.extendedae_plus.network.C2SPacketEncodeFinished;
@@ -33,7 +33,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Objects;
 
 @Mixin(PatternEncodingTermMenu.class)
-public abstract class PatternEncodingTermMenuMixin implements PatternEncodingTermMenuMixinHelper {
+public abstract class PatternEncodingTermMenuMixin implements HelperCtrlPressed {
     // 防止重复执行
     @Unique
     private boolean eap$blankAutoFilled = false;

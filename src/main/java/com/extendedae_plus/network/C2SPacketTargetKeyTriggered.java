@@ -2,7 +2,7 @@ package com.extendedae_plus.network;
 
 import appeng.menu.me.items.PatternEncodingTermMenu;
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.client.PatternEncodingTermMenuMixinHelper;
+import com.extendedae_plus.api.HelperCtrlPressed;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -35,7 +35,7 @@ public record C2SPacketTargetKeyTriggered(KeyType keyType) implements CustomPack
             ServerPlayer player = (ServerPlayer) context.player();
 
             if (player.containerMenu instanceof PatternEncodingTermMenu patternMenu) {
-                if (patternMenu instanceof PatternEncodingTermMenuMixinHelper accessor) {
+                if (patternMenu instanceof HelperCtrlPressed accessor) {
                     accessor.eaep$setCtrlPressed(switch (packet.keyType) {
                         case CTRL_UP -> false;
                         case CTRL_DOWN -> true;

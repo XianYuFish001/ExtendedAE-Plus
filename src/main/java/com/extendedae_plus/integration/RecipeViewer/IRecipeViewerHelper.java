@@ -1,6 +1,7 @@
 package com.extendedae_plus.integration.RecipeViewer;
 
 import appeng.api.stacks.GenericStack;
+import com.mojang.datafixers.util.Pair;
 
 import java.util.List;
 
@@ -10,6 +11,8 @@ public interface IRecipeViewerHelper {
     List<GenericStack> getHoveredStacks();
 
     List<GenericStack> getFavorites();
+
+    Pair<Integer, Boolean> getPulled(int mouseKey);
 
     default boolean isCheatMode() {
         return false;

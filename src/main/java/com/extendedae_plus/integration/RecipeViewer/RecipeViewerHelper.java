@@ -3,6 +3,7 @@ package com.extendedae_plus.integration.RecipeViewer;
 import appeng.api.stacks.GenericStack;
 import com.extendedae_plus.integration.RecipeViewer.emi.EMIHelper;
 import com.extendedae_plus.integration.RecipeViewer.jei.JeiHelper;
+import com.mojang.datafixers.util.Pair;
 import net.neoforged.fml.ModList;
 
 import java.util.List;
@@ -28,6 +29,10 @@ public class RecipeViewerHelper {
 
     public static List<GenericStack> getFavorites() {
         return getViewer().map(IRecipeViewerHelper::getFavorites).orElse(List.of());
+    }
+
+    public static Pair<Integer, Boolean> getPulled(int mouseKey) {
+        return getViewer().map(viewer -> viewer.getPulled(mouseKey)).orElse(new Pair<>(0, false));
     }
 
     public static boolean isCheatMode() {

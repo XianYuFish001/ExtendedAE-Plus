@@ -24,15 +24,12 @@ public class ModNetwork {
         registrar.playToServer(UploadEncodedPatternToProviderC2SPacket.TYPE, UploadEncodedPatternToProviderC2SPacket.STREAM_CODEC, UploadEncodedPatternToProviderC2SPacket::handle);
         registrar.playToServer(UploadInventoryPatternToProviderC2SPacket.TYPE, UploadInventoryPatternToProviderC2SPacket.STREAM_CODEC, UploadInventoryPatternToProviderC2SPacket::handle);
 
-        registrar.playToServer(OpenCraftFromJeiC2SPacket.TYPE,
-                OpenCraftFromJeiC2SPacket.STREAM_CODEC,
-                OpenCraftFromJeiC2SPacket::handle);
         registrar.playToServer(PickFromWirelessC2SPacket.TYPE,
                 PickFromWirelessC2SPacket.STREAM_CODEC,
                 PickFromWirelessC2SPacket::handle);
-        registrar.playToServer(PullFromJeiOrCraftC2SPacket.TYPE,
-                PullFromJeiOrCraftC2SPacket.STREAM_CODEC,
-                PullFromJeiOrCraftC2SPacket::handle);
+        registrar.playToServer(CPacketPullFromNetwork.TYPE,
+                CPacketPullFromNetwork.STREAM_CODEC,
+                CPacketPullFromNetwork::handle);
         registrar.playToServer(ChannelCardBindPacket.TYPE,
                 ChannelCardBindPacket.STREAM_CODEC,
                 ChannelCardBindPacket::handle);
