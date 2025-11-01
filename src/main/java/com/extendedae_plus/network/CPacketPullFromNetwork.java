@@ -20,7 +20,6 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
@@ -29,7 +28,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record CPacketPullFromNetwork(GenericStack stack, boolean doPull, boolean toInventory) implements CustomPacketPayload {
     public static final Type<CPacketPullFromNetwork> TYPE = new Type<>(
-            ResourceLocation.fromNamespaceAndPath(ExtendedAEPlus.MODID, "pull_from_network"));
+            ExtendedAEPlus.getLocation("pull_from_network"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, CPacketPullFromNetwork> STREAM_CODEC = StreamCodec.composite(
             GenericStack.STREAM_CODEC, CPacketPullFromNetwork::stack,
@@ -88,7 +87,7 @@ public record CPacketPullFromNetwork(GenericStack stack, boolean doPull, boolean
             ItemStack cursorStack = player.containerMenu.getCarried();
 
             if (cursorStack.isEmpty()) {
-                player.containerMenu.setCarried(extractedStack);
+                player.containerMenu.setCarried(extractedStack.copyAndClear());
             } else if (ItemStack.isSameItemSameComponents(cursorStack, extractedStack)) {
                 int maxStackSize = cursorStack.getMaxStackSize();
                 int totalAmount = cursorStack.getCount() + extractedStack.getCount();
@@ -96,20 +95,25 @@ public record CPacketPullFromNetwork(GenericStack stack, boolean doPull, boolean
                 if (totalAmount <= maxStackSize) {
                     cursorStack.setCount(totalAmount);
                     player.containerMenu.setCarried(cursorStack);
+                    extractedStack.setCount(0);
                 } else {
                     int overflow = totalAmount - maxStackSize;
                     cursorStack.setCount(maxStackSize);
                     player.containerMenu.setCarried(cursorStack);
 
-                    ItemStack overflowStack = extractedStack.copy();
-                    overflowStack.setCount(overflow);
+                    ItemStack overflowStack = extractedStack.copyWithCount(overflow);
                     playerInv.add(overflowStack);
+                    extractedStack.setCount(overflowStack.getCount());
                 }
             } else playerInv.add(extractedStack);
         } else playerInv.add(extractedStack);
 
-        double powerUsage = Math.max(0.5, extracted * 0.05);
+
+        double powerUsage = Math.max(0.5, (extracted - extractedStack.getCount()) * 0.05);
         terminal.usePower(player, powerUsage, info.stack());
+
+        if (!extractedStack.isEmpty())
+            StorageHelper.poweredInsert(energy, storage, itemKey, extractedStack.getCount(), new PlayerSource(player));
 
         info.commit();
         player.containerMenu.broadcastChanges();

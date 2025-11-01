@@ -77,9 +77,6 @@
   "config.jade.plugin_extendedae_plus.wt_master_location": "Show Master Node Location",
   "config.jade.plugin_extendedae_plus.wt_locked": "Show Lock Status",
   "config.jade.plugin_extendedae_plus.wt_network_usable": "Show Network Online Status",
-  "extendedae_plus.tooltip.frequency": "Frequency: %d",
-  "extendedae_plus.tooltip.master_mode": "Mode: %s",
-  "extendedae_plus.tooltip.locked": "Lock Status: %s",
 
   "screen.extendedae_plus.title": "ExtendedAE Plus Configuration",
   "config.extendedae_plus": "ExtendedAE Plus",

@@ -18,7 +18,7 @@ public enum EAEPIcon {
     public final int height;
 
     public static final ResourceLocation TEXTURE =
-            ResourceLocation.fromNamespaceAndPath(ExtendedAEPlus.MODID, "textures/gui/icons.png");
+            ExtendedAEPlus.getLocation("textures/gui/icons.png");
     public static final int TEXTURE_WIDTH = 64;
     public static final int TEXTURE_HEIGHT = 64;
 

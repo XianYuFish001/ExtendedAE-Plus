@@ -11,10 +11,8 @@ import com.extendedae_plus.config.EAEPConfig;
 import com.extendedae_plus.init.*;
 import com.extendedae_plus.util.storage.InfinityStorageManager;
 import com.mojang.logging.LogUtils;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.level.block.Blocks;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -47,19 +45,20 @@ public class ExtendedAEPlus {
         NeoForge.EVENT_BUS.register(this);
         NeoForge.EVENT_BUS.addListener(ExtendedAEPlus::onServerStarted);
         NeoForge.EVENT_BUS.addListener(ExtendedAEPlus::onServerStopped);
-        // 注册配置：接入自定义的 EAEPConfig
-        modContainer.registerConfig(ModConfig.Type.COMMON, EAEPConfig.COMMON_SPEC, "extendedae_plus-common.toml");
-        modContainer.registerConfig(ModConfig.Type.CLIENT, EAEPConfig.CLIENT_SPEC, "extendedae_plus-client.toml");
-        modContainer.registerConfig(ModConfig.Type.SERVER, EAEPConfig.SERVER_SPEC, "extendedae_plus-server.toml");
+
+        modContainer.registerConfig(ModConfig.Type.COMMON, EAEPConfig.COMMON_SPEC);
+        modContainer.registerConfig(ModConfig.Type.CLIENT, EAEPConfig.CLIENT_SPEC);
+        modContainer.registerConfig(ModConfig.Type.SERVER, EAEPConfig.SERVER_SPEC);
     }
 
-    public static ResourceLocation id(String path) {
+    public static ResourceLocation getLocation(String path) {
         return ResourceLocation.fromNamespaceAndPath(MODID, path);
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
-        LOGGER.info("HELLO FROM COMMON SETUP");
-        LOGGER.info("DIRT BLOCK >> {}", BuiltInRegistries.BLOCK.getKey(Blocks.DIRT));
+        // 出现了! 谜一样的log
+//        LOGGER.info("HELLO FROM COMMON SETUP");
+//        LOGGER.info("DIRT BLOCK >> {}", BuiltInRegistries.BLOCK.getKey(Blocks.DIRT));
         StorageCells.addCellHandler(InfinityBigIntegerCellHandler.INSTANCE);
 
         // 绑定 AE2 的 CraftingBlockEntity 到本模组的自定义加速器方块，避免 AEBaseEntityBlock.blockEntityType 为空
@@ -74,18 +73,6 @@ public class ExtendedAEPlus {
                                 ModItems.ENTITY_TICKER_PART_ITEM.get().getPartClass().asSubclass(IPart.class)
                         )
                 );
-
-                // 注册自定义 AE2 MenuLocator（用于 Curios 槽位打开菜单）
-                try {
-                    appeng.menu.locator.MenuLocators.register(
-                            com.extendedae_plus.menu.locator.CuriosItemLocator.class,
-                            com.extendedae_plus.menu.locator.CuriosItemLocator::writeToPacket,
-                            com.extendedae_plus.menu.locator.CuriosItemLocator::readFromPacket
-                    );
-                    LOGGER.info("Registered AE2 MenuLocator: CuriosItemLocator");
-                } catch (Throwable t) {
-                    LOGGER.warn("Failed to register CuriosItemLocator with AE2 MenuLocators: {}", t.toString());
-                }
 
                 AEBaseEntityBlock<CraftingBlockEntity> b4 = ModBlocks.ACCELERATOR_4x.get();
                 AEBaseEntityBlock<CraftingBlockEntity> b16 = ModBlocks.ACCELERATOR_16x.get();
@@ -117,10 +104,7 @@ public class ExtendedAEPlus {
         });
     }
 
-    @Nullable
     private static InfinityStorageManager storageManager;
-
-    @Nullable
     private static MinecraftServer storageManagerServer;
 
     private static void onServerStarted(ServerStartedEvent event) {
@@ -140,7 +124,6 @@ public class ExtendedAEPlus {
         return storageManager;
     }
 
-    // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
     }

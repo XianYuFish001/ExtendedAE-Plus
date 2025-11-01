@@ -10,7 +10,6 @@ import com.extendedae_plus.mixin.ae2.accessor.PatternProviderMenuAdvancedAccesso
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.pedroksl.advanced_ae.gui.advpatternprovider.AdvPatternProviderMenu;
@@ -21,7 +20,7 @@ import net.pedroksl.advanced_ae.gui.advpatternprovider.AdvPatternProviderMenu;
  */
 public class ToggleAdvancedBlockingC2SPacket implements CustomPacketPayload {
     public static final Type<ToggleAdvancedBlockingC2SPacket> TYPE = new Type<>(
-            ResourceLocation.fromNamespaceAndPath(ExtendedAEPlus.MODID, "toggle_adv_blocking"));
+            ExtendedAEPlus.getLocation("toggle_adv_blocking"));
 
     public static final ToggleAdvancedBlockingC2SPacket INSTANCE = new ToggleAdvancedBlockingC2SPacket();
 

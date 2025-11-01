@@ -6,7 +6,6 @@ import com.extendedae_plus.ae.parts.EntitySpeedTickerPart;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
@@ -15,7 +14,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
  */
 public class ToggleEntityTickerC2SPacket implements CustomPacketPayload  {
     public static final CustomPacketPayload.Type<ToggleEntityTickerC2SPacket> TYPE = new CustomPacketPayload.Type<>(
-            ResourceLocation.fromNamespaceAndPath(ExtendedAEPlus.MODID, "toggle_entity_ticker"));
+            ExtendedAEPlus.getLocation("toggle_entity_ticker"));
 
     public static final ToggleEntityTickerC2SPacket INSTANCE = new ToggleEntityTickerC2SPacket();
 

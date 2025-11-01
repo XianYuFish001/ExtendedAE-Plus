@@ -6,7 +6,6 @@ import com.extendedae_plus.content.ClientPatternHighlightStore;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /**
@@ -15,7 +14,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
  */
 public class SetPatternHighlightS2CPacket implements CustomPacketPayload {
     public static final Type<SetPatternHighlightS2CPacket> TYPE = new Type<>(
-            ResourceLocation.fromNamespaceAndPath(ExtendedAEPlus.MODID, "set_pattern_highlight"));
+            ExtendedAEPlus.getLocation("set_pattern_highlight"));
 
     private final AEKey key;
     private final boolean highlight;

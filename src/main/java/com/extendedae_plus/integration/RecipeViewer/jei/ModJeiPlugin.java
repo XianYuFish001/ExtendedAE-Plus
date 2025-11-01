@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 @JeiPlugin
 public class ModJeiPlugin implements IModPlugin {
     private static final ResourceLocation UID =
-            ResourceLocation.fromNamespaceAndPath(ExtendedAEPlus.MODID, "jei_plugin");
+            ExtendedAEPlus.getLocation("jei_plugin");
 
     @Override
     public ResourceLocation getPluginUid() {

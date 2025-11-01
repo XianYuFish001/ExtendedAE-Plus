@@ -9,7 +9,6 @@ import com.extendedae_plus.util.PatternProviderDataUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
@@ -22,7 +21,7 @@ public class ScalePatternsC2SPacket implements CustomPacketPayload {
     }
 
     public static final Type<ScalePatternsC2SPacket> TYPE = new Type<>(
-            ResourceLocation.fromNamespaceAndPath(ExtendedAEPlus.MODID, "scale_patterns"));
+            ExtendedAEPlus.getLocation("scale_patterns"));
 
     public static final StreamCodec<FriendlyByteBuf, ScalePatternsC2SPacket> STREAM_CODEC = StreamCodec.of(
             (buf, pkt) -> buf.writeEnum(pkt.op),

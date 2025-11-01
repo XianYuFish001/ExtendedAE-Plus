@@ -10,6 +10,7 @@ import appeng.me.service.CraftingService;
 import appeng.menu.locator.MenuLocators;
 import appeng.menu.me.crafting.CraftingCPUMenu;
 import appeng.parts.AEBasePart;
+import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.mixin.ae2.accessor.PatternProviderLogicAccessor;
 import com.extendedae_plus.util.PatternProviderDataUtil;
 import com.glodblock.github.extendedae.util.FCClientUtil;
@@ -21,7 +22,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -40,7 +40,7 @@ import static com.glodblock.github.extendedae.client.render.EAEHighlightHandler.
  */
 public class CraftingMonitorOpenProviderC2SPacket implements CustomPacketPayload {
     public static final Type<CraftingMonitorOpenProviderC2SPacket> TYPE = new Type<>(
-            ResourceLocation.fromNamespaceAndPath(com.extendedae_plus.ExtendedAEPlus.MODID, "crafting_monitor_open_provider"));
+            ExtendedAEPlus.getLocation("crafting_monitor_open_provider"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, CraftingMonitorOpenProviderC2SPacket> STREAM_CODEC = StreamCodec.of(
             (buf, pkt) -> AEKey.writeKey(buf, pkt.what),

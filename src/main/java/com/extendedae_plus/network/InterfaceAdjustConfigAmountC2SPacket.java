@@ -2,10 +2,10 @@ package com.extendedae_plus.network;
 
 import appeng.api.stacks.GenericStack;
 import appeng.menu.implementations.InterfaceMenu;
+import com.extendedae_plus.ExtendedAEPlus;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
@@ -15,7 +15,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
  */
 public class InterfaceAdjustConfigAmountC2SPacket implements CustomPacketPayload {
     public static final Type<InterfaceAdjustConfigAmountC2SPacket> TYPE = new Type<>(
-            ResourceLocation.fromNamespaceAndPath(com.extendedae_plus.ExtendedAEPlus.MODID, "interface_adjust_config_amount"));
+            ExtendedAEPlus.getLocation("interface_adjust_config_amount"));
 
     public static final StreamCodec<FriendlyByteBuf, InterfaceAdjustConfigAmountC2SPacket> STREAM_CODEC = StreamCodec.of(
             (buf, pkt) -> {

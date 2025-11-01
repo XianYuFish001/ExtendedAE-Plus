@@ -1,11 +1,11 @@
 package com.extendedae_plus.network;
 
 import appeng.menu.me.items.PatternEncodingTermMenu;
+import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.util.ExtendedAEPatternUploadUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
@@ -14,7 +14,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
  */
 public class UploadEncodedPatternToProviderC2SPacket implements CustomPacketPayload {
     public static final Type<UploadEncodedPatternToProviderC2SPacket> TYPE = new Type<>(
-            ResourceLocation.fromNamespaceAndPath(com.extendedae_plus.ExtendedAEPlus.MODID, "upload_pattern_to_provider"));
+            ExtendedAEPlus.getLocation("upload_pattern_to_provider"));
 
     public static final StreamCodec<FriendlyByteBuf, UploadEncodedPatternToProviderC2SPacket> STREAM_CODEC = StreamCodec.of(
             (buf, pkt) -> buf.writeLong(pkt.providerId),

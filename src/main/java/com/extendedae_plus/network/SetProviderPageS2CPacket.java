@@ -8,7 +8,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.lang.reflect.Field;
@@ -18,7 +17,7 @@ import java.lang.reflect.Field;
  */
 public class SetProviderPageS2CPacket implements CustomPacketPayload {
     public static final Type<SetProviderPageS2CPacket> TYPE = new Type<>(
-            ResourceLocation.fromNamespaceAndPath(ExtendedAEPlus.MODID, "set_provider_page"));
+            ExtendedAEPlus.getLocation("set_provider_page"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, SetProviderPageS2CPacket> STREAM_CODEC = StreamCodec.of(
             (buf, pkt) -> buf.writeVarInt(pkt.page),

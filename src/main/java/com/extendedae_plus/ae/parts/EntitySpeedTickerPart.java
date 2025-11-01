@@ -50,8 +50,7 @@ import java.lang.reflect.Method;
  * 功能受<a href="https://github.com/GilbertzRivi/crazyae2addons">Crazy AE2 Addons</a>启发
  */
 public class EntitySpeedTickerPart extends UpgradeablePart implements IGridTickable, MenuProvider, IUpgradeableObject {
-    public static final ResourceLocation MODEL_BASE = ResourceLocation.fromNamespaceAndPath(
-            ExtendedAEPlus.MODID, "part/entity_speed_ticker_part");
+    public static final ResourceLocation MODEL_BASE = ExtendedAEPlus.getLocation("part/entity_speed_ticker_part");
     @PartModels
     public static final PartModel MODELS_OFF;
     @PartModels
@@ -60,9 +59,9 @@ public class EntitySpeedTickerPart extends UpgradeablePart implements IGridTicka
     public static final PartModel MODELS_HAS_CHANNEL;
 
     static {
-        MODELS_OFF = new PartModel(MODEL_BASE, ResourceLocation.fromNamespaceAndPath(ExtendedAEPlus.MODID, "part/entity_speed_ticker_off"));
-        MODELS_ON = new PartModel(MODEL_BASE, ResourceLocation.fromNamespaceAndPath(ExtendedAEPlus.MODID, "part/entity_speed_ticker_on"));
-        MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE, ResourceLocation.fromNamespaceAndPath(ExtendedAEPlus.MODID, "part/entity_speed_ticker_has_channel"));
+        MODELS_OFF = new PartModel(MODEL_BASE, ExtendedAEPlus.getLocation("part/entity_speed_ticker_off"));
+        MODELS_ON = new PartModel(MODEL_BASE, ExtendedAEPlus.getLocation("part/entity_speed_ticker_on"));
+        MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE, ExtendedAEPlus.getLocation("part/entity_speed_ticker_has_channel"));
     }
 
     public EntitySpeedTickerMenu menu;              // 当前打开的菜单实例

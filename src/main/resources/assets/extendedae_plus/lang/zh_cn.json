@@ -77,9 +77,6 @@
   "config.jade.plugin_extendedae_plus.wt_master_location": "显示主节点位置",
   "config.jade.plugin_extendedae_plus.wt_locked": "显示锁定状态",
   "config.jade.plugin_extendedae_plus.wt_network_usable": "显示网络在线状态",
-  "extendedae_plus.tooltip.frequency": "频率: %d",
-  "extendedae_plus.tooltip.master_mode": "模式: %s",
-  "extendedae_plus.tooltip.locked": "锁定状态: %s",
 
   "screen.extendedae_plus.title": "ExtendedAE Plus 配置",
   "config.extendedae_plus": "ExtendedAE Plus",

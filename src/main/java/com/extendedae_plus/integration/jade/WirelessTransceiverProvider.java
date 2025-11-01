@@ -2,6 +2,7 @@ package com.extendedae_plus.integration.jade;
 
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
+import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.content.wireless.WirelessTransceiverBlockEntity;
 import com.extendedae_plus.wireless.IWirelessEndpoint;
 import com.extendedae_plus.wireless.WirelessMasterRegistry;
@@ -15,7 +16,7 @@ import snownee.jade.api.IServerDataProvider;
 public enum WirelessTransceiverProvider implements IServerDataProvider<BlockAccessor> {
     INSTANCE;
 
-    private static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath("extendedae_plus", "wireless_transceiver_info");
+    private static final ResourceLocation UID = ExtendedAEPlus.getLocation("wireless_transceiver_info");
     // 此类仅用于同步服务端数据，不再包含客户端选项键
 
     @Override

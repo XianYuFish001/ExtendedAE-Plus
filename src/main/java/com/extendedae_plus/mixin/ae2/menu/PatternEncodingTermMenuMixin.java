@@ -15,7 +15,7 @@ import appeng.parts.encoding.EncodingMode;
 import com.extendedae_plus.api.HelperCtrlPressed;
 import com.extendedae_plus.config.EAEPConfig;
 import com.extendedae_plus.mixin.ae2.accessor.MEStorageMenuAccessor;
-import com.extendedae_plus.network.C2SPacketEncodeFinished;
+import com.extendedae_plus.network.CPacketEncodeFinished;
 import com.extendedae_plus.util.ExtendedAEPatternUploadUtil;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
@@ -181,7 +181,7 @@ public abstract class PatternEncodingTermMenuMixin implements HelperCtrlPressed 
         Objects.requireNonNull(self.getPlayer().getServer()).execute(() -> {
             try {
                 if (self.getMode() == EncodingMode.PROCESSING)
-                    PacketDistributor.sendToPlayer((ServerPlayer) self.getPlayer(), C2SPacketEncodeFinished.INSTANCE);
+                    PacketDistributor.sendToPlayer((ServerPlayer) self.getPlayer(), CPacketEncodeFinished.INSTANCE);
                 else ExtendedAEPatternUploadUtil.uploadFromEncodingMenuToMatrix((ServerPlayer) self.getPlayer(), self);
             } catch (Throwable ignored) {}
         });

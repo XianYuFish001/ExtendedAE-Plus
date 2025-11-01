@@ -1,5 +1,6 @@
 package com.extendedae_plus.integration.jade;
 
+import com.extendedae_plus.ExtendedAEPlus;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -104,7 +105,7 @@ public enum WirelessTransceiverJadePluginComponents implements IBlockComponentPr
     private final ResourceLocation uid;
 
     WirelessTransceiverJadePluginComponents(String path) {
-        this.uid = ResourceLocation.fromNamespaceAndPath("extendedae_plus", path);
+        this.uid = ExtendedAEPlus.getLocation(path);
     }
 
     @Override

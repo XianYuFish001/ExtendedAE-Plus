@@ -24,9 +24,9 @@ public class ModNetwork {
         registrar.playToServer(UploadEncodedPatternToProviderC2SPacket.TYPE, UploadEncodedPatternToProviderC2SPacket.STREAM_CODEC, UploadEncodedPatternToProviderC2SPacket::handle);
         registrar.playToServer(UploadInventoryPatternToProviderC2SPacket.TYPE, UploadInventoryPatternToProviderC2SPacket.STREAM_CODEC, UploadInventoryPatternToProviderC2SPacket::handle);
 
-        registrar.playToServer(PickFromWirelessC2SPacket.TYPE,
-                PickFromWirelessC2SPacket.STREAM_CODEC,
-                PickFromWirelessC2SPacket::handle);
+        registrar.playToServer(CPacketPickFromNetwork.TYPE,
+                CPacketPickFromNetwork.STREAM_CODEC,
+                CPacketPickFromNetwork::handle);
         registrar.playToServer(CPacketPullFromNetwork.TYPE,
                 CPacketPullFromNetwork.STREAM_CODEC,
                 CPacketPullFromNetwork::handle);
@@ -37,14 +37,14 @@ public class ModNetwork {
                 SetWirelessFrequencyC2SPacket.STREAM_CODEC,
                 SetWirelessFrequencyC2SPacket::handle);
 
-        registrar.playToClient(C2SPacketEncodeFinished.TYPE,
-                C2SPacketEncodeFinished.STREAM_CODEC,
-                C2SPacketEncodeFinished::handle);
-        registrar.playToServer(C2SPacketTargetKeyTriggered.TYPE,
-                C2SPacketTargetKeyTriggered.STREAM_CODEC,
-                C2SPacketTargetKeyTriggered::handle);
-        registrar.playToServer(C2SPacketStoneCuttingID.TYPE,
-                C2SPacketStoneCuttingID.STREAM_CODEC,
-                C2SPacketStoneCuttingID::handle);
+        registrar.playToClient(CPacketEncodeFinished.TYPE,
+                CPacketEncodeFinished.STREAM_CODEC,
+                CPacketEncodeFinished::handle);
+        registrar.playToServer(CPacketTargetKeyTriggered.TYPE,
+                CPacketTargetKeyTriggered.STREAM_CODEC,
+                CPacketTargetKeyTriggered::handle);
+        registrar.playToServer(CPacketStoneCuttingID.TYPE,
+                CPacketStoneCuttingID.STREAM_CODEC,
+                CPacketStoneCuttingID::handle);
     }
 }

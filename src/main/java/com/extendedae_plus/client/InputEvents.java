@@ -7,8 +7,8 @@ import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.integration.RecipeViewer.RecipeViewerHelper;
 import com.extendedae_plus.mixin.ae2.accessor.MEStorageScreenAccessor;
 import com.extendedae_plus.mixin.extendedae.accessor.GuiExPatternTerminalAccessor;
-import com.extendedae_plus.network.C2SPacketTargetKeyTriggered;
 import com.extendedae_plus.network.CPacketPullFromNetwork;
+import com.extendedae_plus.network.CPacketTargetKeyTriggered;
 import com.glodblock.github.extendedae.client.gui.GuiExPatternTerminal;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
@@ -29,7 +29,6 @@ public final class InputEvents {
     public static void onMouseButtonPre(InputEvent.MouseButton.Pre event) {
         if (Minecraft.getInstance().player == null) return;
         if (Minecraft.getInstance().screen == null) return;
-
 
         if (event.getAction() != GLFW.GLFW_PRESS && isPulled) {
             isPulled = false;
@@ -97,13 +96,13 @@ public final class InputEvents {
                 }
             }
         } else if (event.getKeyCode() == GLFW.GLFW_KEY_LEFT_CONTROL)
-            PacketDistributor.sendToServer(new C2SPacketTargetKeyTriggered(C2SPacketTargetKeyTriggered.KeyType.CTRL_DOWN));
+            PacketDistributor.sendToServer(new CPacketTargetKeyTriggered(CPacketTargetKeyTriggered.KeyType.CTRL_DOWN));
     }
 
     @SubscribeEvent
     public static void onKeyReleasePre(ScreenEvent.KeyReleased.Pre event) {
         if (Minecraft.getInstance().player == null) return;
         if (event.getKeyCode() == GLFW.GLFW_KEY_LEFT_CONTROL)
-            PacketDistributor.sendToServer(new C2SPacketTargetKeyTriggered(C2SPacketTargetKeyTriggered.KeyType.CTRL_UP));
+            PacketDistributor.sendToServer(new CPacketTargetKeyTriggered(CPacketTargetKeyTriggered.KeyType.CTRL_UP));
     }
 }

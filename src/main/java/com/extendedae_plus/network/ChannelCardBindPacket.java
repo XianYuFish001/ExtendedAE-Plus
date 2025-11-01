@@ -8,7 +8,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -24,7 +23,7 @@ import java.util.UUID;
 public class ChannelCardBindPacket implements CustomPacketPayload {
     
     public static final Type<ChannelCardBindPacket> TYPE = new Type<>(
-            ResourceLocation.fromNamespaceAndPath(ExtendedAEPlus.MODID, "channel_card_bind"));
+            ExtendedAEPlus.getLocation("channel_card_bind"));
 
     public static final StreamCodec<FriendlyByteBuf, ChannelCardBindPacket> STREAM_CODEC = StreamCodec.of(
             (buf, pkt) -> buf.writeEnum(pkt.hand),

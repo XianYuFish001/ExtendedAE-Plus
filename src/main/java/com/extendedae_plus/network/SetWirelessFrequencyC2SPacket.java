@@ -6,7 +6,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -22,7 +21,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 public class SetWirelessFrequencyC2SPacket implements CustomPacketPayload {
     
     public static final Type<SetWirelessFrequencyC2SPacket> TYPE = new Type<>(
-            ResourceLocation.fromNamespaceAndPath(ExtendedAEPlus.MODID, "set_wireless_frequency"));
+            ExtendedAEPlus.getLocation("set_wireless_frequency"));
 
     /**
      * StreamCodec用于序列化和反序列化数据包

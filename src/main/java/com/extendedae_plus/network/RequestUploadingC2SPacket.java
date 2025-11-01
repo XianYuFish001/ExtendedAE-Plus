@@ -9,7 +9,6 @@ import com.extendedae_plus.util.ExtendedAEPatternUploadUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
@@ -21,7 +20,7 @@ import java.util.List;
  */
 public class RequestUploadingC2SPacket implements CustomPacketPayload {
     public static final Type<RequestUploadingC2SPacket> TYPE = new Type<>(
-            ResourceLocation.fromNamespaceAndPath(ExtendedAEPlus.MODID, "request_uploading"));
+            ExtendedAEPlus.getLocation("request_uploading"));
 
     public static final RequestUploadingC2SPacket INSTANCE = new RequestUploadingC2SPacket();
 

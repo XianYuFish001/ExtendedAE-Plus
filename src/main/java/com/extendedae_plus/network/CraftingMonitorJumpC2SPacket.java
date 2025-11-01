@@ -20,7 +20,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -40,7 +39,7 @@ import java.util.List;
  */
 public record CraftingMonitorJumpC2SPacket(AEKey what) implements CustomPacketPayload {
     public static final Type<CraftingMonitorJumpC2SPacket> TYPE = new Type<>(
-            ResourceLocation.fromNamespaceAndPath(ExtendedAEPlus.MODID, "crafting_monitor_jump"));
+            ExtendedAEPlus.getLocation("crafting_monitor_jump"));
 
     @Override
     public Type<? extends CustomPacketPayload> type() {

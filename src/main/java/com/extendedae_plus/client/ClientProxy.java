@@ -31,28 +31,28 @@ public final class ClientProxy {
         if (REGISTERED) return;
         REGISTERED = true;
         // 注册 Item property，用于根据 ItemStack 的 NBT exponent 切换模型
-        ItemProperties.register(ModItems.ENTITY_SPEED_CARD.get(), ExtendedAEPlus.id("mult"),
+        ItemProperties.register(ModItems.ENTITY_SPEED_CARD.get(), ExtendedAEPlus.getLocation("mult"),
                 (stack, world, entity, seed) -> (float) EntitySpeedCardItem.readMultiplier(stack));
 
         // 注册四种形成态模型为内置模型
         BuiltInModelHooks.addBuiltInModel(
-                ExtendedAEPlus.id("block/crafting/4x_accelerator_formed_v2"),
+                ExtendedAEPlus.getLocation("block/crafting/4x_accelerator_formed_v2"),
                 new CraftingCubeModel(new EPlusCraftingCubeModelProvider(EPlusCraftingUnitType.ACCELERATOR_4x)));
 
         BuiltInModelHooks.addBuiltInModel(
-                ExtendedAEPlus.id("block/crafting/16x_accelerator_formed_v2"),
+                ExtendedAEPlus.getLocation("block/crafting/16x_accelerator_formed_v2"),
                 new CraftingCubeModel(new EPlusCraftingCubeModelProvider(EPlusCraftingUnitType.ACCELERATOR_16x)));
 
         BuiltInModelHooks.addBuiltInModel(
-                ExtendedAEPlus.id("block/crafting/64x_accelerator_formed_v2"),
+                ExtendedAEPlus.getLocation("block/crafting/64x_accelerator_formed_v2"),
                 new CraftingCubeModel(new EPlusCraftingCubeModelProvider(EPlusCraftingUnitType.ACCELERATOR_64x)));
 
         BuiltInModelHooks.addBuiltInModel(
-                ExtendedAEPlus.id("block/crafting/256x_accelerator_formed_v2"),
+                ExtendedAEPlus.getLocation("block/crafting/256x_accelerator_formed_v2"),
                 new CraftingCubeModel(new EPlusCraftingCubeModelProvider(EPlusCraftingUnitType.ACCELERATOR_256x)));
 
         BuiltInModelHooks.addBuiltInModel(
-                ExtendedAEPlus.id("block/crafting/1024x_accelerator_formed_v2"),
+                ExtendedAEPlus.getLocation("block/crafting/1024x_accelerator_formed_v2"),
                 new CraftingCubeModel(new EPlusCraftingCubeModelProvider(EPlusCraftingUnitType.ACCELERATOR_1024x)));
 
     }

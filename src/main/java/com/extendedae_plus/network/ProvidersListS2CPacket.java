@@ -8,7 +8,6 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -21,7 +20,7 @@ import java.util.List;
 public record ProvidersListS2CPacket(List<Long> ids, List<String> names, List<String> i18nKeys,
                                      List<Integer> emptySlots) implements CustomPacketPayload {
     public static final Type<ProvidersListS2CPacket> TYPE = new Type<>(
-            ResourceLocation.fromNamespaceAndPath(ExtendedAEPlus.MODID, "providers_list"));
+            ExtendedAEPlus.getLocation("providers_list"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ProvidersListS2CPacket> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.fromCodec(Codec.list(Codec.LONG)), ProvidersListS2CPacket::ids,
