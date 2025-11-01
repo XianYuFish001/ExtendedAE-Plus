@@ -24,7 +24,7 @@ license="LGPL-3.0-or-later"
 modId="extendedae_plus" #mandatory
 
 # The version number of the mod
-version="1.21.1-1.0.4" #mandatory
+version="1.21.1-1.0.5" #mandatory
 
 # A display name for the mod
 displayName="ExtendedAE-Plus" #mandatory

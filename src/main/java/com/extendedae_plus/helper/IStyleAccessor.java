@@ -1,4 +1,4 @@
-package com.extendedae_plus.util;
+package com.extendedae_plus.helper;
 
 import appeng.client.gui.style.Blitter;
 import appeng.client.gui.style.WidgetStyle;

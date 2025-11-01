@@ -2,7 +2,7 @@ package com.extendedae_plus.network;
 
 import appeng.menu.me.items.PatternEncodingTermMenu;
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.api.HelperCtrlPressed;
+import com.extendedae_plus.helper.HelperCtrlPressed;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;

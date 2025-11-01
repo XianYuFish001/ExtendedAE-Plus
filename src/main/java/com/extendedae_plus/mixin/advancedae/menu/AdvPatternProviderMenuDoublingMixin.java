@@ -2,8 +2,8 @@ package com.extendedae_plus.mixin.advancedae.menu;
 
 import appeng.menu.AEBaseMenu;
 import appeng.menu.guisync.GuiSync;
-import com.extendedae_plus.api.PatternProviderMenuDoublingSync;
-import com.extendedae_plus.api.SmartDoublingHolder;
+import com.extendedae_plus.helper.PatternProviderMenuDoublingSync;
+import com.extendedae_plus.helper.SmartDoublingHolder;
 import net.pedroksl.advanced_ae.common.logic.AdvPatternProviderLogic;
 import net.pedroksl.advanced_ae.gui.advpatternprovider.AdvPatternProviderMenu;
 import org.spongepowered.asm.mixin.Final;

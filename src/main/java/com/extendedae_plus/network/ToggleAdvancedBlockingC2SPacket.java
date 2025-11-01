@@ -4,7 +4,7 @@ import appeng.api.config.Settings;
 import appeng.api.config.YesNo;
 import appeng.menu.implementations.PatternProviderMenu;
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.api.AdvancedBlockingHolder;
+import com.extendedae_plus.helper.AdvancedBlockingHolder;
 import com.extendedae_plus.mixin.advancedae.accessor.AdvPatternProviderMenuAdvancedAccessor;
 import com.extendedae_plus.mixin.ae2.accessor.PatternProviderMenuAdvancedAccessor;
 import net.minecraft.network.FriendlyByteBuf;

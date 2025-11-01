@@ -9,8 +9,8 @@ import appeng.helpers.patternprovider.PatternProviderLogic;
 import appeng.helpers.patternprovider.PatternProviderLogicHost;
 import appeng.parts.crafting.PatternProviderPart;
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.api.AdvancedBlockingHolder;
-import com.extendedae_plus.api.SmartDoublingHolder;
+import com.extendedae_plus.helper.AdvancedBlockingHolder;
+import com.extendedae_plus.helper.SmartDoublingHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -27,7 +27,6 @@ import java.util.Set;
  * - 阻挡模式（AE2 内置 BLOCKING_MODE 设置）
  * - 高级阻挡模式（AdvancedBlockingHolder mixin）
  * - 智能翻倍模式（SmartDoublingHolder mixin）
- *
  * 负载为三个操作码（各1字节），分别对应：blocking、advancedBlocking、smartDoubling。
  */
 public class GlobalToggleProviderModesC2SPacket implements CustomPacketPayload {

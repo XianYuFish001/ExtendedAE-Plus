@@ -5,18 +5,15 @@ import appeng.api.networking.energy.IEnergyService;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.storage.MEStorage;
 import appeng.api.storage.StorageHelper;
-import appeng.items.tools.powered.WirelessTerminalItem;
 import appeng.me.helpers.PlayerSource;
 import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.util.WirelessTerminalLocator;
-import com.extendedae_plus.util.WirelessTerminalLocator.TerminalInfo;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
@@ -44,25 +41,25 @@ public record CPacketPickFromNetwork(BlockPos pos, Direction face, Vec3 hitLoc) 
             if (!(context.player() instanceof ServerPlayer player)) return;
             if (player.isCreative()) return;
 
-            ServerLevel level = player.serverLevel();
-            BlockState state = level.getBlockState(packet.pos);
+            var level = player.serverLevel();
+            var state = level.getBlockState(packet.pos);
             if (state.isAir()) return;
 
-            TerminalInfo info = WirelessTerminalLocator.find(player);
-            ItemStack terminalStack = info.stack();
+            var infoOptional = WirelessTerminalLocator.locate(player);
+            if (infoOptional.isEmpty()) return;
+            var info = infoOptional.get();
+
+            var terminalStack = info.terminalStack();
+            var terminal = info.terminal();
             if (terminalStack.isEmpty()) return;
 
-            var uncheckedTerm = terminalStack.getItem();
-            if (!(uncheckedTerm instanceof WirelessTerminalItem terminal)) return;
-            if (!terminal.hasPower(player, 0.5, terminalStack)) return;
-
-            IGrid grid = terminal.getLinkedGrid(terminalStack, level, null);
-            if (grid == null) return;
+            var gridOptional = info.grid();
+            if (gridOptional.isEmpty()) return;
+            var grid = gridOptional.get();
 
             double powerUsage = pullItem(packet, player, state, grid);
-            if (powerUsage > 0) terminal.usePower(player, powerUsage, info.stack());
+            if (powerUsage > 0) terminal.usePower(player, powerUsage, info.terminalStack());
 
-            info.commit();
             player.containerMenu.broadcastChanges();
         });
     }

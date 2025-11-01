@@ -1,4 +1,4 @@
-package com.extendedae_plus.api;
+package com.extendedae_plus.helper;
 
 /**
  * 由 {@code GuiExPatternProviderMixin} 实现，用于从通用的 Screen Mixin 中更新按钮布局。

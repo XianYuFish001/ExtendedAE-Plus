@@ -1,4 +1,4 @@
-package com.extendedae_plus.api;
+package com.extendedae_plus.helper;
 
 public interface SmartDoublingAwarePattern {
     boolean eap$allowScaling();

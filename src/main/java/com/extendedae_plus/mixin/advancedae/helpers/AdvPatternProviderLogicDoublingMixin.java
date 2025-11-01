@@ -2,8 +2,8 @@ package com.extendedae_plus.mixin.advancedae.helpers;
 
 import appeng.api.crafting.IPatternDetails;
 import appeng.crafting.pattern.AEProcessingPattern;
-import com.extendedae_plus.api.SmartDoublingAwarePattern;
-import com.extendedae_plus.api.SmartDoublingHolder;
+import com.extendedae_plus.helper.SmartDoublingAwarePattern;
+import com.extendedae_plus.helper.SmartDoublingHolder;
 import com.extendedae_plus.mixin.advancedae.accessor.AdvPatternProviderLogicPatternsAccessor;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
