@@ -28,7 +28,8 @@ public final class WirelessTerminalLocator {
                     var result = resultOptional.get();
 
                     info.set(new TerminalInfo(result.stack(), (WirelessTerminalItem) result.stack().getItem(),
-                            new LocatedSlotContext(player, false, -1, result.slotContext().index())));
+                            new LocatedSlotContext(player, false, -1,
+                                    result.slotContext().identifier(), result.slotContext().index())));
                 });
                 if (info.get() != null) return Optional.of(info.get());
             } catch (Throwable ignore) {
@@ -37,7 +38,7 @@ public final class WirelessTerminalLocator {
 
         if (inventory.offhand.getFirst().getItem() instanceof WirelessTerminalItem terminal)
             return Optional.of(new TerminalInfo(inventory.offhand.getFirst(), terminal,
-                    new LocatedSlotContext(player, true, -1, -1)));
+                    new LocatedSlotContext(player, true, -1, "", -1)));
 
         for (int invIndex = 0; invIndex < inventory.items.size(); invIndex++) {
             var item = inventory.items.get(invIndex);
@@ -45,7 +46,7 @@ public final class WirelessTerminalLocator {
                 continue;
 
             return Optional.of(new TerminalInfo(item, terminal,
-                    new LocatedSlotContext(player, false, invIndex, -1)));
+                    new LocatedSlotContext(player, false, invIndex, "", -1)));
         }
 
         return Optional.empty();
@@ -60,11 +61,12 @@ public final class WirelessTerminalLocator {
         }
 
         public Optional<ItemMenuHostLocator> getMenuLocator() {
-            var curioSlot = context.curioIndex;
+            var curioType = context.curioType;
+            var curioIndex = context.curioIndex;
             var slot = context.invIndex;
 
             ItemMenuHostLocator locator = null;
-            if (curioSlot >= 0) locator = MenuLocators.forCurioSlot(curioSlot);
+            if (curioIndex >= 0) locator = new CuriosItemLocator(curioType, curioIndex, null);
             else if (context.offhand) locator = MenuLocators.forHand(context.player, InteractionHand.OFF_HAND);
             else if (slot >= 0) locator = MenuLocators.forInventorySlot(slot);
 
@@ -86,6 +88,6 @@ public final class WirelessTerminalLocator {
         }
     }
 
-    public record LocatedSlotContext(Player player, boolean offhand, int invIndex, int curioIndex) {
+    public record LocatedSlotContext(Player player, boolean offhand, int invIndex, String curioType, int curioIndex) {
     }
 }

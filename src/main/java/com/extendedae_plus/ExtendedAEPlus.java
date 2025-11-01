@@ -6,9 +6,11 @@ import appeng.api.storage.StorageCells;
 import appeng.block.AEBaseEntityBlock;
 import appeng.blockentity.crafting.CraftingBlockEntity;
 import appeng.items.parts.PartModelsHelper;
+import appeng.menu.locator.MenuLocators;
 import com.extendedae_plus.ae.api.storage.InfinityBigIntegerCellHandler;
 import com.extendedae_plus.config.EAEPConfig;
 import com.extendedae_plus.init.*;
+import com.extendedae_plus.util.CuriosItemLocator;
 import com.extendedae_plus.util.storage.InfinityStorageManager;
 import com.mojang.logging.LogUtils;
 import net.minecraft.resources.ResourceLocation;
@@ -66,6 +68,12 @@ public class ExtendedAEPlus {
             try {
                 // 注册升级卡
                 new UpgradeCards(event);
+
+                MenuLocators.register(
+                        CuriosItemLocator.class,
+                        CuriosItemLocator::writeToPacket,
+                        CuriosItemLocator::readFromPacket
+                );
 
                 // 为 PartItem 注册 AE2 部件模型
                 PartModels.registerModels(
