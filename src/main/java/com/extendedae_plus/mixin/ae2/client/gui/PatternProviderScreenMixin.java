@@ -7,12 +7,12 @@ import appeng.client.gui.implementations.PatternProviderScreen;
 import appeng.client.gui.style.ScreenStyle;
 import appeng.client.gui.widgets.SettingToggleButton;
 import appeng.menu.implementations.PatternProviderMenu;
+import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.helper.ExPatternButtonsAccessor;
 import com.extendedae_plus.helper.PatternProviderMenuAdvancedSync;
 import com.extendedae_plus.helper.PatternProviderMenuDoublingSync;
 import com.extendedae_plus.network.ToggleAdvancedBlockingC2SPacket;
 import com.extendedae_plus.network.ToggleSmartDoublingC2SPacket;
-import com.extendedae_plus.util.ExtendedAELogger;
 import com.glodblock.github.extendedae.client.gui.GuiExPatternProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -55,7 +55,7 @@ public abstract class PatternProviderScreenMixin<C extends PatternProviderMenu> 
                 this.eap$AdvancedBlockingEnabled = sync.eap$getAdvancedBlockingSynced();
             }
         } catch (Throwable t) {
-            ExtendedAELogger.LOGGER.error("Error initializing advanced sync", t);
+            ExtendedAEPlus.LOGGER.error("Error initializing advanced sync", t);
         }
 
         // 使用 SettingToggleButton<YesNo> 的外观（原版图标），但自定义悬停描述为“智能阻挡”
@@ -90,7 +90,7 @@ public abstract class PatternProviderScreenMixin<C extends PatternProviderMenu> 
                 this.eap$SmartDoublingEnabled = sync2.eap$getSmartDoublingSynced();
             }
         } catch (Throwable t) {
-            ExtendedAELogger.LOGGER.error("Error initializing smart doubling sync", t);
+            ExtendedAEPlus.LOGGER.error("Error initializing smart doubling sync", t);
         }
 
         this.eap$SmartDoublingToggle = new SettingToggleButton<>(

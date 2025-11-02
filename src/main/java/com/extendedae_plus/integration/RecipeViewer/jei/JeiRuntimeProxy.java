@@ -97,6 +97,8 @@ public final class JeiRuntimeProxy {
         return Collections.emptyList();
     }
 
+    // 有点难绷, 但是为了兼容性还是留着吧
+
     /**
      * 将物品添加到 JEI 书签
      */

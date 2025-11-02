@@ -75,18 +75,7 @@ public abstract class MixinBoMScreen {
 
                             menu.encode();
 
-                            ExtendedAEPatternUploadUtil.addLastProcessingNameList(
-                                    node.recipe.getCategory().getName().getString());
-
-                            if (node.recipe.getBackingRecipe() != null) {
-                                String name = ExtendedAEPatternUploadUtil.mapRecipeTypeToSearchKey(node.recipe.getBackingRecipe().value());
-                                if (!(name == null || name.isBlank()))
-                                    ExtendedAEPatternUploadUtil.addLastProcessingNameList(name);
-                            }
-
-                            ExtendedAEPatternUploadUtil.addLastProcessingNameList(
-                                    node.recipe.getId().toString().split("/")[0]);
-
+                            ExtendedAEPatternUploadUtil.tryCollectKeywords(node.recipe);
                             PacketDistributor.sendToServer(RequestUploadingC2SPacket.INSTANCE);
                         }
                         Minecraft.getInstance().player.playSound(SoundEvents.UI_BUTTON_CLICK.value());

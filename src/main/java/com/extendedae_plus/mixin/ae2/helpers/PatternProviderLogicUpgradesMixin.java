@@ -5,7 +5,7 @@ import appeng.api.upgrades.IUpgradeInventory;
 import appeng.api.upgrades.UpgradeInventories;
 import appeng.helpers.patternprovider.PatternProviderLogic;
 import appeng.helpers.patternprovider.PatternProviderLogicHost;
-import com.extendedae_plus.util.ExtendedAELogger;
+import com.extendedae_plus.ExtendedAEPlus;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -61,7 +61,7 @@ public abstract class PatternProviderLogicUpgradesMixin {
                 eap$extendAppliedFluxUpgrades();
             } // 未安装 AppliedFlux 的情况由 CompatMixin 负责创建兼容升级槽
         } catch (Throwable t) {
-            ExtendedAELogger.LOGGER.error("[样板供应器][升级槽] 初始化失败", t);
+            ExtendedAEPlus.LOGGER.error("[样板供应器][升级槽] 初始化失败", t);
         }
     }
     
@@ -132,7 +132,7 @@ public abstract class PatternProviderLogicUpgradesMixin {
                 this.eap$upgradesInitialized = true;
             }
         } catch (Throwable t) {
-            ExtendedAELogger.LOGGER.error("[样板供应器][升级槽] 扩展 AppliedFlux 升级槽失败", t);
+            ExtendedAEPlus.LOGGER.error("[样板供应器][升级槽] 扩展 AppliedFlux 升级槽失败", t);
             // 失败时创建默认数量
             this.eap$upgrades = UpgradeInventories.forMachine(
                 host.getTerminalIcon().getItem(), 
@@ -167,7 +167,7 @@ public abstract class PatternProviderLogicUpgradesMixin {
             }
             
         } catch (Throwable t) {
-            ExtendedAELogger.LOGGER.error("[样板供应器][升级槽] onUpgradesChanged 处理失败", t);
+            ExtendedAEPlus.LOGGER.error("[样板供应器][升级槽] onUpgradesChanged 处理失败", t);
         }
     }
     
@@ -191,7 +191,7 @@ public abstract class PatternProviderLogicUpgradesMixin {
                 }
             }
         } catch (Throwable t) {
-            ExtendedAELogger.LOGGER.error("[样板供应器][升级槽] 保存升级槽失败", t);
+            ExtendedAEPlus.LOGGER.error("[样板供应器][升级槽] 保存升级槽失败", t);
         }
     }
     
@@ -222,7 +222,7 @@ public abstract class PatternProviderLogicUpgradesMixin {
                 }
             }
         } catch (Throwable t) {
-            ExtendedAELogger.LOGGER.error("[样板供应器][升级槽] 加载升级槽失败", t);
+            ExtendedAEPlus.LOGGER.error("[样板供应器][升级槽] 加载升级槽失败", t);
         }
     }
     
@@ -241,7 +241,7 @@ public abstract class PatternProviderLogicUpgradesMixin {
                 }
             }
         } catch (Throwable t) {
-            ExtendedAELogger.LOGGER.error("[样板供应器][升级槽] 添加掉落失败", t);
+            ExtendedAEPlus.LOGGER.error("[样板供应器][升级槽] 添加掉落失败", t);
         }
     }
     
@@ -256,7 +256,7 @@ public abstract class PatternProviderLogicUpgradesMixin {
                 this.eap$upgrades.clear();
             }
         } catch (Throwable t) {
-            ExtendedAELogger.LOGGER.error("[样板供应器][升级槽] 清空升级槽失败", t);
+            ExtendedAEPlus.LOGGER.error("[样板供应器][升级槽] 清空升级槽失败", t);
         }
     }
 }

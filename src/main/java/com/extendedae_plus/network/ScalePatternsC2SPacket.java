@@ -4,7 +4,6 @@ import appeng.helpers.patternprovider.PatternProviderLogic;
 import appeng.menu.implementations.PatternProviderMenu;
 import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.mixin.ae2.accessor.PatternProviderMenuAdvancedAccessor;
-import com.extendedae_plus.util.ExtendedAELogger;
 import com.extendedae_plus.util.PatternProviderDataUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -80,7 +79,7 @@ public class ScalePatternsC2SPacket implements CustomPacketPayload {
                 player.displayClientMessage(net.minecraft.network.chat.Component.literal("[EAP] " + summary), true);
 
             } catch (Throwable t) {
-                ExtendedAELogger.LOGGER.error("[EAP] Handle ScalePatternsC2SPacket failed", t);
+                ExtendedAEPlus.LOGGER.error("[EAP] Handle ScalePatternsC2SPacket failed", t);
             }
         });
     }

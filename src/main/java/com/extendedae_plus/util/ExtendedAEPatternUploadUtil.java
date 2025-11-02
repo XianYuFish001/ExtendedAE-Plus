@@ -19,15 +19,14 @@ import com.extendedae_plus.config.EAEPConfig;
 import com.extendedae_plus.mixin.ae2.accessor.PatternEncodingTermMenuAccessor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraft.core.registries.BuiltInRegistries;
+import dev.emi.emi.api.recipe.EmiRecipe;
+import dev.emi.emi.jemi.JemiRecipe;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLPaths;
 
 import java.io.IOException;
@@ -46,20 +45,26 @@ import java.util.regex.Pattern;
  * 兼容ExtendedAE的ContainerExPatternTerminal和原版AE2的PatternAccessTermMenu
  */
 public class ExtendedAEPatternUploadUtil {
-
-    // --------------------------- 配置：RecipeType 中文名称映射 ---------------------------
-    private static final String CONFIG_RELATIVE = "extendedae_plus/recipe_type_names.json";
-    private static final Map<ResourceLocation, String> CUSTOM_NAMES = new ConcurrentHashMap<>();
-    // 允许使用最终搜索关键字（通常为 path 或自定义短语）作为键，例如："assembler": "组装机"
-    private static final Map<String, String> CUSTOM_ALIASES = new ConcurrentHashMap<>();
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+    private static final String CONFIG_RELATIVE = "extendedae_plus/stored_alias.json";
+    private static final Map<String, String> ALIASES = new ConcurrentHashMap<>();
 
     static {
         try {
-            loadRecipeTypeNames();
-        } catch (Throwable t) {
-            // 安静失败，使用内置映射
-        }
+            loadAliases();
+        } catch (Throwable ignore) {}
+    }
+
+    private static synchronized void createAliasTemplate(Path filePath) throws IOException {
+        if (Files.exists(filePath)) return;
+
+        Files.createDirectories(filePath.getParent());
+        JsonObject tmpl = new JsonObject();
+        tmpl.addProperty("minecraft:smelting", "熔炉");
+        tmpl.addProperty("minecraft:blasting", "高炉");
+        tmpl.addProperty("minecraft:smoking", "烟熏");
+        tmpl.addProperty("minecraft:campfire_cooking", "营火");
+        Files.writeString(filePath, GSON.toJson(tmpl));
     }
 
     /**
@@ -69,113 +74,70 @@ public class ExtendedAEPatternUploadUtil {
      *   "assembler": "组装机"
      * }
      */
-    public static synchronized void loadRecipeTypeNames() {
+    public static synchronized void loadAliases() {
         try {
-            Path cfgDir = FMLPaths.CONFIGDIR.get();
-            Path cfgPath = cfgDir.resolve(CONFIG_RELATIVE);
-            if (!Files.exists(cfgPath)) {
-                // 创建目录并写入模板
-                Files.createDirectories(cfgPath.getParent());
-                JsonObject tmpl = new JsonObject();
-                // 提供一些常见原版默认（仅作为示例，实际仍以内置 switch 为兜底）
-                tmpl.addProperty("minecraft:smelting", "熔炉");
-                tmpl.addProperty("minecraft:blasting", "高炉");
-                tmpl.addProperty("minecraft:smoking", "烟熏");
-                tmpl.addProperty("minecraft:campfire_cooking", "营火");
-                // GTCEu 示例占位
-                tmpl.addProperty("gtceu:assembler", "组装机");
-                tmpl.addProperty("gtceu:arc_furnace", "电弧炉");
-                tmpl.addProperty("gtceu:chemical_reactor", "化学反应器");
-                // 也支持别名（最终搜索关键字）形式，例如：
-                tmpl.addProperty("assembler", "组装机");
-                Files.writeString(cfgPath, GSON.toJson(tmpl));
-            }
+            Path configPath = FMLPaths.CONFIGDIR.get();
+            Path filePath = configPath.resolve(CONFIG_RELATIVE);
 
-            String json = Files.readString(cfgPath);
+            if (!Files.exists(filePath)) createAliasTemplate(filePath);
+
+            String json = Files.readString(filePath);
             JsonObject obj = GSON.fromJson(json, JsonObject.class);
-            Map<ResourceLocation, String> map = new HashMap<>();
-            Map<String, String> alias = new HashMap<>();
-            if (obj != null) {
-                for (Map.Entry<String, JsonElement> e : obj.entrySet()) {
-                    String k = e.getKey();
-                    JsonElement v = e.getValue();
-                    if (v != null && v.isJsonPrimitive()) {
-                        String name = v.getAsString();
-                        if (name == null || name.isBlank()) continue;
-                        if (k.contains(":")) {
-                            // 形如 namespace:path
-                            try {
-                                var rl = ResourceLocation.tryParse(k);
-                                if (rl != null) {
-                                    map.put(rl, name);
-                                }
-                            } catch (Exception ignored) {}
-                        } else {
-                            // 视为别名：最终搜索关键字（大小写不敏感）
-                            alias.put(k.toLowerCase(), name);
-                        }
-                    }
-                }
+            if (obj == null) {
+                ALIASES.clear();
+                return;
             }
-            CUSTOM_NAMES.clear();
-            CUSTOM_NAMES.putAll(map);
-            CUSTOM_ALIASES.clear();
-            CUSTOM_ALIASES.putAll(alias);
-        } catch (IOException ignored) {
+
+            Map<String, String> resolvedAlias = new HashMap<>();
+
+            obj.entrySet().forEach(entry -> {
+                var typeKey = entry.getKey();
+                var aliasValve = entry.getValue();
+                if (aliasValve == null || !aliasValve.isJsonPrimitive()) return;
+
+                var aliasName = aliasValve.getAsString();
+                if (aliasName == null || aliasName.isBlank()) return;
+
+                resolvedAlias.put(typeKey.toLowerCase(), aliasName);
+            });
+
+            ALIASES.clear();
+            ALIASES.putAll(resolvedAlias);
+        } catch (Throwable ignored) {
         }
-    }
-
-    // 最近一次通过 JEI 填充到编码终端的“处理配方”的中文名称（如：烧炼/高炉/烟熏...）
-    public static volatile List<String> lastProcessingNameList = new ArrayList<>();
-
-    public static void addLastProcessingNameList(String name) {
-        lastProcessingNameList.add(name);
     }
 
     /**
      * 向配置中新增或更新“别名 -> 中文”映射，并刷新内存映射。
      * 仅用于非原版（或希望使用最终搜索关键字）场景。
      *
-     * @param aliasKey 最终搜索关键字（不含冒号），大小写不敏感
-     * @param cnValue  中文名称
+     * @param typeKey 最终搜索关键字（不含冒号），大小写不敏感
+     * @param alias  中文名称
      * @return 是否写入成功
      */
-    public static synchronized boolean addOrUpdateAliasMapping(String aliasKey, String cnValue) {
-        if (aliasKey == null || aliasKey.isBlank() || cnValue == null || cnValue.isBlank()) {
+    public static synchronized boolean addOrUpdateAlias(String typeKey, String alias) {
+        if (typeKey == null || typeKey.isBlank() || alias == null || alias.isBlank())
             return false;
-        }
+
         try {
-            Path cfgDir = FMLPaths.CONFIGDIR.get();
-            Path cfgPath = cfgDir.resolve(CONFIG_RELATIVE);
-            if (!Files.exists(cfgPath)) {
-                // 若文件不存在，先创建模板
-                loadRecipeTypeNames();
-            }
+            Path configPath = FMLPaths.CONFIGDIR.get();
+            Path filePath = configPath.resolve(CONFIG_RELATIVE);
+
+            if (!Files.exists(filePath)) createAliasTemplate(filePath);
+
             JsonObject obj;
-            if (Files.exists(cfgPath)) {
-                String json = Files.readString(cfgPath);
+            if (Files.exists(filePath)) {
+                String json = Files.readString(filePath);
                 obj = GSON.fromJson(json, JsonObject.class);
                 if (obj == null) obj = new JsonObject();
-            } else {
-                obj = new JsonObject();
-            }
-            String key = aliasKey.trim();
-            // 仅允许作为别名写入（不含冒号），如包含冒号，仍按原样写入，但推荐别名
-            obj.addProperty(key, cnValue);
-            Files.createDirectories(cfgPath.getParent());
-            Files.writeString(cfgPath, GSON.toJson(obj));
+            } else return false;
 
-            // 更新内存映射
-            if (key.contains(":")) {
-                try {
-                    var rl = ResourceLocation.tryParse(key);
-                    if (rl != null) {
-                        CUSTOM_NAMES.put(rl, cnValue);
-                    }
-                } catch (Exception ignored) {}
-            } else {
-                CUSTOM_ALIASES.put(key.toLowerCase(), cnValue);
-            }
+            String key = typeKey.trim();
+
+            obj.addProperty(key, alias);
+            Files.writeString(filePath, GSON.toJson(obj));
+
+            ALIASES.put(key.toLowerCase(), alias);
             return true;
         } catch (IOException e) {
             return false;
@@ -186,198 +148,91 @@ public class ExtendedAEPatternUploadUtil {
      * 按中文值精确匹配删除映射（支持别名与完整ID）。
      * 返回删除的条目数量。
      */
-    public static synchronized int removeMappingsByCnValue(String cnValue) {
-        if (cnValue == null) return 0;
-        String target = cnValue.trim();
-        if (target.isEmpty()) return 0;
+    public static synchronized int removeAliases(String alias) {
+        if (alias == null) return 0;
+
+        String target = alias.trim();
+        if (target.isBlank()) return 0;
+
         try {
-            Path cfgDir = FMLPaths.CONFIGDIR.get();
-            Path cfgPath = cfgDir.resolve(CONFIG_RELATIVE);
-            if (!Files.exists(cfgPath)) {
+            Path configPath = FMLPaths.CONFIGDIR.get();
+            Path filePath = configPath.resolve(CONFIG_RELATIVE);
+            if (!Files.exists(filePath)) {
+                createAliasTemplate(filePath);
                 return 0;
             }
-            String json = Files.readString(cfgPath);
+
+            String json = Files.readString(filePath);
             JsonObject obj = GSON.fromJson(json, JsonObject.class);
             if (obj == null) return 0;
 
-            java.util.List<String> toRemove = new java.util.ArrayList<>();
-            for (java.util.Map.Entry<String, JsonElement> e : obj.entrySet()) {
-                JsonElement v = e.getValue();
-                if (v != null && v.isJsonPrimitive()) {
-                    String name = v.getAsString();
-                    if (target.equals(name)) {
-                        toRemove.add(e.getKey());
-                    }
-                }
-            }
+            List<String> toRemove = new ArrayList<>();
+            obj.entrySet().forEach(entry -> {
+                var aliasValue = entry.getValue();
+                if (aliasValue == null || !aliasValue.isJsonPrimitive()) return;
+
+                var aliasName = aliasValue.getAsString();
+                if (target.equalsIgnoreCase(aliasName))
+                    toRemove.add(entry.getKey().toLowerCase());
+            });
             if (toRemove.isEmpty()) return 0;
 
-            // 从 JSON 中移除
-            for (String k : toRemove) {
-                obj.remove(k);
-            }
-            Files.createDirectories(cfgPath.getParent());
-            Files.writeString(cfgPath, GSON.toJson(obj));
-
-            // 同步移除内存映射
-            for (String k : toRemove) {
-                if (k.contains(":")) {
-                    try {
-                        var rl = ResourceLocation.tryParse(k);
-                        if (rl != null) {
-                            String cur = CUSTOM_NAMES.get(rl);
-                            if (target.equals(cur)) {
-                                CUSTOM_NAMES.remove(rl);
-                            }
-                        }
-                    } catch (Exception ignored) {}
-                } else {
-                    // 别名按小写存放
-                    String lower = k.toLowerCase();
-                    String cur = CUSTOM_ALIASES.get(lower);
-                    if (target.equals(cur)) {
-                        CUSTOM_ALIASES.remove(lower);
-                    }
-                }
-            }
+            toRemove.forEach(ALIASES::remove);
+            toRemove.forEach(obj::remove);
+            Files.writeString(filePath, GSON.toJson(obj));
             return toRemove.size();
         } catch (IOException e) {
             return 0;
         }
     }
 
-    public static String mapRecipeTypeToCn(Recipe<?> recipe) {
-        if (recipe == null) return null;
-        RecipeType<?> type = recipe.getType();
-        ResourceLocation key = BuiltInRegistries.RECIPE_TYPE.getKey(type);
-        if (key == null) return null;
-        // 1) 自定义配置优先
-        String custom = CUSTOM_NAMES.get(key);
-        if (custom != null && !custom.isBlank()) {
-            return custom;
-        }
-        String id = key.toString();
-        String path = key.getPath();
-        // 常见原版类型映射
-        return switch (path) {
-            case "smelting" -> "熔炉"; // 熔炉
-            case "blasting" -> "高炉";
-            case "smoking" -> "烟熏";
-            case "campfire_cooking" -> "营火";
-            // 其他模组类型，若未配置中文则返回原始ID（namespace:path）作为英文回退
-            default -> id;
-        };
-    }
-
-    /**
-     * 供搜索使用的关键字映射：
-     * - 有中文映射则返回中文；
-     * - 否则返回配方类型的 path（不含命名空间），例如 assembler。
-     */
-    public static String mapRecipeTypeToSearchKey(Recipe<?> recipe) {
-        if (recipe == null) return null;
-        RecipeType<?> type = recipe.getType();
-        ResourceLocation key = BuiltInRegistries.RECIPE_TYPE.getKey(type);
-        if (key == null) return null;
-        // 先查别名（按 path 匹配）
-        // 别名替换放在init做, 提前别名的次序
-        return key.getPath();
-    }
-
-    // 注意：GTCEu 的映射方法已在下方提供基于 Object 的反射版本，避免重复定义。
-
-    /**
-     * 仅使用反射的 GTCEu GTRecipe -> 搜索关键字（避免在运行时直接引用 GTCEu 类）。
-     */
-    public static String mapGTCEuRecipeToSearchKey(Object gtRecipeObj) {
-        if (gtRecipeObj == null) return null;
-        try {
-            // 通过反射调用 getType()，其 toString() 应返回 registryName，即 namespace:path
-            java.lang.reflect.Method mGetType = gtRecipeObj.getClass().getMethod("getType");
-            Object typeObj = mGetType.invoke(gtRecipeObj);
-            String idStr = String.valueOf(typeObj);
-            if (idStr == null || idStr.isBlank()) return null;
-            var rl = ResourceLocation.tryParse(idStr);
-            // 1) 别名优先（使用 path 作为最终搜索关键字）
-            String path = rl != null ? rl.getPath() : null;
-            if (path != null) {
-                String alias = CUSTOM_ALIASES.get(path.toLowerCase());
-                if (alias != null && !alias.isBlank()) return alias;
-            }
-            // 2) 再查完整ID映射
-            String custom = rl != null ? CUSTOM_NAMES.get(rl) : null;
-            if (custom != null && !custom.isBlank()) return custom;
-            // 3) 默认返回 path 作为搜索关键字
-            return (path != null && !path.isBlank()) ? path : idStr;
-        } catch (Throwable t) {
-            return null;
-        }
-    }
-
-    /**
-     * 当 JEI 传入的 recipeBase 不是原版 Recipe<?> 时，根据类的包名/类名推导一个尽量可用的搜索关键字。
-     * 例如："moe.gregtech.recipe.SomeAssemblerRecipe" -> "gtceu assembler"
-     */
-    public static String deriveSearchKeyFromUnknownRecipe(Object recipeBase) {
-        if (recipeBase == null) return null;
-        try {
-            Class<?> cls = recipeBase.getClass();
-            String simple = cls.getSimpleName();
-            String pkg = cls.getName();
-
-            String ns = null;
-            String lower = pkg.toLowerCase();
-            if (lower.contains("gtceu")) ns = "gtceu";
-            else if (lower.contains("gregtech")) ns = "gregtech";
-            else if (lower.contains("projecte")) ns = "projecte";
-            else if (lower.contains("create")) ns = "create";
-            else if (lower.contains("immersiveengineering")) ns = "immersive";
-
-            String token = toSearchToken(simple);
-            String key;
-            if (ns != null && token != null && !token.isBlank()) key = ns + " " + token;
-            else key = token != null && !token.isBlank() ? token : ns;
-            if (key == null || key.isBlank()) return null;
-            // 尝试别名映射（大小写不敏感）
-            String alias = CUSTOM_ALIASES.get(key.toLowerCase());
-            return (alias != null && !alias.isBlank()) ? alias : key;
-        } catch (Throwable ignored) {
-            return null;
-        }
-    }
-
-    private static String toSearchToken(String simpleName) {
-        if (simpleName == null || simpleName.isBlank()) return null;
-        // 去掉常见后缀
-        String s = simpleName
-                .replaceAll("Recipe$", "")
-                .replaceAll("Recipes$", "")
-                .replaceAll("Category$", "")
-                .replaceAll("JEI$", "");
-        // 驼峰转空格并小写
-        s = s.replaceAll("(?<!^)([A-Z])", " $1").toLowerCase();
-        // 取首个关键词
-        s = s.trim();
-        return s;
-    }
-
     public static String findMapping(String key) {
         if (key == null || key.isBlank()) return null;
 
-        if (CUSTOM_ALIASES.containsKey(key.toLowerCase()))
-            return CUSTOM_ALIASES.get(key.toLowerCase());
+        if (ALIASES.containsKey(key.toLowerCase()))
+            return ALIASES.get(key.toLowerCase());
 
-        if (key.contains(":")) {
-            try {
-                ResourceLocation location = ResourceLocation.tryParse(key);
-                if (location != null && CUSTOM_NAMES.containsKey(location))
-                    return CUSTOM_NAMES.get(location);
-            } catch (Exception ignored) {}
+        if (!Pattern.matches(".*[:._/\\-].*", key)) {
+            if (Pattern.matches("^[a-zA-Z]+$", key)) return null;
+            else return key;
         }
 
-        if (!Pattern.matches(".*[:._/\\-].*", key)) return key;
-
         return null;
+    }
+
+    /// 最近一次通过 JEI 填充到编码终端的“处理配方”的中文名称（如：烧炼/高炉/烟熏...）
+    public static volatile List<String> recipeKeywords = new ArrayList<>();
+
+    public static void collectRecipeKeyword(String name) {
+        recipeKeywords.add(name);
+    }
+
+    /// @param recipe (J)EmiRecipe或RecipeHolder
+    public static void tryCollectKeywords(Object recipe) {
+        if (recipe == null) return;
+        List<String> keys = new ArrayList<>();
+
+        if (ModList.get().isLoaded("emi")) {
+            if (recipe instanceof JemiRecipe<?> jemiRecipe) {
+                keys.add(jemiRecipe.category.getTitle().getString());
+                keys.add(jemiRecipe.originalId.toString().split("/")[0]);
+                keys.add(jemiRecipe.originalId.getPath().split("/")[0]);
+            } else if (recipe instanceof EmiRecipe emiRecipe) {
+                keys.add(emiRecipe.getCategory().getName().getString());
+                if (emiRecipe.getId() != null) {
+                    keys.add(emiRecipe.getId().toString().split("/")[0]);
+                    keys.add(emiRecipe.getId().getPath().split("/")[0]);
+                }
+            }
+        }
+
+        if (recipe instanceof RecipeHolder<?> recipeHolder){
+            keys.add(recipeHolder.id().toString().split("/")[0]);
+            keys.add(recipeHolder.id().getPath().split("/")[0]);
+        }
+
+        keys.stream().distinct()
+                .forEach(ExtendedAEPatternUploadUtil::collectRecipeKeyword);
     }
 
     /**
@@ -387,9 +242,7 @@ public class ExtendedAEPatternUploadUtil {
      * @return PatternAccessTermMenu实例，如果玩家没有打开则返回null
      */
     public static PatternAccessTermMenu getPatternAccessMenu(ServerPlayer player) {
-        if (player == null || player.containerMenu == null) {
-            return null;
-        }
+        if (player == null) return null;
         // 优先检查ExtendedAE的扩展样板管理终端（使用类名检查避免直接导入）
         String containerClassName = player.containerMenu.getClass().getName();
         if (containerClassName.equals("com.glodblock.github.extendedae.container.ContainerExPatternTerminal")) {
@@ -437,12 +290,8 @@ public class ExtendedAEPatternUploadUtil {
         // 获取 AE 网络
         IGrid grid = null;
         try {
-            if (menu instanceof AEBaseMenu abm) {
-                Object target = abm.getTarget();
-                if (target instanceof IActionHost host && host.getActionableNode() != null) {
-                    grid = host.getActionableNode().getGrid();
-                }
-            }
+            if (menu.getTarget() instanceof IActionHost host && host.getActionableNode() != null)
+                grid = host.getActionableNode().getGrid();
         } catch (Throwable ignored) {}
         if (grid == null) {
             sendMessage(player, "ExtendedAE Plus: 当前不在有效的 AE 网络中");

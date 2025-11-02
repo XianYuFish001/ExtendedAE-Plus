@@ -5,10 +5,10 @@ import appeng.api.networking.security.IActionHost;
 import appeng.api.upgrades.IUpgradeInventory;
 import appeng.api.upgrades.IUpgradeableObject;
 import appeng.parts.storagebus.StorageBusPart;
+import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.ae.items.ChannelCardItem;
 import com.extendedae_plus.bridge.InterfaceWirelessLinkBridge;
 import com.extendedae_plus.init.ModItems;
-import com.extendedae_plus.util.ExtendedAELogger;
 import com.extendedae_plus.wireless.WirelessSlaveLink;
 import com.extendedae_plus.wireless.endpoint.GenericNodeEndpointImpl;
 import net.minecraft.nbt.CompoundTag;
@@ -109,7 +109,7 @@ public abstract class StorageBusPartChannelCardMixin implements InterfaceWireles
             // 通知客户端状态变化
             ((appeng.parts.AEBasePart)(Object)this).getHost().markForUpdate();
         } catch (Exception e) {
-            ExtendedAELogger.LOGGER.error("[服务端] StorageBus 初始化频道链接失败", e);
+            ExtendedAEPlus.LOGGER.error("[服务端] StorageBus 初始化频道链接失败", e);
         }
     }
 

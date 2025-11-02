@@ -48,9 +48,9 @@ public class ExtendedAEPlus {
         NeoForge.EVENT_BUS.addListener(ExtendedAEPlus::onServerStarted);
         NeoForge.EVENT_BUS.addListener(ExtendedAEPlus::onServerStopped);
 
-        modContainer.registerConfig(ModConfig.Type.COMMON, EAEPConfig.COMMON_SPEC);
-        modContainer.registerConfig(ModConfig.Type.CLIENT, EAEPConfig.CLIENT_SPEC);
-        modContainer.registerConfig(ModConfig.Type.SERVER, EAEPConfig.SERVER_SPEC);
+        modContainer.registerConfig(ModConfig.Type.COMMON, EAEPConfig.COMMON_SPEC, "extendedae_plus/common.toml");
+        modContainer.registerConfig(ModConfig.Type.CLIENT, EAEPConfig.CLIENT_SPEC, "extendedae_plus/client.toml");
+        modContainer.registerConfig(ModConfig.Type.SERVER, EAEPConfig.SERVER_SPEC, "extendedae_plus/server.toml");
     }
 
     public static ResourceLocation getLocation(String path) {
@@ -59,8 +59,8 @@ public class ExtendedAEPlus {
 
     private void commonSetup(FMLCommonSetupEvent event) {
         // 出现了! 谜一样的log
-//        LOGGER.info("HELLO FROM COMMON SETUP");
-//        LOGGER.info("DIRT BLOCK >> {}", BuiltInRegistries.BLOCK.getKey(Blocks.DIRT));
+//        ExtendedAEPlus.LOGGER.info("HELLO FROM COMMON SETUP");
+//        ExtendedAEPlus.LOGGER.info("DIRT BLOCK >> {}", BuiltInRegistries.BLOCK.getKey(Blocks.DIRT));
         StorageCells.addCellHandler(InfinityBigIntegerCellHandler.INSTANCE);
 
         // 绑定 AE2 的 CraftingBlockEntity 到本模组的自定义加速器方块，避免 AEBaseEntityBlock.blockEntityType 为空
@@ -96,7 +96,7 @@ public class ExtendedAEPlus {
                 b64.setBlockEntity(CraftingBlockEntity.class, type, null, null);
                 b256.setBlockEntity(CraftingBlockEntity.class, type, null, null);
                 b1024.setBlockEntity(CraftingBlockEntity.class, type, null, null);
-                LOGGER.info("Bound AE2 CraftingBlockEntity to ExtendedAE Plus accelerators.");
+                ExtendedAEPlus.LOGGER.info("Bound AE2 CraftingBlockEntity to ExtendedAE Plus accelerators.");
 
                 // 绑定装配矩阵上传核心方块实体类型，避免 blockEntityClass 为 null 的问题
                 ModBlocks.ASSEMBLER_MATRIX_UPLOAD_CORE.get().setBlockEntity(
@@ -105,9 +105,9 @@ public class ExtendedAEPlus {
                     null,
                     null
                 );
-                LOGGER.info("Bound UploadCoreBlockEntity to assembler matrix upload core block.");
+                ExtendedAEPlus.LOGGER.info("Bound UploadCoreBlockEntity to assembler matrix upload core block.");
             } catch (Throwable t) {
-                LOGGER.warn("Failed to bind block entities: {}", t.toString());
+                ExtendedAEPlus.LOGGER.warn("Failed to bind block entities: {}", t.toString());
             }
         });
     }

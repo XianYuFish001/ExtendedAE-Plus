@@ -1,7 +1,6 @@
 package com.extendedae_plus.mixin.recipeViewer.emi;
 
 import appeng.integration.modules.emi.EmiEncodePatternHandler;
-import appeng.integration.modules.itemlists.EncodingHelper;
 import appeng.menu.AEBaseMenu;
 import com.extendedae_plus.util.ExtendedAEPatternUploadUtil;
 import dev.emi.emi.api.recipe.EmiRecipe;
@@ -18,19 +17,6 @@ public abstract class MixinEncodePatternTransfer {
     private static void onTransfer(AEBaseMenu menu, RecipeHolder<?> holder,
                                    EmiRecipe emiRecipe, boolean doTransfer, CallbackInfoReturnable<?> cir) {
         if (!doTransfer) return;
-        var recipe = holder != null ? holder.value() : null;
-        // 技术力不够,忍痛不兼容gtceu(
-        // 对不起老牛😭
-        if (recipe == null) return;
-        if (EncodingHelper.isSupportedCraftingRecipe(recipe)) return;
-
-        String name = ExtendedAEPatternUploadUtil.mapRecipeTypeToSearchKey(recipe);
-        if (!(name == null || name.isBlank()))
-            ExtendedAEPatternUploadUtil.addLastProcessingNameList(name);
-
-        ExtendedAEPatternUploadUtil.addLastProcessingNameList(emiRecipe.getCategory().getName().getString());
-
-        if (emiRecipe.getId() != null)
-            ExtendedAEPatternUploadUtil.addLastProcessingNameList(emiRecipe.getId().toString().split("/")[0]);
+        ExtendedAEPatternUploadUtil.tryCollectKeywords(emiRecipe);
     }
 }

@@ -60,7 +60,7 @@ public class ProviderSelectScreen extends Screen {
         this.emptySlots = emptySlots;
         // 如果有来自 JEI 的最近处理名称，则作为初始查询
         try {
-            List<String> recent = ExtendedAEPatternUploadUtil.lastProcessingNameList;
+            List<String> recent = ExtendedAEPatternUploadUtil.recipeKeywords;
             if (recent != null && !recent.isEmpty()) {
                 this.query = new ArrayList<>();
                 recent.forEach(q -> {
@@ -70,7 +70,7 @@ public class ProviderSelectScreen extends Screen {
                 });
                 this.selectedQuery = query.getFirst();
                 // 用后即清空，避免污染下次
-                ExtendedAEPatternUploadUtil.lastProcessingNameList.clear();
+                ExtendedAEPatternUploadUtil.recipeKeywords.clear();
             }
         } catch (Throwable ignored) {}
         buildGroups();
@@ -198,7 +198,7 @@ public class ProviderSelectScreen extends Screen {
 
     private void reloadMapping() {
         try {
-            com.extendedae_plus.util.ExtendedAEPatternUploadUtil.loadRecipeTypeNames();
+            com.extendedae_plus.util.ExtendedAEPatternUploadUtil.loadAliases();
             var player = Minecraft.getInstance().player;
             if (player != null) {
                 player.sendSystemMessage(Component.literal("ExtendedAE Plus: 已重载映射表"));
@@ -428,7 +428,7 @@ public class ProviderSelectScreen extends Screen {
             if (player != null) player.sendSystemMessage(Component.literal("请输入待映射别名"));
             return;
         }
-        boolean ok = ExtendedAEPatternUploadUtil.addOrUpdateAliasMapping(key, val);
+        boolean ok = ExtendedAEPatternUploadUtil.addOrUpdateAlias(key, val);
         if (ok) {
             if (player != null) player.sendSystemMessage(Component.literal("已添加/更新映射: " + key + " -> " + val));
             // 将刚添加的中文名写入搜索框，作为当前查询
@@ -455,7 +455,7 @@ public class ProviderSelectScreen extends Screen {
             if (player != null) player.sendSystemMessage(Component.literal("请输入存在别名后再删除映射"));
             return;
         }
-        int removed = com.extendedae_plus.util.ExtendedAEPatternUploadUtil.removeMappingsByCnValue(val);
+        int removed = com.extendedae_plus.util.ExtendedAEPatternUploadUtil.removeAliases(val);
         if (removed > 0) {
             if (player != null) player.sendSystemMessage(Component.literal("已删除 " + removed + " 条映射，别名: [" + val + "]"));
             applyFilter();

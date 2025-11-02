@@ -8,12 +8,12 @@ import appeng.api.upgrades.IUpgradeableObject;
 import appeng.api.upgrades.UpgradeInventories;
 import appeng.helpers.patternprovider.PatternProviderLogic;
 import appeng.helpers.patternprovider.PatternProviderLogicHost;
+import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.ae.items.ChannelCardItem;
 import com.extendedae_plus.bridge.CompatUpgradeProvider;
 import com.extendedae_plus.bridge.InterfaceWirelessLinkBridge;
 import com.extendedae_plus.compat.UpgradeSlotCompat;
 import com.extendedae_plus.init.ModItems;
-import com.extendedae_plus.util.ExtendedAELogger;
 import com.extendedae_plus.wireless.WirelessSlaveLink;
 import com.extendedae_plus.wireless.endpoint.GenericNodeEndpointImpl;
 import net.minecraft.nbt.CompoundTag;
@@ -81,7 +81,7 @@ public abstract class PatternProviderLogicCompatMixin implements CompatUpgradePr
                 eap$tryHookAppliedFluxUpgradeChanges();
             }
         } catch (Throwable t) {
-            ExtendedAELogger.LOGGER.error("[样板供应器] 初始化兼容升级槽失败", t);
+            ExtendedAEPlus.LOGGER.error("[样板供应器] 初始化兼容升级槽失败", t);
         }
     }
 
@@ -93,7 +93,7 @@ public abstract class PatternProviderLogicCompatMixin implements CompatUpgradePr
             eap$compatHasInitialized = false;
             eap$compatInitializeChannelLink();
         } catch (Throwable t) {
-            ExtendedAELogger.LOGGER.error("[样板供应器] 兼容升级变更处理失败", t);
+            ExtendedAEPlus.LOGGER.error("[样板供应器] 兼容升级变更处理失败", t);
         }
     }
 
@@ -122,7 +122,7 @@ public abstract class PatternProviderLogicCompatMixin implements CompatUpgradePr
                 this.eap$compatUpgrades.writeToNBT(tag, "compat_upgrades", registries);
             }
         } catch (Throwable t) {
-            ExtendedAELogger.LOGGER.error("[样板供应器] 保存兼容升级失败", t);
+            ExtendedAEPlus.LOGGER.error("[样板供应器] 保存兼容升级失败", t);
         }
     }
 
@@ -137,7 +137,7 @@ public abstract class PatternProviderLogicCompatMixin implements CompatUpgradePr
             eap$compatHasInitialized = false;
             eap$compatInitializeChannelLink();
         } catch (Throwable t) {
-            ExtendedAELogger.LOGGER.error("[样板供应器] 读取兼容升级失败", t);
+            ExtendedAEPlus.LOGGER.error("[样板供应器] 读取兼容升级失败", t);
         }
     }
 
@@ -150,7 +150,7 @@ public abstract class PatternProviderLogicCompatMixin implements CompatUpgradePr
                 }
             }
         } catch (Throwable t) {
-            ExtendedAELogger.LOGGER.error("[样板供应器] 掉落兼容升级失败", t);
+            ExtendedAEPlus.LOGGER.error("[样板供应器] 掉落兼容升级失败", t);
         }
     }
 
@@ -161,7 +161,7 @@ public abstract class PatternProviderLogicCompatMixin implements CompatUpgradePr
                 this.eap$compatUpgrades.clear();
             }
         } catch (Throwable t) {
-            ExtendedAELogger.LOGGER.error("[样板供应器] 清理兼容升级失败", t);
+            ExtendedAEPlus.LOGGER.error("[样板供应器] 清理兼容升级失败", t);
         }
     }
 
@@ -176,7 +176,7 @@ public abstract class PatternProviderLogicCompatMixin implements CompatUpgradePr
                 try { grid.getTickManager().wakeDevice(node); } catch (Throwable ignored) {}
             });
         } catch (Throwable t) {
-            ExtendedAELogger.LOGGER.error("[样板供应器] 主节点状态变更处理失败", t);
+            ExtendedAEPlus.LOGGER.error("[样板供应器] 主节点状态变更处理失败", t);
         }
     }
 
@@ -217,11 +217,11 @@ public abstract class PatternProviderLogicCompatMixin implements CompatUpgradePr
                     upgrades = eap$getAppliedFluxUpgrades();
                     if (upgrades != null) {
                     } else {
-                        ExtendedAELogger.LOGGER.warn("[样板供应器] 无法获取 appflux 升级槽，回退到兼容槽");
+                        ExtendedAEPlus.LOGGER.warn("[样板供应器] 无法获取 appflux 升级槽，回退到兼容槽");
                         upgrades = this.eap$compatUpgrades;
                     }
                 } catch (Throwable t) {
-                    ExtendedAELogger.LOGGER.error("[样板供应器] 获取 appflux 升级槽失败，回退到兼容槽", t);
+                    ExtendedAEPlus.LOGGER.error("[样板供应器] 获取 appflux 升级槽失败，回退到兼容槽", t);
                     upgrades = this.eap$compatUpgrades;
                 }
             } else {
@@ -310,7 +310,7 @@ public abstract class PatternProviderLogicCompatMixin implements CompatUpgradePr
                 });
             }
         } catch (Throwable t) {
-            ExtendedAELogger.LOGGER.error("[样板供应器] 初始化频道链接失败", t);
+            ExtendedAEPlus.LOGGER.error("[样板供应器] 初始化频道链接失败", t);
         }
     }
 
@@ -446,7 +446,7 @@ public abstract class PatternProviderLogicCompatMixin implements CompatUpgradePr
             } else {
             }
         } catch (Throwable t) {
-            ExtendedAELogger.LOGGER.error("[样板供应器] 获取AppliedFlux升级槽时出错", t);
+            ExtendedAEPlus.LOGGER.error("[样板供应器] 获取AppliedFlux升级槽时出错", t);
         }
         return null;
     }

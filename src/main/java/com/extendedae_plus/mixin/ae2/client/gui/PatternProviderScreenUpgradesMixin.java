@@ -15,6 +15,7 @@ import appeng.helpers.patternprovider.PatternProviderLogicHost;
 import appeng.menu.AEBaseMenu;
 import appeng.menu.SlotSemantics;
 import appeng.menu.implementations.PatternProviderMenu;
+import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.compat.AppliedFluxCompat;
 import com.extendedae_plus.compat.UpgradeSlotCompat;
 import com.extendedae_plus.helper.IStyleAccessor;
@@ -58,7 +59,7 @@ public abstract class PatternProviderScreenUpgradesMixin<C extends PatternProvid
                 // 尝试添加升级面板
                 this.widgets.add("upgrades", new UpgradesPanel(menu.getSlots(SlotSemantics.UPGRADE), this::eap$getCompatibleUpgrades));
             } catch (IllegalStateException e) {
-                com.extendedae_plus.util.ExtendedAELogger.LOGGER.warn("[样板供应器][界面] 升级面板已存在，跳过添加: {}", e.getMessage());
+                ExtendedAEPlus.LOGGER.warn("[样板供应器][界面] 升级面板已存在，跳过添加: {}", e.getMessage());
                 return; // 如果升级面板已存在，不继续添加其他内容
             }
             
@@ -81,7 +82,7 @@ public abstract class PatternProviderScreenUpgradesMixin<C extends PatternProvid
                 try {
                     this.widgets.add("toolbox", new ToolboxPanel(style, upg.eap$getToolbox().getName()));
                 } catch (IllegalStateException e) {
-                    com.extendedae_plus.util.ExtendedAELogger.LOGGER.warn("[样板供应器][界面] 工具箱面板已存在，跳过添加: {}", e.getMessage());
+                    ExtendedAEPlus.LOGGER.warn("[样板供应器][界面] 工具箱面板已存在，跳过添加: {}", e.getMessage());
                 }
             }
             

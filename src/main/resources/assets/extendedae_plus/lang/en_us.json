@@ -38,8 +38,9 @@
   "tooltip.extendedae_plus.entity_speed_card.multiplier": "Multiplier: %s",
   "tooltip.extendedae_plus.entity_speed_card.max": "Maximum Effect: %s Times",
   "tooltip.extendedae_plus.encode_button.upload_pattern": "\n§a[Ctrl] §7Upload patterns",
+  "tooltip.bom.extendedae_plus.help": "\n---------§aExtendedAE Plus§r---------\nHold §6[Ctrl]§r and Right click a node,\nto encode & upload a pattern automatically",
 
-  "block.extendedae_plus.wireless_transceiver": "Wireless Transceiver",
+    "block.extendedae_plus.wireless_transceiver": "Wireless Transceiver",
   "block.extendedae_plus.4x_crafting_accelerator": "4x Crafting Accelerator",
   "block.extendedae_plus.16x_crafting_accelerator": "16x Crafting Accelerator",
   "block.extendedae_plus.64x_crafting_accelerator": "64x Crafting Accelerator",

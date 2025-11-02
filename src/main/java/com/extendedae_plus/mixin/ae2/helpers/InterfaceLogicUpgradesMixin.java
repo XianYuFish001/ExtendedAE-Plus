@@ -5,16 +5,12 @@ import appeng.api.upgrades.IUpgradeInventory;
 import appeng.api.upgrades.UpgradeInventories;
 import appeng.helpers.InterfaceLogic;
 import appeng.helpers.InterfaceLogicHost;
+import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.bridge.CompatUpgradeProvider;
 import com.extendedae_plus.compat.UpgradeSlotCompat;
-import net.neoforged.fml.ModList;
-import com.extendedae_plus.util.ExtendedAELogger;
 import net.minecraft.world.item.Item;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Mutable;
-import org.spongepowered.asm.mixin.Unique;
+import net.neoforged.fml.ModList;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -75,7 +71,7 @@ public abstract class InterfaceLogicUpgradesMixin implements CompatUpgradeProvid
             method.setAccessible(true);
             method.invoke(this);
         } catch (Exception e) {
-            ExtendedAELogger.LOGGER.error("[ME接口] 调用onUpgradesChanged失败", e);
+            ExtendedAEPlus.LOGGER.error("[ME接口] 调用onUpgradesChanged失败", e);
         }
     }
 
