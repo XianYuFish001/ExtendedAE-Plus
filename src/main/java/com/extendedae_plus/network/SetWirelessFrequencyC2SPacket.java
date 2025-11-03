@@ -1,7 +1,7 @@
 package com.extendedae_plus.network;
 
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.content.wireless.WirelessTransceiverBlockEntity;
+import com.extendedae_plus.common.block.wirelessTransceiver.WirelessTransceiverBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;

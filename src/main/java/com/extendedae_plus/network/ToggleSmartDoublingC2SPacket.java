@@ -2,9 +2,9 @@ package com.extendedae_plus.network;
 
 import appeng.menu.implementations.PatternProviderMenu;
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.helper.SmartDoublingHolder;
-import com.extendedae_plus.mixin.advancedae.accessor.AdvPatternProviderMenuAdvancedAccessor;
-import com.extendedae_plus.mixin.ae2.accessor.PatternProviderMenuAdvancedAccessor;
+import com.extendedae_plus.mixin.core.advancedae.accessor.AdvPatternProviderMenuAdvancedAccessor;
+import com.extendedae_plus.mixin.core.ae2.accessor.PatternProviderMenuAdvancedAccessor;
+import com.extendedae_plus.mixin.helper.SmartDoublingHolder;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;

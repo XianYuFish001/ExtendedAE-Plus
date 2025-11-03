@@ -1,6 +1,6 @@
 package com.extendedae_plus.integration.RecipeViewer.jei;
 
-import com.extendedae_plus.mixin.recipeViewer.jei.accessor.AccessorBookmarkOverlay;
+import com.extendedae_plus.mixin.core.recipeViewer.jei.accessor.AccessorBookmarkOverlay;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.ingredients.IIngredientType;
 import mezz.jei.api.ingredients.ITypedIngredient;

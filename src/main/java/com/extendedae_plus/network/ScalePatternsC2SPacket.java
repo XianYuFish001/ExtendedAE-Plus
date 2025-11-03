@@ -3,7 +3,7 @@ package com.extendedae_plus.network;
 import appeng.helpers.patternprovider.PatternProviderLogic;
 import appeng.menu.implementations.PatternProviderMenu;
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.mixin.ae2.accessor.PatternProviderMenuAdvancedAccessor;
+import com.extendedae_plus.mixin.core.ae2.accessor.PatternProviderMenuAdvancedAccessor;
 import com.extendedae_plus.util.PatternProviderDataUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;

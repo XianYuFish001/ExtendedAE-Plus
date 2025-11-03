@@ -1,7 +1,7 @@
 package com.extendedae_plus.integration.jade;
 
-import com.extendedae_plus.content.wireless.WirelessTransceiverBlock;
-import com.extendedae_plus.content.wireless.WirelessTransceiverBlockEntity;
+import com.extendedae_plus.common.block.wirelessTransceiver.WirelessTransceiverBlock;
+import com.extendedae_plus.common.block.wirelessTransceiver.WirelessTransceiverBlockEntity;
 import snownee.jade.api.IWailaClientRegistration;
 import snownee.jade.api.IWailaCommonRegistration;
 import snownee.jade.api.IWailaPlugin;

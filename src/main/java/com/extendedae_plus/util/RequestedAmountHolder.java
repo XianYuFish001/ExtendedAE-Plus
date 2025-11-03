@@ -9,9 +9,6 @@ import java.util.Deque;
 public final class RequestedAmountHolder {
     private static final ThreadLocal<Deque<Long>> HOLDER = ThreadLocal.withInitial(ArrayDeque::new);
 
-    private RequestedAmountHolder() {
-    }
-
     /**
      * Push a requested amount onto the thread-local stack.
      */

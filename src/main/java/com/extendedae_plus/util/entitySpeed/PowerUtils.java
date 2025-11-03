@@ -1,8 +1,8 @@
 package com.extendedae_plus.util.entitySpeed;
 
 import appeng.api.upgrades.IUpgradeInventory;
-import com.extendedae_plus.ae.definitions.upgrades.EntitySpeedCardItem;
-import com.extendedae_plus.config.EAEPConfig;
+import com.extendedae_plus.EAEPConfig;
+import com.extendedae_plus.common.item.EntitySpeedCardItem;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;

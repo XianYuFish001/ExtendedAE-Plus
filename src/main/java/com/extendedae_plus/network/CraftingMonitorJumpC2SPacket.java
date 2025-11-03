@@ -14,7 +14,7 @@ import appeng.helpers.patternprovider.PatternProviderLogicHost;
 import appeng.me.service.CraftingService;
 import appeng.menu.me.crafting.CraftingCPUMenu;
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.mixin.ae2.accessor.PatternProviderLogicAccessor;
+import com.extendedae_plus.mixin.core.ae2.accessor.PatternProviderLogicAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.RegistryFriendlyByteBuf;

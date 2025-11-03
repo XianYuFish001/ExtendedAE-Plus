@@ -10,6 +10,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Set;
 
@@ -17,9 +18,7 @@ import java.util.Set;
 /**
  * GUI工具类，提供样板获取、绘制等通用功能
  */
-public class GuiUtil {
-    private GuiUtil() {throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");}
-
+public final class GuiUtil {
     /**
      * 从样板中获取输出数量文本
      *
@@ -27,38 +26,51 @@ public class GuiUtil {
      * @return 格式化后的数量文本
      */
     public static String getPatternOutputText(ItemStack pattern) {
-        if (pattern.isEmpty()) {
-            return "";
-        }
+        if (pattern.isEmpty()) return "";
 
         var details = PatternDetailsHelper.decodePattern(pattern, Minecraft.getInstance().level);
-        if (details == null) {
-            return "";
-        }
-        java.util.List<GenericStack> outputs = details.getOutputs();
-        if (outputs == null || outputs.isEmpty()) {
-            return "";
-        }
+        if (details == null) return "";
+
+        List<GenericStack> outputs = details.getOutputs();
+        if (outputs == null || outputs.isEmpty()) return "";
+
         GenericStack out = outputs.getFirst();
         long amount = out.amount();
         long perUnit = out.what().getAmountPerUnit();
-        if (amount <= 0 || perUnit <= 0) {
-            return "";
-        }
+        if (amount <= 0 || perUnit <= 0) return "";
 
         // 计算实际单位数量，支持小数
         double units = (double) amount / perUnit;
-        if (units <= 0) {
-            return "";
+        if (units <= 0) return "";
+
+        return formatNumberWithDecimal(units) + (perUnit > 1 ? "B" : "");
+    }
+
+    /**
+     * 格式化带小数的数字，支持流体等需要显示小数的场景
+     * @param value 小数值
+     * @return 格式化后的字符串
+     */
+    public static String formatNumberWithDecimal(double value) {
+        if (value < 1000) {
+            DecimalFormat smallDf = new DecimalFormat("#.##");
+            // 小于1000时，若是整数则显示整数，否则显示最多两位小数
+            if (value == (long) value) {
+                return String.valueOf((long) value);
+            } else {
+                return smallDf.format(value);
+            }
         }
 
-        // 自动判断是否为流体，避免重复后缀
-        String autoSuffix = "";
-        if (perUnit > 1) {
-            // 如果每单位数量大于1，说明是流体（如1000mB = 1B）
-            autoSuffix = "B";
+        String[] preFixes = new String[]{"k", "M", "G", "T", "P", "E", "Z", "Y"};
+        String level = "";
+        for (int offset = 0; value >= 1000.0 && offset < preFixes.length; ++offset) {
+            value /= 1000.0;
+            level = preFixes[offset];
         }
-        return NumberFormatUtil.formatNumberWithDecimal(units) + autoSuffix;
+
+        DecimalFormat df = new DecimalFormat("#.##");
+        return df.format(value) + level;
     }
 
     /**

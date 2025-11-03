@@ -1,7 +1,7 @@
 package com.extendedae_plus.integration.RecipeViewer.jei;
 
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.ae.definitions.upgrades.EntitySpeedCardItem;
+import com.extendedae_plus.common.item.EntitySpeedCardItem;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaTypes;
@@ -34,7 +34,7 @@ public class ModJeiPlugin implements IModPlugin {
         // Register NBT-based subtype interpreter so JEI treats different multipliers as distinct items
         registration.registerSubtypeInterpreter(
                 VanillaTypes.ITEM_STACK,
-                com.extendedae_plus.init.ModItems.ENTITY_SPEED_CARD.get(),
+                com.extendedae_plus.common.init.ModItems.ENTITY_SPEED_CARD.get(),
                 new ISubtypeInterpreter<>() {
                     @Override
                     public @NotNull Object getSubtypeData(@NotNull ItemStack ingredient, @NotNull UidContext context) {

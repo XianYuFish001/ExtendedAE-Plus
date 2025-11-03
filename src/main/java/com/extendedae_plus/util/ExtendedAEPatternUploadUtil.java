@@ -15,8 +15,8 @@ import appeng.menu.implementations.PatternAccessTermMenu;
 import appeng.menu.me.items.PatternEncodingTermMenu;
 import appeng.util.inv.FilteredInternalInventory;
 import appeng.util.inv.filter.IAEItemFilter;
-import com.extendedae_plus.config.EAEPConfig;
-import com.extendedae_plus.mixin.ae2.accessor.PatternEncodingTermMenuAccessor;
+import com.extendedae_plus.EAEPConfig;
+import com.extendedae_plus.mixin.core.ae2.accessor.PatternEncodingTermMenuAccessor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -1063,7 +1063,7 @@ public class ExtendedAEPatternUploadUtil {
             var it = any.getCluster().getBlockEntities();
             while (it.hasNext()) {
                 var te = it.next();
-                if (te instanceof com.extendedae_plus.content.matrix.UploadCoreBlockEntity) {
+                if (te instanceof com.extendedae_plus.common.block.uploadCore.UploadCoreBlockEntity) {
                     cores++;
                 }
             }

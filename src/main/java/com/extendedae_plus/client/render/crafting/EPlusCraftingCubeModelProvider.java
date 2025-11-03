@@ -3,7 +3,7 @@ package com.extendedae_plus.client.render.crafting;
 import appeng.client.render.crafting.AbstractCraftingUnitModelProvider;
 import appeng.client.render.crafting.LightBakedModel;
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.content.crafting.EPlusCraftingUnitType;
+import com.extendedae_plus.common.block.EAEPCraftingUnitType;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -23,7 +23,7 @@ import java.util.function.Function;
  * 形成态光照模型。
  */
 public class EPlusCraftingCubeModelProvider
-        extends AbstractCraftingUnitModelProvider<EPlusCraftingUnitType> {
+        extends AbstractCraftingUnitModelProvider<EAEPCraftingUnitType> {
 
     public static final ChunkRenderTypeSet CUTOUT = ChunkRenderTypeSet.of(RenderType.cutout());
     private static final List<Material> MATERIALS = new ArrayList<>();
@@ -46,7 +46,7 @@ public class EPlusCraftingCubeModelProvider
     protected static final Material ACCELERATOR_1024X_LIGHT = texture(
             "1024x_accelerator_light");
 
-    public EPlusCraftingCubeModelProvider(EPlusCraftingUnitType type) {
+    public EPlusCraftingCubeModelProvider(EAEPCraftingUnitType type) {
         super(type);
     }
 

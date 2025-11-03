@@ -1,8 +1,8 @@
 {
     "required": true,
-    "package": "com.extendedae_plus.mixin",
+    "package": "com.extendedae_plus.mixin.core",
     "compatibilityLevel": "JAVA_21",
-    "plugin": "com.extendedae_plus.mixin.ExtendedAEPlusMixinPlugin",
+    "plugin": "com.extendedae_plus.mixin.core.ExtendedAEPlusMixinPlugin",
     "mixins": [
         "MixinPlayer",
         "advancedae.AdvPatternProviderLogicContainsRedirectMixin",

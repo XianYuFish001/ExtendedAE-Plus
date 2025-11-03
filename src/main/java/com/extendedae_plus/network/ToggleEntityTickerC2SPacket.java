@@ -1,8 +1,8 @@
 package com.extendedae_plus.network;
 
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.ae.menu.EntitySpeedTickerMenu;
-import com.extendedae_plus.ae.parts.EntitySpeedTickerPart;
+import com.extendedae_plus.common.menu.EntitySpeedTickerMenu;
+import com.extendedae_plus.common.part.EntitySpeedTickerPart;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;

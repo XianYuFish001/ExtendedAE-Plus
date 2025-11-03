@@ -7,9 +7,8 @@ import appeng.block.AEBaseEntityBlock;
 import appeng.blockentity.crafting.CraftingBlockEntity;
 import appeng.items.parts.PartModelsHelper;
 import appeng.menu.locator.MenuLocators;
-import com.extendedae_plus.ae.api.storage.InfinityBigIntegerCellHandler;
-import com.extendedae_plus.config.EAEPConfig;
-import com.extendedae_plus.init.*;
+import com.extendedae_plus.common.init.*;
+import com.extendedae_plus.common.item.infinityBigIntegerCell.InfinityBigIntegerCellHandler;
 import com.extendedae_plus.util.CuriosItemLocator;
 import com.extendedae_plus.util.storage.InfinityStorageManager;
 import com.mojang.logging.LogUtils;
@@ -100,7 +99,7 @@ public class ExtendedAEPlus {
 
                 // 绑定装配矩阵上传核心方块实体类型，避免 blockEntityClass 为 null 的问题
                 ModBlocks.ASSEMBLER_MATRIX_UPLOAD_CORE.get().setBlockEntity(
-                    com.extendedae_plus.content.matrix.UploadCoreBlockEntity.class,
+                    com.extendedae_plus.common.block.uploadCore.UploadCoreBlockEntity.class,
                     ModBlockEntities.UPLOAD_CORE_BE.get(),
                     null,
                     null

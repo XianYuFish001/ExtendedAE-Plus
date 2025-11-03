@@ -6,8 +6,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class ClientAdvancedBlockingState {
     private static final Map<String, Boolean> states = new ConcurrentHashMap<>();
 
-    private ClientAdvancedBlockingState() {}
-
     public static String key(String dimension, long blockPosLong) {
         return dimension + "@" + blockPosLong;
     }
