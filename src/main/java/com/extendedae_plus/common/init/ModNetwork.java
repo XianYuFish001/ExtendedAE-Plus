@@ -2,10 +2,13 @@ package com.extendedae_plus.common.init;
 
 import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.network.*;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 
+@EventBusSubscriber(modid = ExtendedAEPlus.MODID)
 public class ModNetwork {
-    // 在 Mod 构造中通过 modEventBus.addListener(ModNetwork::registerPayloadHandlers) 注册
+    @SubscribeEvent
     public static void registerPayloadHandlers(final RegisterPayloadHandlersEvent event) {
         var registrar = event.registrar(ExtendedAEPlus.MODID);
         registrar.playToServer(ToggleEntityTickerC2SPacket.TYPE, ToggleEntityTickerC2SPacket.STREAM_CODEC, ToggleEntityTickerC2SPacket::handle);

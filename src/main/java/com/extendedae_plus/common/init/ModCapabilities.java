@@ -2,14 +2,17 @@ package com.extendedae_plus.common.init;
 
 import appeng.api.AECapabilities;
 import appeng.api.networking.IInWorldGridNodeHost;
+import com.extendedae_plus.ExtendedAEPlus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
 /**
  * 注册 AE2 能力给本模组的方块实体，确保 AE 电缆能识别并连接到我们的 In-World Grid Node。
  */
+@EventBusSubscriber(modid = ExtendedAEPlus.MODID)
 public final class ModCapabilities {
-    private ModCapabilities() {}
-
+    @SubscribeEvent
     public static void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
         // 为实现了 IInWorldGridNodeHost 的自定义方块实体注册 AE2 的 IN_WORLD_GRID_NODE_HOST 能力
         event.registerBlockEntity(

@@ -1,7 +1,7 @@
 package com.extendedae_plus.network;
 
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.util.ExtendedAEPatternUploadUtil;
+import com.extendedae_plus.util.PatternUploadUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -40,7 +40,7 @@ public class UploadInventoryPatternToProviderC2SPacket implements CustomPacketPa
     public static void handle(final UploadInventoryPatternToProviderC2SPacket msg, final IPayloadContext ctx) {
         ctx.enqueueWork(() -> {
             if (!(ctx.player() instanceof ServerPlayer player)) return;
-            ExtendedAEPatternUploadUtil.uploadPatternToProvider(player, msg.playerSlotIndex, msg.providerId);
+            PatternUploadUtil.uploadPatternToProvider(player, msg.playerSlotIndex, msg.providerId);
         });
     }
 }

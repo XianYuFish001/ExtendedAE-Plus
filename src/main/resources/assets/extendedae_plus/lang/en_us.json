@@ -128,5 +128,7 @@
   
   "group.pattern_provider.name": "Pattern Provider",
   "group.storage.name": "Storage Bus",
-  "group.entity_ticker.name": "Entity Ticker"
+  "group.entity_ticker.name": "Entity Ticker",
+
+  "keyword_group.extendedae_plus.workstations": "§6KeywordGroup {§rRecipe: %s§6}"
 }

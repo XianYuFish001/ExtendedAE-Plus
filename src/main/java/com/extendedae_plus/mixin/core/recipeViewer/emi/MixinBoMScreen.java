@@ -5,7 +5,7 @@ import appeng.menu.me.items.PatternEncodingTermMenu;
 import com.extendedae_plus.integration.RecipeViewer.emi.HandlerBoMRecipes;
 import com.extendedae_plus.integration.RecipeViewer.emi.PatternFillingHelper;
 import com.extendedae_plus.network.RequestUploadingC2SPacket;
-import com.extendedae_plus.util.ExtendedAEPatternUploadUtil;
+import com.extendedae_plus.util.PatternAliasing;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.bom.BoM;
 import dev.emi.emi.bom.MaterialNode;
@@ -75,7 +75,7 @@ public abstract class MixinBoMScreen {
 
                             menu.encode();
 
-                            ExtendedAEPatternUploadUtil.tryCollectKeywords(node.recipe);
+                            PatternAliasing.tryCollectKeywords(node.recipe);
                             PacketDistributor.sendToServer(RequestUploadingC2SPacket.INSTANCE);
                         }
                         Minecraft.getInstance().player.playSound(SoundEvents.UI_BUTTON_CLICK.value());

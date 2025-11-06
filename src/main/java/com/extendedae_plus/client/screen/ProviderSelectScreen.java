@@ -1,7 +1,7 @@
 package com.extendedae_plus.client.screen;
 
 import com.extendedae_plus.network.UploadEncodedPatternToProviderC2SPacket;
-import com.extendedae_plus.util.ExtendedAEPatternUploadUtil;
+import com.extendedae_plus.util.PatternAliasing;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -10,8 +10,12 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.sounds.SoundEvents;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 简单的供应器选择弹窗。
@@ -42,8 +46,8 @@ public class ProviderSelectScreen extends Screen {
     private EditBox searchBox;
     // 中文名输入框（用于添加映射）
     private EditBox aliasInput;
-    private String selectedQuery = "";
-    private List<String> query = new ArrayList<>();
+    private PatternAliasing.KeywordGroup selectedQuery = PatternAliasing.KeywordGroup.EMPTY;
+    private List<PatternAliasing.KeywordGroup> query = new ArrayList<>();
     private boolean needsRefresh = false;
 
     private int page = 0;
@@ -60,19 +64,15 @@ public class ProviderSelectScreen extends Screen {
         this.emptySlots = emptySlots;
         // 如果有来自 JEI 的最近处理名称，则作为初始查询
         try {
-            List<String> recent = ExtendedAEPatternUploadUtil.recipeKeywords;
+            var recent = PatternAliasing.recipeKeywords;
             if (recent != null && !recent.isEmpty()) {
-                this.query = new ArrayList<>();
-                recent.forEach(q -> {
-                    String alias = ExtendedAEPatternUploadUtil.findMapping(q);
-                    if (alias != null) query.addFirst(alias);
-                    else query.addLast(q);
-                });
+                this.query = new ArrayList<>(recent);
                 this.selectedQuery = query.getFirst();
-                // 用后即清空，避免污染下次
-                ExtendedAEPatternUploadUtil.recipeKeywords.clear();
+
+                PatternAliasing.recipeKeywords.clear();
             }
-        } catch (Throwable ignored) {}
+        } catch (Throwable ignored) {
+        }
         buildGroups();
         applyFilter();
     }
@@ -94,24 +94,24 @@ public class ProviderSelectScreen extends Screen {
             searchBox.setY(startY - 25);
             searchBox.setWidth(240);
         }
-        searchBox.setValue(selectedQuery);
+        searchBox.setValue(selectedQuery.getDescription().getString());
 
         // 为多个候选的情况添加Tooltip指示
         if (query.size() > 1) {
             MutableComponent candidateQuery = Component.literal("候选关键词");
             query.forEach(q -> {
-                if (selectedQuery.equalsIgnoreCase(q)) candidateQuery
-                        .append(Component.literal("\n> ").withStyle(ChatFormatting.GREEN))
-                        .append(Component.literal(q).withStyle(ChatFormatting.BOLD));
-                else candidateQuery.append("\n" +q);
+                if (q.equals(selectedQuery)) candidateQuery
+                        .append(Component.literal("\n→ ").withStyle(ChatFormatting.GREEN))
+                        .append(q.getDescription());
+                else candidateQuery.append("\n").append(q.getDescription().copy().withStyle(ChatFormatting.GRAY));
             });
             searchBox.setTooltip(Tooltip.create(candidateQuery));
         }
 
         searchBox.setResponder(text -> {
             // 只有当输入真正发生变化时，才重置页码与过滤
-            if (Objects.equals(text, selectedQuery)) return;
-            selectedQuery = text;
+            if (text.equals(selectedQuery.getDescription().getString())) return;
+            selectedQuery = new PatternAliasing.KeywordGroup(text);
             // 切换候选词不触发, 手动输入时重置query
             query.clear();
             page = 0;
@@ -198,7 +198,7 @@ public class ProviderSelectScreen extends Screen {
 
     private void reloadMapping() {
         try {
-            com.extendedae_plus.util.ExtendedAEPatternUploadUtil.loadAliases();
+            PatternAliasing.loadAliases();
             var player = Minecraft.getInstance().player;
             if (player != null) {
                 player.sendSystemMessage(Component.literal("ExtendedAE Plus: 已重载映射表"));
@@ -282,57 +282,16 @@ public class ProviderSelectScreen extends Screen {
         fNames.clear();
         fTotalSlots.clear();
         fCount.clear();
-        String q = query == null ? "" : selectedQuery.trim();
         for (int i = 0; i < gIds.size(); i++) {
             String name = gNames.get(i);
             String i18nKey = gI18nKeys.get(i);
-            if (q.isEmpty() || i18nKeyMatches(i18nKey, q) || nameMatches(name, q)) {
+            if (selectedQuery.match(name, i18nKey)) {
                 fIds.add(gIds.get(i));
                 fNames.add(name);
                 fTotalSlots.add(gTotalSlots.get(i));
                 fCount.add(gCount.get(i));
             }
         }
-    }
-
-    // 优先使用 JEC 的拼音匹配，否则回退到大小写不敏感子串匹配
-    private static Boolean JEC_AVAILABLE = null;
-    private static java.lang.reflect.Method JEC_CONTAINS = null;
-
-    private static boolean nameMatches(String name, String key) {
-        if (name == null) return false;
-        if (key == null || key.isEmpty()) return true;
-        try {
-            if (JEC_AVAILABLE == null) {
-                try {
-                    Class<?> cls = Class.forName("me.towdium.jecharacters.utils.Match");
-                    // 使用 contains(CharSequence, CharSequence)
-                    JEC_CONTAINS = cls.getMethod("contains", CharSequence.class, CharSequence.class);
-                    JEC_AVAILABLE = true;
-                } catch (Throwable t) {
-                    JEC_AVAILABLE = false;
-                }
-            }
-            if (JEC_AVAILABLE && JEC_CONTAINS != null) {
-                Object r = JEC_CONTAINS.invoke(null, name, key);
-                if (r instanceof Boolean && (Boolean) r) return true;
-                // 再尝试大小写不敏感：双方转为小写重新匹配
-                String nL = name.toLowerCase();
-                String kL = key.toLowerCase();
-                Object r2 = JEC_CONTAINS.invoke(null, nL, kL);
-                if (r2 instanceof Boolean && (Boolean) r2) return true;
-            }
-        } catch (Throwable ignored) {
-            // 回退
-        }
-        // 默认大小写不敏感子串
-        return name.toLowerCase().contains(key.toLowerCase());
-    }
-
-    private static boolean i18nKeyMatches(String i18nKey, String key) {
-        if (i18nKey == null || i18nKey.isBlank()) return false;
-        if (key == null || key.isEmpty()) return true;
-        return i18nKey.toLowerCase().contains(key.toLowerCase());
     }
 
     @Override
@@ -355,20 +314,21 @@ public class ProviderSelectScreen extends Screen {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         // 右键点击搜索框区域时，清空搜索框内容并刷新
         if (button == 1 && this.searchBox != null) {
-            int x = this.searchBox.getX();
-            int y = this.searchBox.getY();
-            int w = this.searchBox.getWidth();
-            int h = this.searchBox.getHeight();
-            if (mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h) {
-                if (!this.searchBox.getValue().isEmpty()) {
-                    this.searchBox.setValue("");
+            if (this.searchBox.isMouseOver(mouseX, mouseY) || this.aliasInput.isMouseOver(mouseX, mouseY)) {
+                if (Minecraft.getInstance().player != null)
+                    Minecraft.getInstance().player.playSound(SoundEvents.UI_BUTTON_CLICK.value(), 0.1F, 1.0F);
+
+                if (this.searchBox.isMouseOver(mouseX, mouseY)) {
+                    if (!this.searchBox.getValue().isEmpty()) this.searchBox.setValue("");
+                    this.selectedQuery = PatternAliasing.KeywordGroup.EMPTY;
+                    this.query.clear();
+                    this.page = 0;
+                    searchBox.setTooltip(Tooltip.create(Component.empty()));
+                    applyFilter();
+                    this.needsRefresh = true;
+                } else {
+                    if (!this.aliasInput.getValue().isEmpty()) this.aliasInput.setValue("");
                 }
-                this.selectedQuery = "";
-                this.query.clear();
-                this.page = 0;
-                searchBox.setTooltip(Tooltip.create(Component.empty()));
-                applyFilter();
-                this.needsRefresh = true;
                 return true;
             }
         }
@@ -379,6 +339,8 @@ public class ProviderSelectScreen extends Screen {
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         if (query.size() <= 1 || this.searchBox == null)
             return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
+        if (Minecraft.getInstance().player != null)
+            Minecraft.getInstance().player.playSound(SoundEvents.UI_BUTTON_CLICK.value(), 0.1F, 1.0F);
 
         boolean direction = scrollY > 0;
         int boxX = this.searchBox.getX();
@@ -417,33 +379,37 @@ public class ProviderSelectScreen extends Screen {
     }
 
     private void addMappingFromUI() {
-        String key = query == null ? "" : selectedQuery.trim();
-        String val = aliasInput == null ? "" : aliasInput.getValue().trim();
+        String searchKey = selectedQuery.getDescription().getString();
+        String aliasToSet = aliasInput == null ? "" : aliasInput.getValue().trim();
         var player = Minecraft.getInstance().player;
-        if (key.isEmpty()) {
-            if (player != null) player.sendSystemMessage(Component.literal("请输入搜索关键字后再添加映射"));
+
+        if (selectedQuery.isEmpty()) {
+            if (player != null) player.displayClientMessage(Component.literal("请输入搜索关键字后再添加映射"), false);
             return;
         }
-        if (val.isEmpty()) {
-            if (player != null) player.sendSystemMessage(Component.literal("请输入待映射别名"));
+        if (aliasToSet.isEmpty()) {
+            if (player != null) player.displayClientMessage(Component.literal("请输入待映射别名"), false);
             return;
         }
-        boolean ok = ExtendedAEPatternUploadUtil.addOrUpdateAlias(key, val);
-        if (ok) {
-            if (player != null) player.sendSystemMessage(Component.literal("已添加/更新映射: " + key + " -> " + val));
+
+        if (PatternAliasing.addOrUpdateAlias(searchKey, aliasToSet)) {
+            if (player != null) player.displayClientMessage(
+                    Component.literal("已添加/更新映射: " + searchKey + " -> " + aliasToSet), false);
+
             // 将刚添加的中文名写入搜索框，作为当前查询
             this.query.remove(selectedQuery);
-            this.query.addFirst(val);
-            this.selectedQuery = val;
+
+            var newAliasGroup = new PatternAliasing.KeywordGroup(aliasToSet);
+            this.query.addFirst(newAliasGroup);
+            this.selectedQuery = newAliasGroup;
+
             if (this.searchBox != null)
-                this.searchBox.setValue(val);
-            // 更新本地过滤显示（若名称包含中文可被搜索）
+                this.searchBox.setValue(aliasToSet);
             applyFilter();
-            // 回到第一页以展示最新筛选结果
             page = 0;
             needsRefresh = true;
         } else {
-            if (player != null) player.sendSystemMessage(Component.literal("写入映射失败"));
+            if (player != null) player.displayClientMessage(Component.literal("写入映射失败"), false);
         }
     }
 
@@ -455,7 +421,7 @@ public class ProviderSelectScreen extends Screen {
             if (player != null) player.sendSystemMessage(Component.literal("请输入存在别名后再删除映射"));
             return;
         }
-        int removed = com.extendedae_plus.util.ExtendedAEPatternUploadUtil.removeAliases(val);
+        int removed = PatternAliasing.removeAliases(val);
         if (removed > 0) {
             if (player != null) player.sendSystemMessage(Component.literal("已删除 " + removed + " 条映射，别名: [" + val + "]"));
             applyFilter();

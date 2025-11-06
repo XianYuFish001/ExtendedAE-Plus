@@ -5,17 +5,17 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 import java.util.List;
 
 public final class EAEPConfig {
-    public static final ModConfigSpec COMMON_SPEC;
+    static final ModConfigSpec COMMON_SPEC;
     public static final ModConfigSpec.IntValue PAGE_MULTIPLIER;
     public static final ModConfigSpec.BooleanValue INDEPENDENT_UPLOADING_BUTTON;
 
-    public static final ModConfigSpec CLIENT_SPEC;
+    static final ModConfigSpec CLIENT_SPEC;
     public static final ModConfigSpec.BooleanValue SHOW_ENCODER_PATTERN_PLAYER;
     public static final ModConfigSpec.BooleanValue PATTERN_TERMINAL_SHOW_SLOTS_DEFAULT;
     public static final ModConfigSpec.BooleanValue PRIORITIZE_DISK_ENERGY;
     public static final ModConfigSpec.BooleanValue OVERRIDE_AE2WT_PICKING;
 
-    public static final ModConfigSpec SERVER_SPEC;
+    static final ModConfigSpec SERVER_SPEC;
     public static final ModConfigSpec.BooleanValue NEEDS_UPLOADING_CORE;
     public static final ModConfigSpec.BooleanValue PROVIDER_ROUND_ROBIN_ENABLE;
     public static final ModConfigSpec.IntValue SMART_SCALING_MAX_MULTIPLIER;
@@ -77,7 +77,7 @@ public final class EAEPConfig {
                 .defineInRange("smartScalingMaxMultiplier", 0, 0, 1048576);
         CRAFTING_PAUSE_THRESHOLD = serverBuilder
                 .comment(
-                        "值越大将减少AE构建合成计划过程中的 wait/notify 次数，提升吞吐但会降低调度响应性"
+                        "值越大则AE构建合成计划过程中的 wait/notify 次数越少，提升吞吐但会降低调度响应性"
                 )
                 .defineInRange("craftingPauseThreshold", 100000, 100, Integer.MAX_VALUE);
         serverBuilder.pop();

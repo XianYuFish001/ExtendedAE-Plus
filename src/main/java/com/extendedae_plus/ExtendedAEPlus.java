@@ -33,19 +33,17 @@ public class ExtendedAEPlus {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public ExtendedAEPlus(IEventBus modEventBus, ModContainer modContainer) {
+        NeoForge.EVENT_BUS.register(this);
+        NeoForge.EVENT_BUS.addListener(ExtendedAEPlus::onServerStarted);
+        NeoForge.EVENT_BUS.addListener(ExtendedAEPlus::onServerStopped);
+
         modEventBus.addListener(this::commonSetup);
-        modEventBus.addListener(ModNetwork::registerPayloadHandlers);
-        modEventBus.addListener(ModCapabilities::onRegisterCapabilities);
 
         ModBlocks.BLOCKS.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
         ModBlockEntities.BLOCK_ENTITY_TYPES.register(modEventBus);
         ModCreativeTabs.TABS.register(modEventBus);
         ModMenuTypes.MENUS.register(modEventBus);
-
-        NeoForge.EVENT_BUS.register(this);
-        NeoForge.EVENT_BUS.addListener(ExtendedAEPlus::onServerStarted);
-        NeoForge.EVENT_BUS.addListener(ExtendedAEPlus::onServerStopped);
 
         modContainer.registerConfig(ModConfig.Type.COMMON, EAEPConfig.COMMON_SPEC, "extendedae_plus/common.toml");
         modContainer.registerConfig(ModConfig.Type.CLIENT, EAEPConfig.CLIENT_SPEC, "extendedae_plus/client.toml");
