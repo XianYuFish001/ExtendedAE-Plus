@@ -2,7 +2,7 @@ package com.extendedae_plus.mixin.core.ae2.autopattern;
 
 import appeng.api.crafting.IPatternDetails;
 import appeng.me.service.CraftingService;
-import com.extendedae_plus.util.patternScaling.ScaledProcessingPattern;
+import com.extendedae_plus.common.impl.pattern.patternScaling.ScaledProcessingPattern;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;

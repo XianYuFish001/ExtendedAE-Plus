@@ -30,9 +30,9 @@ public final class EventScreenActions {
         if (Minecraft.getInstance().player == null) return;
         if (Minecraft.getInstance().screen == null) return;
 
-        if (event.getAction() != GLFW.GLFW_PRESS && isPulled) {
+        if (event.getAction() != GLFW.GLFW_PRESS) {
+            if (isPulled) event.setCanceled(true);
             isPulled = false;
-            event.setCanceled(true);
             return;
         }
 

@@ -9,7 +9,8 @@ import com.extendedae_plus.EAEPConfig;
 import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.client.render.Button.EAEActionItems;
 import com.extendedae_plus.client.render.Button.EAEPActionButton;
-import com.extendedae_plus.mixin.helper.ExPatternButtonsAccessor;
+import com.extendedae_plus.mixin.impl.bridge.ExPatternButtonsAccessor;
+import com.extendedae_plus.mixin.impl.bridge.ExPatternPageAccessor;
 import com.extendedae_plus.network.ScalePatternsC2SPacket;
 import com.glodblock.github.extendedae.client.button.ActionEPPButton;
 import com.glodblock.github.extendedae.client.gui.GuiExPatternProvider;
@@ -27,7 +28,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 @Mixin(value = GuiExPatternProvider.class, remap = false)
-public abstract class GuiExPatternProviderMixin extends PatternProviderScreen<ContainerExPatternProvider> implements ExPatternButtonsAccessor, com.extendedae_plus.mixin.helper.ExPatternPageAccessor {
+public abstract class GuiExPatternProviderMixin extends PatternProviderScreen<ContainerExPatternProvider> implements ExPatternButtonsAccessor, ExPatternPageAccessor {
 
     @Unique
     ScreenStyle eap$screenStyle;

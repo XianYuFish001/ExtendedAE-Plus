@@ -1,6 +1,6 @@
 package com.extendedae_plus.mixin.core;
 
-import com.extendedae_plus.util.BuiltInModelUtil;
+import com.extendedae_plus.client.RegistriesBuiltInModel;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class ModelBakeryMixin {
     @Inject(method = "getModel", at = @At("HEAD"), cancellable = true)
     private void extendedae_plus$getModelHook(ResourceLocation id, CallbackInfoReturnable<UnbakedModel> cir) {
-        var model = BuiltInModelUtil.getBuiltInModel(id);
+        var model = RegistriesBuiltInModel.getBuiltInModel(id);
         if (model != null) {
             cir.setReturnValue(model);
         }

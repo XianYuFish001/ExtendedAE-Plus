@@ -3,8 +3,8 @@ package com.extendedae_plus.network;
 import appeng.helpers.patternprovider.PatternProviderLogic;
 import appeng.menu.implementations.PatternProviderMenu;
 import com.extendedae_plus.ExtendedAEPlus;
+import com.extendedae_plus.common.impl.pattern.PatternProviderData;
 import com.extendedae_plus.mixin.core.ae2.accessor.PatternProviderMenuAdvancedAccessor;
-import com.extendedae_plus.util.PatternProviderDataUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -64,11 +64,11 @@ public class ScalePatternsC2SPacket implements CustomPacketPayload {
                     default -> { return; }
                 }
 
-                PatternProviderDataUtil.PatternScalingResult result;
+                PatternProviderData.PatternScalingResult result;
                 if (multiply) {
-                    result = PatternProviderDataUtil.multiplyPatternAmounts(logic, factor);
+                    result = PatternProviderData.multiplyPatternAmounts(logic, factor);
                 } else {
-                    result = PatternProviderDataUtil.dividePatternAmounts(logic, factor);
+                    result = PatternProviderData.dividePatternAmounts(logic, factor);
                 }
 
                 logic.saveChanges();

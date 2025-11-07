@@ -14,7 +14,7 @@ import appeng.client.gui.style.Text;
 import appeng.client.gui.style.TextAlignment;
 import appeng.menu.slot.AppEngSlot;
 import com.extendedae_plus.client.ClientPatternHighlightStore;
-import com.extendedae_plus.mixin.helper.ExPatternPageAccessor;
+import com.extendedae_plus.mixin.impl.bridge.ExPatternPageAccessor;
 import com.extendedae_plus.network.CraftingMonitorJumpC2SPacket;
 import com.extendedae_plus.network.CraftingMonitorOpenProviderC2SPacket;
 import com.extendedae_plus.util.GuiUtil;
@@ -318,4 +318,6 @@ public abstract class AEBaseScreenMixin {
             }
         } catch (Throwable ignored) {}
     }
+
+
 }

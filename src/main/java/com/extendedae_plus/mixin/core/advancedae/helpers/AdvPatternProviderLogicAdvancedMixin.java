@@ -5,7 +5,7 @@ import appeng.api.crafting.IPatternDetails.IInput;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
 import appeng.helpers.patternprovider.PatternProviderTarget;
-import com.extendedae_plus.mixin.helper.AdvancedBlockingHolder;
+import com.extendedae_plus.mixin.impl.bridge.AdvancedBlockingHolder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.pedroksl.advanced_ae.common.logic.AdvPatternProviderLogic;

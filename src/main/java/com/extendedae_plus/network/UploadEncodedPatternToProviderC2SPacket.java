@@ -2,7 +2,7 @@ package com.extendedae_plus.network;
 
 import appeng.menu.me.items.PatternEncodingTermMenu;
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.util.PatternUploadUtil;
+import com.extendedae_plus.common.impl.pattern.PatternUploader;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -39,10 +39,10 @@ public class UploadEncodedPatternToProviderC2SPacket implements CustomPacketPayl
             // 1) providerId >= 0: 访问终端 byId 模式
             // 2) providerId < 0:   索引模式（由列表回退路径生成），index = -1 - providerId
             if (msg.providerId >= 0) {
-                PatternUploadUtil.uploadFromEncodingMenuToProvider(player, menu, msg.providerId);
+                PatternUploader.uploadFromEncodingMenuToProvider(player, menu, msg.providerId);
             } else {
                 int index = (int) (-1L - msg.providerId);
-                PatternUploadUtil.uploadFromEncodingMenuToProviderByIndex(player, menu, index);
+                PatternUploader.uploadFromEncodingMenuToProviderByIndex(player, menu, index);
             }
         });
     }

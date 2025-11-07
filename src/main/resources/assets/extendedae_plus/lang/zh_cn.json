@@ -129,5 +129,6 @@
   "group.storage.name": "存储总线",
   "group.entity_ticker.name": "实体加速器",
 
-  "keyword_group.extendedae_plus.workstations": "§6关键词组 {§r配方: §l%s§6}"
+  "recipe_alias.extendedae_plus.keyword_group.workstations": "§6关键词组 {§r配方: §l%s§6}",
+  "recipe_alias.extendedae_plus.candidate_keywords": "候选关键词"
 }

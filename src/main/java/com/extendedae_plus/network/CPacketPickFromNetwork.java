@@ -7,7 +7,7 @@ import appeng.api.storage.MEStorage;
 import appeng.api.storage.StorageHelper;
 import appeng.me.helpers.PlayerSource;
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.util.WirelessTerminalLocator;
+import com.extendedae_plus.common.impl.menuLocator.WirelessTerminalLocator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.RegistryFriendlyByteBuf;

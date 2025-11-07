@@ -2,8 +2,8 @@ package com.extendedae_plus.mixin.core.advancedae.menu;
 
 import appeng.menu.AEBaseMenu;
 import appeng.menu.guisync.GuiSync;
-import com.extendedae_plus.mixin.helper.AdvancedBlockingHolder;
-import com.extendedae_plus.mixin.helper.PatternProviderMenuAdvancedSync;
+import com.extendedae_plus.mixin.impl.bridge.AdvancedBlockingHolder;
+import com.extendedae_plus.mixin.impl.bridge.PatternProviderMenuAdvancedSync;
 import net.pedroksl.advanced_ae.common.logic.AdvPatternProviderLogic;
 import net.pedroksl.advanced_ae.gui.advpatternprovider.AdvPatternProviderMenu;
 import org.spongepowered.asm.mixin.Final;

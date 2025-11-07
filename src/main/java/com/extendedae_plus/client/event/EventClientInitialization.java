@@ -3,6 +3,7 @@ package com.extendedae_plus.client.event;
 import appeng.client.render.crafting.CraftingCubeModel;
 import appeng.init.client.InitScreens;
 import com.extendedae_plus.ExtendedAEPlus;
+import com.extendedae_plus.client.RegistriesBuiltInModel;
 import com.extendedae_plus.client.render.crafting.EPlusCraftingCubeModelProvider;
 import com.extendedae_plus.client.screen.EntitySpeedTickerScreen;
 import com.extendedae_plus.client.screen.GlobalProviderModesScreen;
@@ -11,7 +12,6 @@ import com.extendedae_plus.common.init.ModItems;
 import com.extendedae_plus.common.init.ModMenuTypes;
 import com.extendedae_plus.common.item.EntitySpeedCardItem;
 import com.extendedae_plus.common.menu.EntitySpeedTickerMenu;
-import com.extendedae_plus.util.BuiltInModelUtil;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.neoforged.api.distmarker.Dist;
@@ -66,7 +66,7 @@ public final class EventClientInitialization {
     }
 
     private static void addCrafterModel(String location, EAEPCraftingUnitType type) {
-        BuiltInModelUtil.addBuiltInModel(
+        RegistriesBuiltInModel.addBuiltInModel(
                 ExtendedAEPlus.getLocation("block/crafting/" + location),
                 new CraftingCubeModel(new EPlusCraftingCubeModelProvider(type)));
     }

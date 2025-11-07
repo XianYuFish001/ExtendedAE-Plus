@@ -13,13 +13,15 @@ import appeng.menu.me.items.PatternEncodingTermMenu;
 import appeng.menu.slot.RestrictedInputSlot;
 import appeng.parts.encoding.EncodingMode;
 import com.extendedae_plus.EAEPConfig;
+import com.extendedae_plus.common.impl.pattern.PatternUploader;
 import com.extendedae_plus.mixin.core.ae2.accessor.MEStorageMenuAccessor;
-import com.extendedae_plus.mixin.helper.HelperCtrlPressed;
+import com.extendedae_plus.mixin.impl.bridge.BridgeCtrlPressed;
+import com.extendedae_plus.mixin.impl.bridge.BridgePlanToEncode;
 import com.extendedae_plus.network.CPacketEncodeFinished;
-import com.extendedae_plus.util.PatternUploadUtil;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.spongepowered.asm.mixin.Final;
@@ -33,7 +35,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Objects;
 
 @Mixin(PatternEncodingTermMenu.class)
-public abstract class PatternEncodingTermMenuMixin implements HelperCtrlPressed {
+public abstract class PatternEncodingTermMenuMixin implements BridgeCtrlPressed, BridgePlanToEncode {
     // 防止重复执行
     @Unique
     private boolean eap$blankAutoFilled = false;
@@ -42,12 +44,24 @@ public abstract class PatternEncodingTermMenuMixin implements HelperCtrlPressed 
     @Shadow
     @Final
     private RestrictedInputSlot encodedPatternSlot;
+
+    @Shadow
+    public abstract void encode();
+
     @Unique
-    public boolean eaep$isCtrlPressed = false;
+    private boolean eaep$isCtrlPressed = false;
+    @Unique
+    private boolean eaep$encodeActionDelayed = false;
+
 
     @Unique
     public void eaep$setCtrlPressed(boolean press) {
         eaep$isCtrlPressed = press;
+    }
+
+    @Unique
+    public void eaep$plan() {
+        this.eaep$encodeActionDelayed = true;
     }
 
     @Unique
@@ -182,8 +196,16 @@ public abstract class PatternEncodingTermMenuMixin implements HelperCtrlPressed 
             try {
                 if (self.getMode() == EncodingMode.PROCESSING)
                     PacketDistributor.sendToPlayer((ServerPlayer) self.getPlayer(), CPacketEncodeFinished.INSTANCE);
-                else PatternUploadUtil.uploadFromEncodingMenuToMatrix((ServerPlayer) self.getPlayer(), self);
+                else PatternUploader.uploadFromEncodingMenuToMatrix((ServerPlayer) self.getPlayer(), self);
             } catch (Throwable ignored) {}
         });
+    }
+
+    @Inject(method = "onSlotChange", at = @At("HEAD"))
+    private void executeDelay(Slot s, CallbackInfo ci) {
+        if (this.eaep$encodeActionDelayed) {
+            this.eaep$encodeActionDelayed = false;
+            this.encode();
+        }
     }
 }

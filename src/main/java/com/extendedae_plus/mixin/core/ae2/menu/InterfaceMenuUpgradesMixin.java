@@ -4,7 +4,7 @@ import appeng.helpers.InterfaceLogicHost;
 import appeng.menu.AEBaseMenu;
 import appeng.menu.ToolboxMenu;
 import appeng.menu.implementations.InterfaceMenu;
-import com.extendedae_plus.mixin.helper.IUpgradableMenu;
+import com.extendedae_plus.mixin.impl.bridge.IUpgradableMenu;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import org.spongepowered.asm.mixin.Mixin;

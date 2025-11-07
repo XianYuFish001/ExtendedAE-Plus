@@ -1,7 +1,7 @@
 package com.extendedae_plus.mixin.core.ae2;
 
 import appeng.crafting.pattern.AEProcessingPattern;
-import com.extendedae_plus.mixin.helper.SmartDoublingAwarePattern;
+import com.extendedae_plus.mixin.impl.bridge.SmartDoublingAwarePattern;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 

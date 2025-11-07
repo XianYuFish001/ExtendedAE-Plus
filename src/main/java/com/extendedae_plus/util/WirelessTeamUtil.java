@@ -39,7 +39,7 @@ public class WirelessTeamUtil {
         }
         
         try {
-            return getTeamUUID(level, playerUUID);
+            return getTeamUUID(playerUUID);
         } catch (Exception e) {
             // 如果FTBTeams API调用失败，回退到玩家UUID
             return playerUUID;
@@ -97,7 +97,7 @@ public class WirelessTeamUtil {
 
     // ==================== FTBTeams 集成（通过反射调用避免硬依赖）====================
 
-    private static UUID getTeamUUID(ServerLevel level, UUID playerUUID) {
+    private static UUID getTeamUUID(UUID playerUUID) {
         try {
             // 使用FTBTeams API
             var apiClass = Class.forName("dev.ftb.mods.ftbteams.api.FTBTeamsAPI");

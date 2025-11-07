@@ -11,8 +11,8 @@ import appeng.menu.locator.MenuLocators;
 import appeng.menu.me.crafting.CraftingCPUMenu;
 import appeng.parts.AEBasePart;
 import com.extendedae_plus.ExtendedAEPlus;
+import com.extendedae_plus.common.impl.pattern.PatternProviderData;
 import com.extendedae_plus.mixin.core.ae2.accessor.PatternProviderLogicAccessor;
-import com.extendedae_plus.util.PatternProviderDataUtil;
 import com.glodblock.github.extendedae.util.FCClientUtil;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
@@ -99,7 +99,7 @@ public class CraftingMonitorOpenProviderC2SPacket implements CustomPacketPayload
                         if (pbe == null) continue;
 
                         // 跳过未连接到网格或不活跃的 provider（使用 util 判断并传入当前 grid）
-                        if (!PatternProviderDataUtil.isProviderAvailable(ppl, grid)) continue;
+                        if (!PatternProviderData.isProviderAvailable(ppl, grid)) continue;
 
                         // 直接打开供应器自身的 UI（调用 Host 默认方法）
                         try {
@@ -116,7 +116,7 @@ public class CraftingMonitorOpenProviderC2SPacket implements CustomPacketPayload
 
 
                             // 先在该 provider 中定位 pattern 的槽位索引，以便计算页码（尽量早退出，按槽位逐个解码）
-                            int foundSlot = PatternProviderDataUtil.findSlotForPattern(ppl, pattern.getDefinition());
+                            int foundSlot = PatternProviderData.findSlotForPattern(ppl, pattern.getDefinition());
                             if (foundSlot >= 0) {
                                 int pageId = foundSlot / 36;
                                 if (pageId > 0) {

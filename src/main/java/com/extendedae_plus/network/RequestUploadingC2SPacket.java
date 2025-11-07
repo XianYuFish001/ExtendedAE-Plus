@@ -5,7 +5,7 @@ import appeng.menu.implementations.PatternAccessTermMenu;
 import appeng.menu.me.items.PatternEncodingTermMenu;
 import appeng.parts.encoding.EncodingMode;
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.util.PatternUploadUtil;
+import com.extendedae_plus.common.impl.pattern.PatternUploader;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -41,15 +41,15 @@ public class RequestUploadingC2SPacket implements CustomPacketPayload {
 
             if (encMenu.getMode() != EncodingMode.PROCESSING) {
                 try {
-                    PatternUploadUtil.uploadFromEncodingMenuToMatrix(player, encMenu);
+                    PatternUploader.uploadFromEncodingMenuToMatrix(player, encMenu);
                 } catch (Throwable ignored) {}
                 return;
             }
 
             // 优先：若玩家也打开了样板访问终端，则用 byId 方式（精确服务器ID）
-            PatternAccessTermMenu accessMenu = PatternUploadUtil.getPatternAccessMenu(player);
+            PatternAccessTermMenu accessMenu = PatternUploader.getPatternAccessMenu(player);
             if (accessMenu != null) {
-                List<Long> ids = PatternUploadUtil.getAllProviderIds(accessMenu);
+                List<Long> ids = PatternUploader.getAllProviderIds(accessMenu);
                 List<Long> filteredIds = new ArrayList<>();
                 List<String> names = new ArrayList<>();
                 List<String> i18nKeys = new ArrayList<>();
@@ -57,19 +57,19 @@ public class RequestUploadingC2SPacket implements CustomPacketPayload {
 
                 for (Long id : ids) {
                     if (id == null) continue;
-                    if (!PatternUploadUtil.isProviderAvailable(id, accessMenu)) continue;
-                    int empty = PatternUploadUtil.getAvailableSlots(id, accessMenu);
+                    if (!PatternUploader.isProviderAvailable(id, accessMenu)) continue;
+                    int empty = PatternUploader.getAvailableSlots(id, accessMenu);
                     if (empty <= 0) continue; // 只列出有空位的
                     filteredIds.add(id);
-                    names.add(PatternUploadUtil.getProviderDisplayName(id, accessMenu));
-                    i18nKeys.add(PatternUploadUtil.getProviderI18nName(id, accessMenu));
+                    names.add(PatternUploader.getProviderDisplayName(id, accessMenu));
+                    i18nKeys.add(PatternUploader.getProviderI18nName(id, accessMenu));
                     slots.add(empty);
                 }
 
                 player.connection.send(new ProvidersListS2CPacket(filteredIds, names, i18nKeys, slots));
             } else {
                 // 回退：基于编码终端所在网络枚举供应器，用“负数ID编码索引”：encodedId = -1 - index
-                List<PatternContainer> containers = PatternUploadUtil.listAvailableProvidersFromGrid(encMenu);
+                List<PatternContainer> containers = PatternUploader.listAvailableProvidersFromGrid(encMenu);
                 List<Long> idxIds = new ArrayList<>();
                 List<String> names = new ArrayList<>();
                 List<String> i18nKeys = new ArrayList<>();
@@ -77,12 +77,12 @@ public class RequestUploadingC2SPacket implements CustomPacketPayload {
                 for (int i = 0; i < containers.size(); i++) {
                     var c = containers.get(i);
                     if (c == null) continue;
-                    int empty = PatternUploadUtil.getAvailableSlots(c);
+                    int empty = PatternUploader.getAvailableSlots(c);
                     if (empty <= 0) continue;
                     long encodedId = -1L - i; // 约定：负数代表按索引
                     idxIds.add(encodedId);
-                    names.add(PatternUploadUtil.getProviderDisplayName(c));
-                    i18nKeys.add(PatternUploadUtil.getProviderI18nName(c));
+                    names.add(PatternUploader.getProviderDisplayName(c));
+                    i18nKeys.add(PatternUploader.getProviderI18nName(c));
                     slots.add(empty);
                 }
                 player.connection.send(new ProvidersListS2CPacket(idxIds, names, i18nKeys, slots));

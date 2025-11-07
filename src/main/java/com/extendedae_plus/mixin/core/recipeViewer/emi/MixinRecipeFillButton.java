@@ -1,6 +1,6 @@
 package com.extendedae_plus.mixin.core.recipeViewer.emi;
 
-import appeng.menu.me.items.PatternEncodingTermMenu;
+import com.extendedae_plus.mixin.impl.bridge.BridgePlanToEncode;
 import dev.emi.emi.api.widget.RecipeFillButtonWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -12,14 +12,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(RecipeFillButtonWidget.class)
 public class MixinRecipeFillButton {
+
     @Inject(method = "mouseClicked", at = @At("RETURN"))
-    private static void eaep$onMouseClicked(int mouseX, int mouseY, int button,
+    private void eaep$onMouseClicked(int mouseX, int mouseY, int button,
                                             CallbackInfoReturnable<Boolean> cir) {
         if (!cir.getReturnValue()) return;
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
-        if (!(player.containerMenu instanceof PatternEncodingTermMenu menu)) return;
+        if (!(player.containerMenu instanceof BridgePlanToEncode bridge)) return;
         if (!Screen.hasControlDown()) return;
-        menu.encode();
+        bridge.eaep$plan();
     }
 }

@@ -2,7 +2,7 @@ package com.extendedae_plus.common.item.infinityBigIntegerCell;
 
 import appeng.api.config.FuzzyMode;
 import appeng.api.storage.cells.ICellWorkbenchItem;
-import com.extendedae_plus.util.storage.InfinityConstants;
+import com.extendedae_plus.common.impl.storage.InfinityConstants;
 import com.google.common.base.Preconditions;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;

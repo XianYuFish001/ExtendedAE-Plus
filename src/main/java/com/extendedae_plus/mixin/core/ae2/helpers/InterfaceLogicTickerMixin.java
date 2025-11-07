@@ -1,7 +1,7 @@
 package com.extendedae_plus.mixin.core.ae2.helpers;
 
 import appeng.helpers.InterfaceLogic;
-import com.extendedae_plus.mixin.helper.InterfaceWirelessLinkBridge;
+import com.extendedae_plus.mixin.impl.bridge.InterfaceWirelessLinkBridge;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

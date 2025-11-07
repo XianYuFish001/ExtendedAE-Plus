@@ -6,7 +6,7 @@ import appeng.api.upgrades.UpgradeInventories;
 import appeng.helpers.InterfaceLogic;
 import appeng.helpers.InterfaceLogicHost;
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.mixin.helper.CompatUpgradeProvider;
+import com.extendedae_plus.mixin.impl.bridge.CompatUpgradeProvider;
 import net.minecraft.world.item.Item;
 import net.neoforged.fml.ModList;
 import org.spongepowered.asm.mixin.*;
