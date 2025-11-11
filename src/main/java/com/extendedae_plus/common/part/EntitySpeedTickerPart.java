@@ -12,6 +12,7 @@ import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartItem;
 import appeng.api.parts.IPartModel;
+import appeng.api.stacks.AEKey;
 import appeng.api.storage.MEStorage;
 import appeng.api.storage.StorageHelper;
 import appeng.api.upgrades.IUpgradeableObject;
@@ -28,8 +29,6 @@ import com.extendedae_plus.common.impl.entitySpeed.PowerUtils;
 import com.extendedae_plus.common.init.ModItems;
 import com.extendedae_plus.common.init.ModMenuTypes;
 import com.extendedae_plus.common.menu.EntitySpeedTickerMenu;
-import com.glodblock.github.appflux.common.me.key.FluxKey;
-import com.glodblock.github.appflux.common.me.key.type.EnergyType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -310,7 +309,10 @@ public class EntitySpeedTickerPart extends UpgradeablePart implements IGridTicka
 
     private boolean tryExtractFE(IEnergyService energyService, MEStorage storage, double requiredPower, IActionSource source) {
         try {
-            FluxKey feKey = FluxKey.of(EnergyType.FE);
+            var clazzFluxKey = Class.forName("com.glodblock.github.appflux.common.me.key.FluxKey");
+            var clazzEnergyType = Class.forName("com.glodblock.github.appflux.common.me.key.type.EnergyType");
+            AEKey feKey = (AEKey) clazzFluxKey.getMethod("of", clazzEnergyType)
+                    .invoke(null, clazzEnergyType.getField("FE").get(null));
 
             // 模拟提取 FE
             long feExtracted = StorageHelper.poweredExtraction(

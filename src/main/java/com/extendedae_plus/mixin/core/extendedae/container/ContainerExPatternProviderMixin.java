@@ -23,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 
 @Pseudo
-@Mixin(value = ContainerExPatternProvider.class, priority = 3000, remap = false)
+@Mixin(value = ContainerExPatternProvider.class, priority = 1100, remap = false)
 public abstract class ContainerExPatternProviderMixin extends PatternProviderMenu {
 
     // 使用高位唯一ID，避免与其他模组在同一类上的 @GuiSync 冲突

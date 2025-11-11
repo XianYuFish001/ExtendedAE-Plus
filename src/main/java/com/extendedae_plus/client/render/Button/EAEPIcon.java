@@ -5,12 +5,12 @@ import com.extendedae_plus.ExtendedAEPlus;
 import net.minecraft.resources.ResourceLocation;
 
 public enum EAEPIcon {
-    MULTIPLY5(0, 0),
-    DIVIDE5(16, 0),
-    MULTIPLY2(32, 0),
-    DIVIDE2(48, 0),
-    MULTIPLY10(0, 16),
-    DIVIDE10(16, 16);
+    MUL5(0, 0),
+    DIV5(16, 0),
+    MUL2(32, 0),
+    DIV2(48, 0),
+    MUL10(0, 16),
+    DIV10(16, 16);
 
     public final int x;
     public final int y;

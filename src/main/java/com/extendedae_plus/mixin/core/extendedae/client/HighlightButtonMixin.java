@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Objects;
 
-@Mixin(value = HighlightButton.class, priority = 1000)
+@Mixin(value = HighlightButton.class)
 public abstract class HighlightButtonMixin {
 	@Inject(method = "highlight", at = @At("TAIL"), remap = false)
 	private static void onHighlight(Button btn, CallbackInfo ci) {

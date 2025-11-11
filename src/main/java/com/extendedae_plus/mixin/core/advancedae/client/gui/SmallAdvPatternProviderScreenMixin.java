@@ -5,16 +5,17 @@ import appeng.api.config.YesNo;
 import appeng.client.gui.AEBaseScreen;
 import appeng.client.gui.style.ScreenStyle;
 import appeng.client.gui.widgets.SettingToggleButton;
-import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.mixin.impl.bridge.PatternProviderMenuAdvancedSync;
 import com.extendedae_plus.mixin.impl.bridge.PatternProviderMenuDoublingSync;
 import com.extendedae_plus.network.ToggleAdvancedBlockingC2SPacket;
 import com.extendedae_plus.network.ToggleSmartDoublingC2SPacket;
+import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.pedroksl.advanced_ae.client.gui.SmallAdvPatternProviderScreen;
 import net.pedroksl.advanced_ae.gui.advpatternprovider.SmallAdvPatternProviderMenu;
+import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -28,6 +29,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(SmallAdvPatternProviderScreen.class)
 public abstract class SmallAdvPatternProviderScreenMixin extends AEBaseScreen<SmallAdvPatternProviderMenu> {
+    @Unique
+    private static final Logger eaep$LOGGER = LogUtils.getLogger();
 
     @Unique
     private SettingToggleButton<YesNo> eap$AdvancedBlockingToggle;
@@ -53,7 +56,7 @@ public abstract class SmallAdvPatternProviderScreenMixin extends AEBaseScreen<Sm
                 this.eap$AdvancedBlockingEnabled = sync.eap$getAdvancedBlockingSynced();
             }
         } catch (Throwable t) {
-            ExtendedAEPlus.LOGGER.error("Error initializing advanced sync", t);
+            eaep$LOGGER.error("Error initializing advanced sync", t);
         }
 
         // 使用 SettingToggleButton<YesNo> 的外观（原版图标），但自定义悬停描述为“智能阻挡”
@@ -87,7 +90,7 @@ public abstract class SmallAdvPatternProviderScreenMixin extends AEBaseScreen<Sm
                 this.eap$SmartDoublingEnabled = sync2.eap$getSmartDoublingSynced();
             }
         } catch (Throwable t) {
-            ExtendedAEPlus.LOGGER.error("Error initializing smart doubling sync", t);
+            eaep$LOGGER.error("Error initializing smart doubling sync", t);
         }
 
         this.eap$SmartDoublingToggle = new SettingToggleButton<>(

@@ -1,5 +1,6 @@
 package com.extendedae_plus.mixin.core.recipeViewer.emi;
 
+import com.extendedae_plus.mixin.MixinDependencies;
 import dev.emi.emi.screen.BoMScreen;
 import dev.emi.emi.screen.tooltip.EmiTooltip;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -10,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import java.util.ArrayList;
 import java.util.List;
 
+@MixinDependencies("emi")
 @Mixin(BoMScreen.class)
 public class MixinBoMTooltips {
     @ModifyArg(method = "render", at = @At(value = "INVOKE",

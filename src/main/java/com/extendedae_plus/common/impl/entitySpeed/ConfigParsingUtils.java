@@ -1,6 +1,7 @@
 package com.extendedae_plus.common.impl.entitySpeed;
 
-import com.extendedae_plus.ExtendedAEPlus;
+import com.mojang.logging.LogUtils;
+import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,6 +13,8 @@ import java.util.regex.PatternSyntaxException;
  * 配置解析工具类：用于解析黑名单与倍率配置的字符串
  */
 public final class ConfigParsingUtils {
+    private static final Logger LOGGER = LogUtils.getLogger();
+
     public static final class MultiplierEntry {
         public final Pattern pattern;
         public final double multiplier;
@@ -27,7 +30,7 @@ public final class ConfigParsingUtils {
      */
     public static Pattern compilePattern(String raw) {
         if (raw == null || raw.trim().isEmpty()) {
-            ExtendedAEPlus.LOGGER.warn("Invalid pattern: {}", raw);
+            LOGGER.warn("Invalid pattern: {}", raw);
             throw new IllegalArgumentException("Pattern is null or empty");
         }
         raw = raw.trim();
@@ -37,7 +40,7 @@ public final class ConfigParsingUtils {
             try {
                 return Pattern.compile("^" + raw + "$");
             } catch (PatternSyntaxException e) {
-                ExtendedAEPlus.LOGGER.warn("Failed to compile regex pattern '{}': {}", raw, e.getMessage());
+                LOGGER.warn("Failed to compile regex pattern '{}': {}", raw, e.getMessage());
                 // Fallback to glob
             }
         }
@@ -71,7 +74,7 @@ public final class ConfigParsingUtils {
         if (entry == null || entry.trim().isEmpty()) return null;
         String[] parts = entry.trim().split("\\s+");
         if (parts.length < 2) {
-            ExtendedAEPlus.LOGGER.warn("Invalid multiplier entry: {}", entry);
+            LOGGER.warn("Invalid multiplier entry: {}", entry);
             return null;
         }
         String key = parts[0];
@@ -81,14 +84,14 @@ public final class ConfigParsingUtils {
         try {
             multiplier = Double.parseDouble(val);
         } catch (NumberFormatException e) {
-            ExtendedAEPlus.LOGGER.warn("Invalid multiplier value in '{}': {}", entry, val);
+            LOGGER.warn("Invalid multiplier value in '{}': {}", entry, val);
             return null;
         }
         try {
             Pattern pattern = compilePattern(key);
             return new MultiplierEntry(pattern, multiplier);
         } catch (IllegalArgumentException e) {
-            ExtendedAEPlus.LOGGER.warn("Failed to compile pattern in '{}': {}", entry, e.getMessage());
+            LOGGER.warn("Failed to compile pattern in '{}': {}", entry, e.getMessage());
             return null;
         }
     }
@@ -123,7 +126,7 @@ public final class ConfigParsingUtils {
             try {
                 out.add(compilePattern(s));
             } catch (IllegalArgumentException e) {
-                ExtendedAEPlus.LOGGER.warn("Failed to compile pattern '{}': {}", s, e.getMessage());
+                LOGGER.warn("Failed to compile pattern '{}': {}", s, e.getMessage());
             }
         }
         return out;

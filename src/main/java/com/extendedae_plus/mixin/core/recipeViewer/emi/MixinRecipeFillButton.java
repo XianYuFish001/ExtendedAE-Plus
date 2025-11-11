@@ -1,5 +1,6 @@
 package com.extendedae_plus.mixin.core.recipeViewer.emi;
 
+import com.extendedae_plus.mixin.MixinDependencies;
 import com.extendedae_plus.mixin.impl.bridge.BridgePlanToEncode;
 import dev.emi.emi.api.widget.RecipeFillButtonWidget;
 import net.minecraft.client.Minecraft;
@@ -10,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+@MixinDependencies("emi")
 @Mixin(RecipeFillButtonWidget.class)
 public class MixinRecipeFillButton {
 

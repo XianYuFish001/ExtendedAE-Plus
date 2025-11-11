@@ -1,7 +1,7 @@
 package com.extendedae_plus.mixin.core.advancedae;
 
 import appeng.api.crafting.IPatternDetails;
-import com.extendedae_plus.common.impl.pattern.patternScaling.ScaledProcessingPattern;
+import com.extendedae_plus.common.impl.pattern.smartDoubling.ScaledProcessingPattern;
 import net.pedroksl.advanced_ae.common.logic.AdvPatternProviderLogic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -24,7 +24,7 @@ public class AdvPatternProviderLogicContainsRedirectMixin {
     private boolean eap$patternsContains(List<?> list, Object o) {
         try {
             if (o instanceof ScaledProcessingPattern scaled) {
-                IPatternDetails base = scaled.getOriginal();
+                IPatternDetails base = scaled.original();
                 if (base != null && list.indexOf(base) != -1) {
                     return true;
                 }

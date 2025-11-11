@@ -10,12 +10,14 @@ import appeng.crafting.CraftingTreeProcess;
 import appeng.crafting.pattern.AEProcessingPattern;
 import appeng.me.service.CraftingService;
 import com.extendedae_plus.EAEPConfig;
-import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.common.impl.pattern.patternScaling.PatternScaler;
-import com.extendedae_plus.common.impl.pattern.patternScaling.ScaledProcessingPattern;
-import com.extendedae_plus.mixin.impl.RequestedAmountHolder;
-import com.extendedae_plus.mixin.impl.bridge.SmartDoublingAwarePattern;
+import com.extendedae_plus.common.impl.pattern.smartDoubling.PatternScaler;
+import com.extendedae_plus.common.impl.pattern.smartDoubling.RequestedAmountHolder;
+import com.extendedae_plus.common.impl.pattern.smartDoubling.ScaledProcessingPattern;
+import com.extendedae_plus.common.impl.pattern.smartDoubling.SmartDoublingAwarePattern;
+import com.mojang.logging.LogUtils;
+import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
@@ -28,6 +30,8 @@ import java.util.stream.StreamSupport;
  */
 @Mixin(CraftingTreeProcess.class)
 public abstract class CraftingTreeProcessMixin {
+    @Unique
+    private static final Logger eaep$LOGGER = LogUtils.getLogger();
 
     @ModifyVariable(
             method = "<init>(Lappeng/api/networking/crafting/ICraftingService;Lappeng/crafting/CraftingCalculation;Lappeng/api/crafting/IPatternDetails;Lappeng/crafting/CraftingTreeNode;)V",
@@ -38,7 +42,7 @@ public abstract class CraftingTreeProcessMixin {
         try {
             // 若传入的 details 已经是缩放样板，且原始样板不允许缩放，则直接解包为原始样板
             if (details instanceof ScaledProcessingPattern sp) {
-                var proc0 = sp.getOriginal();
+                var proc0 = sp.original();
                 if (proc0 instanceof SmartDoublingAwarePattern aware0 && !aware0.eap$allowScaling()) {
                     return proc0;
                 }
@@ -90,7 +94,7 @@ public abstract class CraftingTreeProcessMixin {
             var scaled = PatternScaler.scale(proc, parentTarget, perProvider);
             return scaled != null ? scaled : original;
         } catch (Exception e) {
-            ExtendedAEPlus.LOGGER.warn("构建倍增样板出错", e);
+            eaep$LOGGER.warn("构建倍增样板出错", e);
             e.printStackTrace();
             return original;
         }

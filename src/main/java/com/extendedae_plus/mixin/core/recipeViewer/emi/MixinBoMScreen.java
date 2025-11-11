@@ -5,6 +5,7 @@ import appeng.menu.me.items.PatternEncodingTermMenu;
 import com.extendedae_plus.common.impl.pattern.AliasGetter;
 import com.extendedae_plus.integration.RecipeViewer.emi.HandlerBoMRecipes;
 import com.extendedae_plus.integration.RecipeViewer.emi.PatternFillingHelper;
+import com.extendedae_plus.mixin.MixinDependencies;
 import com.extendedae_plus.network.RequestUploadingC2SPacket;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.bom.BoM;
@@ -25,6 +26,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+@MixinDependencies("emi")
 @Mixin(BoMScreen.class)
 public abstract class MixinBoMScreen {
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)

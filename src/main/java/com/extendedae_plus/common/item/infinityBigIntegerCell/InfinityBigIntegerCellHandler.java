@@ -2,7 +2,7 @@ package com.extendedae_plus.common.item.infinityBigIntegerCell;
 
 import appeng.api.storage.cells.ICellHandler;
 import appeng.api.storage.cells.ISaveProvider;
-import com.extendedae_plus.ExtendedAEPlus;
+import com.extendedae_plus.common.impl.storage.infinityCell.HolderInfinityStorageManager;
 import net.minecraft.world.item.ItemStack;
 
 public class InfinityBigIntegerCellHandler implements ICellHandler {
@@ -16,6 +16,6 @@ public class InfinityBigIntegerCellHandler implements ICellHandler {
 
     @Override
     public InfinityBigIntegerCellInventory getCellInventory(ItemStack is, ISaveProvider container) {
-        return InfinityBigIntegerCellInventory.createInventory(is, container, ExtendedAEPlus.currentStorageManager());
+        return InfinityBigIntegerCellInventory.createInventory(is, container, HolderInfinityStorageManager.currentStorageManager());
     }
 }

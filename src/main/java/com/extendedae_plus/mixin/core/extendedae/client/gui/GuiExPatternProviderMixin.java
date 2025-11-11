@@ -6,18 +6,18 @@ import appeng.client.gui.style.ScreenStyle;
 import appeng.menu.SlotSemantics;
 import appeng.menu.slot.AppEngSlot;
 import com.extendedae_plus.EAEPConfig;
-import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.client.render.Button.EAEActionItems;
 import com.extendedae_plus.client.render.Button.EAEPActionButton;
-import com.extendedae_plus.mixin.impl.bridge.ExPatternButtonsAccessor;
+import com.extendedae_plus.client.render.Button.EAEPActionItems;
 import com.extendedae_plus.mixin.impl.bridge.ExPatternPageAccessor;
-import com.extendedae_plus.network.ScalePatternsC2SPacket;
+import com.extendedae_plus.mixin.impl.bridge.HelperProviderButtons;
+import com.extendedae_plus.network.CPacketScalePatterns;
 import com.glodblock.github.extendedae.client.button.ActionEPPButton;
 import com.glodblock.github.extendedae.client.gui.GuiExPatternProvider;
 import com.glodblock.github.extendedae.container.ContainerExPatternProvider;
-import net.minecraft.client.Minecraft;
+import com.mojang.logging.LogUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -28,8 +28,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 @Mixin(value = GuiExPatternProvider.class, remap = false)
-public abstract class GuiExPatternProviderMixin extends PatternProviderScreen<ContainerExPatternProvider> implements ExPatternButtonsAccessor, ExPatternPageAccessor {
-
+public abstract class GuiExPatternProviderMixin extends PatternProviderScreen<ContainerExPatternProvider> implements HelperProviderButtons, ExPatternPageAccessor {
+    @Unique
+    private static final Logger eaep$LOGGER = LogUtils.getLogger();
+    
     @Unique
     ScreenStyle eap$screenStyle;
 
@@ -119,7 +121,7 @@ public abstract class GuiExPatternProviderMixin extends PatternProviderScreen<Co
         try { cfgPages = Math.max(1, EAEPConfig.PAGE_MULTIPLIER.get()); } catch (Throwable ignored) {}
         int calcPages = Math.max(1, (int) Math.ceil(totalSlots / (double) SLOTS_PER_PAGE));
         int desiredMaxPage = Math.max(cfgPages, calcPages);
-        ExtendedAEPlus.LOGGER.info("[EAP] GuiExPatternProvider init: totalSlots={}, cfgPages={}, calcPages={}, desiredMaxPage={}", totalSlots, cfgPages, calcPages, desiredMaxPage);
+        eaep$LOGGER.info("[EAP] GuiExPatternProvider init: totalSlots={}, cfgPages={}, calcPages={}, desiredMaxPage={}", totalSlots, cfgPages, calcPages, desiredMaxPage);
         // 更新本地最大页
         this.eap$maxPageLocal = Math.max(1, desiredMaxPage);
         this.eap$currentPage = 0;
@@ -151,7 +153,7 @@ public abstract class GuiExPatternProviderMixin extends PatternProviderScreen<Co
                 // 同步到本地 GUI 页码
                 this.eap$currentPage = newPage;
                 // 日志与强制重排（放在更新本地页码之后，确保布局读取到新页）
-                ExtendedAEPlus.LOGGER.info("[EAP] PrevPage clicked: {} -> {} (max={})", currentPage, newPage, maxPage);
+                eaep$LOGGER.info("[EAP] PrevPage clicked: {} -> {} (max={})", currentPage, newPage, maxPage);
                 this.repositionSlots(SlotSemantics.ENCODED_PATTERN);
                 this.repositionSlots(SlotSemantics.STORAGE);
                 this.hoveredSlot = null;
@@ -180,7 +182,7 @@ public abstract class GuiExPatternProviderMixin extends PatternProviderScreen<Co
                 // 同步到本地 GUI 页码
                 this.eap$currentPage = newPage;
                 // 日志与强制重排（放在更新本地页码之后，确保布局读取到新页）
-                ExtendedAEPlus.LOGGER.info("[EAP] NextPage clicked: {} -> {} (max={})", currentPage, newPage, maxPage);
+                eaep$LOGGER.info("[EAP] NextPage clicked: {} -> {} (max={})", currentPage, newPage, maxPage);
                 this.repositionSlots(SlotSemantics.ENCODED_PATTERN);
                 this.repositionSlots(SlotSemantics.STORAGE);
                 this.hoveredSlot = null;
@@ -194,12 +196,12 @@ public abstract class GuiExPatternProviderMixin extends PatternProviderScreen<Co
         }
 
         // 倍增/除法按钮：使用自有 C2S 包发送到服务端执行样板缩放
-        x2Button = new EAEPActionButton(EAEActionItems.MULTIPLY2, () -> eaep$sendAdjustMessage(2, false));
-        x5Button = new EAEPActionButton(EAEActionItems.MULTIPLY5, () -> eaep$sendAdjustMessage(5, false));
-        x10Button = new EAEPActionButton(EAEActionItems.MULTIPLY10, () -> eaep$sendAdjustMessage(10, false));
-        divideBy2Button = new EAEPActionButton(EAEActionItems.DIVIDE2, () -> eaep$sendAdjustMessage(2, true));
-        divideBy5Button = new EAEPActionButton(EAEActionItems.DIVIDE5, () -> eaep$sendAdjustMessage(5, true));
-        divideBy10Button = new EAEPActionButton(EAEActionItems.DIVIDE10, () -> eaep$sendAdjustMessage(10, true));
+        x2Button = new EAEPActionButton(EAEPActionItems.MUL2, CPacketScalePatterns::send);
+        x5Button = new EAEPActionButton(EAEPActionItems.MUL5, CPacketScalePatterns::send);
+        x10Button = new EAEPActionButton(EAEPActionItems.MUL10, CPacketScalePatterns::send);
+        divideBy2Button = new EAEPActionButton(EAEPActionItems.DIV2, CPacketScalePatterns::send);
+        divideBy5Button = new EAEPActionButton(EAEPActionItems.DIV5, CPacketScalePatterns::send);
+        divideBy10Button = new EAEPActionButton(EAEPActionItems.DIV10, CPacketScalePatterns::send);
         this.x2Button.setVisibility(true);
         this.x5Button.setVisibility(true);
         this.x10Button.setVisibility(true);
@@ -216,15 +218,6 @@ public abstract class GuiExPatternProviderMixin extends PatternProviderScreen<Co
         this.addRenderableWidget(this.x10Button);
     }
 
-    @Unique
-    private static void eaep$sendAdjustMessage(int size, boolean divide) {
-        var connection = Minecraft.getInstance().getConnection();
-        if (connection != null)
-            connection.send(new ScalePatternsC2SPacket(
-                    ScalePatternsC2SPacket.Operation.valueOf(
-                            (divide ? "DIV" : "MUL") + size)));
-    }
-
     @Override
     public int eap$getCurrentPage() {
         return getCurrentPage();
@@ -235,7 +228,7 @@ public abstract class GuiExPatternProviderMixin extends PatternProviderScreen<Co
     // 注意：不再注入 Screen#init，避免混入在某些映射情况下失败导致 TransformerError
     
     @Override
-    public void eap$updateButtonsLayout() {
+    public void eaep$updateButtonsLayout() {
         // 只处理按钮可见性与定位，不再强制 showPage 或挪动 Slot 坐标，避免与原布局/tooltip 冲突
         if (nextPage != null && prevPage != null) {
             this.nextPage.setVisibility(true);
@@ -316,7 +309,7 @@ public abstract class GuiExPatternProviderMixin extends PatternProviderScreen<Co
         }
 
         // 定位到 GUI 右缘外侧一点（使用绝对屏幕坐标）
-        int bx = this.leftPos + this.imageWidth + 1; // 向右平移 1px 到面板外侧
+        int bx = this.leftPos + this.imageWidth + 3;
         int by = this.topPos + 50;
         int spacing = 22;
         // 翻页按钮交由左侧工具栏布局，无需手动定位

@@ -7,21 +7,28 @@ import appeng.client.gui.implementations.PatternProviderScreen;
 import appeng.client.gui.style.ScreenStyle;
 import appeng.client.gui.widgets.SettingToggleButton;
 import appeng.menu.implementations.PatternProviderMenu;
-import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.mixin.impl.bridge.ExPatternButtonsAccessor;
+import com.extendedae_plus.client.render.Button.EAEPActionButton;
+import com.extendedae_plus.client.render.Button.EAEPActionItems;
+import com.extendedae_plus.mixin.impl.bridge.HelperProviderButtons;
 import com.extendedae_plus.mixin.impl.bridge.PatternProviderMenuAdvancedSync;
 import com.extendedae_plus.mixin.impl.bridge.PatternProviderMenuDoublingSync;
+import com.extendedae_plus.network.CPacketScalePatterns;
 import com.extendedae_plus.network.ToggleAdvancedBlockingC2SPacket;
 import com.extendedae_plus.network.ToggleSmartDoublingC2SPacket;
-import com.glodblock.github.extendedae.client.gui.GuiExPatternProvider;
+import com.mojang.datafixers.util.Pair;
+import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 为 AE2 原版样板供应器界面添加“智能阻挡模式”按钮。
@@ -29,19 +36,26 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * - 点击仅发送 C2S 切换请求；状态由 AE2 @GuiSync 回传决定
  */
 @Mixin(value = PatternProviderScreen.class, remap = false)
-public abstract class PatternProviderScreenMixin<C extends PatternProviderMenu> extends AEBaseScreen<C> {
+public abstract class PatternProviderScreenMixin<C extends PatternProviderMenu>
+        extends AEBaseScreen<C>
+        implements HelperProviderButtons {
+    @Unique
+    private static final Logger eaep$LOGGER = LogUtils.getLogger();
 
     @Unique
     private SettingToggleButton<YesNo> eap$AdvancedBlockingToggle;
-
     @Unique
     private boolean eap$AdvancedBlockingEnabled = false;
 
     @Unique
     private SettingToggleButton<YesNo> eap$SmartDoublingToggle;
-
     @Unique
     private boolean eap$SmartDoublingEnabled = false;
+
+    @Unique
+    public final List<EAEPActionButton> eaep$scalingButtons = new ArrayList<>();
+    @Unique
+    private Pair<Integer, Integer> eaep$lastScreenInfo;
 
     public PatternProviderScreenMixin(C menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
@@ -55,7 +69,7 @@ public abstract class PatternProviderScreenMixin<C extends PatternProviderMenu> 
                 this.eap$AdvancedBlockingEnabled = sync.eap$getAdvancedBlockingSynced();
             }
         } catch (Throwable t) {
-            ExtendedAEPlus.LOGGER.error("Error initializing advanced sync", t);
+            eaep$LOGGER.error("Error initializing advanced sync", t);
         }
 
         // 使用 SettingToggleButton<YesNo> 的外观（原版图标），但自定义悬停描述为“智能阻挡”
@@ -69,13 +83,13 @@ public abstract class PatternProviderScreenMixin<C extends PatternProviderMenu> 
                 }
         ) {
             @Override
-            public java.util.List<net.minecraft.network.chat.Component> getTooltipMessage() {
+            public List<Component> getTooltipMessage() {
                 boolean enabled = eap$AdvancedBlockingEnabled;
-                var title = net.minecraft.network.chat.Component.literal("智能阻挡");
+                var title = Component.literal("智能阻挡");
                 var line = enabled
-                        ? net.minecraft.network.chat.Component.literal("已启用：对于同一种配方将不再阻挡(需要开启原版的阻挡模式)")
-                        : net.minecraft.network.chat.Component.literal("已禁用：这么好的功能为什么不打开呢");
-                return java.util.List.of(title, line);
+                        ? Component.literal("已启用：对于同一种配方将不再阻挡(需要开启原版的阻挡模式)")
+                        : Component.literal("已禁用：这么好的功能为什么不打开呢");
+                return List.of(title, line);
             }
         };
         // 初始化后立刻对齐当前@GuiSync状态，避免首帧显示不一致
@@ -90,7 +104,7 @@ public abstract class PatternProviderScreenMixin<C extends PatternProviderMenu> 
                 this.eap$SmartDoublingEnabled = sync2.eap$getSmartDoublingSynced();
             }
         } catch (Throwable t) {
-            ExtendedAEPlus.LOGGER.error("Error initializing smart doubling sync", t);
+            eaep$LOGGER.error("Error initializing smart doubling sync", t);
         }
 
         this.eap$SmartDoublingToggle = new SettingToggleButton<>(
@@ -102,18 +116,30 @@ public abstract class PatternProviderScreenMixin<C extends PatternProviderMenu> 
                 }
         ) {
             @Override
-            public java.util.List<net.minecraft.network.chat.Component> getTooltipMessage() {
+            public List<Component> getTooltipMessage() {
                 boolean enabled = eap$SmartDoublingEnabled;
-                var title = net.minecraft.network.chat.Component.literal("智能翻倍");
+                var title = Component.literal("智能翻倍");
                 var line = enabled
-                        ? net.minecraft.network.chat.Component.literal("已启用：根据请求量对处理样板进行智能缩放")
-                        : net.minecraft.network.chat.Component.literal("已禁用：按原始样板数量进行发配");
-                return java.util.List.of(title, line);
+                        ? Component.literal("已启用：根据请求量对处理样板进行智能缩放")
+                        : Component.literal("已禁用：按原始样板数量进行发配");
+                return List.of(title, line);
             }
         };
 
         this.eap$SmartDoublingToggle.set(this.eap$SmartDoublingEnabled ? YesNo.YES : YesNo.NO);
         this.addToLeftToolbar(this.eap$SmartDoublingToggle);
+
+        this.eaep$scalingButtons.add(new EAEPActionButton(EAEPActionItems.MUL2, CPacketScalePatterns::send));
+        this.eaep$scalingButtons.add(new EAEPActionButton(EAEPActionItems.MUL5, CPacketScalePatterns::send));
+        this.eaep$scalingButtons.add(new EAEPActionButton(EAEPActionItems.MUL10, CPacketScalePatterns::send));
+        this.eaep$scalingButtons.add(new EAEPActionButton(EAEPActionItems.DIV2, CPacketScalePatterns::send));
+        this.eaep$scalingButtons.add(new EAEPActionButton(EAEPActionItems.DIV5, CPacketScalePatterns::send));
+        this.eaep$scalingButtons.add(new EAEPActionButton(EAEPActionItems.DIV10, CPacketScalePatterns::send));
+
+        this.eaep$scalingButtons.forEach(button -> {
+            this.addRenderableWidget(button);
+            button.setVisibility(true);
+        });
     }
 
     // 每帧刷新：仅从菜单(@GuiSync)同步布尔值，保持按钮状态一致
@@ -139,12 +165,40 @@ public abstract class PatternProviderScreenMixin<C extends PatternProviderMenu> 
             this.eap$SmartDoublingToggle.set(desired2 ? YesNo.YES : YesNo.NO);
         }
 
-        if ((Object) this instanceof GuiExPatternProvider) {
-            try {
-                ((ExPatternButtonsAccessor) this).eap$updateButtonsLayout();
-            } catch (Throwable t) {
-                // debug removed
-            }
+        try {
+            this.eaep$updateButtonsLayout();
+        } catch (Throwable ignore) {
         }
+    }
+
+    @Override
+    public List<EAEPActionButton> eaep$getButtons() {
+        return List.copyOf(eaep$scalingButtons);
+    }
+
+    @Override
+    public void eaep$updateButtonsLayout() {
+        boolean flagReplaceButton = this.eaep$lastScreenInfo == null
+                || this.width != this.eaep$lastScreenInfo.getFirst()
+                || this.height != this.eaep$lastScreenInfo.getSecond();
+        if (flagReplaceButton)
+            this.eaep$lastScreenInfo = new Pair<>(this.width, this.height);
+
+        int bx = this.leftPos + this.imageWidth + 3;
+        int by = this.topPos + 50;
+        int spacing = 22;
+        this.eaep$scalingButtons.forEach(button -> {
+            if (button == null) return;
+            button.setVisibility(true);
+            if (!this.renderables.contains(button)) this.addRenderableWidget(button);
+
+            if (flagReplaceButton) {
+                this.removeWidget(button);
+                this.addRenderableWidget(button);
+            }
+
+            button.setX(bx);
+            button.setY(by + spacing * this.eaep$scalingButtons.indexOf(button));
+        });
     }
 }

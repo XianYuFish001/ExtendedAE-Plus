@@ -40,6 +40,7 @@ public class ChannelCardItem extends UpgradeCardItem {
         stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
     }
 
+    // 气笑了, 又要绑定uuid才能连接, 又不给连接设置uuid, 等着玩家手动改代码吗?
     public static long getChannel(ItemStack stack) {
         CompoundTag tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
         return tag.contains(TAG_CHANNEL) ? tag.getLong(TAG_CHANNEL) : 0L;

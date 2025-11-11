@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(value = CraftingCPUCluster.class, remap = false, priority = 2000)
+@Mixin(value = CraftingCPUCluster.class, remap = false, priority = 1100)
 public abstract class CraftingCPUClusterMixin {
     // 1) 提升“单方块线程上限”的常量，避免抛出 IAE 的 IllegalArgumentException
     @ModifyConstant(

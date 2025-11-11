@@ -134,11 +134,11 @@ dependencies {
     implementation "curse.maven:glodium-957920:5821676"
     implementation "org.appliedenergistics:appliedenergistics2:19.2.15"
     implementation "org.appliedenergistics:guideme:2.5.1"
+    implementation "curse.maven:ex-pattern-provider-892005:7188776"
     // jarJar configuration not set in this build; use implementation for API for now
     implementation "de.mari_023:ae2wtlib_api:19.2.0"
     implementation "curse.maven:curios-309927:6529130"
 
-    compileOnly "curse.maven:ex-pattern-provider-892005:6863556"
     compileOnly "curse.maven:applied-flux-965012:5614830"
     compileOnly "dev.emi:emi-neoforge:1.1.10+1.21"
     compileOnly "curse.maven:mega-cells-622112:6005043"
@@ -162,8 +162,6 @@ dependencies {
 
     runtimeOnly "curse.maven:mekanism-268560:6895130"
     runtimeOnly "curse.maven:applied-mekanistics-574300:5978711"
-
-    runtimeOnly "curse.maven:ex-pattern-provider-892005:6863556"
 
     //aea
     implementation "curse.maven:advancedae-1084104:6932981"

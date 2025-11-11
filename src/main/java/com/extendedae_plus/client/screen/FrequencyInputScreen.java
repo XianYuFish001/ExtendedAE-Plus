@@ -1,4 +1,4 @@
-package com.extendedae_plus.client.ui;
+package com.extendedae_plus.client.screen;
 
 import com.extendedae_plus.network.SetWirelessFrequencyC2SPacket;
 import net.minecraft.client.Minecraft;

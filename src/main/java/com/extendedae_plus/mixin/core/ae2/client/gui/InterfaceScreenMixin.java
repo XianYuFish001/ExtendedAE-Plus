@@ -3,10 +3,11 @@ package com.extendedae_plus.mixin.core.ae2.client.gui;
 import appeng.client.gui.AEBaseScreen;
 import appeng.client.gui.implementations.InterfaceScreen;
 import appeng.menu.SlotSemantics;
-import com.extendedae_plus.client.render.Button.EAEActionItems;
 import com.extendedae_plus.client.render.Button.EAEPActionButton;
-import com.extendedae_plus.mixin.core.accessor.AbstractContainerScreenAccessor;
-import com.extendedae_plus.mixin.core.accessor.ScreenAccessor;
+import com.extendedae_plus.client.render.Button.EAEPActionItems;
+import com.extendedae_plus.mixin.core.minecraft.accessor.AbstractContainerScreenAccessor;
+import com.extendedae_plus.mixin.core.minecraft.accessor.ScreenAccessor;
+import com.extendedae_plus.mixin.impl.bridge.HelperProviderButtons;
 import com.extendedae_plus.network.InterfaceAdjustConfigAmountC2SPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.inventory.Slot;
@@ -16,12 +17,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.List;
+
 /**
  * 在 AE2 的 ME 接口界面注入倍增/除法按钮（x2/÷2、x5/÷5、x10/÷10）。
  * 点击时通过 NeoForge 自定义负载发送到服务端调整配置数量。
  */
-@Mixin(value = AEBaseScreen.class, remap = false)
-public abstract class InterfaceScreenMixin {
+@Mixin(value = InterfaceScreen.class, remap = false)
+public abstract class InterfaceScreenMixin implements HelperProviderButtons {
 
     @Unique private EAEPActionButton eap$x2Button;
     @Unique private EAEPActionButton eap$divideBy2Button;
@@ -36,44 +39,44 @@ public abstract class InterfaceScreenMixin {
     @Unique private int eap$lastImageHeight = -1;
     @Unique private int eap$lastConfigIndex = -1;
 
-    @Inject(method = "init", at = @At("TAIL"))
+    @Inject(method = "<init>", at = @At("TAIL"))
     private void eap$addScaleButtons(CallbackInfo ci) {
         if (!eap$isSupportedInterfaceScreen()) {
             return;
         }
         if (eap$x2Button == null) {
             eap$x2Button = new EAEPActionButton(
-                    EAEActionItems.MULTIPLY2, b -> eap$sendAdjustForAllConfigs(false, 2));
+                    EAEPActionItems.MUL2, b -> eap$sendAdjustForAllConfigs(false, 2));
             eap$x2Button.setTooltip(null);
             eap$x2Button.setVisibility(true);
         }
         if (eap$divideBy2Button == null) {
             eap$divideBy2Button = new EAEPActionButton(
-                    EAEActionItems.DIVIDE2, b -> eap$sendAdjustForAllConfigs(true, 2));
+                    EAEPActionItems.DIV2, b -> eap$sendAdjustForAllConfigs(true, 2));
             eap$divideBy2Button.setTooltip(null);
             eap$divideBy2Button.setVisibility(true);
         }
         if (eap$x5Button == null) {
             eap$x5Button = new EAEPActionButton(
-                    EAEActionItems.MULTIPLY5, b -> eap$sendAdjustForAllConfigs(false, 5));
+                    EAEPActionItems.MUL5, b -> eap$sendAdjustForAllConfigs(false, 5));
             eap$x5Button.setTooltip(null);
             eap$x5Button.setVisibility(true);
         }
         if (eap$divideBy5Button == null) {
             eap$divideBy5Button = new EAEPActionButton(
-                    EAEActionItems.DIVIDE5, b -> eap$sendAdjustForAllConfigs(true, 5));
+                    EAEPActionItems.DIV5, b -> eap$sendAdjustForAllConfigs(true, 5));
             eap$divideBy5Button.setTooltip(null);
             eap$divideBy5Button.setVisibility(true);
         }
         if (eap$x10Button == null) {
             eap$x10Button = new EAEPActionButton(
-                    EAEActionItems.DIVIDE10, b -> eap$sendAdjustForAllConfigs(false, 10));
+                    EAEPActionItems.DIV10, b -> eap$sendAdjustForAllConfigs(false, 10));
             eap$x10Button.setTooltip(null);
             eap$x10Button.setVisibility(true);
         }
         if (eap$divideBy10Button == null) {
             eap$divideBy10Button = new EAEPActionButton(
-                    EAEActionItems.DIVIDE10, b -> eap$sendAdjustForAllConfigs(true, 10));
+                    EAEPActionItems.DIV10, b -> eap$sendAdjustForAllConfigs(true, 10));
             eap$divideBy10Button.setTooltip(null);
             eap$divideBy10Button.setVisibility(true);
         }
@@ -96,7 +99,7 @@ public abstract class InterfaceScreenMixin {
         eap$relayoutButtons();
     }
 
-    @Inject(method = "containerTick", at = @At("TAIL"))
+    @Inject(method = "updateBeforeRender", at = @At("TAIL"))
     private void eap$ensureButtons(CallbackInfo ci) {
         if (!eap$isSupportedInterfaceScreen()) {
             return;
@@ -172,7 +175,7 @@ public abstract class InterfaceScreenMixin {
             int leftPos = ((AbstractContainerScreenAccessor<?>) this).eap$getLeftPos();
             int topPos = ((AbstractContainerScreenAccessor<?>) this).eap$getTopPos();
             int imageWidth = ((AbstractContainerScreenAccessor<?>) this).eap$getImageWidth();
-            int bx = leftPos + imageWidth + 1;
+            int bx = leftPos + imageWidth + 3;
             int by = topPos + 70;
             int spacing = 22;
             if (eap$divideBy2Button != null) { eap$divideBy2Button.setX(bx); eap$divideBy2Button.setY(by); }
@@ -226,5 +229,17 @@ public abstract class InterfaceScreenMixin {
                 }
             }
         } catch (Throwable ignored) {}
+    }
+
+    @Override
+    public void eaep$updateButtonsLayout() {
+
+    }
+
+    @Override
+    public List<EAEPActionButton> eaep$getButtons() {
+        return List.of(
+                eap$x2Button, eap$x5Button, eap$x10Button,
+                eap$divideBy2Button, eap$divideBy5Button, eap$divideBy10Button);
     }
 }

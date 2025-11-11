@@ -3,8 +3,9 @@ package com.extendedae_plus.common.event;
 import appeng.block.crafting.CraftingUnitBlock;
 import appeng.util.InteractionUtil;
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.client.ui.FrequencyInputScreen;
+import com.extendedae_plus.client.screen.FrequencyInputScreen;
 import com.extendedae_plus.common.block.wirelessTransceiver.WirelessTransceiverBlockEntity;
+import com.mojang.logging.LogUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -17,9 +18,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import org.slf4j.Logger;
 
 @EventBusSubscriber(modid = ExtendedAEPlus.MODID)
 public final class EventWrenchActions {
+    private static final Logger LOGGER = LogUtils.getLogger();
+
     @SubscribeEvent
     public static void onPlayerUseBlockEvent(PlayerInteractEvent.RightClickBlock event) {
         if (event.isCanceled()) return;
@@ -92,7 +96,7 @@ public final class EventWrenchActions {
                     try {
                         level.sendBlockUpdated(pos, state, state, 3);
                     } catch (Throwable t) {
-                        ExtendedAEPlus.LOGGER.debug("sendBlockUpdated failed: {}", t.toString());
+                        LOGGER.debug("sendBlockUpdated failed: {}", t.toString());
                     }
                     // 提示玩家（服务端消息下发到客户端）
                     player.displayClientMessage(Component.translatable(
@@ -100,9 +104,9 @@ public final class EventWrenchActions {
                     ), true);
                     // 轻微反馈音效
                     level.playSound(player, hit.getBlockPos(), SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.5F, newLocked ? 0.6F : 0.9F);
-                    ExtendedAEPlus.LOGGER.debug("Wrench toggle lock at {} -> {}", pos, newLocked);
+                    LOGGER.debug("Wrench toggle lock at {} -> {}", pos, newLocked);
                 } else {
-                    ExtendedAEPlus.LOGGER.debug("Client received wrench toggle intent (no-op on client)");
+                    LOGGER.debug("Client received wrench toggle intent (no-op on client)");
                 }
 
                 event.setCanceled(true);
@@ -136,7 +140,7 @@ public final class EventWrenchActions {
                 if (level.isClientSide) {
                     // 客户端：打开频率输入GUI
                     FrequencyInputScreen.open(pos, te.getFrequency());
-                    ExtendedAEPlus.LOGGER.debug("Opening frequency input GUI for transceiver at {}", pos);
+                    LOGGER.debug("Opening frequency input GUI for transceiver at {}", pos);
                 }
                 
                 event.setCanceled(true);

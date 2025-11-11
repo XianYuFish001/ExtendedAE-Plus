@@ -3,15 +3,14 @@ package com.extendedae_plus.mixin.core.ae2;
 import appeng.api.parts.IPartHost;
 import appeng.api.parts.SelectedPart;
 import appeng.items.tools.quartz.QuartzCuttingKnifeItem;
-import com.extendedae_plus.ExtendedAEPlus;
 import com.mojang.blaze3d.platform.Window;
+import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -19,11 +18,10 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.ModList;
 import org.lwjgl.glfw.GLFW;
+import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -47,6 +45,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 @Mixin(value = QuartzCuttingKnifeItem.class)
 public abstract class QuartzCuttingKnifeItemMixin {
+    @Unique
+    private static final Logger eaep$LOGGER = LogUtils.getLogger();
+
     /**
      * 清理方块名称，移除分节符号和其他格式字符
      */
@@ -68,50 +69,16 @@ public abstract class QuartzCuttingKnifeItemMixin {
         return name;
     }
 
-    @Inject(method = "use", at = @At("HEAD"), cancellable = true)
-    private void eap$copyNameOnShiftRightClick(Level level, Player player, InteractionHand hand,
-                                               CallbackInfoReturnable<InteractionResultHolder<ItemStack>> cir) {
-        if (!level.isClientSide()) {
-            return;
-        }
-        if (player == null || !player.isCrouching()) {
-            return;
-        }
-        // 仅在客户端分支访问 Minecraft 类，防止服务端类加载问题
-        Minecraft mc = Minecraft.getInstance();
-        HitResult hr = mc.hitResult;
-        if (!(hr instanceof BlockHitResult bhr)) {
-            return;
-        }
-        var pos = bhr.getBlockPos();
-        var state = level.getBlockState(pos);
-        if (state == null || state.isAir()) return;
-
-        // 获取方块名称
-        String name = eap$getBlockName(level, pos, hr.getLocation());
-        
-        // 清理名称，移除分节符号等格式字符
-        name = eap$cleanBlockName(name);
-
-        // 复制到剪贴板并反馈
-        boolean success = eap$tryCopyToClipboard(Minecraft.getInstance(), name);
-        player.displayClientMessage(Component.literal(success
-                ? ("已复制方块/部件名: " + name)
-                : "复制失败：整合包可能限制剪贴板或未聚焦窗口"), true);
-
-        // 拦截默认行为，不再打开刀具界面
-        ItemStack held = player.getItemInHand(hand);
-        cir.setReturnValue(new InteractionResultHolder<>(InteractionResult.SUCCESS, held));
-    }
-
     @Inject(method = "useOn", at = @At("HEAD"), cancellable = true)
     private void eap$copyNameOnShiftRightClickUseOn(UseOnContext context,
                                                     CallbackInfoReturnable<InteractionResult> cir) {
         Level level = context.getLevel();
         Player player = context.getPlayer();
-        if (!level.isClientSide() || player == null || !player.isCrouching()) {
+        if (!level.isClientSide() || player == null || !Screen.hasShiftDown()) {
+            cir.cancel();
             return;
         }
+
         var pos = context.getClickedPos();
         var state = level.getBlockState(pos);
         if (state.isAir()) return;
@@ -123,13 +90,13 @@ public abstract class QuartzCuttingKnifeItemMixin {
         name = eap$cleanBlockName(name);
 
         // 复制到剪贴板并反馈
-        boolean success = eap$tryCopyToClipboard(Minecraft.getInstance(), name);
-        player.displayClientMessage(Component.literal(success
+        player.displayClientMessage(Component.literal(eap$tryCopyToClipboard(Minecraft.getInstance(), name)
                 ? ("已复制方块/部件名: " + name)
                 : "复制失败：整合包可能限制剪贴板或未聚焦窗口"), true);
+//        player.swing(context.getHand());
 
         // 拦截默认行为
-        cir.setReturnValue(InteractionResult.SUCCESS);
+        cir.setReturnValue(InteractionResult.sidedSuccess(level.isClientSide()));
     }
 
     /**
@@ -195,10 +162,10 @@ public abstract class QuartzCuttingKnifeItemMixin {
                 }
             }
         } catch (ClassNotFoundException e) {
-            ExtendedAEPlus.LOGGER.info("GregTech CEu 类未找到，跳过配方翻译处理");
+            eaep$LOGGER.info("GregTech CEu 类未找到，跳过配方翻译处理");
             return null; // GTCEu 不可用
         } catch (NoSuchFieldException | NoSuchMethodException | IllegalAccessException | java.lang.reflect.InvocationTargetException e) {
-            ExtendedAEPlus.LOGGER.error("处理 GTCEu 配方翻译失败: {}", e.getMessage());
+            eaep$LOGGER.error("处理 GTCEu 配方翻译失败: {}", e.getMessage());
             return null; // 反射失败
         }
         return null; // 非 GTCEu 方块实体
@@ -247,7 +214,7 @@ public abstract class QuartzCuttingKnifeItemMixin {
             try {
                 latch.await();
             } catch (InterruptedException e) {
-                ExtendedAEPlus.LOGGER.error("剪贴板复制线程中断: {}", e.getMessage());
+                eaep$LOGGER.error("剪贴板复制线程中断: {}", e.getMessage());
             }
             return result.get();
         } else {

@@ -19,8 +19,8 @@ public class ExtendedAEPlusClient {
 	@SubscribeEvent
 	static void onClientSetup(FMLClientSetupEvent event) {
         // 原来这里也有意义不明的log(
-//		ExtendedAEPlus.LOGGER.info("HELLO FROM CLIENT SETUP");
-//		ExtendedAEPlus.LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
+//		LOGGER.info("HELLO FROM CLIENT SETUP");
+//		LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
 
         // 这怎么reflect滚木了
 	}
