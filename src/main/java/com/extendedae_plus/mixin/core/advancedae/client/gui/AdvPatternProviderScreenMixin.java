@@ -9,6 +9,7 @@ import com.extendedae_plus.mixin.impl.bridge.PatternProviderMenuAdvancedSync;
 import com.extendedae_plus.mixin.impl.bridge.PatternProviderMenuDoublingSync;
 import com.extendedae_plus.network.ToggleAdvancedBlockingC2SPacket;
 import com.extendedae_plus.network.ToggleSmartDoublingC2SPacket;
+import com.extendedae_plus.util.UtilGetKey;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -21,6 +22,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.List;
 
 /**
  * 为高级ae样板供应器界面添加“高级阻挡模式”按钮。
@@ -70,13 +73,16 @@ public abstract class AdvPatternProviderScreenMixin extends AEBaseScreen<AdvPatt
                 }
         ) {
             @Override
-            public java.util.List<Component> getTooltipMessage() {
+            public List<Component> getTooltipMessage() {
                 boolean enabled = eap$AdvancedBlockingEnabled;
-                var title = Component.literal("智能阻挡");
-                var line = enabled
-                        ? Component.literal("已启用：对于同一种配方将不再阻挡(需要开启原版的阻挡模式)")
-                        : Component.literal("已禁用：这么好的功能为什么不打开呢");
-                return java.util.List.of(title, line);
+//                var title = Component.literal("智能阻挡");
+//                var line = enabled
+//                        ? Component.literal("已启用：对于同一种配方将不再阻挡(需要开启原版的阻挡模式)")
+//                        : Component.literal("已禁用：这么好的功能为什么不打开呢");
+                return List.of(new UtilGetKey(UtilGetKey.screenTooltip)
+                        .addStr("smart_blocking")
+                        .addStr(enabled, "enabled", "disabled")
+                        .build());
             }
         };
         // 初始化后立刻对齐当前@GuiSync状态，避免首帧显示不一致
@@ -102,13 +108,16 @@ public abstract class AdvPatternProviderScreenMixin extends AEBaseScreen<AdvPatt
                 }
         ) {
             @Override
-            public java.util.List<Component> getTooltipMessage() {
+            public List<Component> getTooltipMessage() {
                 boolean enabled = eap$SmartDoublingEnabled;
-                var title = Component.literal("智能翻倍");
-                var line = enabled
-                        ? Component.literal("已启用：根据请求量对处理样板进行智能缩放")
-                        : Component.literal("已禁用：按原始样板数量进行发配");
-                return java.util.List.of(title, line);
+//                var title = Component.literal("智能翻倍");
+//                var line = enabled
+//                        ? Component.literal("已启用：根据请求量对处理样板进行智能缩放")
+//                        : Component.literal("已禁用：按原始样板数量进行发配");
+                return List.of(new UtilGetKey(UtilGetKey.screenTooltip)
+                        .addStr("smart_doubling")
+                        .addStr(enabled, "enabled", "disabled")
+                        .build());
             }
         };
 

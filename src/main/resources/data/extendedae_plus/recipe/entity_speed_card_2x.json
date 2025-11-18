@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "item": "ae2:speed_card"
+    },
+    "b": {
+      "item": "ae2:cell_component_16k"
+    },
+    "c": {
+      "item": "ae2:logic_processor"
+    },
+    "d": {
+      "item": "ae2:singularity"
+    }
+  },
+  "pattern": [
+    "aba",
+    "cdc",
+    "aba"
+  ],
+  "result": {
+    "components": {
+      "extendedae_plus:data_speed_card": {
+        "multiplier": 2
+      }
+    },
+    "count": 1,
+    "id": "extendedae_plus:entity_speed_card"
+  }
+}

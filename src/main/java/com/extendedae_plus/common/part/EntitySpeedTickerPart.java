@@ -96,7 +96,7 @@ public class EntitySpeedTickerPart extends UpgradeablePart implements IGridTicka
     public void setAccelerateEnabled(boolean enabled) {
         this.accelerateEnabled = enabled;
         if (menu != null) {
-            menu.setAccelerateEnabled(enabled);
+            menu.accelerateEnabled = enabled;
         }
     }
 
@@ -329,7 +329,7 @@ public class EntitySpeedTickerPart extends UpgradeablePart implements IGridTicka
                 updateNetworkEnergySufficient(true);
                 return true;
             }
-        } catch (Exception ignore) {
+        } catch (Throwable ignore) {
         }
         updateNetworkEnergySufficient(false);
         return false;

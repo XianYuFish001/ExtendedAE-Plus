@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ae2:advanced_card"
+    },
+    {
+      "item": "ae2:singularity"
+    },
+    {
+      "item": "ae2:fluix_pearl"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "extendedae_plus:channel_card"
+  }
+}

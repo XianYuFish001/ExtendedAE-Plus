@@ -17,31 +17,7 @@ tasks.named('wrapper', Wrapper).configure {
 version = mod_version
 group = mod_group_id
 
-repositories {
-    // Add here additional repositories if required by some of the dependencies below.
-    maven {
-        name = "TerraformersMC"
-        url = uri("https://maven.terraformersmc.com/")
-    }
-    maven {
-        name = 'cursemaven'
-        url = uri("https://www.cursemaven.com")
-    }
-    maven {
-        name = "Modmaven"
-        url = uri("https://modmaven.dev/")
-    }
-    maven {
-        url = uri("https://maven.shedaniel.me/")
-    }
-    maven {
-        url = uri("https://maven.architectury.dev/")
-    }
-    maven {
-        url = uri("https://maven.latvian.dev/releases/")
-    }
-    mavenCentral()
-}
+apply from: "$rootDir/dependencies.gradle"
 
 base {
     archivesName = mod_id
@@ -70,6 +46,7 @@ neoForge {
 
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+            systemProperty "extendedae_plus.environment", 'dev'
         }
 
         server {
@@ -91,6 +68,7 @@ neoForge {
 
             // example of overriding the workingDirectory set in configureEach above, uncomment if you want to use it
             // gameDirectory = project.file('run-data')
+            systemProperty "extendedae_plus.environment", 'data'
 
             // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
             programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
@@ -127,59 +105,6 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 configurations {
     runtimeClasspath.extendsFrom localRuntime
-}
-
-dependencies {
-    // --- Added dependencies for target mods ---
-    implementation "curse.maven:glodium-957920:5821676"
-    implementation "org.appliedenergistics:appliedenergistics2:19.2.15"
-    implementation "org.appliedenergistics:guideme:2.5.1"
-    implementation "curse.maven:ex-pattern-provider-892005:7188776"
-    // jarJar configuration not set in this build; use implementation for API for now
-    implementation "de.mari_023:ae2wtlib_api:19.2.0"
-    implementation "curse.maven:curios-309927:6529130"
-
-    compileOnly "curse.maven:applied-flux-965012:5614830"
-    compileOnly "dev.emi:emi-neoforge:1.1.10+1.21"
-    compileOnly "curse.maven:mega-cells-622112:6005043"
-    compileOnly "curse.maven:jade-324717:5427817"
-    compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:16.0.729"
-    compileOnly "curse.maven:applied-mekanistics-574300:5978711"
-    compileOnly "mekanism:Mekanism:1.21.1-10.7.15.81:api"
-    compileOnly "dev.latvian.mods:kubejs-neoforge:2101.7.1-build.188"
-    compileOnly "dev.latvian.mods:rhino:2101.2.5-build.54"
-    compileOnly "curse.maven:framedblocks-441647:6127891"
-    compileOnly "curse.maven:advancedae-1084104:6225993"
-    compileOnly "curse.maven:functional-storage-556861:6467726"
-    compileOnly "mezz.jei:jei-1.21.1-neoforge:19.21.0.247"
-    compileOnly "curse.maven:ae2-jei-integration-1074338:5748513"
-
-    // runtime test
-    runtimeOnly "curse.maven:applied-flux-965012:5614830"
-    runtimeOnly "de.mari_023:ae2wtlib:19.2.1"
-    runtimeOnly "curse.maven:jade-324717:5427817"
-    runtimeOnly "curse.maven:mega-cells-622112:6005043"
-
-    runtimeOnly "curse.maven:mekanism-268560:6895130"
-    runtimeOnly "curse.maven:applied-mekanistics-574300:5978711"
-
-    //aea
-    implementation "curse.maven:advancedae-1084104:6932981"
-
-    //geckolib
-    runtimeOnly "curse.maven:geckolib-388172:7009924"
-
-    //ftbteams
-    runtimeOnly "curse.maven:ftb-teams-forge-404468:6930910"
-    runtimeOnly "curse.maven:ftb-library-forge-404465:7029003"
-    runtimeOnly "curse.maven:architectury-api-419699:5786327"
-
-
-    runtimeOnly fileTree(dir: 'libs', includes: ['*.jar'])
-
-    runtimeOnly "dev.emi:emi-neoforge:${emi_version}+1.21"
-    runtimeOnly "mezz.jei:jei-1.21.1-neoforge:19.21.0.247"
-    runtimeOnly "curse.maven:ae2-jei-integration-1074338:5748513"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

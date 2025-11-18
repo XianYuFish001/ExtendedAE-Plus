@@ -2,6 +2,7 @@ package com.extendedae_plus.common.impl.entitySpeed;
 
 import appeng.api.upgrades.IUpgradeInventory;
 import com.extendedae_plus.EAEPConfig;
+import com.extendedae_plus.common.dataComponent.DataSpeedCard;
 import com.extendedae_plus.common.item.EntitySpeedCardItem;
 import net.minecraft.world.item.ItemStack;
 
@@ -24,7 +25,7 @@ public final class PowerUtils {
         for (ItemStack stack : upgrades) {
             if (considered >= maxCards) break;
             if (stack != null && !stack.isEmpty() && stack.getItem() instanceof EntitySpeedCardItem) {
-                int multVal = EntitySpeedCardItem.readMultiplier(stack);
+                int multVal = DataSpeedCard.fromStack(stack);
                 int count = Math.min(stack.getCount(), maxCards - considered);
                 for (int i = 0; i < count; i++) {
                     multipliers.add(multVal);

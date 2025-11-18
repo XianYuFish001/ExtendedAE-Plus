@@ -1,6 +1,6 @@
 package com.extendedae_plus.mixin.impl.bridge;
 
-import com.extendedae_plus.client.render.Button.EAEPActionButton;
+import com.extendedae_plus.client.render.widgets.button.EAEPActionButton;
 
 import java.util.List;
 

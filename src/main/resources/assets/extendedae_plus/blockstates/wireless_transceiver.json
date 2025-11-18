@@ -1,5 +1,13 @@
 {
   "variants": {
-    "": { "model": "extendedae_plus:block/wireless_transceiver" }
+    "powered=false": {
+      "model": "extendedae_plus:block/wireless_transceiver/off"
+    },
+    "powered=true,master_mode=true": {
+      "model": "extendedae_plus:block/wireless_transceiver/master"
+    },
+    "powered=true,master_mode=false": {
+      "model": "extendedae_plus:block/wireless_transceiver/slave"
+    }
   }
 }

@@ -5,7 +5,7 @@ import appeng.api.networking.IManagedGridNode;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.helpers.patternprovider.PatternProviderLogic;
 import appeng.helpers.patternprovider.PatternProviderLogicHost;
-import com.extendedae_plus.mixin.impl.HolderChannelCardLink;
+import com.extendedae_plus.common.wireless.HolderLinkChannelCard;
 import com.extendedae_plus.mixin.impl.bridge.HelperProviderUpgradesInv;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,15 +22,14 @@ public class MixinProviderLink {
     @Final
     private IManagedGridNode mainNode;
     @Unique
-    private HolderChannelCardLink eaep$linkLogic = HolderChannelCardLink.EMPTY;
+    private HolderLinkChannelCard eaep$linkLogic = HolderLinkChannelCard.EMPTY;
 
     @Inject(method = "<init>(Lappeng/api/networking/IManagedGridNode;Lappeng/helpers/patternprovider/PatternProviderLogicHost;I)V", at = @At("TAIL"))
     private void onInit(IManagedGridNode mainNode, PatternProviderLogicHost host, int patternInventorySize, CallbackInfo ci) {
-        this.eaep$linkLogic = new HolderChannelCardLink(this.mainNode,
+        this.eaep$linkLogic = new HolderLinkChannelCard(this.mainNode,
                 host::getBlockEntity,
-                ((HelperProviderUpgradesInv) this)::eaep$getUpgradeInventory,
-                host::saveChanges);
-        ((HelperProviderUpgradesInv) this).eaep$bindAction(this.eaep$linkLogic::updateLinkStatus);
+                ((HelperProviderUpgradesInv) this)::eaep$getUpgradeInventory);
+        ((HelperProviderUpgradesInv) this).eaep$bindAction(this.eaep$linkLogic::onUpgradesChanged);
     }
 
     @Inject(method = "hasWorkToDo", at = @At("TAIL"), cancellable = true)
@@ -41,7 +40,7 @@ public class MixinProviderLink {
 
     @Inject(method = "doWork", at = @At("HEAD"))
     private void doAdditionalWork(CallbackInfoReturnable<Boolean> cir) {
-        this.eaep$linkLogic.updateLinkStatus();
+        this.eaep$linkLogic.onTickingInitialize();
     }
 
     @Unique

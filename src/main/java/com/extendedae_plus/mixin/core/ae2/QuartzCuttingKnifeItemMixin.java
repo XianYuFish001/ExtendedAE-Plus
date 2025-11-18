@@ -2,14 +2,15 @@ package com.extendedae_plus.mixin.core.ae2;
 
 import appeng.api.parts.IPartHost;
 import appeng.api.parts.SelectedPart;
+import appeng.core.definitions.AEItems;
 import appeng.items.tools.quartz.QuartzCuttingKnifeItem;
+import com.extendedae_plus.util.UtilGetKey;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.player.Player;
@@ -90,9 +91,13 @@ public abstract class QuartzCuttingKnifeItemMixin {
         name = eap$cleanBlockName(name);
 
         // 复制到剪贴板并反馈
-        player.displayClientMessage(Component.literal(eap$tryCopyToClipboard(Minecraft.getInstance(), name)
-                ? ("已复制方块/部件名: " + name)
-                : "复制失败：整合包可能限制剪贴板或未聚焦窗口"), true);
+        player.displayClientMessage(new UtilGetKey(UtilGetKey.actionBar)
+                        .item(AEItems.CERTUS_QUARTZ_KNIFE.get())
+                        .addStr("block_name_coping")
+                        .addStr(eap$tryCopyToClipboard(name), "success", "failed")
+                        .args(name)
+                        .build(),
+                true);
 //        player.swing(context.getHand());
 
         // 拦截默认行为
@@ -198,7 +203,8 @@ public abstract class QuartzCuttingKnifeItemMixin {
      * 3) AWT 系统剪贴板（可能在某些整合包/无头环境不可用）
      */
     @Unique
-    private static boolean eap$tryCopyToClipboard(Minecraft mc, String text) {
+    private static boolean eap$tryCopyToClipboard(String text) {
+        var mc = Minecraft.getInstance();
         if (text == null || text.isBlank()) return false;
         // 确保在游戏主线程执行
         if (!mc.isSameThread()) {

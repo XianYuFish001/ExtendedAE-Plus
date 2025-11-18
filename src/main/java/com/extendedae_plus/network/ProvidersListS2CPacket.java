@@ -1,7 +1,7 @@
 package com.extendedae_plus.network;
 
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.client.screen.ProviderSelectScreen;
+import com.extendedae_plus.client.screen.ProviderListScreen;
 import com.mojang.serialization.Codec;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -43,6 +43,6 @@ public record ProvidersListS2CPacket(List<Long> ids, List<String> names, List<St
     private static void handleClient(ProvidersListS2CPacket msg) {
         var mc = Minecraft.getInstance();
         var current = mc.screen;
-        mc.setScreen(new ProviderSelectScreen(current, msg.ids, msg.names, msg.i18nKeys, msg.emptySlots));
+        mc.setScreen(new ProviderListScreen(current, msg.ids, msg.names, msg.i18nKeys, msg.emptySlots));
     }
 }

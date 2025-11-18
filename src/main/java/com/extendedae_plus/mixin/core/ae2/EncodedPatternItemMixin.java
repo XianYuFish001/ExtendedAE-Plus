@@ -1,14 +1,15 @@
 package com.extendedae_plus.mixin.core.ae2;
 
+import appeng.core.definitions.AEItems;
 import appeng.crafting.pattern.EncodedPatternItem;
 import com.extendedae_plus.EAEPConfig;
+import com.extendedae_plus.common.init.ModDataComponents;
+import com.extendedae_plus.util.UtilGetKey;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.CustomData;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -20,14 +21,20 @@ import java.util.List;
 public class EncodedPatternItemMixin {
     // 客户端：在 HoverText 显示样板的编码玩家
     @Inject(method = "appendHoverText", at = @At("TAIL"))
-    public void epp$appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> lines, TooltipFlag advancedTooltips, CallbackInfo ci){
-        if (EAEPConfig.SHOW_ENCODER_PATTERN_PLAYER.get()) {
-            var customData = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
-            var tag = customData.copyTag();
-            if (tag.contains("encodePlayer")) {
-                String name = tag.getString("encodePlayer");
-                lines.add(Component.translatable("extendedae_plus.pattern.hovertext.player", name).withStyle(ChatFormatting.GRAY));
-            }
-        }
+    public void appendEncoderProfileTooltip(ItemStack stack,
+                                            Item.TooltipContext context,
+                                            List<Component> lines,
+                                            TooltipFlag advancedTooltips,
+                                            CallbackInfo ci) {
+        if (!EAEPConfig.SHOW_ENCODER_PATTERN_PLAYER.getAsBoolean()) return;
+        if (!stack.has(ModDataComponents.DATA_ENCODER_PROFILE)) return;
+
+        var data = stack.get(ModDataComponents.DATA_ENCODER_PROFILE);
+        lines.add(new UtilGetKey(UtilGetKey.tooltip)
+                .item(AEItems.PROCESSING_PATTERN.get())
+                .addStr("encoder")
+                .args(data.name())
+                .build()
+                .withStyle(ChatFormatting.GRAY));
     }
 }

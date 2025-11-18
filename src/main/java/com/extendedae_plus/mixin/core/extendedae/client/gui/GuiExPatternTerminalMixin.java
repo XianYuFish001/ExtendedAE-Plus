@@ -9,6 +9,7 @@ import appeng.client.gui.widgets.IconButton;
 import appeng.menu.AEBaseMenu;
 import com.extendedae_plus.EAEPConfig;
 import com.extendedae_plus.util.GuiUtil;
+import com.extendedae_plus.util.UtilGetKey;
 import com.glodblock.github.extendedae.client.gui.GuiExPatternTerminal;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -82,7 +83,10 @@ public abstract class GuiExPatternTerminalMixin extends AEBaseScreen<AEBaseMenu>
                         // 显示提示消息：请先选择一个样板供应器
                         if (this.minecraft.player != null) {
                             this.minecraft.player.displayClientMessage(
-                                    Component.literal("ExtendedAE Plus: 请先选择一个样板供应器（点击GroupHeader旁的按钮）"),
+                                    new UtilGetKey(UtilGetKey.message)
+                                            .addStr("provider_to_upload")
+                                            .addStr("unset")
+                                            .build(),
                                     true
                             );
                         }
@@ -102,8 +106,7 @@ public abstract class GuiExPatternTerminalMixin extends AEBaseScreen<AEBaseMenu>
             ItemStack itemToUpload = this.minecraft.player.getInventory().getItem(playerSlotIndex);
 
             if (!itemToUpload.isEmpty() && PatternDetailsHelper.isEncodedPattern(itemToUpload)) {
-                // 什么逆天ide的中文语法检查(
-                // 改用我们自己的网络包，直接将玩家槽位 与 选择的供应器ID发送到服务器
+                // 改用我们自己的网络包，直接将玩家槽位与选择的供应器ID发送到服务器
                 try {
                     PacketDistributor.sendToServer(new com.extendedae_plus.network.UploadInventoryPatternToProviderC2SPacket(
                             playerSlotIndex,
@@ -112,14 +115,20 @@ public abstract class GuiExPatternTerminalMixin extends AEBaseScreen<AEBaseMenu>
                 } catch (Throwable t) {
                     // 理论上不会失败，若失败则给出简要提示
                     this.minecraft.player.displayClientMessage(
-                            Component.literal("❌ ExtendedAE Plus: 客户端发送上传请求失败"),
-                            true
+                            new UtilGetKey(UtilGetKey.message)
+                                    .addStr("provider_to_upload")
+                                    .addStr("failed")
+                                    .build(),
+                            false
                     );
                 }
             } else {
                 this.minecraft.player.displayClientMessage(
-                        Component.literal("❌ ExtendedAE Plus: 无效的样板物品"),
-                        true
+                        new UtilGetKey(UtilGetKey.message)
+                                .addStr("provider_to_upload")
+                                .addStr("invalid_pattern")
+                                .build(),
+                        false
                 );
             }
         }
@@ -163,7 +172,9 @@ public abstract class GuiExPatternTerminalMixin extends AEBaseScreen<AEBaseMenu>
         };
 
         // 设置按钮提示文本
-        this.eap$toggleSlotsButton.setTooltip(Tooltip.create(Component.translatable("gui.expatternprovider.toggle_slots")));
+        this.eap$toggleSlotsButton.setTooltip(Tooltip.create(new UtilGetKey(UtilGetKey.screenTooltip)
+                .addStr("toggle_slots_display")
+                .build()));
 
         // 添加到左侧工具栏
         this.addToLeftToolbar(this.eap$toggleSlotsButton);
@@ -180,9 +191,10 @@ public abstract class GuiExPatternTerminalMixin extends AEBaseScreen<AEBaseMenu>
     private void onRefreshListStart(CallbackInfo ci) {
         // 更新按钮图标
         if (this.eap$toggleSlotsButton != null) {
-            this.eap$toggleSlotsButton.setTooltip(Tooltip.create(Component.translatable(
-                    this.eap$showSlots ? "gui.expatternprovider.hide_slots" : "gui.expatternprovider.show_slots"
-            )));
+            this.eap$toggleSlotsButton.setTooltip(Tooltip.create(new UtilGetKey(UtilGetKey.screenTooltip)
+                    .addStr("toggle_slot_display")
+                    .addStr(this.eap$showSlots, "enabled", "disabled")
+                    .build()));
         }
         // 清理旧的打开UI按钮
         this.eap$openUIButtons.values().forEach(this::removeWidget);

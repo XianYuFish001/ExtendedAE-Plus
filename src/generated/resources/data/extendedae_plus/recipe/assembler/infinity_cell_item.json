@@ -1,0 +1,37 @@
+{
+  "type": "extendedae:crystal_assembler",
+  "input_fluid": {
+    "amount": 2000,
+    "ingredient": {
+      "fluid": "minecraft:lava"
+    }
+  },
+  "input_items": [
+    {
+      "amount": 64,
+      "ingredient": {
+        "item": "ae2:singularity"
+      }
+    },
+    {
+      "amount": 2,
+      "ingredient": {
+        "item": "minecraft:nether_star"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ae2:item_storage_cell_256k"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ae2:fluid_storage_cell_256k"
+      }
+    }
+  ],
+  "output": {
+    "count": 1,
+    "id": "extendedae_plus:infinity_biginteger_cell"
+  }
+}

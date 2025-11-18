@@ -3,11 +3,13 @@ package com.extendedae_plus.common.event;
 import appeng.api.parts.IPart;
 import appeng.api.parts.PartModels;
 import appeng.api.storage.StorageCells;
-import appeng.block.AEBaseEntityBlock;
 import appeng.blockentity.crafting.CraftingBlockEntity;
 import appeng.items.parts.PartModelsHelper;
 import appeng.menu.locator.MenuLocators;
 import com.extendedae_plus.ExtendedAEPlus;
+import com.extendedae_plus.common.block.EAEPCraftingUnitType;
+import com.extendedae_plus.common.block.uploadCore.UploadCoreBlockEntity;
+import com.extendedae_plus.common.block.wirelessTransceiver.BlockEntityWirelessTransceiver;
 import com.extendedae_plus.common.impl.menuLocator.CuriosItemLocator;
 import com.extendedae_plus.common.init.ModBlockEntities;
 import com.extendedae_plus.common.init.ModBlocks;
@@ -19,6 +21,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.slf4j.Logger;
+
+import java.util.Arrays;
 
 @EventBusSubscriber(modid = ExtendedAEPlus.MODID)
 public class EventCommonInitialization {
@@ -50,30 +54,24 @@ public class EventCommonInitialization {
                         )
                 );
 
-                AEBaseEntityBlock<CraftingBlockEntity> b4 = ModBlocks.ACCELERATOR_4x.get();
-                AEBaseEntityBlock<CraftingBlockEntity> b16 = ModBlocks.ACCELERATOR_16x.get();
-                AEBaseEntityBlock<CraftingBlockEntity> b64 = ModBlocks.ACCELERATOR_64x.get();
-                AEBaseEntityBlock<CraftingBlockEntity> b256 = ModBlocks.ACCELERATOR_256x.get();
-                AEBaseEntityBlock<CraftingBlockEntity> b1024 = ModBlocks.ACCELERATOR_1024x.get();
-
-                // 使用我们自定义的 CraftingBlockEntity 类型，它的有效方块列表包含自定义加速器
-                var type = ModBlockEntities.EPLUS_CRAFTING_UNIT_BE.get();
-                // 不提供专用 ticker（AE2 会在其注册时按接口注入），此处传 null 即可
-                b4.setBlockEntity(CraftingBlockEntity.class, type, null, null);
-                b16.setBlockEntity(CraftingBlockEntity.class, type, null, null);
-                b64.setBlockEntity(CraftingBlockEntity.class, type, null, null);
-                b256.setBlockEntity(CraftingBlockEntity.class, type, null, null);
-                b1024.setBlockEntity(CraftingBlockEntity.class, type, null, null);
-                LOGGER.info("Bound AE2 CraftingBlockEntity to ExtendedAE Plus accelerators.");
+                ModBlocks.WIRELESS_TRANSCEIVER.get().setBlockEntity(
+                        BlockEntityWirelessTransceiver.class,
+                        ModBlockEntities.WIRELESS_TRANSCEIVER.get(),
+                        null, null
+                );
 
                 // 绑定装配矩阵上传核心方块实体类型，避免 blockEntityClass 为 null 的问题
                 ModBlocks.ASSEMBLER_MATRIX_UPLOAD_CORE.get().setBlockEntity(
-                        com.extendedae_plus.common.block.uploadCore.UploadCoreBlockEntity.class,
-                        ModBlockEntities.UPLOAD_CORE_BE.get(),
+                        UploadCoreBlockEntity.class,
+                        ModBlockEntities.UPLOAD_CORE.get(),
                         null,
                         null
                 );
-                LOGGER.info("Bound UploadCoreBlockEntity to assembler matrix upload core block.");
+
+                Arrays.stream(EAEPCraftingUnitType.values()).forEach(unit ->
+                        unit.getBlock().get().setBlockEntity(CraftingBlockEntity.class,
+                                ModBlockEntities.EAEP_CRAFTING_UNIT.get(),
+                                null, null));
             } catch (Throwable t) {
                 LOGGER.warn("Common Initialize failed ", t);
             }

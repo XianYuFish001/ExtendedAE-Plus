@@ -36,7 +36,7 @@ public class MixinAdvProviderLinkAppFlux implements HelperProviderUpgradesInv {
     private void onInit(IManagedGridNode mainNode, AdvPatternProviderLogicHost host, int patternInventorySize, CallbackInfo ci) {
         try {
             this.af_upgrades = UpgradeInventories.forMachine(
-                    host.getTerminalIcon().getItem(), Math.max(this.af_upgrades.size() + 1, 8), this::af_onUpgradesChanged);
+                    host.getTerminalIcon().getItem(), Math.min(this.af_upgrades.size() + 1, 8), this::af_onUpgradesChanged);
         } catch (Throwable ignore) {
         }
     }

@@ -11,10 +11,10 @@ import com.extendedae_plus.mixin.core.ae2.accessor.AEBaseScreenAccessor;
 import com.extendedae_plus.mixin.core.minecraft.accessor.AbstractContainerScreenAccessor;
 import com.extendedae_plus.mixin.core.minecraft.accessor.ScreenAccessor;
 import com.extendedae_plus.network.RequestUploadingC2SPacket;
+import com.extendedae_plus.util.UtilGetKey;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.renderer.Rect2i;
-import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -92,7 +92,9 @@ public abstract class PatternEncodingTermScreenMixin {
                     return new Rect2i(getX(), getY(), Math.round(16 * eap$scale), Math.round(16 * eap$scale));
                 }
             };
-            eap$uploadBtn.setTooltip(Tooltip.create(Component.translatable("extendedae_plus.button.choose_provider")));
+            eap$uploadBtn.setTooltip(Tooltip.create(new UtilGetKey(UtilGetKey.screenTooltip)
+                    .addStr("upload_button")
+                    .build()));
         }
 
         // 解析 encodePattern 的样式位置

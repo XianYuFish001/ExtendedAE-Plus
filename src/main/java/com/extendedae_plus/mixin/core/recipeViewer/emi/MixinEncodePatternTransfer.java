@@ -3,7 +3,7 @@ package com.extendedae_plus.mixin.core.recipeViewer.emi;
 import appeng.integration.modules.emi.EmiEncodePatternHandler;
 import appeng.integration.modules.itemlists.EncodingHelper;
 import appeng.menu.AEBaseMenu;
-import com.extendedae_plus.common.impl.pattern.AliasGetter;
+import com.extendedae_plus.client.impl.AliasGetter;
 import com.extendedae_plus.mixin.MixinDependencies;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;

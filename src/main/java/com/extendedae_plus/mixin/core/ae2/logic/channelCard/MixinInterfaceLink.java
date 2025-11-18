@@ -7,7 +7,7 @@ import appeng.api.upgrades.IUpgradeInventory;
 import appeng.api.upgrades.UpgradeInventories;
 import appeng.helpers.InterfaceLogic;
 import appeng.helpers.InterfaceLogicHost;
-import com.extendedae_plus.mixin.impl.HolderChannelCardLink;
+import com.extendedae_plus.common.wireless.HolderLinkChannelCard;
 import net.minecraft.world.item.Item;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
@@ -25,16 +25,16 @@ public class MixinInterfaceLink {
     @Final
     private IUpgradeInventory upgrades;
     @Unique
-    private HolderChannelCardLink eaep$linkLogic = HolderChannelCardLink.EMPTY;
+    private HolderLinkChannelCard eaep$linkLogic = HolderLinkChannelCard.EMPTY;
 
     @Shadow
     private void onUpgradesChanged() {}
 
     @Inject(method = "<init>(Lappeng/api/networking/IManagedGridNode;Lappeng/helpers/InterfaceLogicHost;Lnet/minecraft/world/item/Item;I)V", at = @At("TAIL"))
     private void onInit(IManagedGridNode gridNode, InterfaceLogicHost host, Item is, int slots, CallbackInfo ci) {
-        this.eaep$linkLogic = new HolderChannelCardLink(mainNode,
-                host::getBlockEntity, host::getUpgrades, host::saveChanges);
-        this.upgrades = UpgradeInventories.forMachine(is, Math.max(this.upgrades.size() + 1, 8), this::onUpgradesChanged);
+        this.eaep$linkLogic = new HolderLinkChannelCard(mainNode,
+                host::getBlockEntity, host::getUpgrades);
+        this.upgrades = UpgradeInventories.forMachine(is, Math.min(this.upgrades.size()+ 1, 8), this::onUpgradesChanged);
     }
 
     @Inject(method = "hasWorkToDo", at = @At("TAIL"), cancellable = true)
@@ -45,12 +45,12 @@ public class MixinInterfaceLink {
 
     @Inject(method = "updateStorage", at = @At("HEAD"))
     private void doAdditionalWork(CallbackInfoReturnable<Boolean> cir) {
-        this.eaep$linkLogic.updateLinkStatus();
+        this.eaep$linkLogic.onTickingInitialize();
     }
 
     @Inject(method = "onUpgradesChanged", at = @At("HEAD"))
     private void onUpgradesChanged(CallbackInfo ci) {
-        this.eaep$linkLogic.updateLinkStatus();
+        this.eaep$linkLogic.onUpgradesChanged();
     }
 
     @Unique

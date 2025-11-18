@@ -18,7 +18,9 @@ import com.extendedae_plus.mixin.impl.bridge.ExPatternPageAccessor;
 import com.extendedae_plus.network.CraftingMonitorJumpC2SPacket;
 import com.extendedae_plus.network.CraftingMonitorOpenProviderC2SPacket;
 import com.extendedae_plus.util.GuiUtil;
+import com.extendedae_plus.util.UtilGetKey;
 import com.glodblock.github.extendedae.client.gui.GuiExPatternProvider;
+import com.glodblock.github.extendedae.common.EAESingletons;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -278,7 +280,11 @@ public abstract class AEBaseScreenMixin {
             } catch (Throwable ignored) {
             }
 
-            String pageText = "第" + cur + "页" + "/" + max + "页";
+            String pageText = new UtilGetKey(UtilGetKey.screen)
+                    .item(EAESingletons.EX_PATTERN_PROVIDER.asItem())
+                    .addStr("pages")
+                    .args(cur, max)
+                    .build().getString();
 
             ScreenStyle style = eap$getStyle(self);
             int color = 0xFFFFFFFF;

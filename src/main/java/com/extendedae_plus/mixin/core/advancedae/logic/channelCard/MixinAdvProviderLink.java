@@ -3,7 +3,7 @@ package com.extendedae_plus.mixin.core.advancedae.logic.channelCard;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.IManagedGridNode;
 import appeng.api.networking.ticking.TickRateModulation;
-import com.extendedae_plus.mixin.impl.HolderChannelCardLink;
+import com.extendedae_plus.common.wireless.HolderLinkChannelCard;
 import com.extendedae_plus.mixin.impl.bridge.HelperProviderUpgradesInv;
 import net.pedroksl.advanced_ae.common.logic.AdvPatternProviderLogic;
 import net.pedroksl.advanced_ae.common.logic.AdvPatternProviderLogicHost;
@@ -22,15 +22,14 @@ public class MixinAdvProviderLink {
     @Final
     private IManagedGridNode mainNode;
     @Unique
-    private HolderChannelCardLink eaep$linkLogic = HolderChannelCardLink.EMPTY;
+    private HolderLinkChannelCard eaep$linkLogic = HolderLinkChannelCard.EMPTY;
 
     @Inject(method = "<init>(Lappeng/api/networking/IManagedGridNode;Lnet/pedroksl/advanced_ae/common/logic/AdvPatternProviderLogicHost;I)V", at = @At("TAIL"))
     private void onInit(IManagedGridNode mainNode, AdvPatternProviderLogicHost host, int patternInventorySize, CallbackInfo ci) {
-        this.eaep$linkLogic = new HolderChannelCardLink(this.mainNode,
+        this.eaep$linkLogic = new HolderLinkChannelCard(this.mainNode,
                 host::getBlockEntity,
-                ((HelperProviderUpgradesInv) this)::eaep$getUpgradeInventory,
-                host::saveChanges);
-        ((HelperProviderUpgradesInv) this).eaep$bindAction(this.eaep$linkLogic::updateLinkStatus);
+                ((HelperProviderUpgradesInv) this)::eaep$getUpgradeInventory);
+        ((HelperProviderUpgradesInv) this).eaep$bindAction(this.eaep$linkLogic::onUpgradesChanged);
     }
 
     @Inject(method = "hasWorkToDo", at = @At("TAIL"), cancellable = true)
@@ -41,7 +40,7 @@ public class MixinAdvProviderLink {
 
     @Inject(method = "doWork", at = @At("HEAD"))
     private void doAdditionalWork(CallbackInfoReturnable<Boolean> cir) {
-        this.eaep$linkLogic.updateLinkStatus();
+        this.eaep$linkLogic.onTickingInitialize();
     }
 
     @Unique

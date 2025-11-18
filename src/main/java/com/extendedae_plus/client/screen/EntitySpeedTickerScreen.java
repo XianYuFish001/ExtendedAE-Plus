@@ -9,8 +9,10 @@ import appeng.client.gui.widgets.CommonButtons;
 import appeng.client.gui.widgets.SettingToggleButton;
 import appeng.util.Platform;
 import com.extendedae_plus.common.impl.entitySpeed.PowerUtils;
+import com.extendedae_plus.common.init.ModItems;
 import com.extendedae_plus.common.menu.EntitySpeedTickerMenu;
 import com.extendedae_plus.network.ToggleEntityTickerC2SPacket;
+import com.extendedae_plus.util.UtilGetKey;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -25,10 +27,11 @@ public class EntitySpeedTickerScreen<C extends EntitySpeedTickerMenu> extends Up
 
     /**
      * 构造函数，初始化界面和控件。
-     * @param menu 实体加速器菜单
+     *
+     * @param menu            实体加速器菜单
      * @param playerInventory 玩家背包
-     * @param title 界面标题
-     * @param style 界面样式
+     * @param title           界面标题
+     * @param style           界面样式
      */
     public EntitySpeedTickerScreen(EntitySpeedTickerMenu menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super((C) menu, playerInventory, title, style);
@@ -49,15 +52,17 @@ public class EntitySpeedTickerScreen<C extends EntitySpeedTickerMenu> extends Up
             public List<Component> getTooltipMessage() {
                 if (menu.targetBlacklisted) {
                     return List.of(
-                            Component.literal("实体加速"),
-                            Component.literal("已禁用（目标在黑名单）")
+                            new UtilGetKey(UtilGetKey.screenTooltip)
+                                    .item(ModItems.ENTITY_TICKER_PART_ITEM)
+                                    .addStr("blacklist")
+                                    .build()
                     );
                 }
-                boolean enabled = eap$entitySpeedTickerEnabled;
                 return List.of(
-                        Component.literal("实体加速"),
-                        enabled ? Component.literal("已启用: 将加速目标方块实体的tick") :
-                                Component.literal("已关闭: 不会对目标方块实体进行加速")
+                        new UtilGetKey(UtilGetKey.screenTooltip)
+                                .item(ModItems.ENTITY_TICKER_PART_ITEM)
+                                .addStr(eap$entitySpeedTickerEnabled, "enabled", "disabled")
+                                .build()
                 );
             }
 
@@ -94,25 +99,65 @@ public class EntitySpeedTickerScreen<C extends EntitySpeedTickerMenu> extends Up
         Map<String, Component> textContents = new HashMap<>();
         if (getMenu().targetBlacklisted) {
             // 黑名单禁用时的默认显示
-            textContents.put("enable", Component.translatable("screen.extendedae_plus.entity_speed_ticker.enable"));
-            textContents.put("speed", Component.translatable("screen.extendedae_plus.entity_speed_ticker.speed", 0));
-            textContents.put("energy", Component.translatable("screen.extendedae_plus.entity_speed_ticker.energy", Platform.formatPower(0.0, false)));
-            textContents.put("power_ratio", Component.translatable("screen.extendedae_plus.entity_speed_ticker.power_ratio", PowerUtils.formatPercentage(0.0)));
-            textContents.put("multiplier", Component.translatable("screen.extendedae_plus.entity_speed_ticker.multiplier", String.format("%.2fx", 0.0)));
+            // 你家被黑名单key是enable???真是不得不服😓
+            // "screen.extendedae_plus.entity_speed_ticker.enable": "§c§l机器已被禁用"
+            textContents.put("state", new UtilGetKey(UtilGetKey.screen)
+                    .item(ModItems.ENTITY_TICKER_PART_ITEM)
+                    .addStr("blacklist")
+                    .build());
+            textContents.put("speed", new UtilGetKey(UtilGetKey.screen)
+                    .item(ModItems.ENTITY_TICKER_PART_ITEM)
+                    .addStr("speed")
+                    .args(0)
+                    .build());
+            textContents.put("energy", new UtilGetKey(UtilGetKey.screen)
+                    .item(ModItems.ENTITY_TICKER_PART_ITEM)
+                    .addStr("energy")
+                    .args(Platform.formatPower(0.0, false))
+                    .build());
+            textContents.put("power_ratio", new UtilGetKey(UtilGetKey.screen)
+                    .item(ModItems.ENTITY_TICKER_PART_ITEM)
+                    .addStr("power_ratio")
+                    .args(PowerUtils.formatPercentage(0.0))
+                    .build());
+            textContents.put("multiplier", new UtilGetKey(UtilGetKey.screen)
+                    .item(ModItems.ENTITY_TICKER_PART_ITEM)
+                    .addStr("multiplier")
+                    .args(String.format("%.2fx", 0.0))
+                    .build());
         } else {
             // 正常状态下显示实际数据
             int energyCardCount = getMenu().energyCardCount;
-            double multiplier = getMenu().multiplier;
             int effectiveSpeed = getMenu().effectiveSpeed;
             double finalPower = PowerUtils.computeFinalPowerForProduct(effectiveSpeed, energyCardCount);
             double remainingRatio = PowerUtils.getRemainingRatio(energyCardCount);
 
-            textContents.put("enable", getMenu().networkEnergySufficient ? null :
-                    Component.translatable("screen.extendedae_plus.entity_speed_ticker.warning_network_energy_insufficient"));
-            textContents.put("speed", Component.translatable("screen.extendedae_plus.entity_speed_ticker.speed", effectiveSpeed));
-            textContents.put("energy", Component.translatable("screen.extendedae_plus.entity_speed_ticker.energy", Platform.formatPower(finalPower, false)));
-            textContents.put("power_ratio", Component.translatable("screen.extendedae_plus.entity_speed_ticker.power_ratio", PowerUtils.formatPercentage(remainingRatio)));
-            textContents.put("multiplier", Component.translatable("screen.extendedae_plus.entity_speed_ticker.multiplier", String.format("%.2fx", multiplier)));
+            if (!menu.networkEnergySufficient)
+                textContents.put("state", new UtilGetKey(UtilGetKey.screen)
+                        .item(ModItems.ENTITY_TICKER_PART_ITEM)
+                        .addStr("needs_energy")
+                        .build());
+
+            textContents.put("speed", new UtilGetKey(UtilGetKey.screen)
+                    .item(ModItems.ENTITY_TICKER_PART_ITEM)
+                    .addStr("speed")
+                    .args(effectiveSpeed)
+                    .build());
+            textContents.put("energy", new UtilGetKey(UtilGetKey.screen)
+                    .item(ModItems.ENTITY_TICKER_PART_ITEM)
+                    .addStr("energy")
+                    .args(Platform.formatPower(finalPower, false))
+                    .build());
+            textContents.put("power_ratio", new UtilGetKey(UtilGetKey.screen)
+                    .item(ModItems.ENTITY_TICKER_PART_ITEM)
+                    .addStr("power_ratio")
+                    .args(PowerUtils.formatPercentage(remainingRatio))
+                    .build());
+            textContents.put("multiplier", new UtilGetKey(UtilGetKey.screen)
+                    .item(ModItems.ENTITY_TICKER_PART_ITEM)
+                    .addStr("multiplier")
+                    .args(String.format("%.2fx", getMenu().multiplier))
+                    .build());
         }
         textContents.forEach(this::setTextContent);
     }

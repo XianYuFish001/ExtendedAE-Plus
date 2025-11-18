@@ -1,6 +1,6 @@
 package com.extendedae_plus.mixin;
 
-import com.extendedae_plus.util.FormatUtil;
+import com.extendedae_plus.util.UtilFormat;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.LoadingModList;
 import net.neoforged.fml.loading.moddiscovery.ModInfo;
@@ -49,7 +49,7 @@ public class MixinDependenciesDiscover {
 
         LOGGER.debug("Found @MixinDependencies" +
                 "{MixinClass[{}], requireMods:{}, conflictMods:{}}",
-                FormatUtil.splitToLastKey(mixinClassName, "core", "\\."),
+                UtilFormat.splitToLastKey(mixinClassName, "core", "\\."),
                 dependencies.requiredMods, dependencies.conflictMods);
 
         for (String requiredMod : dependencies.requiredMods) {

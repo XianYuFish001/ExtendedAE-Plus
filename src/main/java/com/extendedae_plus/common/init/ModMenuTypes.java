@@ -3,7 +3,7 @@ package com.extendedae_plus.common.init;
 import appeng.menu.implementations.MenuTypeBuilder;
 import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.common.menu.EntitySpeedTickerMenu;
-import com.extendedae_plus.common.menu.NetworkPatternControllerMenu;
+import com.extendedae_plus.common.menu.MenuProviderController;
 import com.extendedae_plus.common.part.EntitySpeedTickerPart;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.inventory.MenuType;
@@ -17,9 +17,9 @@ public final class ModMenuTypes {
     public static final DeferredRegister<MenuType<?>> MENUS =
             DeferredRegister.create(Registries.MENU, ExtendedAEPlus.MODID);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<NetworkPatternControllerMenu>> NETWORK_PATTERN_CONTROLLER =
+    public static final DeferredHolder<MenuType<?>, MenuType<MenuProviderController>> NETWORK_PATTERN_CONTROLLER =
             MENUS.register("network_pattern_controller",
-                    () -> IMenuTypeExtension.create(NetworkPatternControllerMenu::new));
+                    () -> IMenuTypeExtension.create(MenuProviderController::new));
 
     public static final DeferredHolder<MenuType<?>, MenuType<EntitySpeedTickerMenu>> ENTITY_TICKER_MENU =
             MENUS.register("entity_speed_ticker",

@@ -1,6 +1,8 @@
 package com.extendedae_plus.client.screen;
 
+import com.extendedae_plus.common.init.ModItems;
 import com.extendedae_plus.network.SetWirelessFrequencyC2SPacket;
+import com.extendedae_plus.util.UtilGetKey;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -36,7 +38,10 @@ public class FrequencyInputScreen extends Screen {
      * @param currentFrequency 当前频率
      */
     public FrequencyInputScreen(BlockPos pos, long currentFrequency) {
-        super(Component.translatable("gui.extendedae_plus.frequency_input.title"));
+        super(new UtilGetKey(UtilGetKey.screen)
+                .item(ModItems.WIRELESS_TRANSCEIVER)
+                .addStr("frequency_input")
+                .build());
         this.pos = pos;
         this.currentFrequency = currentFrequency;
     }
@@ -57,7 +62,11 @@ public class FrequencyInputScreen extends Screen {
                 y + 30,
                 WINDOW_WIDTH - 20,
                 20,
-                Component.translatable("gui.extendedae_plus.frequency_input.field")
+                new UtilGetKey(UtilGetKey.screen)
+                        .item(ModItems.WIRELESS_TRANSCEIVER)
+                        .addStr("frequency_input")
+                        .addStr("input_field")
+                        .build()
         );
         
         // 设置输入框属性
@@ -72,7 +81,11 @@ public class FrequencyInputScreen extends Screen {
         // 创建确认按钮
         // API说明：Button.builder方法在1.21.1中使用
         this.confirmButton = Button.builder(
-                Component.translatable("gui.extendedae_plus.frequency_input.confirm"),
+                new UtilGetKey(UtilGetKey.screen)
+                        .item(ModItems.WIRELESS_TRANSCEIVER)
+                        .addStr("frequency_input")
+                        .addStr("confirm")
+                        .build(),
                 button -> this.onConfirm()
         )
         .bounds(x + 10, y + 55, 80, 20)
@@ -82,7 +95,11 @@ public class FrequencyInputScreen extends Screen {
         
         // 创建取消按钮
         Button cancelButton = Button.builder(
-                Component.translatable("gui.extendedae_plus.frequency_input.cancel"),
+                        new UtilGetKey(UtilGetKey.screen)
+                                .item(ModItems.WIRELESS_TRANSCEIVER)
+                                .addStr("frequency_input")
+                                .addStr("cancel")
+                                .build(),
                 button -> this.onClose()
         )
         .bounds(x + 110, y + 55, 80, 20)
@@ -156,7 +173,10 @@ public class FrequencyInputScreen extends Screen {
         guiGraphics.fill(x + WINDOW_WIDTH - 1, y, x + WINDOW_WIDTH, y + WINDOW_HEIGHT, 0xFFFFFFFF); // 右侧
         
         // 绘制标题
-        Component title = Component.translatable("gui.extendedae_plus.frequency_input.title");
+        Component title = new UtilGetKey(UtilGetKey.screen)
+                .item(ModItems.WIRELESS_TRANSCEIVER)
+                .addStr("frequency_input")
+                .build();
         guiGraphics.drawString(
                 this.font,
                 title,

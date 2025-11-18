@@ -16,8 +16,9 @@ import appeng.menu.me.items.PatternEncodingTermMenu;
 import appeng.util.inv.FilteredInternalInventory;
 import appeng.util.inv.filter.IAEItemFilter;
 import com.extendedae_plus.EAEPConfig;
+import com.extendedae_plus.common.block.uploadCore.UploadCoreBlockEntity;
 import com.extendedae_plus.mixin.core.ae2.accessor.PatternEncodingTermMenuAccessor;
-import net.minecraft.network.chat.Component;
+import com.extendedae_plus.util.UtilGetKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
@@ -70,7 +71,6 @@ public class PatternUploader {
                 .eap$getEncodedPatternSlot();
         ItemStack stack = encodedSlot.getItem();
         if (stack.isEmpty() || !PatternDetailsHelper.isEncodedPattern(stack)) {
-            sendMessage(player, "ExtendedAE Plus: 没有可上传的编码样板");
             return false;
         }
 
@@ -79,7 +79,6 @@ public class PatternUploader {
         if (!(details instanceof AECraftingPattern
                 || details instanceof AESmithingTablePattern
                 || details instanceof AEStonecuttingPattern)) {
-            sendMessage(player, "extendedae_plus.upload_to_matrix.fail");
             return false;
         }
 
@@ -90,16 +89,16 @@ public class PatternUploader {
                 grid = host.getActionableNode().getGrid();
         } catch (Throwable ignored) {}
         if (grid == null) {
-            sendMessage(player, "ExtendedAE Plus: 当前不在有效的 AE 网络中");
             return false;
         }
 
         // 在尝试上传之前，检查装配矩阵是否已经存在相同样板（物品与NBT完全一致）
         if (matrixContainsPattern(grid, stack)) {
             // 直接提醒并跳过上传，并将同等数量的空白样板放回空白样板槽，否则退回玩家背包
-            if (player != null) {
-                player.sendSystemMessage(Component.literal("ExtendedAE Plus: 装配矩阵已存在相同样板，已跳过上传并返还空白样板"));
-            }
+            player.sendSystemMessage(new UtilGetKey(UtilGetKey.message)
+                    .addStr("pattern_uploading")
+                    .addStr("duplicate_pattern")
+                    .build());
             try {
                 var accessor = (PatternEncodingTermMenuAccessor) menu;
                 var blankSlot = accessor.eap$getBlankPatternSlot();
@@ -135,7 +134,6 @@ public class PatternUploader {
                     if (stack.isEmpty()) {
                         encodedSlot.set(ItemStack.EMPTY);
                     }
-                    sendMessage(player, "extendedae_plus.upload_to_matrix.success");
                     return true;
                 }
             }
@@ -154,17 +152,9 @@ public class PatternUploader {
                     if (stack.isEmpty()) {
                         encodedSlot.set(ItemStack.EMPTY);
                     }
-                    sendMessage(player, "extendedae_plus.upload_to_matrix.success");
                     return true;
                 }
             }
-        }
-
-        // 未找到可用矩阵或全部拒收
-        if (inventories.isEmpty() && handlers.isEmpty()) {
-            sendMessage(player, "extendedae_plus.upload_to_matrix.fail_no_matrix");
-        } else {
-            sendMessage(player, "extendedae_plus.upload_to_matrix.fail_full");
         }
         return false;
     }
@@ -255,34 +245,29 @@ public class PatternUploader {
         // 1. 验证玩家是否打开了样板访问终端
         PatternAccessTermMenu menu = getPatternAccessMenu(player);
         if (menu == null) {
-            sendMessage(player, "ExtendedAE Plus: 请先打开样板访问终端或扩展样板管理终端");
             return false;
         }
 
         // 2. 获取玩家背包中的物品
         ItemStack playerItem = player.getInventory().getItem(playerSlotIndex);
         if (playerItem.isEmpty()) {
-            sendMessage(player, "ExtendedAE Plus: 背包槽位为空");
             return false;
         }
 
         // 3. 验证是否是编码样板
         if (!PatternDetailsHelper.isEncodedPattern(playerItem)) {
-            sendMessage(player, "ExtendedAE Plus: 该物品不是有效的编码样板");
             return false;
         }
 
         // 4. 获取目标样板供应器
         PatternContainer patternContainer = getPatternContainerById(menu, providerId);
         if (patternContainer == null) {
-            sendMessage(player, "ExtendedAE Plus: 找不到指定的样板供应器 (ID: " + providerId + ")");
             return false;
         }
 
         // 5. 获取样板供应器的库存
         InternalInventory patternInventory = patternContainer.getTerminalPatternInventory();
         if (patternInventory == null) {
-            sendMessage(player, "ExtendedAE Plus: 无法访问样板供应器的库存");
             return false;
         }
 
@@ -302,12 +287,9 @@ public class PatternUploader {
             if (playerItem.isEmpty()) {
                 player.getInventory().setItem(playerSlotIndex, ItemStack.EMPTY);
             }
-            
-            String terminalType = isExtendedAETerminal(player) ? "扩展样板管理终端" : "样板访问终端";
-            sendMessage(player, "ExtendedAE Plus: 通过" + terminalType + "成功上传 " + insertedCount + " 个样板");
+
             return true;
         } else {
-            sendMessage(player, "ExtendedAE Plus: 上传失败 - 样板供应器已满或样板无效");
             return false;
         }
     }
@@ -328,9 +310,6 @@ public class PatternUploader {
                 successCount++;
             }
         }
-        
-        String terminalType = isExtendedAETerminal(player) ? "扩展样板管理终端" : "样板访问终端";
-        sendMessage(player, "ExtendedAE Plus: 通过" + terminalType + "批量上传完成，成功上传 " + successCount + " 个样板");
         return successCount;
     }
 
@@ -458,21 +437,6 @@ public class PatternUploader {
             }
         }
         return null;
-    }
-
-    /**
-     * 发送消息给玩家
-     * 
-     * @param player 玩家
-     * @param message 消息内容
-     */
-    private static void sendMessage(ServerPlayer player, String message) {
-        // 静默：不再向玩家左下角发送任何提示信息
-        // 如需恢复，取消下面注释即可：
-        // if (player != null) {
-        //     player.sendSystemMessage(Component.literal(message));
-        // }
-        // 如果玩家为null，静默忽略（用于测试环境）
     }
 
     /**
@@ -859,7 +823,7 @@ public class PatternUploader {
             var it = any.getCluster().getBlockEntities();
             while (it.hasNext()) {
                 var te = it.next();
-                if (te instanceof com.extendedae_plus.common.block.uploadCore.UploadCoreBlockEntity) {
+                if (te instanceof UploadCoreBlockEntity) {
                     cores++;
                 }
             }

@@ -3,6 +3,8 @@ package com.extendedae_plus.common.item.infinityBigIntegerCell;
 import appeng.api.config.FuzzyMode;
 import appeng.api.storage.cells.ICellWorkbenchItem;
 import com.extendedae_plus.common.impl.storage.infinityCell.InfinityConstants;
+import com.extendedae_plus.common.init.ModItems;
+import com.extendedae_plus.util.UtilGetKey;
 import com.google.common.base.Preconditions;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
@@ -24,8 +26,10 @@ public class InfinityBigIntegerCellItem extends Item implements ICellWorkbenchIt
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag tooltipFlag) {
-        tooltip.add(Component.translatable("tooltip.extendedae_plus.infinity_biginteger_cell.summon1"));
-        tooltip.add(Component.translatable("tooltip.extendedae_plus.infinity_biginteger_cell.summon2"));
+        tooltip.add(new UtilGetKey(UtilGetKey.tooltip)
+                .item(ModItems.INFINITY_BIGINTEGER_CELL_ITEM)
+                .addStr("description")
+                .build());
 
         Preconditions.checkArgument(stack.getItem() == this);
         // 仅在 ItemStack 自身存在 UUID 时显示 UUID，避免触发持久化或加载逻辑

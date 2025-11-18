@@ -13,12 +13,12 @@ import appeng.parts.AEBasePart;
 import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.common.impl.pattern.PatternProviderData;
 import com.extendedae_plus.mixin.core.ae2.accessor.PatternProviderLogicAccessor;
+import com.extendedae_plus.util.UtilGetKey;
 import com.glodblock.github.extendedae.util.FCClientUtil;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
@@ -162,7 +162,10 @@ public class CraftingMonitorOpenProviderC2SPacket implements CustomPacketPayload
         }
 
         if (player != null) {
-            player.displayClientMessage(Component.translatable("chat.ex_pattern_access_terminal.pos", pos.toShortString(), dim.location().getPath()), false);
+            player.displayClientMessage(new UtilGetKey(UtilGetKey.message)
+                    .addStr("opened_provider_info")
+                    .args(pos.toShortString(), dim.location().getPath())
+                    .build(), false);
         }
     }
 }

@@ -97,7 +97,7 @@ config="${mod_id}.mixins.json"
 
 [[dependencies.${mod_id}]]
 modId="expandedae"
-type="discouraged"
+type="incompatible"
 versionRange="*"
 ordering="AFTER"
 side="BOTH"

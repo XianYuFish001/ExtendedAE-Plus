@@ -1,0 +1,39 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "type": "neoforge:components",
+      "items": "extendedae_plus:entity_speed_card",
+      "components": {
+        "extendedae_plus:data_speed_card": {
+          "multiplier": 4
+        }
+      },
+      "strict": true
+    },
+    "b": {
+      "item": "ae2:cell_component_256k"
+    },
+    "c": {
+      "item": "ae2:spatial_cell_component_16"
+    },
+    "d": {
+      "item": "ae2:singularity"
+    }
+  },
+  "pattern": [
+    "aba",
+    "cdc",
+    "aba"
+  ],
+  "result": {
+    "components": {
+      "extendedae_plus:data_speed_card": {
+        "multiplier": 8
+      }
+    },
+    "count": 1,
+    "id": "extendedae_plus:entity_speed_card"
+  }
+}

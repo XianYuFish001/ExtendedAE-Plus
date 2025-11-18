@@ -1,0 +1,6 @@
+{
+    "parent": "extendedae_plus:block/wireless_transceiver/off",
+    "textures": {
+        "light" : "extendedae_plus:block/wireless_transceiver/slave"
+    }
+}

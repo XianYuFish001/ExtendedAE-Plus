@@ -1,0 +1,60 @@
+repositories {
+    maven {
+        name = "TerraformersMC"
+        url = uri("https://maven.terraformersmc.com/")
+    }
+    maven {
+        name = 'cursemaven'
+        url = uri("https://www.cursemaven.com")
+    }
+    maven {
+        name = "Modmaven"
+        url = uri("https://modmaven.dev/")
+    }
+    maven {
+        url = uri("https://maven.shedaniel.me/")
+    }
+    maven {
+        url = uri("https://maven.architectury.dev/")
+    }
+    maven {
+        url = uri("https://maven.latvian.dev/releases/")
+    }
+    mavenCentral()
+}
+
+dependencies {
+    implementation libs.ae2
+    implementation libs.guideME
+    implementation libs.glodium
+    implementation libs.extendedAE
+    implementation libs.advancedAE
+    implementation libs.ae2wt
+    implementation libs.jade
+    implementation libs.jech
+    implementation libs.emi
+    implementation libs.jei
+    implementation libs.ae2Jei
+
+    compileOnly libs.appliedFlux
+    compileOnly libs.megaCells
+    compileOnly libs.mekanism
+    compileOnly libs.appliedMekanistics
+    compileOnly libs.curios
+    compileOnly libs.ftbTeams
+    compileOnly libs.kubejs
+    compileOnly libs.rei
+
+    runtimeOnly libs.geckolib
+    runtimeOnly libs.appliedFlux
+    runtimeOnly libs.megaCells
+    runtimeOnly libs.mekanism
+    runtimeOnly libs.appliedMekanistics
+    runtimeOnly libs.curios
+    runtimeOnly libs.ftbTeams
+    runtimeOnly libs.ftbLibrary
+    runtimeOnly libs.architectury
+    runtimeOnly libs.modernUI
+
+    runtimeOnly fileTree(dir: 'libs', includes: ['*.jar'])
+}

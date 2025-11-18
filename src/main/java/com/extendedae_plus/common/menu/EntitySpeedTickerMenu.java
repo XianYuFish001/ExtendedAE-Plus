@@ -55,6 +55,7 @@ public class EntitySpeedTickerMenu extends UpgradeableMenu<EntitySpeedTickerPart
      * 设置加速开关状态，并同步到部件。
      * @param enabled 是否启用加速
      */
+    // 这霸气的循环调用...有点强
     public void setAccelerateEnabled(boolean enabled) {
         this.accelerateEnabled = enabled;
         if (getHost() != null) {

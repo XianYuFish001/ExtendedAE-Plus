@@ -2,14 +2,17 @@ package com.extendedae_plus.mixin.core.ae2.client.gui;
 
 import appeng.client.gui.AEBaseScreen;
 import appeng.client.gui.implementations.InterfaceScreen;
+import appeng.client.gui.style.ScreenStyle;
 import appeng.menu.SlotSemantics;
-import com.extendedae_plus.client.render.Button.EAEPActionButton;
-import com.extendedae_plus.client.render.Button.EAEPActionItems;
+import appeng.menu.implementations.InterfaceMenu;
+import com.extendedae_plus.client.render.widgets.button.EAEPActionButton;
+import com.extendedae_plus.client.render.widgets.button.EAEPActionItems;
 import com.extendedae_plus.mixin.core.minecraft.accessor.AbstractContainerScreenAccessor;
-import com.extendedae_plus.mixin.core.minecraft.accessor.ScreenAccessor;
 import com.extendedae_plus.mixin.impl.bridge.HelperProviderButtons;
-import com.extendedae_plus.network.InterfaceAdjustConfigAmountC2SPacket;
-import net.minecraft.client.Minecraft;
+import com.extendedae_plus.network.CPacketInterfaceScaling;
+import com.mojang.datafixers.util.Pair;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -17,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,167 +28,42 @@ import java.util.List;
  * 点击时通过 NeoForge 自定义负载发送到服务端调整配置数量。
  */
 @Mixin(value = InterfaceScreen.class, remap = false)
-public abstract class InterfaceScreenMixin implements HelperProviderButtons {
+public abstract class InterfaceScreenMixin<TMenu extends InterfaceMenu>
+        extends AEBaseScreen<TMenu>
+        implements HelperProviderButtons {
+    @Unique
+    public final List<EAEPActionButton> eaep$scalingButtons = new ArrayList<>();
+    @Unique
+    private Pair<Integer, Integer> eaep$lastScreenInfo;
 
-    @Unique private EAEPActionButton eap$x2Button;
-    @Unique private EAEPActionButton eap$divideBy2Button;
-    @Unique private EAEPActionButton eap$x5Button;
-    @Unique private EAEPActionButton eap$divideBy5Button;
-    @Unique private EAEPActionButton eap$x10Button;
-    @Unique private EAEPActionButton eap$divideBy10Button;
-
-    @Unique private int eap$lastLeftPos = -1;
-    @Unique private int eap$lastTopPos = -1;
-    @Unique private int eap$lastImageWidth = -1;
-    @Unique private int eap$lastImageHeight = -1;
     @Unique private int eap$lastConfigIndex = -1;
 
+    public InterfaceScreenMixin(TMenu menu, Inventory playerInventory, Component title, ScreenStyle style) {
+        super(menu, playerInventory, title, style);
+    }
+
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void eap$addScaleButtons(CallbackInfo ci) {
-        if (!eap$isSupportedInterfaceScreen()) {
+    private void addScaleButtons(CallbackInfo ci) {
+        if (!(((Object) this) instanceof InterfaceScreen<?>)) {
             return;
         }
-        if (eap$x2Button == null) {
-            eap$x2Button = new EAEPActionButton(
-                    EAEPActionItems.MUL2, b -> eap$sendAdjustForAllConfigs(false, 2));
-            eap$x2Button.setTooltip(null);
-            eap$x2Button.setVisibility(true);
-        }
-        if (eap$divideBy2Button == null) {
-            eap$divideBy2Button = new EAEPActionButton(
-                    EAEPActionItems.DIV2, b -> eap$sendAdjustForAllConfigs(true, 2));
-            eap$divideBy2Button.setTooltip(null);
-            eap$divideBy2Button.setVisibility(true);
-        }
-        if (eap$x5Button == null) {
-            eap$x5Button = new EAEPActionButton(
-                    EAEPActionItems.MUL5, b -> eap$sendAdjustForAllConfigs(false, 5));
-            eap$x5Button.setTooltip(null);
-            eap$x5Button.setVisibility(true);
-        }
-        if (eap$divideBy5Button == null) {
-            eap$divideBy5Button = new EAEPActionButton(
-                    EAEPActionItems.DIV5, b -> eap$sendAdjustForAllConfigs(true, 5));
-            eap$divideBy5Button.setTooltip(null);
-            eap$divideBy5Button.setVisibility(true);
-        }
-        if (eap$x10Button == null) {
-            eap$x10Button = new EAEPActionButton(
-                    EAEPActionItems.DIV10, b -> eap$sendAdjustForAllConfigs(false, 10));
-            eap$x10Button.setTooltip(null);
-            eap$x10Button.setVisibility(true);
-        }
-        if (eap$divideBy10Button == null) {
-            eap$divideBy10Button = new EAEPActionButton(
-                    EAEPActionItems.DIV10, b -> eap$sendAdjustForAllConfigs(true, 10));
-            eap$divideBy10Button.setTooltip(null);
-            eap$divideBy10Button.setVisibility(true);
-        }
 
-        // 注册到渲染与交互列表
-        var accessor = (ScreenAccessor) this;
-        if (!accessor.eap$getRenderables().contains(eap$divideBy2Button)) accessor.eap$getRenderables().add(eap$divideBy2Button);
-        if (!accessor.eap$getChildren().contains(eap$divideBy2Button)) accessor.eap$getChildren().add(eap$divideBy2Button);
-        if (!accessor.eap$getRenderables().contains(eap$x2Button)) accessor.eap$getRenderables().add(eap$x2Button);
-        if (!accessor.eap$getChildren().contains(eap$x2Button)) accessor.eap$getChildren().add(eap$x2Button);
-        if (!accessor.eap$getRenderables().contains(eap$divideBy5Button)) accessor.eap$getRenderables().add(eap$divideBy5Button);
-        if (!accessor.eap$getChildren().contains(eap$divideBy5Button)) accessor.eap$getChildren().add(eap$divideBy5Button);
-        if (!accessor.eap$getRenderables().contains(eap$x5Button)) accessor.eap$getRenderables().add(eap$x5Button);
-        if (!accessor.eap$getChildren().contains(eap$x5Button)) accessor.eap$getChildren().add(eap$x5Button);
-        if (!accessor.eap$getRenderables().contains(eap$divideBy10Button)) accessor.eap$getRenderables().add(eap$divideBy10Button);
-        if (!accessor.eap$getChildren().contains(eap$divideBy10Button)) accessor.eap$getChildren().add(eap$divideBy10Button);
-        if (!accessor.eap$getRenderables().contains(eap$x10Button)) accessor.eap$getRenderables().add(eap$x10Button);
-        if (!accessor.eap$getChildren().contains(eap$x10Button)) accessor.eap$getChildren().add(eap$x10Button);
+        EAEPActionItems.GROUPED_ACTIONS.get("scaling").forEach(action ->
+                this.eaep$scalingButtons.add(new EAEPActionButton(action, CPacketInterfaceScaling::send)));
 
-        eap$relayoutButtons();
+        this.eaep$scalingButtons.forEach(button -> {
+            this.addRenderableWidget(button);
+            button.setVisibility(true);
+        });
     }
 
     @Inject(method = "updateBeforeRender", at = @At("TAIL"))
     private void eap$ensureButtons(CallbackInfo ci) {
-        if (!eap$isSupportedInterfaceScreen()) {
+        if (!(((Object) this) instanceof InterfaceScreen<?>)) {
             return;
         }
-        var accessor = (ScreenAccessor) this;
-        if (eap$divideBy2Button != null && !accessor.eap$getRenderables().contains(eap$divideBy2Button)) {
-            accessor.eap$getRenderables().add(eap$divideBy2Button);
-            accessor.eap$getChildren().add(eap$divideBy2Button);
-        }
-        if (eap$x2Button != null && !accessor.eap$getRenderables().contains(eap$x2Button)) {
-            accessor.eap$getRenderables().add(eap$x2Button);
-            accessor.eap$getChildren().add(eap$x2Button);
-        }
-        if (eap$divideBy5Button != null && !accessor.eap$getRenderables().contains(eap$divideBy5Button)) {
-            accessor.eap$getRenderables().add(eap$divideBy5Button);
-            accessor.eap$getChildren().add(eap$divideBy5Button);
-        }
-        if (eap$x5Button != null && !accessor.eap$getRenderables().contains(eap$x5Button)) {
-            accessor.eap$getRenderables().add(eap$x5Button);
-            accessor.eap$getChildren().add(eap$x5Button);
-        }
-        if (eap$divideBy10Button != null && !accessor.eap$getRenderables().contains(eap$divideBy10Button)) {
-            accessor.eap$getRenderables().add(eap$divideBy10Button);
-            accessor.eap$getChildren().add(eap$divideBy10Button);
-        }
-        if (eap$x10Button != null && !accessor.eap$getRenderables().contains(eap$x10Button)) {
-            accessor.eap$getRenderables().add(eap$x10Button);
-            accessor.eap$getChildren().add(eap$x10Button);
-        }
-
-        int curLeft = ((AbstractContainerScreenAccessor<?>) this).eap$getLeftPos();
-        int curTop = ((AbstractContainerScreenAccessor<?>) this).eap$getTopPos();
-        int curImgW = ((AbstractContainerScreenAccessor<?>) this).eap$getImageWidth();
-        int curImgH = ((AbstractContainerScreenAccessor<?>) this).eap$getImageHeight();
-        if (curLeft != eap$lastLeftPos || curTop != eap$lastTopPos || curImgW != eap$lastImageWidth || curImgH != eap$lastImageHeight) {
-            eap$lastLeftPos = curLeft;
-            eap$lastTopPos = curTop;
-            eap$lastImageWidth = curImgW;
-            eap$lastImageHeight = curImgH;
-            eap$relayoutButtons();
-        }
+        this.eaep$updateButtonsLayout();
         eap$updateLastConfigFromHover();
-    }
-
-    @Unique
-    private void eap$sendAdjustForAllConfigs(boolean divide, int factor) {
-        try {
-            if (!eap$isSupportedInterfaceScreen()) {
-                return;
-            }
-            var conn = Minecraft.getInstance().getConnection();
-            if (conn != null) conn.send(new InterfaceAdjustConfigAmountC2SPacket(-1, divide, factor));
-        } catch (Throwable ignored) {}
-    }
-
-    @Unique
-    private boolean eap$isSupportedInterfaceScreen() {
-        if (((Object) this) instanceof InterfaceScreen) {
-            return true;
-        }
-        try {
-            String cn = ((Object) this).getClass().getName();
-            if ("com.glodblock.github.extendedae.client.gui.GuiExInterface".equals(cn)) {
-                return true;
-            }
-        } catch (Throwable ignored) {}
-        return false;
-    }
-
-    @Unique
-    private void eap$relayoutButtons() {
-        try {
-            int leftPos = ((AbstractContainerScreenAccessor<?>) this).eap$getLeftPos();
-            int topPos = ((AbstractContainerScreenAccessor<?>) this).eap$getTopPos();
-            int imageWidth = ((AbstractContainerScreenAccessor<?>) this).eap$getImageWidth();
-            int bx = leftPos + imageWidth + 3;
-            int by = topPos + 70;
-            int spacing = 22;
-            if (eap$divideBy2Button != null) { eap$divideBy2Button.setX(bx); eap$divideBy2Button.setY(by); }
-            if (eap$x2Button != null) { eap$x2Button.setX(bx); eap$x2Button.setY(by + spacing); }
-            if (eap$divideBy5Button != null) { eap$divideBy5Button.setX(bx); eap$divideBy5Button.setY(by + spacing * 2); }
-            if (eap$x5Button != null) { eap$x5Button.setX(bx); eap$x5Button.setY(by + spacing * 3); }
-            if (eap$divideBy10Button != null) { eap$divideBy10Button.setX(bx); eap$divideBy10Button.setY(by + spacing * 4); }
-            if (eap$x10Button != null) { eap$x10Button.setX(bx); eap$x10Button.setY(by + spacing * 5); }
-        } catch (Throwable ignored) {}
     }
 
     @Unique
@@ -197,9 +76,7 @@ public abstract class InterfaceScreenMixin implements HelperProviderButtons {
             if (hovered == null) {
                 return;
             }
-            var screen = (AEBaseScreen<?>) (Object) this;
-            var menu = screen.getMenu();
-            if (!(menu instanceof appeng.menu.implementations.InterfaceMenu interfaceMenu)) {
+            if (!(this.getMenu() instanceof InterfaceMenu interfaceMenu)) {
                 return;
             }
             var configSlots = interfaceMenu.getSlots(SlotSemantics.CONFIG);
@@ -233,13 +110,32 @@ public abstract class InterfaceScreenMixin implements HelperProviderButtons {
 
     @Override
     public void eaep$updateButtonsLayout() {
+        boolean flagReplaceButton = this.eaep$lastScreenInfo == null
+                || this.width != this.eaep$lastScreenInfo.getFirst()
+                || this.height != this.eaep$lastScreenInfo.getSecond();
+        if (flagReplaceButton)
+            this.eaep$lastScreenInfo = new Pair<>(this.width, this.height);
 
+        int bx = this.leftPos + this.imageWidth + 3;
+        int by = this.topPos + 50;
+        int spacing = 22;
+        this.eaep$scalingButtons.forEach(button -> {
+            if (button == null) return;
+            button.setVisibility(true);
+            if (!this.renderables.contains(button)) this.addRenderableWidget(button);
+
+            if (flagReplaceButton) {
+                this.removeWidget(button);
+                this.addRenderableWidget(button);
+            }
+
+            button.setX(bx);
+            button.setY(by + spacing * this.eaep$scalingButtons.indexOf(button));
+        });
     }
 
     @Override
     public List<EAEPActionButton> eaep$getButtons() {
-        return List.of(
-                eap$x2Button, eap$x5Button, eap$x10Button,
-                eap$divideBy2Button, eap$divideBy5Button, eap$divideBy10Button);
+        return this.eaep$scalingButtons;
     }
 }

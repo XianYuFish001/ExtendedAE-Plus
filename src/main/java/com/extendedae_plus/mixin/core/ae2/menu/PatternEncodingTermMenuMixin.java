@@ -5,10 +5,12 @@ import appeng.api.inventories.InternalInventory;
 import appeng.api.networking.energy.IEnergySource;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
+import appeng.api.storage.ITerminalHost;
 import appeng.api.storage.MEStorage;
 import appeng.api.storage.StorageHelper;
 import appeng.core.definitions.AEItems;
 import appeng.helpers.IPatternTerminalMenuHost;
+import appeng.menu.me.common.MEStorageMenu;
 import appeng.menu.me.items.PatternEncodingTermMenu;
 import appeng.menu.slot.RestrictedInputSlot;
 import appeng.parts.encoding.EncodingMode;
@@ -32,14 +34,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Objects;
-
 @Mixin(PatternEncodingTermMenu.class)
-public abstract class PatternEncodingTermMenuMixin implements BridgeCtrlPressed, BridgePlanToEncode {
+public abstract class PatternEncodingTermMenuMixin extends MEStorageMenu implements BridgeCtrlPressed, BridgePlanToEncode {
     // 防止重复执行
     @Unique
     private boolean eap$blankAutoFilled = false;
-    @Shadow @Final
+    @Shadow
+    @Final
     private RestrictedInputSlot blankPatternSlot;
     @Shadow
     @Final
@@ -48,11 +49,16 @@ public abstract class PatternEncodingTermMenuMixin implements BridgeCtrlPressed,
     @Shadow
     public abstract void encode();
 
+    @Shadow
+    public EncodingMode mode;
     @Unique
     private boolean eaep$isCtrlPressed = false;
     @Unique
     private boolean eaep$encodeActionDelayed = false;
 
+    public PatternEncodingTermMenuMixin(MenuType<?> menuType, int id, Inventory ip, ITerminalHost host) {
+        super(menuType, id, ip, host);
+    }
 
     @Unique
     public void eaep$setCtrlPressed(boolean press) {
@@ -188,24 +194,25 @@ public abstract class PatternEncodingTermMenuMixin implements BridgeCtrlPressed,
         if (EAEPConfig.INDEPENDENT_UPLOADING_BUTTON.getAsBoolean()) return;
         var self = (PatternEncodingTermMenu) (Object) this;
         if (self.isClientSide()) return;
+
         if (!eaep$isCtrlPressed) return;
         eaep$isCtrlPressed = false;
+
         ItemStack pattern = this.encodedPatternSlot.getItem();
         if (pattern == null || !PatternDetailsHelper.isEncodedPattern(pattern)) return;
-        Objects.requireNonNull(self.getPlayer().getServer()).execute(() -> {
-            try {
-                if (self.getMode() == EncodingMode.PROCESSING)
-                    PacketDistributor.sendToPlayer((ServerPlayer) self.getPlayer(), CPacketEncodeFinished.INSTANCE);
-                else PatternUploader.uploadFromEncodingMenuToMatrix((ServerPlayer) self.getPlayer(), self);
-            } catch (Throwable ignored) {}
-        });
+
+        try {
+            if (self.getMode() == EncodingMode.PROCESSING)
+                PacketDistributor.sendToPlayer((ServerPlayer) self.getPlayer(), CPacketEncodeFinished.INSTANCE);
+            else PatternUploader.uploadFromEncodingMenuToMatrix((ServerPlayer) self.getPlayer(), self);
+        } catch (Throwable ignored) {
+        }
     }
 
-    @Inject(method = "onSlotChange", at = @At("HEAD"))
+    @Inject(method = "onSlotChange", at = @At("TAIL"))
     private void executeDelay(Slot s, CallbackInfo ci) {
-        if (this.eaep$encodeActionDelayed) {
-            this.eaep$encodeActionDelayed = false;
-            this.encode();
-        }
+        if (!this.eaep$encodeActionDelayed) return;
+        this.eaep$encodeActionDelayed = false;
+        this.encode();
     }
 }

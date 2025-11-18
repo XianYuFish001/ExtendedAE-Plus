@@ -83,13 +83,15 @@
     "extendedae.client.HighlightButtonMixin",
     "extendedae.client.gui.GuiExPatternProviderMixin",
     "extendedae.client.gui.GuiExPatternTerminalMixin",
+    "extendedae.client.gui.MixinExInterfaceScaling",
     "minecraft.ModelBakeryMixin",
     "minecraft.PickFromWirelessMixin",
     "minecraft.accessor.AbstractContainerScreenAccessor",
     "minecraft.accessor.ScreenAccessor",
     "recipeViewer.MixinEncodingHelper",
     "recipeViewer.emi.MixinBoMScreen",
-    "recipeViewer.emi.MixinBoMTooltips"
+    "recipeViewer.emi.MixinBoMTooltips",
+    "recipeViewer.emi.accessor.AccessorBoMScreenHover"
   ],
   "injectors": {
     "defaultRequire": 1

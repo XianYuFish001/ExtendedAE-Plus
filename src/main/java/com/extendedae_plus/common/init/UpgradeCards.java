@@ -16,14 +16,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-
 public class UpgradeCards {
     /// 在commonSetup时注册
     public static void init() {
-        // 现有：把 Entity Ticker 的部件注册为处理 SPEED/ENERGY 卡的宿主
-        Upgrades.add(AEItems.ENERGY_CARD, ModItems.ENTITY_TICKER_PART_ITEM.get(), 8, "group.entity_ticker.name");
-        // 使用单一的 UpgradeCard Item 作为注册键，总共允许安装 4 张（不同等级由 ItemStack NBT 区分）
-        Upgrades.add(ModItems.ENTITY_SPEED_CARD.get(), ModItems.ENTITY_TICKER_PART_ITEM.get(), 4, "group.entity_ticker.name");
+        Upgrades.add(AEItems.ENERGY_CARD, ModItems.ENTITY_TICKER_PART_ITEM.get(), 8);
+        Upgrades.add(ModItems.ENTITY_SPEED_CARD.get(), ModItems.ENTITY_TICKER_PART_ITEM.get(), 4);
 
         String interfaceGroup = GuiText.Interface.getTranslationKey();
         String patternProviderGroup = "group.pattern_provider.name";

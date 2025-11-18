@@ -1,7 +1,7 @@
 package com.extendedae_plus.mixin.core.ae2.client.gui;
 
 import appeng.menu.slot.FakeSlot;
-import com.extendedae_plus.common.impl.pattern.AliasGetter;
+import com.extendedae_plus.client.impl.AliasGetter;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

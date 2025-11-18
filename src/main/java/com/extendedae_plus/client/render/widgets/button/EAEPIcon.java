@@ -1,0 +1,40 @@
+package com.extendedae_plus.client.render.widgets.button;
+
+import appeng.client.gui.style.Blitter;
+import com.extendedae_plus.ExtendedAEPlus;
+import net.minecraft.resources.ResourceLocation;
+
+public enum EAEPIcon {
+    MUL2(0, 0),
+    DIV2(16, 0),
+    MUL3(32, 0),
+    DIV3(48, 0),
+    MUL5(0, 16),
+    DIV5(16, 16);
+
+    public final int x;
+    public final int y;
+    public final int width;
+    public final int height;
+
+    public static final ResourceLocation TEXTURE =
+            ExtendedAEPlus.getLocation("textures/gui/icons.png");
+    public static final int TEXTURE_WIDTH = 64;
+    public static final int TEXTURE_HEIGHT = 64;
+
+    EAEPIcon(int x, int y) {
+        this(x, y, 16, 16);
+    }
+
+    EAEPIcon(int x, int y, int width, int height) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+    }
+
+    public Blitter getBlitter() {
+        return Blitter.texture(TEXTURE, TEXTURE_WIDTH, TEXTURE_HEIGHT)
+                .src(x, y, width, height);
+    }
+}

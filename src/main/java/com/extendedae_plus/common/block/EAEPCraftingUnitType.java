@@ -1,10 +1,19 @@
 package com.extendedae_plus.common.block;
 
+import appeng.block.crafting.CraftingUnitBlock;
 import appeng.block.crafting.ICraftingUnitType;
+import com.extendedae_plus.common.init.ModBlocks;
 import com.extendedae_plus.common.init.ModItems;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.neoforged.neoforge.registries.DeferredBlock;
+import net.neoforged.neoforge.registries.DeferredItem;
 
-public enum EAEPCraftingUnitType implements ICraftingUnitType {
+import java.util.ArrayList;
+import java.util.List;
+
+public enum EAEPCraftingUnitType implements ICraftingUnitType, StringRepresentable {
     ACCELERATOR_4x(0, 4),
     ACCELERATOR_16x(0, 16),
     ACCELERATOR_64x(0, 64),
@@ -13,6 +22,9 @@ public enum EAEPCraftingUnitType implements ICraftingUnitType {
 
     private final long storage;
     private final int threads;
+
+    private static final List<DeferredBlock<CraftingUnitBlock>> UNIT_BLOCKS = new ArrayList<>();
+    private static final List<DeferredItem<BlockItem>> UNIT_ITEMS = new ArrayList<>();
 
     EAEPCraftingUnitType(long storage, int threads) {
         this.storage = storage;
@@ -31,14 +43,30 @@ public enum EAEPCraftingUnitType implements ICraftingUnitType {
         return this.threads;
     }
 
+    public static void init() {
+        for (EAEPCraftingUnitType type : values()) {
+            registerUnitType(type);
+        }
+    }
+
+    private static void registerUnitType(EAEPCraftingUnitType type) {
+        var holderBlock = ModBlocks.BLOCK.register(type.getSerializedName(), () -> new CraftingUnitBlock(type));
+        var holderItem = ModItems.regCommonBlockItem(type.getSerializedName(), holderBlock);
+        UNIT_BLOCKS.add(holderBlock);
+        UNIT_ITEMS.add(holderItem);
+    }
+
     @Override
     public Item getItemFromType() {
-        return switch (this) {
-            case ACCELERATOR_4x -> ModItems.ACCELERATOR_4x.get();
-            case ACCELERATOR_16x -> ModItems.ACCELERATOR_16x.get();
-            case ACCELERATOR_64x -> ModItems.ACCELERATOR_64x.get();
-            case ACCELERATOR_256x -> ModItems.ACCELERATOR_256x.get();
-            case ACCELERATOR_1024x -> ModItems.ACCELERATOR_1024x.get();
-        };
+        return UNIT_ITEMS.get(this.ordinal()).get();
+    }
+
+    public DeferredBlock<CraftingUnitBlock> getBlock() {
+        return UNIT_BLOCKS.get(this.ordinal());
+    }
+
+    @Override
+    public String getSerializedName() {
+        return this.toString().toLowerCase();
     }
 }

@@ -4,13 +4,13 @@ import appeng.client.render.crafting.CraftingCubeModel;
 import appeng.init.client.InitScreens;
 import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.client.RegistriesBuiltInModel;
-import com.extendedae_plus.client.render.crafting.EPlusCraftingCubeModelProvider;
+import com.extendedae_plus.client.render.crafting.EAEPCraftingCubeModelProvider;
 import com.extendedae_plus.client.screen.EntitySpeedTickerScreen;
-import com.extendedae_plus.client.screen.GlobalProviderModesScreen;
+import com.extendedae_plus.client.screen.ScreenProviderController;
 import com.extendedae_plus.common.block.EAEPCraftingUnitType;
+import com.extendedae_plus.common.dataComponent.DataSpeedCard;
 import com.extendedae_plus.common.init.ModItems;
 import com.extendedae_plus.common.init.ModMenuTypes;
-import com.extendedae_plus.common.item.EntitySpeedCardItem;
 import com.extendedae_plus.common.menu.EntitySpeedTickerMenu;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -31,7 +31,7 @@ public final class EventClientInitialization {
     public static void regScreens(RegisterMenuScreensEvent event) {
         event.register(
                 ModMenuTypes.NETWORK_PATTERN_CONTROLLER.get(),
-                GlobalProviderModesScreen::new);
+                ScreenProviderController::new);
 
         InitScreens.register(event, ModMenuTypes.ENTITY_TICKER_MENU.get(),
                 EntitySpeedTickerScreen<EntitySpeedTickerMenu>::new, "/screens/entity_speed_ticker.json");
@@ -39,11 +39,11 @@ public final class EventClientInitialization {
 
     @SubscribeEvent
     public static void regAdditional(ModelEvent.RegisterAdditional event) {
-        regStandaloneModel(event, "block/crafting/4x_accelerator_formed_v2");
-        regStandaloneModel(event, "block/crafting/16x_accelerator_formed_v2");
-        regStandaloneModel(event, "block/crafting/64x_accelerator_formed_v2");
-        regStandaloneModel(event, "block/crafting/256x_accelerator_formed_v2");
-        regStandaloneModel(event, "block/crafting/1024x_accelerator_formed_v2");
+        regStandaloneModel(event, "block/crafting/accelerator_4x_formed_v2");
+        regStandaloneModel(event, "block/crafting/accelerator_16x_formed_v2");
+        regStandaloneModel(event, "block/crafting/accelerator_64x_formed_v2");
+        regStandaloneModel(event, "block/crafting/accelerator_256x_formed_v2");
+        regStandaloneModel(event, "block/crafting/accelerator_1024x_formed_v2");
         initModels();
     }
 
@@ -51,14 +51,14 @@ public final class EventClientInitialization {
         if (MODEL_REGISTERED) return;
         MODEL_REGISTERED = true;
 
-        ItemProperties.register(ModItems.ENTITY_SPEED_CARD.get(), ExtendedAEPlus.getLocation("mult"),
-                (stack, world, entity, seed) -> (float) EntitySpeedCardItem.readMultiplier(stack));
+        ItemProperties.register(ModItems.ENTITY_SPEED_CARD.get(), ExtendedAEPlus.getLocation("multiplier"),
+                (stack, world, entity, seed) -> DataSpeedCard.fromStack(stack));
 
-        addCrafterModel("4x_accelerator_formed_v2", EAEPCraftingUnitType.ACCELERATOR_4x);
-        addCrafterModel("16x_accelerator_formed_v2", EAEPCraftingUnitType.ACCELERATOR_16x);
-        addCrafterModel("64x_accelerator_formed_v2", EAEPCraftingUnitType.ACCELERATOR_64x);
-        addCrafterModel("256x_accelerator_formed_v2", EAEPCraftingUnitType.ACCELERATOR_256x);
-        addCrafterModel("1024x_accelerator_formed_v2", EAEPCraftingUnitType.ACCELERATOR_1024x);
+        addCrafterModel("accelerator_4x_formed_v2", EAEPCraftingUnitType.ACCELERATOR_4x);
+        addCrafterModel("accelerator_16x_formed_v2", EAEPCraftingUnitType.ACCELERATOR_16x);
+        addCrafterModel("accelerator_64x_formed_v2", EAEPCraftingUnitType.ACCELERATOR_64x);
+        addCrafterModel("accelerator_256x_formed_v2", EAEPCraftingUnitType.ACCELERATOR_256x);
+        addCrafterModel("accelerator_1024x_formed_v2", EAEPCraftingUnitType.ACCELERATOR_1024x);
     }
 
     private static void regStandaloneModel(ModelEvent.RegisterAdditional event, String location) {
@@ -68,6 +68,6 @@ public final class EventClientInitialization {
     private static void addCrafterModel(String location, EAEPCraftingUnitType type) {
         RegistriesBuiltInModel.addBuiltInModel(
                 ExtendedAEPlus.getLocation("block/crafting/" + location),
-                new CraftingCubeModel(new EPlusCraftingCubeModelProvider(type)));
+                new CraftingCubeModel(new EAEPCraftingCubeModelProvider(type)));
     }
 }

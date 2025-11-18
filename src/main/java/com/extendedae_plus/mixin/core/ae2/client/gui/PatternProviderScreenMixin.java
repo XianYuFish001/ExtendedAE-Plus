@@ -7,14 +7,15 @@ import appeng.client.gui.implementations.PatternProviderScreen;
 import appeng.client.gui.style.ScreenStyle;
 import appeng.client.gui.widgets.SettingToggleButton;
 import appeng.menu.implementations.PatternProviderMenu;
-import com.extendedae_plus.client.render.Button.EAEPActionButton;
-import com.extendedae_plus.client.render.Button.EAEPActionItems;
+import com.extendedae_plus.client.render.widgets.button.EAEPActionButton;
+import com.extendedae_plus.client.render.widgets.button.EAEPActionItems;
 import com.extendedae_plus.mixin.impl.bridge.HelperProviderButtons;
 import com.extendedae_plus.mixin.impl.bridge.PatternProviderMenuAdvancedSync;
 import com.extendedae_plus.mixin.impl.bridge.PatternProviderMenuDoublingSync;
 import com.extendedae_plus.network.CPacketScalePatterns;
 import com.extendedae_plus.network.ToggleAdvancedBlockingC2SPacket;
 import com.extendedae_plus.network.ToggleSmartDoublingC2SPacket;
+import com.extendedae_plus.util.UtilGetKey;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
@@ -85,11 +86,10 @@ public abstract class PatternProviderScreenMixin<C extends PatternProviderMenu>
             @Override
             public List<Component> getTooltipMessage() {
                 boolean enabled = eap$AdvancedBlockingEnabled;
-                var title = Component.literal("智能阻挡");
-                var line = enabled
-                        ? Component.literal("已启用：对于同一种配方将不再阻挡(需要开启原版的阻挡模式)")
-                        : Component.literal("已禁用：这么好的功能为什么不打开呢");
-                return List.of(title, line);
+                return List.of(new UtilGetKey(UtilGetKey.screenTooltip)
+                        .addStr("smart_blocking")
+                        .addStr(enabled, "enabled", "disabled")
+                        .build());
             }
         };
         // 初始化后立刻对齐当前@GuiSync状态，避免首帧显示不一致
@@ -118,23 +118,24 @@ public abstract class PatternProviderScreenMixin<C extends PatternProviderMenu>
             @Override
             public List<Component> getTooltipMessage() {
                 boolean enabled = eap$SmartDoublingEnabled;
-                var title = Component.literal("智能翻倍");
-                var line = enabled
-                        ? Component.literal("已启用：根据请求量对处理样板进行智能缩放")
-                        : Component.literal("已禁用：按原始样板数量进行发配");
-                return List.of(title, line);
+                return List.of(new UtilGetKey(UtilGetKey.screenTooltip)
+                        .addStr("smart_doubling")
+                        .addStr(enabled, "enabled", "disabled")
+                        .build());
             }
         };
 
         this.eap$SmartDoublingToggle.set(this.eap$SmartDoublingEnabled ? YesNo.YES : YesNo.NO);
         this.addToLeftToolbar(this.eap$SmartDoublingToggle);
 
-        this.eaep$scalingButtons.add(new EAEPActionButton(EAEPActionItems.MUL2, CPacketScalePatterns::send));
-        this.eaep$scalingButtons.add(new EAEPActionButton(EAEPActionItems.MUL5, CPacketScalePatterns::send));
-        this.eaep$scalingButtons.add(new EAEPActionButton(EAEPActionItems.MUL10, CPacketScalePatterns::send));
-        this.eaep$scalingButtons.add(new EAEPActionButton(EAEPActionItems.DIV2, CPacketScalePatterns::send));
-        this.eaep$scalingButtons.add(new EAEPActionButton(EAEPActionItems.DIV5, CPacketScalePatterns::send));
-        this.eaep$scalingButtons.add(new EAEPActionButton(EAEPActionItems.DIV10, CPacketScalePatterns::send));
+//        this.eaep$scalingButtons.add(new EAEPActionButton(EAEPActionItems.MUL2, CPacketScalePatterns::send));
+//        this.eaep$scalingButtons.add(new EAEPActionButton(EAEPActionItems.MUL5, CPacketScalePatterns::send));
+//        this.eaep$scalingButtons.add(new EAEPActionButton(EAEPActionItems.MUL10, CPacketScalePatterns::send));
+//        this.eaep$scalingButtons.add(new EAEPActionButton(EAEPActionItems.DIV2, CPacketScalePatterns::send));
+//        this.eaep$scalingButtons.add(new EAEPActionButton(EAEPActionItems.DIV5, CPacketScalePatterns::send));
+//        this.eaep$scalingButtons.add(new EAEPActionButton(EAEPActionItems.DIV10, CPacketScalePatterns::send));
+        EAEPActionItems.GROUPED_ACTIONS.get("scaling").forEach(action ->
+                this.eaep$scalingButtons.add(new EAEPActionButton(action, CPacketScalePatterns::send)));
 
         this.eaep$scalingButtons.forEach(button -> {
             this.addRenderableWidget(button);
@@ -173,7 +174,7 @@ public abstract class PatternProviderScreenMixin<C extends PatternProviderMenu>
 
     @Override
     public List<EAEPActionButton> eaep$getButtons() {
-        return List.copyOf(eaep$scalingButtons);
+        return this.eaep$scalingButtons;
     }
 
     @Override

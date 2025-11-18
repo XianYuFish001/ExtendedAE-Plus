@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "item": "ae2:annihilation_core"
+    },
+    "e": {
+      "item": "ae2:dense_energy_cell"
+    },
+    "f": {
+      "item": "ae2:formation_core"
+    },
+    "p": {
+      "item": "extendedae:ex_io_port"
+    },
+    "s": {
+      "item": "ae2:singularity"
+    }
+  },
+  "pattern": [
+    "ses",
+    "apf",
+    "ses"
+  ],
+  "result": {
+    "count": 1,
+    "id": "extendedae_plus:entity_speed_ticker"
+  }
+}

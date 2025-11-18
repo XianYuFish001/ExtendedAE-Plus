@@ -6,14 +6,13 @@ import appeng.client.gui.style.ScreenStyle;
 import appeng.menu.SlotSemantics;
 import appeng.menu.slot.AppEngSlot;
 import com.extendedae_plus.EAEPConfig;
-import com.extendedae_plus.client.render.Button.EAEPActionButton;
-import com.extendedae_plus.client.render.Button.EAEPActionItems;
+import com.extendedae_plus.client.render.widgets.button.EAEPActionButton;
 import com.extendedae_plus.mixin.impl.bridge.ExPatternPageAccessor;
 import com.extendedae_plus.mixin.impl.bridge.HelperProviderButtons;
-import com.extendedae_plus.network.CPacketScalePatterns;
 import com.glodblock.github.extendedae.client.button.ActionEPPButton;
 import com.glodblock.github.extendedae.client.gui.GuiExPatternProvider;
 import com.glodblock.github.extendedae.container.ContainerExPatternProvider;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.logging.LogUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -26,6 +25,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 @Mixin(value = GuiExPatternProvider.class, remap = false)
 public abstract class GuiExPatternProviderMixin extends PatternProviderScreen<ContainerExPatternProvider> implements HelperProviderButtons, ExPatternPageAccessor {
@@ -34,10 +35,6 @@ public abstract class GuiExPatternProviderMixin extends PatternProviderScreen<Co
     
     @Unique
     ScreenStyle eap$screenStyle;
-
-    // 跟踪上次屏幕尺寸，处理 GUI 缩放/窗口大小变化后按钮丢失问题
-    @Unique private int eap$lastScreenWidth = -1;
-    @Unique private int eap$lastScreenHeight = -1;
 
     // 不再使用右侧 VerticalButtonBar，直接把按钮注册为独立 AE2 小部件
 
@@ -102,12 +99,11 @@ public abstract class GuiExPatternProviderMixin extends PatternProviderScreen<Co
 
     public ActionEPPButton nextPage;
     public ActionEPPButton prevPage;
-    public EAEPActionButton x2Button;
-    public EAEPActionButton divideBy2Button;
-    public EAEPActionButton x5Button;
-    public EAEPActionButton divideBy5Button;
-    public EAEPActionButton x10Button;
-    public EAEPActionButton divideBy10Button;
+
+    @Unique
+    public final List<EAEPActionButton> eaep$scalingButtons = new ArrayList<>();
+    @Unique
+    private Pair<Integer, Integer> eaep$lastScreenInfo;
     
     // 在构造器返回后初始化按钮与翻页控制
     @Inject(method = "<init>", at = @At("RETURN"))
@@ -121,7 +117,7 @@ public abstract class GuiExPatternProviderMixin extends PatternProviderScreen<Co
         try { cfgPages = Math.max(1, EAEPConfig.PAGE_MULTIPLIER.get()); } catch (Throwable ignored) {}
         int calcPages = Math.max(1, (int) Math.ceil(totalSlots / (double) SLOTS_PER_PAGE));
         int desiredMaxPage = Math.max(cfgPages, calcPages);
-        eaep$LOGGER.info("[EAP] GuiExPatternProvider init: totalSlots={}, cfgPages={}, calcPages={}, desiredMaxPage={}", totalSlots, cfgPages, calcPages, desiredMaxPage);
+        eaep$LOGGER.info("[EAEP] GuiExPatternProvider init: totalSlots={}, cfgPages={}, calcPages={}, desiredMaxPage={}", totalSlots, cfgPages, calcPages, desiredMaxPage);
         // 更新本地最大页
         this.eap$maxPageLocal = Math.max(1, desiredMaxPage);
         this.eap$currentPage = 0;
@@ -153,7 +149,7 @@ public abstract class GuiExPatternProviderMixin extends PatternProviderScreen<Co
                 // 同步到本地 GUI 页码
                 this.eap$currentPage = newPage;
                 // 日志与强制重排（放在更新本地页码之后，确保布局读取到新页）
-                eaep$LOGGER.info("[EAP] PrevPage clicked: {} -> {} (max={})", currentPage, newPage, maxPage);
+                eaep$LOGGER.info("[EAEP] PrevPage clicked: {} -> {} (max={})", currentPage, newPage, maxPage);
                 this.repositionSlots(SlotSemantics.ENCODED_PATTERN);
                 this.repositionSlots(SlotSemantics.STORAGE);
                 this.hoveredSlot = null;
@@ -182,7 +178,7 @@ public abstract class GuiExPatternProviderMixin extends PatternProviderScreen<Co
                 // 同步到本地 GUI 页码
                 this.eap$currentPage = newPage;
                 // 日志与强制重排（放在更新本地页码之后，确保布局读取到新页）
-                eaep$LOGGER.info("[EAP] NextPage clicked: {} -> {} (max={})", currentPage, newPage, maxPage);
+                eaep$LOGGER.info("[EAEP] NextPage clicked: {} -> {} (max={})", currentPage, newPage, maxPage);
                 this.repositionSlots(SlotSemantics.ENCODED_PATTERN);
                 this.repositionSlots(SlotSemantics.STORAGE);
                 this.hoveredSlot = null;
@@ -195,27 +191,7 @@ public abstract class GuiExPatternProviderMixin extends PatternProviderScreen<Co
             this.addToLeftToolbar(this.prevPage);
         }
 
-        // 倍增/除法按钮：使用自有 C2S 包发送到服务端执行样板缩放
-        x2Button = new EAEPActionButton(EAEPActionItems.MUL2, CPacketScalePatterns::send);
-        x5Button = new EAEPActionButton(EAEPActionItems.MUL5, CPacketScalePatterns::send);
-        x10Button = new EAEPActionButton(EAEPActionItems.MUL10, CPacketScalePatterns::send);
-        divideBy2Button = new EAEPActionButton(EAEPActionItems.DIV2, CPacketScalePatterns::send);
-        divideBy5Button = new EAEPActionButton(EAEPActionItems.DIV5, CPacketScalePatterns::send);
-        divideBy10Button = new EAEPActionButton(EAEPActionItems.DIV10, CPacketScalePatterns::send);
-        this.x2Button.setVisibility(true);
-        this.x5Button.setVisibility(true);
-        this.x10Button.setVisibility(true);
-        this.divideBy2Button.setVisibility(true);
-        this.divideBy5Button.setVisibility(true);
-        this.divideBy10Button.setVisibility(true);
-
-        // 注册可渲染按钮
-        this.addRenderableWidget(this.divideBy2Button);
-        this.addRenderableWidget(this.x2Button);
-        this.addRenderableWidget(this.divideBy5Button);
-        this.addRenderableWidget(this.x5Button);
-        this.addRenderableWidget(this.divideBy10Button);
-        this.addRenderableWidget(this.x10Button);
+        // 倍增/除法按钮：mixin在父类, 避免重复添加直接通过helper获取
     }
 
     @Override
@@ -234,109 +210,32 @@ public abstract class GuiExPatternProviderMixin extends PatternProviderScreen<Co
             this.nextPage.setVisibility(true);
             this.prevPage.setVisibility(true);
         }
-        if (x2Button != null) {
-            this.x2Button.setVisibility(true);
-        }
-        if (divideBy2Button != null) {
-            this.divideBy2Button.setVisibility(true);
-        }
-        if (x10Button != null) {
-            this.x10Button.setVisibility(true);
-        }
-        if (divideBy10Button != null) {
-            this.divideBy10Button.setVisibility(true);
-        }
-        if (divideBy5Button != null) {
-            this.divideBy5Button.setVisibility(true);
-        }
-        if (x5Button != null) {
-            this.x5Button.setVisibility(true);
-        }
 
-        // 若从 JEI 配方界面返回后，Screen 的 renderables/children 可能被清空，导致按钮丢失
-        // 这里在每帧保证这些按钮存在于渲染列表中（不存在则重新注册）
-        try {
-            if (this.divideBy2Button != null && !this.renderables.contains(this.divideBy2Button)) {
-                this.addRenderableWidget(this.divideBy2Button);
-            }
-            if (this.x2Button != null && !this.renderables.contains(this.x2Button)) {
-                this.addRenderableWidget(this.x2Button);
-            }
-            if (this.divideBy5Button != null && !this.renderables.contains(this.divideBy5Button)) {
-                this.addRenderableWidget(this.divideBy5Button);
-            }
-            if (this.x5Button != null && !this.renderables.contains(this.x5Button)) {
-                this.addRenderableWidget(this.x5Button);
-            }
-            if (this.divideBy10Button != null && !this.renderables.contains(this.divideBy10Button)) {
-                this.addRenderableWidget(this.divideBy10Button);
-            }
-            if (this.x10Button != null && !this.renderables.contains(this.x10Button)) {
-                this.addRenderableWidget(this.x10Button);
-            }
-        } catch (Throwable ignored) {}
+        if (this.eaep$scalingButtons.isEmpty())
+            this.eaep$scalingButtons.addAll(this.eaep$getButtons());
 
-        // 如果屏幕尺寸发生变化（窗口/GUI缩放），重新注册右侧外列的自定义按钮，翻页按钮由左侧工具栏托管
-        if (this.width != eap$lastScreenWidth || this.height != eap$lastScreenHeight) {
-            eap$lastScreenWidth = this.width;
-            eap$lastScreenHeight = this.height;
-            try {
-                if (this.divideBy2Button != null) {
-                    this.removeWidget(this.divideBy2Button);
-                    this.addRenderableWidget(this.divideBy2Button);
-                }
-                if (this.x2Button != null) {
-                    this.removeWidget(this.x2Button);
-                    this.addRenderableWidget(this.x2Button);
-                }
-                if (this.divideBy5Button != null) {
-                    this.removeWidget(this.divideBy5Button);
-                    this.addRenderableWidget(this.divideBy5Button);
-                }
-                if (this.x5Button != null) {
-                    this.removeWidget(this.x5Button);
-                    this.addRenderableWidget(this.x5Button);
-                }
-                if (this.divideBy10Button != null) {
-                    this.removeWidget(this.divideBy10Button);
-                    this.addRenderableWidget(this.divideBy10Button);
-                }
-                if (this.x10Button != null) {
-                    this.removeWidget(this.x10Button);
-                    this.addRenderableWidget(this.x10Button);
-                }
-            } catch (Throwable ignored) {}
-        }
+        boolean flagReplaceButton = this.eaep$lastScreenInfo == null
+                || this.width != this.eaep$lastScreenInfo.getFirst()
+                || this.height != this.eaep$lastScreenInfo.getSecond();
+        if (flagReplaceButton)
+            this.eaep$lastScreenInfo = new Pair<>(this.width, this.height);
 
-        // 定位到 GUI 右缘外侧一点（使用绝对屏幕坐标）
         int bx = this.leftPos + this.imageWidth + 3;
         int by = this.topPos + 50;
         int spacing = 22;
-        // 翻页按钮交由左侧工具栏布局，无需手动定位
-        if (this.divideBy2Button != null) {
-            this.divideBy2Button.setX(bx);
-            this.divideBy2Button.setY(by);
-        }
-        if (this.x2Button != null) {
-            this.x2Button.setX(bx);
-            this.x2Button.setY(by + spacing);
-        }
-        if (this.divideBy5Button != null) {
-            this.divideBy5Button.setX(bx);
-            this.divideBy5Button.setY(by + spacing * 2);
-        }
-        if (this.x5Button != null) {
-            this.x5Button.setX(bx);
-            this.x5Button.setY(by + spacing * 3);
-        }
-        if (this.divideBy10Button != null) {
-            this.divideBy10Button.setX(bx);
-            this.divideBy10Button.setY(by + spacing * 4);
-        }
-        if (this.x10Button != null) {
-            this.x10Button.setX(bx);
-            this.x10Button.setY(by + spacing * 5);
-        }
+        this.eaep$scalingButtons.forEach(button -> {
+            if (button == null) return;
+            button.setVisibility(true);
+            if (!this.renderables.contains(button)) this.addRenderableWidget(button);
+
+            if (flagReplaceButton) {
+                this.removeWidget(button);
+                this.addRenderableWidget(button);
+            }
+
+            button.setX(bx);
+            button.setY(by + spacing * this.eaep$scalingButtons.indexOf(button));
+        });
 
         // 每帧确保当前页槽位处于启用状态，非当前页禁用
         eap$updatePageSlotActivity();

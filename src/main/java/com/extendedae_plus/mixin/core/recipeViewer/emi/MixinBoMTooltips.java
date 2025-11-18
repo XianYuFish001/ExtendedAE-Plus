@@ -1,6 +1,7 @@
 package com.extendedae_plus.mixin.core.recipeViewer.emi;
 
 import com.extendedae_plus.mixin.MixinDependencies;
+import com.extendedae_plus.util.UtilGetKey;
 import dev.emi.emi.screen.BoMScreen;
 import dev.emi.emi.screen.tooltip.EmiTooltip;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -19,7 +20,10 @@ public class MixinBoMTooltips {
             index = 2, remap = false)
     private List<ClientTooltipComponent> modifyBoMHelpTooltip(List<ClientTooltipComponent> components) {
         var componentsMutable = new ArrayList<>(components);
-        componentsMutable.addAll(EmiTooltip.splitTranslate("tooltip.bom.extendedae_plus.help"));
+        componentsMutable.addAll(EmiTooltip.splitTranslate(new UtilGetKey(UtilGetKey.tooltip)
+                .addStr("bom")
+                .addStr("help")
+                .buildRaw()));
         return componentsMutable;
     }
 }

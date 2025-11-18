@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ae2:network_tool"
+    },
+    {
+      "tag": "extendedae:extended_pattern_provider"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "extendedae_plus:provider_controller"
+  }
+}

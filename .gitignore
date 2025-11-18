@@ -32,3 +32,5 @@ crashreport
 /build/generated/
 /build/generated/sources/
 /build/generated/sources/modMetadata/
+/src/generated/resources/.cache/
+/GeneratedTranslationKeys.json

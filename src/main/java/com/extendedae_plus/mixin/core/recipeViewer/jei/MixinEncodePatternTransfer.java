@@ -1,7 +1,7 @@
 package com.extendedae_plus.mixin.core.recipeViewer.jei;
 
 import appeng.integration.modules.itemlists.EncodingHelper;
-import com.extendedae_plus.common.impl.pattern.AliasGetter;
+import com.extendedae_plus.client.impl.AliasGetter;
 import com.extendedae_plus.mixin.MixinDependencies;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.transfer.IRecipeTransferError;

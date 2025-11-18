@@ -1,0 +1,51 @@
+[versions]
+ae2 = "19.2.17"
+guideME = "21.1.15"
+glodium = "5821676"
+extendedAE = "7188776"
+ae2wt = "19.2.0"
+advancedAE = "6932981"
+curios = "6529130"
+appliedFlux = "5614830"
+megaCells = "6005043"
+jade = "5427817"
+mekanism = "1.21.1-10.7.15.81"
+appliedMekanistics = "5978711"
+rhino = "2101.2.5-build.54"
+kubejs = "2101.7.1-build.188"
+emi = "1.1.10+1.21"
+rei = "16.0.729"
+jei = "19.21.0.247"
+ae2Jei = "5748513"
+geckolib = "7009924"
+ftbTeams = "6930910"
+ftbLibrary = "7029003"
+architectury = "5786327"
+jech = "6681787"
+modernUI = "6956436"
+
+[libraries]
+ae2 = { group = "org.appliedenergistics", name = "appliedenergistics2", version.ref = "ae2" }
+guideME = { group = "org.appliedenergistics", name = "guideme", version.ref = "guideME" }
+glodium = { group = "curse.maven", name = "glodium-957920", version.ref = "glodium" }
+extendedAE = { group = "curse.maven", name = "ex-pattern-provider-892005", version.ref = "extendedAE" }
+ae2wt = { group = "de.mari_023", name = "ae2wtlib", version.ref = "ae2wt" }
+advancedAE = { group = "curse.maven", name = "advancedae-1084104", version.ref = "advancedAE" }
+curios = { group = "curse.maven", name = "curios-309927", version.ref = "curios" }
+appliedFlux = { group = "curse.maven", name = "applied-flux-965012", version.ref = "appliedFlux" }
+megaCells = { group = "curse.maven", name = "mega-cells-622112", version.ref = "megaCells" }
+jade = { group = "curse.maven", name = "jade-324717", version.ref = "jade" }
+mekanism = { group = "mekanism", name = "Mekanism", version.ref = "mekanism" }
+appliedMekanistics = { group = "curse.maven", name = "applied-mekanistics-574300", version.ref = "appliedMekanistics" }
+rhino = { group = "dev.latvian.mods", name = "rhino", version.ref = "rhino" }
+kubejs = { group = "dev.latvian.mods", name = "kubejs-neoforge", version.ref = "kubejs" }
+jech = { group = "curse.maven", name = "just-enough-characters-250702", version.ref = "jech" }
+emi = { group = "dev.emi", name = "emi-neoforge", version.ref = "emi" }
+rei = { group = "me.shedaniel", name = "RoughlyEnoughItems-neoforge", version.ref = "rei" }
+jei = { group = "mezz.jei", name = "jei-1.21.1-neoforge", version.ref = "jei" }
+ae2Jei = { group = "curse.maven", name = "ae2-jei-integration-1074338", version.ref = "ae2Jei" }
+geckolib = { group = "curse.maven", name = "geckolib-388172", version.ref = "geckolib" }
+ftbTeams = { group = "curse.maven", name = "ftb-teams-forge-404468", version.ref = "ftbTeams" }
+ftbLibrary = { group = "curse.maven", name = "ftb-library-forge-404465", version.ref = "ftbLibrary" }
+architectury = { group = "curse.maven", name = "architectury-api-419699", version.ref = "architectury" }
+modernUI = { group = "curse.maven", name = "modern-ui-352491", version.ref = "modernUI" }

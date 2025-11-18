@@ -6,7 +6,7 @@ import appeng.api.upgrades.UpgradeInventories;
 import appeng.api.upgrades.Upgrades;
 import appeng.parts.automation.UpgradeablePart;
 import com.extendedae_plus.common.init.ModItems;
-import com.extendedae_plus.mixin.impl.HolderChannelCardLink;
+import com.extendedae_plus.common.wireless.HolderLinkChannelCard;
 import com.extendedae_plus.mixin.impl.bridge.HelperPartLinkLogic;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(UpgradeablePart.class)
 public abstract class MixinUpgradeablePartsLink implements HelperPartLinkLogic {
     @Unique
-    private HolderChannelCardLink eaep$linkLogic = HolderChannelCardLink.EMPTY;
+    private HolderLinkChannelCard eaep$linkLogic = HolderLinkChannelCard.EMPTY;
     @Unique
     private boolean eaep$supportedChannelCard = false;
 
@@ -37,26 +37,26 @@ public abstract class MixinUpgradeablePartsLink implements HelperPartLinkLogic {
         if (!this.eaep$supportedChannelCard) return;
         var self = (UpgradeablePart)(Object) this;
 
-        this.eaep$linkLogic = new HolderChannelCardLink(self.getMainNode(),
-                self::getBlockEntity, self::getUpgrades, () -> self.getHost().markForSave());
+        this.eaep$linkLogic = new HolderLinkChannelCard(self.getMainNode(),
+                self::getBlockEntity, self::getUpgrades);
         this.upgrades = UpgradeInventories.forMachine(
-                partItem.asItem(), Math.max(this.upgrades.size() + 1, 8), this::onUpgradesChanged);
+                partItem.asItem(), Math.min(this.upgrades.size() + 1, 8), this::onUpgradesChanged);
     }
 
     @Inject(method = "onUpgradesChanged", at = @At("HEAD"))
     private void onUpgradesChanged(CallbackInfo ci) {
-        if (this.eaep$supportedChannelCard) this.eaep$linkLogic.updateLinkStatus();
+        if (this.eaep$supportedChannelCard) this.eaep$linkLogic.onUpgradesChanged();
     }
 
     @Inject(method = "readFromNBT", at = @At("TAIL"))
     private void onReadingComponents(CompoundTag extra, HolderLookup.Provider registries, CallbackInfo ci) {
-        if (this.eaep$supportedChannelCard) this.eaep$linkLogic.updateLinkStatus();
+        if (this.eaep$supportedChannelCard) this.eaep$linkLogic.onTickingInitialize();
     }
 
     @Unique
     public void eaep$updateLinkStatus() {
         if (this.eaep$needsLinkUpdate() && this.eaep$supportedChannelCard) {
-            this.eaep$linkLogic.updateLinkStatus();
+            this.eaep$linkLogic.onTickingInitialize();
         }
     }
 

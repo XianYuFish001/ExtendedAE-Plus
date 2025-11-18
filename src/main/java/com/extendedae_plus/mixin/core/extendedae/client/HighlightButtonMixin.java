@@ -1,9 +1,9 @@
 package com.extendedae_plus.mixin.core.extendedae.client;
 
+import com.extendedae_plus.util.UtilGetKey;
 import com.glodblock.github.extendedae.client.button.HighlightButton;
 import com.glodblock.github.extendedae.client.gui.GuiExPatternTerminal;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -58,7 +58,11 @@ public abstract class HighlightButtonMixin {
 								// 提示玩家已选择供应器
 								if (minecraft.player != null) {
 									minecraft.player.displayClientMessage(
-										Component.literal("[ExtendedAE Plus] 已选择样板供应器 (" + serverId + ")，可按住Shift左键快速上传样板"),
+										new UtilGetKey(UtilGetKey.message)
+                                                .addStr("provider_to_upload")
+                                                .addStr("selected")
+                                                .args(serverId)
+                                                .build(),
 										false
 									);
 								}

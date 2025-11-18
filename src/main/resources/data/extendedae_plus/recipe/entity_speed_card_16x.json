@@ -1,0 +1,39 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "type": "neoforge:components",
+      "items": "extendedae_plus:entity_speed_card",
+      "components": {
+        "extendedae_plus:data_speed_card": {
+          "multiplier": 8
+        }
+      },
+      "strict": true
+    },
+    "b": {
+      "item": "ae2:singularity"
+    },
+    "c": {
+      "item": "ae2:spatial_cell_component_128"
+    },
+    "d": {
+      "item": "minecraft:nether_star"
+    }
+  },
+  "pattern": [
+    "aba",
+    "cdc",
+    "aba"
+  ],
+  "result": {
+    "components": {
+      "extendedae_plus:data_speed_card": {
+        "multiplier": 16
+      }
+    },
+    "count": 1,
+    "id": "extendedae_plus:entity_speed_card"
+  }
+}

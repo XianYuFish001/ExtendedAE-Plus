@@ -1,7 +1,7 @@
 package com.extendedae_plus.integration.RecipeViewer.jei;
 
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.common.item.EntitySpeedCardItem;
+import com.extendedae_plus.common.dataComponent.DataSpeedCard;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaTypes;
@@ -39,13 +39,13 @@ public class ModJeiPlugin implements IModPlugin {
                     @Override
                     public @NotNull Object getSubtypeData(@NotNull ItemStack ingredient, @NotNull UidContext context) {
                         // 返回你想让 JEI 区分子类型的数据，这里用 multiplier
-                        return EntitySpeedCardItem.readMultiplier(ingredient);
+                        return DataSpeedCard.fromStack(ingredient);
                     }
 
                     @Override
                     public @NotNull String getLegacyStringSubtypeInfo(@NotNull ItemStack ingredient, @NotNull UidContext context) {
                         // 返回同样的值给旧接口兼容
-                        return String.valueOf(EntitySpeedCardItem.readMultiplier(ingredient));
+                        return String.valueOf(DataSpeedCard.fromStack(ingredient));
                     }
                 }
         );

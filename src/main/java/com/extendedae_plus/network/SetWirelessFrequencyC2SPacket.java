@@ -1,7 +1,7 @@
 package com.extendedae_plus.network;
 
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.common.block.wirelessTransceiver.WirelessTransceiverBlockEntity;
+import com.extendedae_plus.common.block.wirelessTransceiver.BlockEntityWirelessTransceiver;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -68,14 +68,14 @@ public record SetWirelessFrequencyC2SPacket(BlockPos pos, long frequency) implem
 
             // 获取方块实体
             BlockEntity be = player.level().getBlockEntity(msg.pos);
-            if (!(be instanceof WirelessTransceiverBlockEntity transceiver)) {
+            if (!(be instanceof BlockEntityWirelessTransceiver transceiver)) {
                 LOGGER.warn("Invalid block entity at {} for frequency setting", msg.pos);
                 return;
             }
 
             // 使用强制设置方法，忽略锁定状态
             // 扳手GUI调整频率时应该能够绕过锁定限制
-            transceiver.setFrequencyForced(msg.frequency);
+            transceiver.setFrequency(msg.frequency, true);
             LOGGER.debug("Set transceiver frequency at {} to {} (forced)", msg.pos, msg.frequency);
         });
     }

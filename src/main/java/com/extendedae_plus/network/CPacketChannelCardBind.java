@@ -1,8 +1,9 @@
 package com.extendedae_plus.network;
 
 import com.extendedae_plus.ExtendedAEPlus;
+import com.extendedae_plus.common.dataComponent.DataChannelCard;
 import com.extendedae_plus.common.init.ModItems;
-import com.extendedae_plus.common.item.ChannelCardItem;
+import com.extendedae_plus.util.UtilGetKey;
 import com.extendedae_plus.util.WirelessTeamUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -46,26 +47,34 @@ public record CPacketChannelCardBind(InteractionHand hand) implements CustomPack
             }
 
             ServerLevel level = player.serverLevel();
-            UUID currentOwner = ChannelCardItem.getOwnerUUID(stack);
+            UUID currentOwner = DataChannelCard.getOwnerUUID(stack);
 
             if (currentOwner != null) {
                 // 已有所有者，清除
-                ChannelCardItem.clearOwner(stack);
+                DataChannelCard.clearOwner(stack);
                 player.displayClientMessage(
-                        Component.translatable("item.extendedae_plus.channel_card.owner.cleared"),
+                        new UtilGetKey(UtilGetKey.actionBar)
+                                .item(ModItems.CHANNEL_CARD)
+                                .addStr("binding")
+                                .addStr("clear")
+                                .build(),
                         true
                 );
             } else {
                 // 写入当前玩家的UUID和团队信息
                 UUID playerUUID = player.getUUID();
-                ChannelCardItem.setOwnerUUID(stack, playerUUID);
+                DataChannelCard.setOwnerUUID(stack, playerUUID);
 
                 // 获取团队名称用于显示
                 Component teamName = WirelessTeamUtil.getNetworkOwnerName(level, playerUUID);
-                ChannelCardItem.setTeamName(stack, teamName.getString());
+                DataChannelCard.setOwnerName(stack, teamName.getString());
 
                 player.displayClientMessage(
-                        Component.translatable("item.extendedae_plus.channel_card.owner.bound", teamName),
+                        new UtilGetKey(UtilGetKey.actionBar)
+                                .item(ModItems.CHANNEL_CARD)
+                                .addStr("binding")
+                                .args(teamName.getString())
+                                .build(),
                         true
                 );
             }

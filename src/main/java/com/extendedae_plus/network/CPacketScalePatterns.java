@@ -3,9 +3,10 @@ package com.extendedae_plus.network;
 import appeng.helpers.patternprovider.PatternProviderLogic;
 import appeng.menu.implementations.PatternProviderMenu;
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.client.render.Button.EAEPActionItems;
+import com.extendedae_plus.client.render.widgets.button.EAEPActionItems;
 import com.extendedae_plus.common.impl.pattern.PatternProviderData;
 import com.extendedae_plus.mixin.core.ae2.accessor.PatternProviderMenuAdvancedAccessor;
+import com.extendedae_plus.util.UtilGetKey;
 import com.mojang.logging.LogUtils;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -40,12 +41,21 @@ public record CPacketScalePatterns(int scale, boolean mul) implements CustomPack
         boolean mul = false;
 
         switch (action) {
-            case MUL2 -> { scale = 2; mul = true; }
-            case MUL5 -> { scale = 5; mul = true; }
-            case MUL10 -> { scale = 10; mul = true; }
+            case MUL2 -> {
+                scale = 2;
+                mul = true;
+            }
+            case MUL3 -> {
+                scale = 3;
+                mul = true;
+            }
+            case MUL5 -> {
+                scale = 5;
+                mul = true;
+            }
             case DIV2 -> scale = 2;
+            case DIV3 -> scale = 3;
             case DIV5 -> scale = 5;
-            case DIV10 -> scale = 10;
         }
 
         if (scale > 0)
@@ -75,12 +85,25 @@ public record CPacketScalePatterns(int scale, boolean mul) implements CustomPack
                 logic.saveChanges();
 
                 // 回显结果到玩家
-                String summary = String.format("样板缩放(%s x%.0f): 共%d, 成功%d, 失败%d", multiply ? "倍增" : "除法",
-                        scale, result.getTotalPatterns(), result.getScaledPatterns(), result.getFailedPatterns());
-                player.displayClientMessage(net.minecraft.network.chat.Component.literal("[EAP] " + summary), true);
+//                String summary = String.format("样板缩放(%s x%.0f): 共%d, 成功%d, 失败%d", multiply ? "倍增" : "除法",
+//                        scale, result.getTotalPatterns(), result.getScaledPatterns(), result.getFailedPatterns());
+//                player.displayClientMessage(net.minecraft.network.chat.Component.literal("[EAEP] " + summary), true);
+                player.displayClientMessage(
+                        new UtilGetKey(UtilGetKey.message)
+                                .addStr("pattern_scaling")
+                                .addStr(multiply, "mul", "div")
+                                .args(
+                                        scale,
+                                        result.getTotalPatterns(),
+                                        result.getScaledPatterns(),
+                                        result.getFailedPatterns()
+                                )
+                                .build(),
+                        false
+                );
 
             } catch (Throwable t) {
-                LOGGER.error("[EAP] Handle ScalePatternsC2SPacket failed", t);
+                LOGGER.error("[EAEP] Handle ScalePatternsC2SPacket failed", t);
             }
         });
     }
