@@ -16,6 +16,7 @@ public final class ModBlocks {
     public static final DeferredBlock<UploadCoreBlock> ASSEMBLER_MATRIX_UPLOAD_CORE =
             BLOCK.register("assembler_matrix_upload_core", UploadCoreBlock::new);
 
+    /// CraftingUnit Blocks are now in {@link EAEPCraftingUnitType#UNIT_BLOCKS}
     static {
         EAEPCraftingUnitType.init();
     }

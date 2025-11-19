@@ -4,22 +4,21 @@
   "key": {
     "a": {
       "type": "neoforge:components",
-      "items": "extendedae_plus:entity_speed_card",
       "components": {
         "extendedae_plus:data_speed_card": {
-          "multiplier": 8
+          "multiplier": 4
         }
       },
-      "strict": true
+      "items": "extendedae_plus:entity_speed_card"
     },
     "b": {
-      "item": "ae2:singularity"
+      "item": "ae2:cell_component_256k"
     },
     "c": {
-      "item": "ae2:spatial_cell_component_128"
+      "item": "ae2:spatial_cell_component_16"
     },
     "d": {
-      "item": "minecraft:nether_star"
+      "item": "ae2:singularity"
     }
   },
   "pattern": [
@@ -30,7 +29,7 @@
   "result": {
     "components": {
       "extendedae_plus:data_speed_card": {
-        "multiplier": 16
+        "multiplier": 8
       }
     },
     "count": 1,

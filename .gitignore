@@ -32,5 +32,6 @@ crashreport
 /build/generated/
 /build/generated/sources/
 /build/generated/sources/modMetadata/
+/build/generated/sources/modMetadata/META-INF/
 /src/generated/resources/.cache/
 /GeneratedTranslationKeys.json

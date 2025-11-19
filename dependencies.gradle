@@ -4,11 +4,11 @@ repositories {
         url = uri("https://maven.terraformersmc.com/")
     }
     maven {
-        name = 'cursemaven'
+        name = 'CurseMaven'
         url = uri("https://www.cursemaven.com")
     }
     maven {
-        name = "Modmaven"
+        name = "ModMaven"
         url = uri("https://modmaven.dev/")
     }
     maven {

@@ -5,6 +5,7 @@ import appeng.core.definitions.AEBlocks;
 import appeng.core.definitions.AEItems;
 import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.common.block.EAEPCraftingUnitType;
+import com.extendedae_plus.common.dataComponent.DataSpeedCard;
 import com.extendedae_plus.common.init.ModItems;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipeBuilder;
@@ -65,47 +66,47 @@ public class Recipe extends RecipeProvider {
                 .unlockedBy("has_accelerator", has(AEBlocks.CRAFTING_ACCELERATOR))
                 .save(recipeOutput);
 
-        // WIP: 这里define传入的物品无法在生成中被应用dataComponents, 先手动改吧
-//        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, DataSpeedCard.toStack(2))
-//                .pattern("aba")
-//                .pattern("cdc")
-//                .pattern("aba")
-//                .define('a', AEItems.SPEED_CARD)
-//                .define('b', AEItems.CELL_COMPONENT_16K)
-//                .define('c', AEItems.LOGIC_PROCESSOR)
-//                .define('d', AEItems.SINGULARITY)
-//                .unlockedBy("has_card", has(AEItems.SPEED_CARD))
-//                .save(recipeOutput, ExtendedAEPlus.getLocation("entity_speed_card_2x"));
-//        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, DataSpeedCard.toStack(4))
-//                .pattern("aba")
-//                .pattern("cdc")
-//                .pattern("aba")
-//                .define('a', DataSpeedCard.toIngredient(2))
-//                .define('b', AEItems.CELL_COMPONENT_64K)
-//                .define('c', AEItems.SPATIAL_2_CELL_COMPONENT)
-//                .define('d', AEItems.SINGULARITY)
-//                .unlockedBy("has_card", has(AEItems.SPEED_CARD))
-//                .save(recipeOutput, ExtendedAEPlus.getLocation("entity_speed_card_4x"));
-//        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, DataSpeedCard.toStack(8))
-//                .pattern("aba")
-//                .pattern("cdc")
-//                .pattern("aba")
-//                .define('a', DataSpeedCard.toIngredient(4))
-//                .define('b', AEItems.CELL_COMPONENT_256K)
-//                .define('c', AEItems.SPATIAL_16_CELL_COMPONENT)
-//                .define('d', AEItems.SINGULARITY)
-//                .unlockedBy("has_card", has(AEItems.SPEED_CARD))
-//                .save(recipeOutput, ExtendedAEPlus.getLocation("entity_speed_card_8x"));
-//        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, DataSpeedCard.toStack(16))
-//                .pattern("aba")
-//                .pattern("cdc")
-//                .pattern("aba")
-//                .define('a', DataSpeedCard.toIngredient(8))
-//                .define('b', AEItems.SINGULARITY)
-//                .define('c', AEItems.SPATIAL_128_CELL_COMPONENT)
-//                .define('d', Items.NETHER_STAR)
-//                .unlockedBy("has_card", has(AEItems.SPEED_CARD))
-//                .save(recipeOutput, ExtendedAEPlus.getLocation("entity_speed_card_16x"));
+        // NeoForged我们喜欢你, 我们喜欢Tags, NeoForgeRegistries, DataComponentIngredient😋
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, DataSpeedCard.toStack(2))
+                .pattern("aba")
+                .pattern("cdc")
+                .pattern("aba")
+                .define('a', AEItems.SPEED_CARD)
+                .define('b', AEItems.CELL_COMPONENT_16K)
+                .define('c', AEItems.LOGIC_PROCESSOR)
+                .define('d', AEItems.SINGULARITY)
+                .unlockedBy("has_card", has(AEItems.SPEED_CARD))
+                .save(recipeOutput, ExtendedAEPlus.getLocation("entity_speed_card_2x"));
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, DataSpeedCard.toStack(4))
+                .pattern("aba")
+                .pattern("cdc")
+                .pattern("aba")
+                .define('a', DataSpeedCard.toIngredient(2))
+                .define('b', AEItems.CELL_COMPONENT_64K)
+                .define('c', AEItems.SPATIAL_2_CELL_COMPONENT)
+                .define('d', AEItems.SINGULARITY)
+                .unlockedBy("has_card", has(AEItems.SPEED_CARD))
+                .save(recipeOutput, ExtendedAEPlus.getLocation("entity_speed_card_4x"));
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, DataSpeedCard.toStack(8))
+                .pattern("aba")
+                .pattern("cdc")
+                .pattern("aba")
+                .define('a', DataSpeedCard.toIngredient(4))
+                .define('b', AEItems.CELL_COMPONENT_256K)
+                .define('c', AEItems.SPATIAL_16_CELL_COMPONENT)
+                .define('d', AEItems.SINGULARITY)
+                .unlockedBy("has_card", has(AEItems.SPEED_CARD))
+                .save(recipeOutput, ExtendedAEPlus.getLocation("entity_speed_card_8x"));
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, DataSpeedCard.toStack(16))
+                .pattern("aba")
+                .pattern("cdc")
+                .pattern("aba")
+                .define('a', DataSpeedCard.toIngredient(8))
+                .define('b', AEItems.SINGULARITY)
+                .define('c', AEItems.SPATIAL_128_CELL_COMPONENT)
+                .define('d', Items.NETHER_STAR)
+                .unlockedBy("has_card", has(AEItems.SPEED_CARD))
+                .save(recipeOutput, ExtendedAEPlus.getLocation("entity_speed_card_16x"));
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.ENTITY_TICKER_PART_ITEM)
                 .pattern("ses")
                 .pattern("apf")

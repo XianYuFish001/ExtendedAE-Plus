@@ -3,6 +3,7 @@ package com.extendedae_plus.common.event;
 import appeng.api.parts.IPart;
 import appeng.api.parts.PartModels;
 import appeng.api.storage.StorageCells;
+import appeng.blockentity.AEBaseBlockEntity;
 import appeng.blockentity.crafting.CraftingBlockEntity;
 import appeng.items.parts.PartModelsHelper;
 import appeng.menu.locator.MenuLocators;
@@ -60,6 +61,8 @@ public class EventCommonInitialization {
                         null, null
                 );
 
+                AEBaseBlockEntity.registerBlockEntityItem(ModBlockEntities.WIRELESS_TRANSCEIVER.get(), ModItems.WIRELESS_TRANSCEIVER.get());
+
                 // 绑定装配矩阵上传核心方块实体类型，避免 blockEntityClass 为 null 的问题
                 ModBlocks.ASSEMBLER_MATRIX_UPLOAD_CORE.get().setBlockEntity(
                         UploadCoreBlockEntity.class,
@@ -67,6 +70,8 @@ public class EventCommonInitialization {
                         null,
                         null
                 );
+
+                AEBaseBlockEntity.registerBlockEntityItem(ModBlockEntities.UPLOAD_CORE.get(), ModItems.ASSEMBLER_MATRIX_UPLOAD_CORE.get());
 
                 Arrays.stream(EAEPCraftingUnitType.values()).forEach(unit ->
                         unit.getBlock().get().setBlockEntity(CraftingBlockEntity.class,

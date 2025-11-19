@@ -9,7 +9,6 @@ import appeng.me.helpers.BlockEntityNodeListener;
 import appeng.util.SettingsFrom;
 import com.extendedae_plus.common.init.ModBlockEntities;
 import com.extendedae_plus.common.init.ModDataComponents;
-import com.extendedae_plus.common.init.ModItems;
 import com.extendedae_plus.common.wireless.LinkMaster;
 import com.extendedae_plus.common.wireless.LinkSlave;
 import com.extendedae_plus.common.wireless.linkApi.ILinkHost;
@@ -38,10 +37,6 @@ public class BlockEntityWirelessTransceiver extends AENetworkedBlockEntity {
 
     private final LinkMaster linkMaster;
     private final LinkSlave linkSlave;
-
-    static {
-        registerBlockEntityItem(ModBlockEntities.WIRELESS_TRANSCEIVER.get(), ModItems.WIRELESS_TRANSCEIVER.get());
-    }
 
     public BlockEntityWirelessTransceiver(BlockPos pos, BlockState blockState) {
         super(ModBlockEntities.WIRELESS_TRANSCEIVER.get(), pos, blockState);

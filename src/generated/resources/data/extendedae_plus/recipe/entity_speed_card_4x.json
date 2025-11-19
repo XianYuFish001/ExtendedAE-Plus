@@ -4,19 +4,18 @@
   "key": {
     "a": {
       "type": "neoforge:components",
-      "items": "extendedae_plus:entity_speed_card",
       "components": {
         "extendedae_plus:data_speed_card": {
-          "multiplier": 4
+          "multiplier": 2
         }
       },
-      "strict": true
+      "items": "extendedae_plus:entity_speed_card"
     },
     "b": {
-      "item": "ae2:cell_component_256k"
+      "item": "ae2:cell_component_64k"
     },
     "c": {
-      "item": "ae2:spatial_cell_component_16"
+      "item": "ae2:spatial_cell_component_2"
     },
     "d": {
       "item": "ae2:singularity"
@@ -30,7 +29,7 @@
   "result": {
     "components": {
       "extendedae_plus:data_speed_card": {
-        "multiplier": 8
+        "multiplier": 4
       }
     },
     "count": 1,

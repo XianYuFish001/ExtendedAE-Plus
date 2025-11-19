@@ -109,7 +109,7 @@
   "screen.extendedae_plus.provider_list.query": "输入关键词以搜索...",
   "screen.extendedae_plus.provider_list.remap_aliases": "重载映射表",
   "screen.item.extendedae_plus.entity_speed_ticker.blacklist": "§c§l机器已被禁用",
-  "screen.item.extendedae_plus.entity_speed_ticker.enabled": "§a§l机器运行中",
+  "screen.item.extendedae_plus.entity_speed_ticker.enabled": "§2§l机器运行中",
   "screen.item.extendedae_plus.entity_speed_ticker.energy": "能耗: %s/t",
   "screen.item.extendedae_plus.entity_speed_ticker.multiplier": "额外消耗倍率: %s",
   "screen.item.extendedae_plus.entity_speed_ticker.needs_energy": "§6§l网络能量不足",

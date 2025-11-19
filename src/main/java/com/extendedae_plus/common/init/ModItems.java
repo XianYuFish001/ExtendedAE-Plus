@@ -3,6 +3,7 @@ package com.extendedae_plus.common.init;
 import appeng.items.materials.UpgradeCardItem;
 import appeng.items.parts.PartItem;
 import com.extendedae_plus.ExtendedAEPlus;
+import com.extendedae_plus.common.block.EAEPCraftingUnitType;
 import com.extendedae_plus.common.item.ChannelCardItem;
 import com.extendedae_plus.common.item.EntitySpeedCardItem;
 import com.extendedae_plus.common.item.EntitySpeedTickerPartItem;
@@ -22,7 +23,8 @@ import java.util.random.RandomGenerator;
 public final class ModItems {
     public static final DeferredRegister.Items ITEM =
             DeferredRegister.createItems(ExtendedAEPlus.MODID);
-    
+
+    /// CraftingUnit Items are now in {@link EAEPCraftingUnitType#UNIT_ITEMS}
     public static final List<DeferredItem<?>> ITEMS = new ArrayList<>();
 
     public static final DeferredItem<BlockItem> WIRELESS_TRANSCEIVER =
@@ -41,6 +43,7 @@ public final class ModItems {
     public static final DeferredItem<UpgradeCardItem> CHANNEL_CARD =
             regItem("channel_card", ChannelCardItem::new);
 
+    /// 随机数, 嘻嘻😋
     public static final DeferredItem<UpgradeCardItem> ENTITY_SPEED_CARD =
             ITEM.register("entity_speed_card", () -> new EntitySpeedCardItem(RandomGenerator.getDefault().nextInt(64)));
 

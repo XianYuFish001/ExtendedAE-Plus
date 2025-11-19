@@ -9,6 +9,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 
 // 搞不懂为什么不自己注册, 非要全塞到customData里
 public record DataSpeedCard(int multiplier) {
@@ -22,7 +23,10 @@ public record DataSpeedCard(int multiplier) {
     );
 
     public static Ingredient toIngredient(int multiplier) {
-        return Ingredient.of(toStack(multiplier));
+        return DataComponentIngredient.of(false,
+                ModDataComponents.DATA_SPEED_CARD,
+                new DataSpeedCard(multiplier),
+                ModItems.ENTITY_SPEED_CARD);
     }
 
     public static ItemStack toStack(int multiplier) {

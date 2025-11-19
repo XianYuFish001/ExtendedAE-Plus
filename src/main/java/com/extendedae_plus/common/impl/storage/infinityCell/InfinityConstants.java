@@ -1,5 +1,6 @@
 package com.extendedae_plus.common.impl.storage.infinityCell;
 
+/// 劝退了劝退了, 完全改不了的样子😅
 public interface InfinityConstants {
     // 当前磁盘格式版本号，增加字段用于向后/向前兼容
     int FORMAT_VERSION = 2;

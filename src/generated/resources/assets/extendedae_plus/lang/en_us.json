@@ -107,7 +107,7 @@
   "screen.extendedae_plus.provider_list.query": "Input to search...",
   "screen.extendedae_plus.provider_list.remap_aliases": "Remap",
   "screen.item.extendedae_plus.entity_speed_ticker.blacklist": "§c§lDisabled",
-  "screen.item.extendedae_plus.entity_speed_ticker.enabled": "§a§lRunning",
+  "screen.item.extendedae_plus.entity_speed_ticker.enabled": "§2§lRunning",
   "screen.item.extendedae_plus.entity_speed_ticker.energy": "Energy cost: %s/t",
   "screen.item.extendedae_plus.entity_speed_ticker.multiplier": "Additional consumption multiplier: %s",
   "screen.item.extendedae_plus.entity_speed_ticker.needs_energy": "§6§lEnergy Insufficient",
