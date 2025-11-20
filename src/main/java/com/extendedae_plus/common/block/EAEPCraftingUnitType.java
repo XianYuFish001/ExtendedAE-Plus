@@ -26,6 +26,19 @@ public enum EAEPCraftingUnitType implements ICraftingUnitType, StringRepresentab
     private static final List<DeferredBlock<CraftingUnitBlock>> UNIT_BLOCKS = new ArrayList<>();
     private static final List<DeferredItem<BlockItem>> UNIT_ITEMS = new ArrayList<>();
 
+    public static void init() {
+        for (var type : values()) {
+            registerUnitType(type);
+        }
+    }
+
+    private static void registerUnitType(EAEPCraftingUnitType type) {
+        var holderBlock = ModBlocks.BLOCK.register(type.getSerializedName(), () -> new CraftingUnitBlock(type));
+        var holderItem = ModItems.regCommonBlockItem(type.getSerializedName(), holderBlock);
+        UNIT_BLOCKS.add(holderBlock);
+        UNIT_ITEMS.add(holderItem);
+    }
+
     EAEPCraftingUnitType(long storage, int threads) {
         this.storage = storage;
         this.threads = threads;
@@ -41,19 +54,6 @@ public enum EAEPCraftingUnitType implements ICraftingUnitType, StringRepresentab
         // 返回定义的真实线程数。AE2 原版在 CraftingCPUCluster.addBlockEntity 中对单块线程数
         // 有 16 的硬限制，但本模组已通过 Mixin 取消该限制，因此这里不再进行夹取。
         return this.threads;
-    }
-
-    public static void init() {
-        for (EAEPCraftingUnitType type : values()) {
-            registerUnitType(type);
-        }
-    }
-
-    private static void registerUnitType(EAEPCraftingUnitType type) {
-        var holderBlock = ModBlocks.BLOCK.register(type.getSerializedName(), () -> new CraftingUnitBlock(type));
-        var holderItem = ModItems.regCommonBlockItem(type.getSerializedName(), holderBlock);
-        UNIT_BLOCKS.add(holderBlock);
-        UNIT_ITEMS.add(holderItem);
     }
 
     @Override

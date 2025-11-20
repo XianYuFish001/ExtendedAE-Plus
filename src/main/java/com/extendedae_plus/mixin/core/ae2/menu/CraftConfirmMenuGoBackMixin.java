@@ -4,7 +4,7 @@ import appeng.api.stacks.GenericStack;
 import appeng.menu.me.crafting.CraftConfirmMenu;
 import appeng.menu.me.crafting.CraftingPlanSummary;
 import appeng.menu.me.crafting.CraftingPlanSummaryEntry;
-import com.extendedae_plus.integration.RecipeViewer.RecipeViewerHelper;
+import com.extendedae_plus.integration.recipeViewer.HelperRecipeViewer;
 import net.minecraft.client.gui.screens.Screen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -46,7 +46,7 @@ public class CraftConfirmMenuGoBackMixin {
                     try {
                         var display = entry.getWhat();
                         if (display != null)
-                            RecipeViewerHelper.addFavorite(new GenericStack(display, entry.getMissingAmount()));
+                            HelperRecipeViewer.addFavorite(new GenericStack(display, entry.getMissingAmount()));
                     } catch (Throwable ignored) {}
                 }
             }

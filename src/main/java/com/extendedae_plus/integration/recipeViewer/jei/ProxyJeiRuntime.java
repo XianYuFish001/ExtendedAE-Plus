@@ -1,4 +1,4 @@
-package com.extendedae_plus.integration.RecipeViewer.jei;
+package com.extendedae_plus.integration.recipeViewer.jei;
 
 import com.extendedae_plus.mixin.core.recipeViewer.jei.accessor.AccessorBookmarkOverlay;
 import mezz.jei.api.constants.VanillaTypes;
@@ -25,10 +25,10 @@ import java.util.Optional;
 /**
  * 线程安全地缓存并访问 JEI Runtime。
  */
-public final class JeiRuntimeProxy {
+public final class ProxyJeiRuntime {
     private static volatile IJeiRuntime RUNTIME;
 
-    private JeiRuntimeProxy() {}
+    private ProxyJeiRuntime() {}
 
     static void setRuntime(IJeiRuntime runtime) {
         RUNTIME = runtime;

@@ -9,11 +9,11 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.util.List;
 
-/**适配
+/**
  * Redirect PatternProviderLogic.pushPattern 中对 List.contains 的调用，
  * 在遇到缩放样板时回退匹配到原始样板实例。
  */
-@Mixin(value = PatternProviderLogic.class, remap = false)
+@Mixin(value = PatternProviderLogic.class, remap = false, priority = 1100)
 public class PatternProviderLogicContainsRedirectMixin {
 
     @Redirect(method = "pushPattern",

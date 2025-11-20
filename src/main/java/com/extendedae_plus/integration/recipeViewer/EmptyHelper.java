@@ -1,11 +1,11 @@
-package com.extendedae_plus.integration.RecipeViewer;
+package com.extendedae_plus.integration.recipeViewer;
 
 import appeng.api.stacks.GenericStack;
 import com.mojang.datafixers.util.Pair;
 
 import java.util.List;
 
-public class EmptyHelper implements IRecipeViewerHelper{
+public class EmptyHelper implements IHelperRecipeViewer {
     @Override
     public List<GenericStack> getHoveredStacks(double mouseX, double mouseY) {
         return List.of();

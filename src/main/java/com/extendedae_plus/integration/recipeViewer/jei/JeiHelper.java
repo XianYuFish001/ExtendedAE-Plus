@@ -1,10 +1,10 @@
-package com.extendedae_plus.integration.RecipeViewer.jei;
+package com.extendedae_plus.integration.recipeViewer.jei;
 
 import appeng.api.stacks.AEFluidKey;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
-import com.extendedae_plus.integration.RecipeViewer.IRecipeViewerHelper;
+import com.extendedae_plus.integration.recipeViewer.IHelperRecipeViewer;
 import com.mojang.datafixers.util.Pair;
 import mezz.jei.api.ingredients.ITypedIngredient;
 import net.minecraft.client.gui.screens.Screen;
@@ -16,7 +16,7 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 
-public class JeiHelper implements IRecipeViewerHelper {
+public class JeiHelper implements IHelperRecipeViewer {
     @Override
     public List<GenericStack> getHoveredStacks(double mouseX, double mouseY) {
         return getHoveredStacks();
@@ -24,7 +24,7 @@ public class JeiHelper implements IRecipeViewerHelper {
 
     @Override
     public List<GenericStack> getHoveredStacks() {
-        ITypedIngredient<?> hovered = JeiRuntimeProxy.getIngredientUnderMouse().orElse(null);
+        ITypedIngredient<?> hovered = ProxyJeiRuntime.getIngredientUnderMouse().orElse(null);
         if (hovered != null)
             return Collections.singletonList(GenericEntryStackHelper.ingredientToStack(hovered));
         else return null;
@@ -32,7 +32,7 @@ public class JeiHelper implements IRecipeViewerHelper {
 
     @Override
     public List<GenericStack> getFavorites() {
-        return JeiRuntimeProxy.getBookmarkList().stream()
+        return ProxyJeiRuntime.getBookmarkList().stream()
                 .map(GenericEntryStackHelper::ingredientToStack).toList();
     }
 
@@ -51,23 +51,23 @@ public class JeiHelper implements IRecipeViewerHelper {
 
     @Override
     public boolean isCheatMode() {
-        return JeiRuntimeProxy.isJeiCheatModeEnabled();
+        return ProxyJeiRuntime.isJeiCheatModeEnabled();
     }
 
     @Override
     public void addFavorite(GenericStack stack) {
         AEKey key = stack.what();
         if (key instanceof AEItemKey itemKey)
-            JeiRuntimeProxy.addBookmark(itemKey.toStack());
+            ProxyJeiRuntime.addBookmark(itemKey.toStack());
         else if (key instanceof AEFluidKey fluidKey)
-            JeiRuntimeProxy.addBookmark(fluidKey.toStack(1000));
+            ProxyJeiRuntime.addBookmark(fluidKey.toStack(1000));
         else if (ModList.get().isLoaded("mekanism") || ModList.get().isLoaded("appmek")) {
             try {
                 Class<?> keyClass = key.getClass();
                 if (keyClass.getName().contains("MekanismKey")) {
                     Method getChemicalStackMethod = keyClass.getMethod("getStack");
                     Object chemicalStack = getChemicalStackMethod.invoke(key);
-                    JeiRuntimeProxy.addBookmark(chemicalStack);
+                    ProxyJeiRuntime.addBookmark(chemicalStack);
                 }
             } catch (Exception ignored) {}
         }
@@ -75,6 +75,6 @@ public class JeiHelper implements IRecipeViewerHelper {
 
     @Override
     public void setSearch(String text) {
-        JeiRuntimeProxy.setIngredientFilterText(text);
+        ProxyJeiRuntime.setIngredientFilterText(text);
     }
 }

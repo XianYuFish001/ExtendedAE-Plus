@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MixinIOBusLinkTicker {
     @Inject(method = "canDoBusWork", at = @At("TAIL"), cancellable = true)
     private void testAdditionalWork(CallbackInfoReturnable<Boolean> cir) {
-        if (!cir.getReturnValue()) return;
+        if (cir.getReturnValue()) return;
 
         if (this instanceof HelperPartLinkLogic helper)
             cir.setReturnValue(helper.eaep$needsLinkUpdate());

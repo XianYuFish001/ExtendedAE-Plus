@@ -1,4 +1,4 @@
-package com.extendedae_plus.integration.RecipeViewer.jei;
+package com.extendedae_plus.integration.recipeViewer.jei;
 
 import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.common.dataComponent.DataSpeedCard;
@@ -25,7 +25,7 @@ public class ModJeiPlugin implements IModPlugin {
 
     @Override
     public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
-        JeiRuntimeProxy.setRuntime(jeiRuntime);
+        ProxyJeiRuntime.setRuntime(jeiRuntime);
     }
 
 

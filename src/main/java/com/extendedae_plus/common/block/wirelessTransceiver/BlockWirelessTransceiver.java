@@ -51,6 +51,7 @@ public class BlockWirelessTransceiver extends AEBaseEntityBlock<BlockEntityWirel
                     true);
         } else if (player.isShiftKeyDown()) {
             if (!(level.getBlockEntity(pos) instanceof BlockEntityWirelessTransceiver blockEntity)) return;
+            if (!level.isClientSide()) return;
             FrequencyInputScreen.open(pos, blockEntity.getFrequency());
         } else super.attack(state, level, pos, player);
     }

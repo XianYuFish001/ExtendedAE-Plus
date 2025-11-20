@@ -73,9 +73,7 @@ public enum ProviderWirelessTransceiver {
 
         if (!(blockEntity.getLevel() instanceof ServerLevel level)) return;
         data.putString("placerName", WirelessTeamUtil.getNetworkOwnerName(level, placer).getString());
-    })
-
-    ;
+    });
 
     private final BiConsumer<CompoundTag, BlockAccessor> provider;
 

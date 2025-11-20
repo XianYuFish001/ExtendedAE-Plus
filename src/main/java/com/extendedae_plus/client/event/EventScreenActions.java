@@ -4,7 +4,7 @@ import appeng.api.stacks.GenericStack;
 import appeng.client.gui.me.common.MEStorageScreen;
 import appeng.core.AEConfig;
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.integration.RecipeViewer.RecipeViewerHelper;
+import com.extendedae_plus.integration.recipeViewer.HelperRecipeViewer;
 import com.extendedae_plus.mixin.core.ae2.accessor.MEStorageScreenAccessor;
 import com.extendedae_plus.mixin.core.extendedae.accessor.GuiExPatternTerminalAccessor;
 import com.extendedae_plus.network.CPacketPullFromNetwork;
@@ -36,9 +36,9 @@ public final class EventScreenActions {
             return;
         }
 
-        var pulled = RecipeViewerHelper.getPulled(event.getButton());
-        if (!RecipeViewerHelper.isCheatMode() && pulled.getFirst() > 0) {
-            List<GenericStack> stacks = RecipeViewerHelper.getHoveredStacks();
+        var pulled = HelperRecipeViewer.getPulled(event.getButton());
+        if (!HelperRecipeViewer.isCheatMode() && pulled.getFirst() > 0) {
+            List<GenericStack> stacks = HelperRecipeViewer.getHoveredStacks();
             GenericStack stack = stacks.isEmpty() ? null : stacks.getFirst();
             if (stack == null) return;
 
@@ -51,7 +51,7 @@ public final class EventScreenActions {
         }
 
         if (event.getButton() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-            List<GenericStack> stacks = RecipeViewerHelper.getHoveredStacks();
+            List<GenericStack> stacks = HelperRecipeViewer.getHoveredStacks();
             GenericStack stack = stacks.isEmpty() ? null : stacks.getFirst();
             if (stack == null) return;
 
@@ -66,7 +66,7 @@ public final class EventScreenActions {
         if (event.getKeyCode() == GLFW.GLFW_KEY_F) {
             // 仅当鼠标确实悬停在 JEI 配料上时触发
             // 大概会在一格有多个(?)stack的时候出bug, 但是真的会有那种时候吗?
-            GenericStack stack = RecipeViewerHelper.getHoveredStacks().getFirst();
+            GenericStack stack = HelperRecipeViewer.getHoveredStacks().getFirst();
             if (stack == null) return;
             String name = stack.what().getDisplayName().getString();
 
@@ -75,7 +75,7 @@ public final class EventScreenActions {
             if (screen instanceof MEStorageScreen<?> me) {
                 try {
                     // 如果用EMI搜索框
-                    if (AEConfig.instance().isUseExternalSearch()) RecipeViewerHelper.setSearchText(name);
+                    if (AEConfig.instance().isUseExternalSearch()) HelperRecipeViewer.setSearchText(name);
                     else {
                         MEStorageScreenAccessor acc = (MEStorageScreenAccessor) me;
                         acc.eap$getSearchField().setValue(name);
@@ -86,7 +86,7 @@ public final class EventScreenActions {
                 }
             } else if (screen instanceof GuiExPatternTerminal<?> gpt) {
                 try {
-                    if (AEConfig.instance().isUseExternalSearch()) RecipeViewerHelper.setSearchText(name);
+                    if (AEConfig.instance().isUseExternalSearch()) HelperRecipeViewer.setSearchText(name);
                     else {
                         GuiExPatternTerminalAccessor acc = (GuiExPatternTerminalAccessor) gpt;
                         acc.getSearchField().setValue(name);

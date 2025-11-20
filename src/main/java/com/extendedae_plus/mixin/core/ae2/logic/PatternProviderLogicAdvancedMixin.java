@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Collections;
 
-@Mixin(value = PatternProviderLogic.class, remap = false)
+@Mixin(value = PatternProviderLogic.class, remap = false, priority = 1100)
 public class PatternProviderLogicAdvancedMixin implements AdvancedBlockingHolder {
     @Unique
     private static final String EAP_ADV_BLOCKING_KEY = "epp_advanced_blocking";

@@ -18,9 +18,9 @@ import com.extendedae_plus.network.ToggleSmartDoublingC2SPacket;
 import com.extendedae_plus.util.UtilGetKey;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.logging.LogUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -77,11 +77,8 @@ public abstract class PatternProviderScreenMixin<C extends PatternProviderMenu>
         this.eap$AdvancedBlockingToggle = new SettingToggleButton<>(
                 Settings.BLOCKING_MODE,
                 this.eap$AdvancedBlockingEnabled ? YesNo.YES : YesNo.NO,
-                (btn, backwards) -> {
-                    // 不做本地切换，点击仅发送自定义C2S，显示由@GuiSync回传
-                    var conn = Minecraft.getInstance().getConnection();
-                    if (conn != null) conn.send(ToggleAdvancedBlockingC2SPacket.INSTANCE);
-                }
+                (btn, backwards) ->
+                        PacketDistributor.sendToServer(ToggleAdvancedBlockingC2SPacket.INSTANCE)
         ) {
             @Override
             public List<Component> getTooltipMessage() {
@@ -110,10 +107,8 @@ public abstract class PatternProviderScreenMixin<C extends PatternProviderMenu>
         this.eap$SmartDoublingToggle = new SettingToggleButton<>(
                 Settings.BLOCKING_MODE,
                 this.eap$SmartDoublingEnabled ? YesNo.YES : YesNo.NO,
-                (btn, backwards) -> {
-                    var conn = Minecraft.getInstance().getConnection();
-                    if (conn != null) conn.send(ToggleSmartDoublingC2SPacket.INSTANCE);
-                }
+                (btn, backwards) ->
+                        PacketDistributor.sendToServer(ToggleSmartDoublingC2SPacket.INSTANCE)
         ) {
             @Override
             public List<Component> getTooltipMessage() {
@@ -128,12 +123,6 @@ public abstract class PatternProviderScreenMixin<C extends PatternProviderMenu>
         this.eap$SmartDoublingToggle.set(this.eap$SmartDoublingEnabled ? YesNo.YES : YesNo.NO);
         this.addToLeftToolbar(this.eap$SmartDoublingToggle);
 
-//        this.eaep$scalingButtons.add(new EAEPActionButton(EAEPActionItems.MUL2, CPacketScalePatterns::send));
-//        this.eaep$scalingButtons.add(new EAEPActionButton(EAEPActionItems.MUL5, CPacketScalePatterns::send));
-//        this.eaep$scalingButtons.add(new EAEPActionButton(EAEPActionItems.MUL10, CPacketScalePatterns::send));
-//        this.eaep$scalingButtons.add(new EAEPActionButton(EAEPActionItems.DIV2, CPacketScalePatterns::send));
-//        this.eaep$scalingButtons.add(new EAEPActionButton(EAEPActionItems.DIV5, CPacketScalePatterns::send));
-//        this.eaep$scalingButtons.add(new EAEPActionButton(EAEPActionItems.DIV10, CPacketScalePatterns::send));
         EAEPActionItems.GROUPED_ACTIONS.get("scaling").forEach(action ->
                 this.eaep$scalingButtons.add(new EAEPActionButton(action, CPacketScalePatterns::send)));
 

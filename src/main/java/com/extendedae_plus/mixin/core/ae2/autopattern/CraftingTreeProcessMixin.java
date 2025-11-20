@@ -14,6 +14,7 @@ import com.extendedae_plus.common.impl.pattern.smartDoubling.PatternScaler;
 import com.extendedae_plus.common.impl.pattern.smartDoubling.RequestedAmountHolder;
 import com.extendedae_plus.common.impl.pattern.smartDoubling.ScaledProcessingPattern;
 import com.extendedae_plus.common.impl.pattern.smartDoubling.SmartDoublingAwarePattern;
+import com.extendedae_plus.mixin.core.ae2.accessor.CraftingTreeNodeAccessor;
 import com.mojang.logging.LogUtils;
 import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;

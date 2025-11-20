@@ -119,9 +119,9 @@ public class Recipe extends RecipeProvider {
                 .unlockedBy("has_singularity", has(AEItems.SINGULARITY))
                 .save(recipeOutput);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.WIRELESS_TRANSCEIVER)
-                .pattern("rrr")
+                .pattern(" r ")
                 .pattern("rlr")
-                .pattern("rrr")
+                .pattern(" r ")
                 .define('r', AEBlocks.QUANTUM_RING)
                 .define('l', AEBlocks.QUANTUM_LINK)
                 .unlockedBy("has_singularity", has(AEItems.SINGULARITY))

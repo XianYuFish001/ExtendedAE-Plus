@@ -53,9 +53,9 @@ public class HolderLinkChannelCard {
     }
 
     private @Nullable DataChannelCard findChannelCard() {
-        var data = new AtomicReference<DataChannelCard>();
         var upgradesInv = this.getterUpgradeInventory.get();
         if (upgradesInv == null) return null;
+        var data = new AtomicReference<DataChannelCard>();
         upgradesInv.forEach(card -> {
             if (data.get() == null && card.has(ModDataComponents.DATA_CHANNEL_CARD))
                 data.set(card.get(ModDataComponents.DATA_CHANNEL_CARD));
@@ -75,7 +75,7 @@ public class HolderLinkChannelCard {
 
     private LinkSlave getOrCreateLink() {
         if (this.linkSlave == null)
-            this.linkSlave = new LinkSlave(new HostGeneric(this.getterBlockEntity, mainNode::getNode));
-        return linkSlave;
+            this.linkSlave = new LinkSlave(new HostGeneric(this.getterBlockEntity, this.mainNode::getNode));
+        return this.linkSlave;
     }
 }

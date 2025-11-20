@@ -1,8 +1,8 @@
-package com.extendedae_plus.integration.RecipeViewer.emi;
+package com.extendedae_plus.integration.recipeViewer.emi;
 
 import appeng.api.stacks.GenericStack;
 import appeng.integration.modules.emi.EmiStackHelper;
-import com.extendedae_plus.integration.RecipeViewer.IRecipeViewerHelper;
+import com.extendedae_plus.integration.recipeViewer.IHelperRecipeViewer;
 import com.mojang.datafixers.util.Pair;
 import dev.emi.emi.api.EmiApi;
 import dev.emi.emi.config.EmiConfig;
@@ -11,7 +11,7 @@ import dev.emi.emi.runtime.EmiFavorites;
 
 import java.util.List;
 
-public class EMIHelper implements IRecipeViewerHelper {
+public class EmiHelper implements IHelperRecipeViewer {
     @Override
     public List<GenericStack> getHoveredStacks(double mouseX, double mouseY) {
         return EmiApi.getHoveredStack((int) mouseX, (int) mouseY, false).getStack().getEmiStacks()

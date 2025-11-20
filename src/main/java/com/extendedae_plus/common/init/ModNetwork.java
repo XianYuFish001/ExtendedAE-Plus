@@ -46,8 +46,5 @@ public class ModNetwork {
         registrar.playToServer(CPacketTargetKeyTriggered.TYPE,
                 CPacketTargetKeyTriggered.STREAM_CODEC,
                 CPacketTargetKeyTriggered::handle);
-        registrar.playToServer(CPacketStoneCuttingID.TYPE,
-                CPacketStoneCuttingID.STREAM_CODEC,
-                CPacketStoneCuttingID::handle);
     }
 }

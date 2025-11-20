@@ -1,4 +1,4 @@
-package com.extendedae_plus.integration.RecipeViewer.emi;
+package com.extendedae_plus.integration.recipeViewer.emi;
 
 import appeng.api.stacks.GenericStack;
 import appeng.integration.modules.emi.EmiStackHelper;

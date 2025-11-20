@@ -1,4 +1,4 @@
-package com.extendedae_plus.integration.RecipeViewer.emi;
+package com.extendedae_plus.integration.recipeViewer.emi;
 
 import com.extendedae_plus.mixin.impl.ExclusionZoneScalingButton;
 import dev.emi.emi.api.EmiEntrypoint;

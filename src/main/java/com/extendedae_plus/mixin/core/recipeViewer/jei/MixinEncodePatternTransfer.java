@@ -30,6 +30,6 @@ public class MixinEncodePatternTransfer {
                 || EncodingHelper.isSupportedCraftingRecipe(holder.value()))
             return;
 
-        AliasGetter.tryCollectKeywords(recipeBase);
+        AliasGetter.tryCollectKeywords(holder);
     }
 }

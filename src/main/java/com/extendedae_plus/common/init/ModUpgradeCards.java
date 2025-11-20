@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class UpgradeCards {
+public class ModUpgradeCards {
     /// 在commonSetup时注册
     public static void init() {
         Upgrades.add(AEItems.ENERGY_CARD, ModItems.ENTITY_TICKER_PART_ITEM.get(), 8);

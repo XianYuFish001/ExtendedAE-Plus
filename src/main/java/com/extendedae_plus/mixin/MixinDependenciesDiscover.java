@@ -48,7 +48,7 @@ public class MixinDependenciesDiscover {
         }
 
         LOGGER.debug("Found @MixinDependencies" +
-                "{MixinClass[{}], requireMods:{}, conflictMods:{}}",
+                "{MixinClass[{}], requireMods{}, conflictMods{}}",
                 UtilFormat.splitToLastKey(mixinClassName, "core", "\\."),
                 dependencies.requiredMods, dependencies.conflictMods);
 
@@ -79,7 +79,7 @@ public class MixinDependenciesDiscover {
         try (InputStream is = storedLoader.getResourceAsStream(classPath)) {
             if (is != null) {
                 ClassReader classReader = new ClassReader(is);
-                classReader.accept(new ModDependenciesClassVisitor(dependencies), ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
+                classReader.accept(new DependenciesClassVisitor(dependencies), ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
             }
         } catch (IOException e) {
             LOGGER.warn("[EAEP/mixin] Failed to read mixin class: {}", mixinClassName);
@@ -88,10 +88,10 @@ public class MixinDependenciesDiscover {
         return dependencies;
     }
 
-    private static class ModDependenciesClassVisitor extends ClassVisitor {
+    private static class DependenciesClassVisitor extends ClassVisitor {
         private final MixinDependencies.DependencyInfo dependencies;
 
-        public ModDependenciesClassVisitor(MixinDependencies.DependencyInfo dependencies) {
+        public DependenciesClassVisitor(MixinDependencies.DependencyInfo dependencies) {
             super(Opcodes.ASM9);
             this.dependencies = dependencies;
         }
@@ -100,16 +100,16 @@ public class MixinDependenciesDiscover {
         public AnnotationVisitor visitAnnotation(String descriptor, boolean visible) {
             if ("Lcom/extendedae_plus/mixin/MixinDependencies;".equals(descriptor)) {
                 dependencies.hasAnnotation = true;
-                return new ModDependenciesAnnotationVisitor(dependencies);
+                return new DependenciesAnnotationVisitor(dependencies);
             }
             return null;
         }
     }
 
-    private static class ModDependenciesAnnotationVisitor extends AnnotationVisitor {
+    private static class DependenciesAnnotationVisitor extends AnnotationVisitor {
         private final MixinDependencies.DependencyInfo dependencies;
 
-        public ModDependenciesAnnotationVisitor(MixinDependencies.DependencyInfo dependencies) {
+        public DependenciesAnnotationVisitor(MixinDependencies.DependencyInfo dependencies) {
             super(Opcodes.ASM9);
             this.dependencies = dependencies;
         }
@@ -117,16 +117,16 @@ public class MixinDependenciesDiscover {
         @Override
         public AnnotationVisitor visitArray(String name) {
             if ("value".equals(name) || "conflict".equals(name))
-                return new StringArrayVisitor(name, dependencies);
+                return new DependenciesValuesVisitor(name, dependencies);
             return null;
         }
     }
 
-    private static class StringArrayVisitor extends AnnotationVisitor {
+    private static class DependenciesValuesVisitor extends AnnotationVisitor {
         private final String arrayName;
         private final MixinDependencies.DependencyInfo dependencies;
 
-        public StringArrayVisitor(String arrayName, MixinDependencies.DependencyInfo dependencies) {
+        public DependenciesValuesVisitor(String arrayName, MixinDependencies.DependencyInfo dependencies) {
             super(Opcodes.ASM9);
             this.arrayName = arrayName;
             this.dependencies = dependencies;

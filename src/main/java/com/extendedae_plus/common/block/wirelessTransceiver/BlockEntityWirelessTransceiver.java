@@ -102,7 +102,7 @@ public class BlockEntityWirelessTransceiver extends AENetworkedBlockEntity {
         super.exportSettings(mode, builder, player);
 
         if (mode != SettingsFrom.MEMORY_CARD) return;
-        builder.set(ModDataComponents.DATA_SETTINGS, new DataSettings(
+        builder.set(ModDataComponents.DATA_TRANSCEIVER_SETTINGS, new DataSettings(
                 this.getBlockState().getValue(BlockWirelessTransceiver.MASTER_MODE),
                 this.host.getFrequency(),
                 this.host.getPlacer(),
@@ -115,8 +115,8 @@ public class BlockEntityWirelessTransceiver extends AENetworkedBlockEntity {
         super.importSettings(mode, input, player);
 
         if (!(this.getLevel() instanceof ServerLevel level)) return;
-        if (!input.has(ModDataComponents.DATA_SETTINGS.get())) return;
-        var settings = input.get(ModDataComponents.DATA_SETTINGS.get());
+        if (!input.has(ModDataComponents.DATA_TRANSCEIVER_SETTINGS.get())) return;
+        var settings = input.get(ModDataComponents.DATA_TRANSCEIVER_SETTINGS.get());
 
         if (settings.masterMode != this.getBlockState().getValue(BlockWirelessTransceiver.MASTER_MODE))
             level.setBlock(this.getBlockPos(),

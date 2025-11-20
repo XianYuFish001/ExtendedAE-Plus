@@ -5,6 +5,7 @@ import com.extendedae_plus.common.block.wirelessTransceiver.BlockEntityWirelessT
 import com.extendedae_plus.common.dataComponent.DataChannelCard;
 import com.extendedae_plus.common.dataComponent.DataEncoderProfile;
 import com.extendedae_plus.common.dataComponent.DataSpeedCard;
+import com.extendedae_plus.mixin.impl.DataProviderSettings;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
@@ -24,13 +25,16 @@ public class ModDataComponents {
             register("data_speed_card", DataSpeedCard.CODEC, DataSpeedCard.STREAM_CODEC);
 
     public static final DeferredHolder<DataComponentType<?>,
-            DataComponentType<BlockEntityWirelessTransceiver.DataSettings>> DATA_SETTINGS =
+            DataComponentType<BlockEntityWirelessTransceiver.DataSettings>> DATA_TRANSCEIVER_SETTINGS =
             register("data_transceiver_settings",
                     BlockEntityWirelessTransceiver.DataSettings.CODEC,
                     BlockEntityWirelessTransceiver.DataSettings.STREAM_CODEC);
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<DataEncoderProfile>> DATA_ENCODER_PROFILE =
             register("data_encoder_profile", DataEncoderProfile.CODEC, DataEncoderProfile.STREAM_CODEC);
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<DataProviderSettings>> DATA_PROVIDER_SETTINGS =
+            register("data_provider_settings", DataProviderSettings.CODEC, DataProviderSettings.STREAM_CODEC);
 
     private static <T> DeferredHolder<DataComponentType<?>, DataComponentType<T>> register(
             String name, Codec<T> codec, StreamCodec<RegistryFriendlyByteBuf, T> streamCodec) {
