@@ -30,6 +30,8 @@ public final class EventScreenActions {
         if (Minecraft.getInstance().player == null) return;
         if (Minecraft.getInstance().screen == null) return;
 
+        if (HelperRecipeViewer.isCheatMode()) return;
+
         if (event.getAction() != GLFW.GLFW_PRESS) {
             if (isPulled) event.setCanceled(true);
             isPulled = false;
@@ -37,7 +39,7 @@ public final class EventScreenActions {
         }
 
         var pulled = HelperRecipeViewer.getPulled(event.getButton());
-        if (!HelperRecipeViewer.isCheatMode() && pulled.getFirst() > 0) {
+        if (pulled.getFirst() > 0) {
             List<GenericStack> stacks = HelperRecipeViewer.getHoveredStacks();
             GenericStack stack = stacks.isEmpty() ? null : stacks.getFirst();
             if (stack == null) return;

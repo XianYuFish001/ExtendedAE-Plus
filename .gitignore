@@ -29,9 +29,6 @@ othermods
 crashreport
 .cursor
 /build/
-/build/generated/
-/build/generated/sources/
-/build/generated/sources/modMetadata/
-/build/generated/sources/modMetadata/META-INF/
+/build/generated/sources/modMetadata/META-INF/neoforge.mods.toml
 /src/generated/resources/.cache/
 /GeneratedTranslationKeys.json

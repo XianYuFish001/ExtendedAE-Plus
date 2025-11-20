@@ -1,8 +1,6 @@
 # ExtendedAE Plus
 _这个分支是粗浅的EMI适配,技术力不足,请见谅_
 
-_(这里也许不应该完完全全列出所有差异, 但是懒癌发作, 引导什么的不会写了, 只能放在这里了😅)_
-
 ### 相较于主分支(1.4.3)增加/更改的QoL功能
 - 新增
     - EMI 适配
@@ -20,6 +18,11 @@ _(这里也许不应该完完全全列出所有差异, 但是懒癌发作, 引�
         - _(仍然使用暴力枚举, 存在打开错误界面可能性)_
     - 不再会自动上传合成(即非编码样板)
 - 修改
+    - 样板上传过程中选择供应器的屏幕:
+        - 新添加 `关键词组` 功能:
+            - 目的是缩减从相同源收集的配方关键词在候选词列表中展示的长度
+            - 目前为从 `(J)EmiRecipe` 收集到的 `工作方块` 添加了一个内置的关键词组, 这也大大提高了匹配的准确性
+        - 现在支持匹配供应器目标方块的 `i18nKey`(`本地化键名`)
     - 从recipeViewer拉取物品的逻辑:
         - EMI下, 通过设置 `热键`--`作弊` 下的按键绑定触发, 即:
             - 给予[一个/一组]物品至[物品栏/光标]
@@ -38,6 +41,7 @@ _(这里也许不应该完完全全列出所有差异, 但是懒癌发作, 引�
             - 关闭时, 使用 AE2WT 的选取逻辑 _(即不做修改, 未安装时无选取功能)_
         - 需要上传核心:
             - 开启时, 样板只能上传至拥有上传核心的装配矩阵
+    - 其余大多是技术性的/小修小改的内容, 在此没有提及
 - Features
     - EMI Support
     - Quick pattern encoding & uploading from the recipe tree/recipe screen _(EMI Exclusive)_
@@ -54,6 +58,11 @@ _(这里也许不应该完完全全列出所有差异, 但是懒癌发作, 引�
         - _(Still uses brute-force enumeration; may potentially open the wrong GUI)_
     - Will no longer automatically upload crafting patterns (i.e., non-encoded patterns).
 - Modifications
+    - `ProviderListScreen` during pattern upload:
+        - `KeywordGroup`:
+            - Aims to shorten the displayed length of candidate recipe keywords collected from the same source in the candidate list.
+            - Currently adds a built-in keyword group for the `workstation blocks` collected from `(J)EmiRecipe`, which also significantly improves matching accuracy.
+        - Now supports matching the provider's target block `i18nKey`(`Localization Key`).
     - Logic for pulling items from recipe viewers:
         - For EMI: Triggered via keybinds set under `Keys` -> `Cheats` in the settings, namely:
             - Cheat [One/Stack] to [Inventory/Cursor]
@@ -72,3 +81,4 @@ _(这里也许不应该完完全全列出所有差异, 但是懒癌发作, 引�
             - When disabled, uses AE2WT's block picking logic _(i.e., unmodified; no pick block functionality if AE2WT is not installed)_.
         - Needs Uploading Core:
             - When enabled, patterns can only be uploaded to an Assembly Matrix that has an Uploading Core installed.
+    - Most of the remaining changes are technical or minor fixes and are not listed here.
