@@ -5,7 +5,7 @@ import appeng.menu.implementations.PatternProviderMenu;
 import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.client.render.widgets.button.EAEPActionItems;
 import com.extendedae_plus.common.impl.pattern.PatternProviderData;
-import com.extendedae_plus.mixin.core.ae2.accessor.PatternProviderMenuAdvancedAccessor;
+import com.extendedae_plus.mixin.core.ae2.accessor.AccessorProviderMenu;
 import com.extendedae_plus.util.UtilGetKey;
 import com.mojang.logging.LogUtils;
 import net.minecraft.network.FriendlyByteBuf;
@@ -68,8 +68,8 @@ public record CPacketScalePatterns(int scale, boolean mul) implements CustomPack
             if (!(player.containerMenu instanceof PatternProviderMenu menu)) return;
 
             try {
-                var accessor = (PatternProviderMenuAdvancedAccessor) menu;
-                PatternProviderLogic logic = accessor.eap$logic();
+                var accessor = (AccessorProviderMenu) menu;
+                PatternProviderLogic logic = accessor.eaep$getProviderLogic();
                 if (logic == null) return;
 
                 double scale = packet.scale;
@@ -85,9 +85,6 @@ public record CPacketScalePatterns(int scale, boolean mul) implements CustomPack
                 logic.saveChanges();
 
                 // 回显结果到玩家
-//                String summary = String.format("样板缩放(%s x%.0f): 共%d, 成功%d, 失败%d", multiply ? "倍增" : "除法",
-//                        scale, result.getTotalPatterns(), result.getScaledPatterns(), result.getFailedPatterns());
-//                player.displayClientMessage(net.minecraft.network.chat.Component.literal("[EAEP] " + summary), true);
                 player.displayClientMessage(
                         new UtilGetKey(UtilGetKey.message)
                                 .addStr("pattern_scaling")

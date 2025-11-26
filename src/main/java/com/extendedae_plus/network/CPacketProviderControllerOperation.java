@@ -9,9 +9,9 @@ import appeng.helpers.patternprovider.PatternProviderLogic;
 import appeng.helpers.patternprovider.PatternProviderLogicHost;
 import appeng.parts.crafting.PatternProviderPart;
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.common.impl.pattern.smartDoubling.SmartDoublingHolder;
 import com.extendedae_plus.common.init.ModItems;
-import com.extendedae_plus.mixin.impl.bridge.AdvancedBlockingHolder;
+import com.extendedae_plus.mixin.impl.bridge.ISmartBlockingObject;
+import com.extendedae_plus.mixin.impl.bridge.ISmartDoublingObject;
 import com.extendedae_plus.util.UtilGetKey;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -189,17 +189,17 @@ public record CPacketProviderControllerOperation(
             }
         }
         // 2) 高级阻挡（mixin 接口）
-        if (msg.operationAdvancedBlocking != Operation.NOOP && logic instanceof AdvancedBlockingHolder adv) {
-            boolean current = adv.eap$getAdvancedBlocking();
+        if (msg.operationAdvancedBlocking != Operation.NOOP && logic instanceof ISmartBlockingObject adv) {
+            boolean current = adv.eaep$getBlockingState();
             boolean target = computeTarget(current, msg.operationAdvancedBlocking);
-            adv.eap$setAdvancedBlocking(target);
+            adv.eaep$setBlockingState(target);
             changed = changed || (current != target);
         }
         // 3) 智能翻倍（mixin 接口）
-        if (msg.operationSmartDoubling != Operation.NOOP && logic instanceof SmartDoublingHolder sd) {
-            boolean current = sd.eap$getSmartDoubling();
+        if (msg.operationSmartDoubling != Operation.NOOP && logic instanceof ISmartDoublingObject sd) {
+            boolean current = sd.eaep$getDoublingState();
             boolean target = computeTarget(current, msg.operationSmartDoubling);
-            sd.eap$setSmartDoubling(target);
+            sd.eaep$setDoublingState(target);
             changed = changed || (current != target);
         }
         // 保存更改并让 AE2 同步

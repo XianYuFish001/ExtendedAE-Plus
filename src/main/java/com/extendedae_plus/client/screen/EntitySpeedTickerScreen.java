@@ -13,9 +13,9 @@ import com.extendedae_plus.common.init.ModItems;
 import com.extendedae_plus.common.menu.EntitySpeedTickerMenu;
 import com.extendedae_plus.network.ToggleEntityTickerC2SPacket;
 import com.extendedae_plus.util.UtilGetKey;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.HashMap;
 import java.util.List;
@@ -44,8 +44,7 @@ public class EntitySpeedTickerScreen<C extends EntitySpeedTickerMenu> extends Up
                 this.eap$entitySpeedTickerEnabled ? YesNo.YES : YesNo.NO,
                 (btn, backwards) -> {
                     // 不做本地切换，点击仅发送自定义C2S，显示由@GuiSync回传
-                    var conn = Minecraft.getInstance().getConnection();
-                    if (conn != null) conn.send(ToggleEntityTickerC2SPacket.INSTANCE);
+                    PacketDistributor.sendToServer(ToggleEntityTickerC2SPacket.INSTANCE);
                 }
         ) {
             @Override
@@ -69,7 +68,7 @@ public class EntitySpeedTickerScreen<C extends EntitySpeedTickerMenu> extends Up
             @Override
             protected Icon getIcon() {
                 if (menu.targetBlacklisted) return Icon.INVALID;
-                return this.getCurrentValue() == YesNo.YES ? Icon.VALID : Icon.INVALID;
+                return this.getCurrentValue() == YesNo.YES ? Icon.AUTO_EXPORT_ON : Icon.AUTO_EXPORT_OFF;
             }
         };
         eap$entitySpeedTickerToggle.set(this.eap$entitySpeedTickerEnabled ? YesNo.YES : YesNo.NO);

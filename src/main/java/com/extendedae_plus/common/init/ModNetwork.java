@@ -12,7 +12,7 @@ public class ModNetwork {
     public static void registerPayloadHandlers(final RegisterPayloadHandlersEvent event) {
         var registrar = event.registrar(ExtendedAEPlus.MODID);
         registrar.playToServer(ToggleEntityTickerC2SPacket.TYPE, ToggleEntityTickerC2SPacket.STREAM_CODEC, ToggleEntityTickerC2SPacket::handle);
-        registrar.playToServer(ToggleAdvancedBlockingC2SPacket.TYPE, ToggleAdvancedBlockingC2SPacket.STREAM_CODEC, ToggleAdvancedBlockingC2SPacket::handle);
+        registrar.playToServer(CPacketToggleSmartBlocking.TYPE, CPacketToggleSmartBlocking.STREAM_CODEC, CPacketToggleSmartBlocking::handle);
         registrar.playToServer(ToggleSmartDoublingC2SPacket.TYPE, ToggleSmartDoublingC2SPacket.STREAM_CODEC, ToggleSmartDoublingC2SPacket::handle);
         registrar.playToServer(CPacketScalePatterns.TYPE, CPacketScalePatterns.STREAM_CODEC, CPacketScalePatterns::handle);
         registrar.playToServer(CPacketInterfaceScaling.TYPE, CPacketInterfaceScaling.STREAM_CODEC, CPacketInterfaceScaling::handle);

@@ -4,10 +4,9 @@ import com.extendedae_plus.client.render.widgets.button.EAEPActionButton;
 
 import java.util.List;
 
-/// 用于从通用的 Screen Mixin 中更新按钮布局。
+/// 用于更新按钮布局, 在 `Provider & Interface` 的 `updateBeforeRender` 中调用
 public interface HelperProviderButtons {
-    /// 在每帧调用以维护扩展样板供应器右侧按钮的可见性、重注册（窗口尺寸变化）与定位。
-    void eaep$updateButtonsLayout();
+    void eaep$updateButtonsStates();
 
-    List<EAEPActionButton> eaep$getButtons();
+    List<EAEPActionButton> eaep$getScalingButtons();
 }

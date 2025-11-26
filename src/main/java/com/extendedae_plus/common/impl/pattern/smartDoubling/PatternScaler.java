@@ -5,15 +5,11 @@ import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
 import appeng.crafting.pattern.AEProcessingPattern;
 import com.extendedae_plus.EAEPConfig;
-import com.mojang.logging.LogUtils;
-import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.Objects;
 
 public final class PatternScaler {
-    private static final Logger LOGGER = LogUtils.getLogger();
-
     public static ScaledProcessingPattern scale(AEProcessingPattern base, AEKey target, long requestedAmount) {
         if (base == null) throw new IllegalArgumentException("base");
         if (target == null) throw new IllegalArgumentException("target");
@@ -97,13 +93,13 @@ public final class PatternScaler {
                 .map(value -> new GenericStack(value.what(), value.amount() * finalMul))
                 .toList();
 
-        var scaled = new ScaledProcessingPattern(base,
+        // 之后一段时间的使用中这个bug又离奇消失了, 明明标记之前触发很频繁的, 避免污染日志先注释掉了
+//        LOGGER.debug("[EAEP/debug] 倍增样板构建结果: {}", scaled);
+        return new ScaledProcessingPattern(base,
                 base.getDefinition(),
                 scaledSparseInputs,
                 scaledSparseOutputs,
                 scaledInputs,
                 scaledCondensedOutputs);
-        LOGGER.debug("[EAEP/debug] 倍增样板构建结果: {}", scaled);
-        return scaled;
     }
 }

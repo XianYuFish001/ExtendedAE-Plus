@@ -37,8 +37,8 @@ public abstract class CraftingTreeProcessMixin {
     @ModifyVariable(
             method = "<init>(Lappeng/api/networking/crafting/ICraftingService;Lappeng/crafting/CraftingCalculation;Lappeng/api/crafting/IPatternDetails;Lappeng/crafting/CraftingTreeNode;)V",
             at = @At("HEAD"),
-            argsOnly = true
-    )
+            argsOnly = true,
+            name = "arg3")
     private static IPatternDetails eap$replaceDetailsAtHead(IPatternDetails original, ICraftingService cc, CraftingCalculation job, IPatternDetails details, CraftingTreeNode craftingTreeNode) {
         try {
             // 若传入的 details 已经是缩放样板，且原始样板不允许缩放，则直接解包为原始样板
@@ -95,8 +95,7 @@ public abstract class CraftingTreeProcessMixin {
             var scaled = PatternScaler.scale(proc, parentTarget, perProvider);
             return scaled != null ? scaled : original;
         } catch (Exception e) {
-            eaep$LOGGER.warn("构建倍增样板出错", e);
-            e.printStackTrace();
+            eaep$LOGGER.warn("[EAEP/warn] 倍增样板构建失败", e);
             return original;
         }
     }

@@ -1,16 +1,22 @@
 package com.extendedae_plus.client.render.widgets.button;
 
+import appeng.client.gui.Icon;
 import appeng.client.gui.style.Blitter;
 import com.extendedae_plus.ExtendedAEPlus;
 import net.minecraft.resources.ResourceLocation;
 
-public enum EAEPIcon {
+public enum EAEPIcon implements IIcon {
     MUL2(0, 0),
     DIV2(16, 0),
     MUL3(32, 0),
     DIV3(48, 0),
     MUL5(0, 16),
-    DIV5(16, 16);
+    DIV5(16, 16),
+    PATTERN_SINGLE(32, 16),
+    PATTERN_MULTI(48, 16),
+    BLOCKING_TRANSPARENT(0, 32),
+
+    ;
 
     public final int x;
     public final int y;
@@ -33,8 +39,30 @@ public enum EAEPIcon {
         this.height = height;
     }
 
+    @Override
     public Blitter getBlitter() {
         return Blitter.texture(TEXTURE, TEXTURE_WIDTH, TEXTURE_HEIGHT)
                 .src(x, y, width, height);
+    }
+
+    @Override
+    public Icon getAEIcon() {
+        return Icon.INVALID;
+    }
+
+    public static IIcon fromAEIcon(Icon aeIcon) {
+        return new AEIcon(aeIcon);
+    }
+
+    private record AEIcon(Icon aeIcon) implements IIcon {
+        @Override
+        public Blitter getBlitter() {
+            return this.aeIcon.getBlitter();
+        }
+
+        @Override
+        public Icon getAEIcon() {
+            return this.aeIcon;
+        }
     }
 }

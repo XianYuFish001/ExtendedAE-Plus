@@ -9,6 +9,7 @@ import com.extendedae_plus.EAEPConfig;
 import com.extendedae_plus.client.render.widgets.button.EAEPActionButton;
 import com.extendedae_plus.mixin.impl.bridge.ExPatternPageAccessor;
 import com.extendedae_plus.mixin.impl.bridge.HelperProviderButtons;
+import com.extendedae_plus.mixin.impl.widget.ButtonImplementations;
 import com.glodblock.github.extendedae.client.button.ActionEPPButton;
 import com.glodblock.github.extendedae.client.gui.GuiExPatternProvider;
 import com.glodblock.github.extendedae.container.ContainerExPatternProvider;
@@ -191,7 +192,7 @@ public abstract class GuiExPatternProviderMixin extends PatternProviderScreen<Co
             this.addToLeftToolbar(this.prevPage);
         }
 
-        // 倍增/除法按钮：mixin在父类, 避免重复添加直接通过helper获取
+        // 倍增/倍减按钮：mixin在父类, 避免重复添加直接通过helper获取
     }
 
     @Override
@@ -204,7 +205,7 @@ public abstract class GuiExPatternProviderMixin extends PatternProviderScreen<Co
     // 注意：不再注入 Screen#init，避免混入在某些映射情况下失败导致 TransformerError
     
     @Override
-    public void eaep$updateButtonsLayout() {
+    public void eaep$updateButtonsStates() {
         // 只处理按钮可见性与定位，不再强制 showPage 或挪动 Slot 坐标，避免与原布局/tooltip 冲突
         if (nextPage != null && prevPage != null) {
             this.nextPage.setVisibility(true);
@@ -212,30 +213,13 @@ public abstract class GuiExPatternProviderMixin extends PatternProviderScreen<Co
         }
 
         if (this.eaep$scalingButtons.isEmpty())
-            this.eaep$scalingButtons.addAll(this.eaep$getButtons());
-
-        boolean flagReplaceButton = this.eaep$lastScreenInfo == null
-                || this.width != this.eaep$lastScreenInfo.getFirst()
-                || this.height != this.eaep$lastScreenInfo.getSecond();
-        if (flagReplaceButton)
-            this.eaep$lastScreenInfo = new Pair<>(this.width, this.height);
-
-        int bx = this.leftPos + this.imageWidth + 3;
-        int by = this.topPos + 50;
-        int spacing = 22;
-        this.eaep$scalingButtons.forEach(button -> {
-            if (button == null) return;
-            button.setVisibility(true);
-            if (!this.renderables.contains(button)) this.addRenderableWidget(button);
-
-            if (flagReplaceButton) {
-                this.removeWidget(button);
-                this.addRenderableWidget(button);
-            }
-
-            button.setX(bx);
-            button.setY(by + spacing * this.eaep$scalingButtons.indexOf(button));
-        });
+            this.eaep$scalingButtons.addAll(this.eaep$getScalingButtons());
+        this.eaep$lastScreenInfo = ButtonImplementations.updateScalingButtonsLayout(
+                this,
+                this.leftPos + this.imageWidth + 3,
+                this.topPos + 50,
+                this.eaep$lastScreenInfo
+        );
 
         // 每帧确保当前页槽位处于启用状态，非当前页禁用
         eap$updatePageSlotActivity();
@@ -247,7 +231,6 @@ public abstract class GuiExPatternProviderMixin extends PatternProviderScreen<Co
     @Unique
     private void eap$updatePageSlotActivity() {
         try {
-            if (!(((Object) this) instanceof GuiExPatternProvider)) return;
             var list = this.getMenu().getSlots(SlotSemantics.ENCODED_PATTERN);
             if (list == null || list.isEmpty()) return;
 

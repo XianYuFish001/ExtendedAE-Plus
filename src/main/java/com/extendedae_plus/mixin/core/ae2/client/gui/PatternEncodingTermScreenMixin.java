@@ -9,11 +9,12 @@ import appeng.client.gui.widgets.IconButton;
 import com.extendedae_plus.EAEPConfig;
 import com.extendedae_plus.mixin.core.ae2.accessor.AEBaseScreenAccessor;
 import com.extendedae_plus.mixin.core.minecraft.accessor.AbstractContainerScreenAccessor;
-import com.extendedae_plus.mixin.core.minecraft.accessor.ScreenAccessor;
+import com.extendedae_plus.mixin.impl.widget.HelperRenderablesModifier;
 import com.extendedae_plus.network.RequestUploadingC2SPacket;
 import com.extendedae_plus.util.UtilGetKey;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.Rect2i;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.spongepowered.asm.mixin.Mixin;
@@ -129,14 +130,8 @@ public abstract class PatternEncodingTermScreenMixin {
         }
 
         // 直接向 renderables / children 列表添加，避免依赖受保护方法
-        var accessor = (ScreenAccessor) this;
-        var renderables = accessor.eap$getRenderables();
-        var children = accessor.eap$getChildren();
-        if (!renderables.contains(eap$uploadBtn)) {
-            renderables.add(eap$uploadBtn);
-        }
-        if (!children.contains(eap$uploadBtn)) {
-            children.add(eap$uploadBtn);
+        if (!((PatternEncodingTermScreen<?>)(Object) this).renderables.contains(eap$uploadBtn)) {
+            HelperRenderablesModifier.addRenderableWidget(((Screen)(Object) this), eap$uploadBtn);
         }
     }
 
@@ -148,8 +143,7 @@ public abstract class PatternEncodingTermScreenMixin {
         if (eap$uploadBtn == null) {
             return;
         }
-        var renderables2 = ((ScreenAccessor) this).eap$getRenderables();
-        if (!renderables2.contains(eap$uploadBtn)) {
+        if (!((PatternEncodingTermScreen<?>)(Object) this).renderables.contains(eap$uploadBtn)) {
             // 被其它模组清空/替换后，重新计算一次位置并补回
             try {
                 ScreenStyle style = ((AEBaseScreenAccessor<?>) this).eap$getStyle();
@@ -177,14 +171,8 @@ public abstract class PatternEncodingTermScreenMixin {
                 eap$uploadBtn.setX(leftPos + imageWidth - 12 - 8 + 2);
                 eap$uploadBtn.setY(topPos + 88);
             }
-            var accessor2 = (ScreenAccessor) this;
-            var r = accessor2.eap$getRenderables();
-            var c = accessor2.eap$getChildren();
-            if (!r.contains(eap$uploadBtn)) {
-                r.add(eap$uploadBtn);
-            }
-            if (!c.contains(eap$uploadBtn)) {
-                c.add(eap$uploadBtn);
+            if (!((PatternEncodingTermScreen<?>)(Object) this).renderables.contains(eap$uploadBtn)) {
+                HelperRenderablesModifier.addRenderableWidget(((Screen)(Object) this), eap$uploadBtn);
             }
         }
     }

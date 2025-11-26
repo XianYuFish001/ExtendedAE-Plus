@@ -5,6 +5,7 @@ import appeng.client.gui.style.ScreenStyle;
 import com.extendedae_plus.client.render.widgets.button.EAEPActionButton;
 import com.extendedae_plus.client.render.widgets.button.EAEPActionItems;
 import com.extendedae_plus.mixin.impl.bridge.HelperProviderButtons;
+import com.extendedae_plus.mixin.impl.widget.ButtonImplementations;
 import com.extendedae_plus.network.CPacketInterfaceScaling;
 import com.glodblock.github.extendedae.client.gui.GuiExInterface;
 import com.glodblock.github.extendedae.container.ContainerExInterface;
@@ -48,37 +49,21 @@ public class MixinExInterfaceScaling extends UpgradeableScreen<ContainerExInterf
 
     @Inject(method = "updateBeforeRender", at = @At("TAIL"))
     private void updateButtons(CallbackInfo ci) {
-        this.eaep$updateButtonsLayout();
+        this.eaep$updateButtonsStates();
     }
 
     @Override
-    public void eaep$updateButtonsLayout() {
-        boolean flagReplaceButton = this.eaep$lastScreenInfo == null
-                || this.width != this.eaep$lastScreenInfo.getFirst()
-                || this.height != this.eaep$lastScreenInfo.getSecond();
-        if (flagReplaceButton)
-            this.eaep$lastScreenInfo = new Pair<>(this.width, this.height);
-
-        int bx = this.leftPos + this.imageWidth + 3;
-        int by = this.topPos + 50;
-        int spacing = 22;
-        this.eaep$scalingButtons.forEach(button -> {
-            if (button == null) return;
-            button.setVisibility(true);
-            if (!this.renderables.contains(button)) this.addRenderableWidget(button);
-
-            if (flagReplaceButton) {
-                this.removeWidget(button);
-                this.addRenderableWidget(button);
-            }
-
-            button.setX(bx);
-            button.setY(by + spacing * this.eaep$scalingButtons.indexOf(button));
-        });
+    public void eaep$updateButtonsStates() {
+        this.eaep$lastScreenInfo = ButtonImplementations.updateScalingButtonsLayout(
+                this,
+                this.leftPos + this.imageWidth + 3,
+                this.topPos + 50,
+                this.eaep$lastScreenInfo
+        );
     }
 
     @Override
-    public List<EAEPActionButton> eaep$getButtons() {
+    public List<EAEPActionButton> eaep$getScalingButtons() {
         return this.eaep$scalingButtons;
     }
 }

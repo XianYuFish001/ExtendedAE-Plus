@@ -2,9 +2,9 @@ package com.extendedae_plus.network;
 
 import appeng.menu.implementations.PatternProviderMenu;
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.common.impl.pattern.smartDoubling.SmartDoublingHolder;
-import com.extendedae_plus.mixin.core.advancedae.accessor.AdvPatternProviderMenuAdvancedAccessor;
-import com.extendedae_plus.mixin.core.ae2.accessor.PatternProviderMenuAdvancedAccessor;
+import com.extendedae_plus.mixin.core.advancedae.accessor.AccessorAdvProviderMenu;
+import com.extendedae_plus.mixin.core.ae2.accessor.AccessorProviderMenu;
+import com.extendedae_plus.mixin.impl.bridge.ISmartDoublingObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -37,21 +37,21 @@ public class ToggleSmartDoublingC2SPacket implements CustomPacketPayload {
             if (!(ctx.player() instanceof ServerPlayer player)) return;
             var containerMenu = player.containerMenu;
             if (containerMenu instanceof PatternProviderMenu menu) {
-                var accessor = (PatternProviderMenuAdvancedAccessor) menu;
-                var logic = accessor.eap$logic();
-                if (logic instanceof SmartDoublingHolder holder) {
-                    boolean current = holder.eap$getSmartDoubling();
+                var accessor = (AccessorProviderMenu) menu;
+                var logic = accessor.eaep$getProviderLogic();
+                if (logic instanceof ISmartDoublingObject holder) {
+                    boolean current = holder.eaep$getDoublingState();
                     boolean next = !current;
-                    holder.eap$setSmartDoubling(next);
+                    holder.eaep$setDoublingState(next);
                     logic.saveChanges();
                 }
-            }else if (containerMenu instanceof AdvPatternProviderMenu menu){
-                var accessor = (AdvPatternProviderMenuAdvancedAccessor) menu;
-                var logic = accessor.eap$logic();
-                if (logic instanceof SmartDoublingHolder holder) {
-                    boolean current = holder.eap$getSmartDoubling();
+            } else if (containerMenu instanceof AdvPatternProviderMenu menu){
+                var accessor = (AccessorAdvProviderMenu) menu;
+                var logic = accessor.eaep$getProviderLogic();
+                if (logic instanceof ISmartDoublingObject holder) {
+                    boolean current = holder.eaep$getDoublingState();
                     boolean next = !current;
-                    holder.eap$setSmartDoubling(next);
+                    holder.eaep$setDoublingState(next);
                     logic.saveChanges();
                 }
             }

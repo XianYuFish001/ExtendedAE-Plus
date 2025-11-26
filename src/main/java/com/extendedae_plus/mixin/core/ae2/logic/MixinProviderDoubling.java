@@ -4,8 +4,8 @@ import appeng.api.crafting.IPatternDetails;
 import appeng.crafting.pattern.AEProcessingPattern;
 import appeng.helpers.patternprovider.PatternProviderLogic;
 import com.extendedae_plus.common.impl.pattern.smartDoubling.SmartDoublingAwarePattern;
-import com.extendedae_plus.common.impl.pattern.smartDoubling.SmartDoublingHolder;
 import com.extendedae_plus.mixin.core.ae2.accessor.PatternProviderLogicPatternsAccessor;
+import com.extendedae_plus.mixin.impl.bridge.ISmartDoublingObject;
 import net.minecraft.nbt.CompoundTag;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = PatternProviderLogic.class, remap = false)
-public class PatternProviderLogicDoublingMixin implements SmartDoublingHolder {
+public class MixinProviderDoubling implements ISmartDoublingObject {
     @Unique
     private static final String EAP_SMART_DOUBLING_KEY = "epp_smart_doubling";
 
@@ -23,12 +23,12 @@ public class PatternProviderLogicDoublingMixin implements SmartDoublingHolder {
     private boolean eap$smartDoubling = false;
 
     @Override
-    public boolean eap$getSmartDoubling() {
+    public boolean eaep$getDoublingState() {
         return eap$smartDoubling;
     }
 
     @Override
-    public void eap$setSmartDoubling(boolean value) {
+    public void eaep$setDoublingState(boolean value) {
         this.eap$smartDoubling = value;
         // 立即将开关状态应用到当前 Provider 的样板上，避免等待下一次 updatePatterns
         try {

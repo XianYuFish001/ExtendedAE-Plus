@@ -12,7 +12,7 @@ public class ExclusionZoneScalingButton implements EmiExclusionArea<Screen> {
     public void addExclusionArea(Screen screen, Consumer<Bounds> consumer) {
         if (!(screen instanceof HelperProviderButtons helper)) return;
 
-        var buttons = helper.eaep$getButtons();
+        var buttons = helper.eaep$getScalingButtons();
         if (buttons.isEmpty()) return;
 
         int minX = Integer.MAX_VALUE;

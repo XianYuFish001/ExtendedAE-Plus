@@ -80,16 +80,19 @@ public class LangZH extends LanguageProvider {
         new UtilGetKey(UtilGetKey.screenTooltip)
                 .item(ModItems.ENTITY_TICKER_PART_ITEM)
                 .branch("blacklist", "§c§l机器已被禁用")
-                .branch("enabled", "已启用: 将加速目标方块实体的tick")
-                .branch("disabled", "已关闭: 不会对目标方块实体进行加速");
+                .branch("enabled", "将加速目标方块实体的tick")
+                .branch("disabled", "不会对目标方块实体进行加速");
         new UtilGetKey(UtilGetKey.screenTooltip)
                 .addStr("smart_blocking")
-                .branch("enabled", "智能阻挡\n已启用：对于同一种配方将不再阻挡(需要开启原版的阻挡模式)")
-                .branch("disabled", "智能阻挡\n已禁用：这么好的功能为什么不打开呢");
+                .branch("enabled", "对于同一种配方将不再阻挡(需要开启原版的阻挡模式)")
+                .branch("disabled", "这么好的功能为什么不打开呢")
+                .branch("disabled_by_super", "不建议在不打开原版阻挡时使用喵")
+                .buildInto("智能阻挡");
         new UtilGetKey(UtilGetKey.screenTooltip)
                 .addStr("smart_doubling")
-                .branch("enabled", "智能翻倍\n已启用：根据请求量对处理样板进行智能缩放")
-                .branch("disabled", "智能翻倍\n已禁用：按原始样板数量进行发配");
+                .branch("enabled", "根据请求量对处理样板进行智能缩放")
+                .branch("disabled", "按原始样板数量进行发配")
+                .buildInto("智能翻倍");
         new UtilGetKey(UtilGetKey.screenTooltip)
                 .addStr("upload_button")
                 .branch("auto_upload", "\n§a[Ctrl] §7上传样板")
@@ -102,7 +105,7 @@ public class LangZH extends LanguageProvider {
         new UtilGetKey(UtilGetKey.screenTooltip)
                 .addStr("provider_list")
                 .addStr("candidate_keywords")
-                .buildInto("§o§l候选关键词");
+                .buildInto("§f§l候选关键词");
 
         new UtilGetKey(UtilGetKey.message)
                 .addStr("provider_list")

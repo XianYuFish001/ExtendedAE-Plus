@@ -12,6 +12,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -175,7 +176,7 @@ public class ProviderListScreen extends Screen {
 
         // 增加映射按钮（使用当前搜索关键字 -> 中文）
         Button addMap = Button.builder(new UtilGetKey(UtilGetKey.screen)
-                                .addStr("provider_screen")
+                                .addStr("provider_list")
                                 .addStr("add_alias")
                                 .build(),
                         b -> addMappingFromUI())
@@ -244,10 +245,7 @@ public class ProviderListScreen extends Screen {
     private void onChoose(int idx) {
         if (idx < 0 || idx >= fIds.size()) return;
         long providerId = fIds.get(idx);
-        var conn = Minecraft.getInstance().getConnection();
-        if (conn != null) {
-            conn.send(new UploadEncodedPatternToProviderC2SPacket(providerId));
-        }
+        PacketDistributor.sendToServer(new UploadEncodedPatternToProviderC2SPacket(providerId));
         this.onClose();
     }
 

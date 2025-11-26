@@ -4,12 +4,18 @@ TODO
         <fixing/testing>
             智能倍增样板有时出现null:
                 已添加更多log信息, 等待构建下次触发
-            无限盘i32整数溢出导致数据归零
+        <fixed>
+            alias映射i18n不对
     <feature>
-        为smartDoubling更改新图标(还是等待ae回复issue吧)
         frequency gui
-        controller gui
-        <failed>
-            为infCell改component
+        controller gui(我是大懒狗)
+        智能倍增考虑容器容量
+        advProvider倍增(哇有点难搞, scaler的逻辑交杂在一起)
+        <executed>
+            smartBlocking新图标:
+                关闭: blocking关闭
+                正常: blocking开启
+                adv: 开启
+            为smartDoubling更改新图标(有点困难.jpg)
 
 TODO today

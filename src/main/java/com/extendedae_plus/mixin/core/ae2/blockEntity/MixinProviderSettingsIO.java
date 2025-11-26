@@ -3,10 +3,10 @@ package com.extendedae_plus.mixin.core.ae2.blockEntity;
 import appeng.blockentity.crafting.PatternProviderBlockEntity;
 import appeng.helpers.patternprovider.PatternProviderLogic;
 import appeng.util.SettingsFrom;
-import com.extendedae_plus.common.impl.pattern.smartDoubling.SmartDoublingHolder;
 import com.extendedae_plus.common.init.ModDataComponents;
 import com.extendedae_plus.mixin.impl.DataProviderSettings;
-import com.extendedae_plus.mixin.impl.bridge.AdvancedBlockingHolder;
+import com.extendedae_plus.mixin.impl.bridge.ISmartBlockingObject;
+import com.extendedae_plus.mixin.impl.bridge.ISmartDoublingObject;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Final;
@@ -29,10 +29,10 @@ public class MixinProviderSettingsIO {
         var smartDoubling = false;
         var smartBlocking = false;
 
-        if (this.logic instanceof SmartDoublingHolder holder)
-            smartDoubling = holder.eap$getSmartDoubling();
-        if (this.logic instanceof AdvancedBlockingHolder holder)
-            smartBlocking = holder.eap$getAdvancedBlocking();
+        if (this.logic instanceof ISmartDoublingObject holder)
+            smartDoubling = holder.eaep$getDoublingState();
+        if (this.logic instanceof ISmartBlockingObject holder)
+            smartBlocking = holder.eaep$getBlockingState();
 
         builder.set(ModDataComponents.DATA_PROVIDER_SETTINGS, new DataProviderSettings(smartDoubling, smartBlocking));
     }
@@ -44,9 +44,9 @@ public class MixinProviderSettingsIO {
 
         var settings = input.get(ModDataComponents.DATA_PROVIDER_SETTINGS.get());
 
-        if (this.logic instanceof SmartDoublingHolder holder)
-            holder.eap$setSmartDoubling(settings.smartDoubling());
-        if (this.logic instanceof AdvancedBlockingHolder holder)
-            holder.eap$setAdvancedBlocking(settings.smartBlocking());
+        if (this.logic instanceof ISmartDoublingObject holder)
+            holder.eaep$setDoublingState(settings.smartDoubling());
+        if (this.logic instanceof ISmartBlockingObject holder)
+            holder.eaep$setBlockingState(settings.smartBlocking());
     }
 }

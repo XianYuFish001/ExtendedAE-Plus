@@ -9,6 +9,7 @@ import com.extendedae_plus.client.render.widgets.button.EAEPActionButton;
 import com.extendedae_plus.client.render.widgets.button.EAEPActionItems;
 import com.extendedae_plus.mixin.core.minecraft.accessor.AbstractContainerScreenAccessor;
 import com.extendedae_plus.mixin.impl.bridge.HelperProviderButtons;
+import com.extendedae_plus.mixin.impl.widget.ButtonImplementations;
 import com.extendedae_plus.network.CPacketInterfaceScaling;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.network.chat.Component;
@@ -36,7 +37,8 @@ public abstract class InterfaceScreenMixin<TMenu extends InterfaceMenu>
     @Unique
     private Pair<Integer, Integer> eaep$lastScreenInfo;
 
-    @Unique private int eap$lastConfigIndex = -1;
+    @Unique
+    private int eap$lastConfigIndex = -1;
 
     public InterfaceScreenMixin(TMenu menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
@@ -44,10 +46,6 @@ public abstract class InterfaceScreenMixin<TMenu extends InterfaceMenu>
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void addScaleButtons(CallbackInfo ci) {
-        if (!(((Object) this) instanceof InterfaceScreen<?>)) {
-            return;
-        }
-
         EAEPActionItems.GROUPED_ACTIONS.get("scaling").forEach(action ->
                 this.eaep$scalingButtons.add(new EAEPActionButton(action, CPacketInterfaceScaling::send)));
 
@@ -59,83 +57,60 @@ public abstract class InterfaceScreenMixin<TMenu extends InterfaceMenu>
 
     @Inject(method = "updateBeforeRender", at = @At("TAIL"))
     private void eap$ensureButtons(CallbackInfo ci) {
-        if (!(((Object) this) instanceof InterfaceScreen<?>)) {
-            return;
+        try {
+            this.eaep$updateButtonsStates();
+            eap$updateLastConfigFromHover();
+        } catch (Throwable ignored) {
         }
-        this.eaep$updateButtonsLayout();
-        eap$updateLastConfigFromHover();
     }
 
     @Unique
     private void eap$updateLastConfigFromHover() {
-        try {
-            if (!(((Object) this) instanceof InterfaceScreen)) {
-                return;
-            }
-            Slot hovered = ((AbstractContainerScreenAccessor<?>) this).eap$getHoveredSlot();
-            if (hovered == null) {
-                return;
-            }
-            if (!(this.getMenu() instanceof InterfaceMenu interfaceMenu)) {
-                return;
-            }
-            var configSlots = interfaceMenu.getSlots(SlotSemantics.CONFIG);
-            if (configSlots == null || configSlots.isEmpty()) {
-                return;
-            }
-            Integer idx = null;
-            for (var s : configSlots) {
-                if (s == hovered) {
-                    try {
-                        var f = s.getClass().getDeclaredField("slot");
-                        f.setAccessible(true);
-                        Object v = f.get(s);
-                        if (v instanceof Integer i) {
-                            idx = i;
-                        }
-                    } catch (Throwable ignored) {}
-                    if (idx == null) {
-                        idx = configSlots.indexOf(s);
+        Slot hovered = ((AbstractContainerScreenAccessor<?>) this).eap$getHoveredSlot();
+        if (hovered == null) {
+            return;
+        }
+        var configSlots = this.getMenu().getSlots(SlotSemantics.CONFIG);
+        if (configSlots == null || configSlots.isEmpty()) {
+            return;
+        }
+        Integer idx = null;
+        for (var s : configSlots) {
+            if (s == hovered) {
+                try {
+                    var f = s.getClass().getDeclaredField("slot");
+                    f.setAccessible(true);
+                    Object v = f.get(s);
+                    if (v instanceof Integer i) {
+                        idx = i;
                     }
-                    break;
+                } catch (Throwable ignored) {
                 }
-            }
-            if (idx != null && idx >= 0) {
-                if (eap$lastConfigIndex != idx) {
-                    eap$lastConfigIndex = idx;
+                if (idx == null) {
+                    idx = configSlots.indexOf(s);
                 }
+                break;
             }
-        } catch (Throwable ignored) {}
+        }
+        if (idx != null && idx >= 0) {
+            if (eap$lastConfigIndex != idx) {
+                eap$lastConfigIndex = idx;
+            }
+        }
     }
 
     @Override
-    public void eaep$updateButtonsLayout() {
-        boolean flagReplaceButton = this.eaep$lastScreenInfo == null
-                || this.width != this.eaep$lastScreenInfo.getFirst()
-                || this.height != this.eaep$lastScreenInfo.getSecond();
-        if (flagReplaceButton)
-            this.eaep$lastScreenInfo = new Pair<>(this.width, this.height);
-
-        int bx = this.leftPos + this.imageWidth + 3;
-        int by = this.topPos + 50;
-        int spacing = 22;
-        this.eaep$scalingButtons.forEach(button -> {
-            if (button == null) return;
-            button.setVisibility(true);
-            if (!this.renderables.contains(button)) this.addRenderableWidget(button);
-
-            if (flagReplaceButton) {
-                this.removeWidget(button);
-                this.addRenderableWidget(button);
-            }
-
-            button.setX(bx);
-            button.setY(by + spacing * this.eaep$scalingButtons.indexOf(button));
-        });
+    public void eaep$updateButtonsStates() {
+        this.eaep$lastScreenInfo = ButtonImplementations.updateScalingButtonsLayout(
+                this,
+                this.leftPos + this.imageWidth + 3,
+                this.topPos + 50,
+                this.eaep$lastScreenInfo
+        );
     }
 
     @Override
-    public List<EAEPActionButton> eaep$getButtons() {
+    public List<EAEPActionButton> eaep$getScalingButtons() {
         return this.eaep$scalingButtons;
     }
 }

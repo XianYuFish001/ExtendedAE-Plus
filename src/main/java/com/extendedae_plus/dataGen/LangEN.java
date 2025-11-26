@@ -86,12 +86,15 @@ public class LangEN extends LanguageProvider {
                 .branch("disabled", "Disabled");
         new UtilGetKey(UtilGetKey.screenTooltip)
                 .addStr("smart_blocking")
-                .branch("enabled", "Smart Blocking\nEnabled：The same recipe will no longer block (requires the original blocking mode)")
-                .branch("disabled", "Smart Blocking\nDisabled：Open it please pwq");
+                .branch("enabled", "The same recipe will no longer block (requires the original blocking mode)")
+                .branch("disabled", "Open it please pwq")
+                .branch("disabled_by_super", "You know why it doesn't work")
+                .buildInto("Smart Blocking");
         new UtilGetKey(UtilGetKey.screenTooltip)
                 .addStr("smart_doubling")
-                .branch("enabled", "Smart Doubling\nEnabled：Intelligently scale the processing pattern based on the volume of requests")
-                .branch("disabled", "Smart Doubling\nDisabled：Nothing be to do");
+                .branch("enabled", "Intelligently scale the processing pattern based on the volume of requests")
+                .branch("disabled", "Nothing be to do")
+                .buildInto("Smart Doubling");
         new UtilGetKey(UtilGetKey.screenTooltip)
                 .addStr("upload_button")
                 .branch("auto_upload", "\n§a[Ctrl] §7Upload encoded pattern")
@@ -104,7 +107,7 @@ public class LangEN extends LanguageProvider {
         new UtilGetKey(UtilGetKey.screenTooltip)
                 .addStr("provider_list")
                 .addStr("candidate_keywords")
-                .buildInto("§o§lKeywords");
+                .buildInto("§f§lKeywords");
 
         new UtilGetKey(UtilGetKey.message)
                 .addStr("provider_list")
