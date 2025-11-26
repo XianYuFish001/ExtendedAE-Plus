@@ -10,7 +10,7 @@ import com.extendedae_plus.EAEPConfig;
 import com.extendedae_plus.mixin.core.ae2.accessor.AEBaseScreenAccessor;
 import com.extendedae_plus.mixin.core.minecraft.accessor.AbstractContainerScreenAccessor;
 import com.extendedae_plus.mixin.impl.widget.HelperRenderablesModifier;
-import com.extendedae_plus.network.RequestUploadingC2SPacket;
+import com.extendedae_plus.network.CPacketRequestUploading;
 import com.extendedae_plus.util.UtilGetKey;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
@@ -42,7 +42,7 @@ public abstract class PatternEncodingTermScreenMixin {
         // 复用已存在的按钮实例，避免重复创建
         if (eap$uploadBtn == null) {
             eap$uploadBtn = new IconButton(btn -> PacketDistributor
-                    .sendToServer(RequestUploadingC2SPacket.INSTANCE)) {
+                    .sendToServer(CPacketRequestUploading.INSTANCE)) {
                 private final float eap$scale = 0.75f; // 约 12x12
 
                 @Override

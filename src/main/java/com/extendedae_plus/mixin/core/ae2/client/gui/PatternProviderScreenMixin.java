@@ -32,9 +32,9 @@ public abstract class PatternProviderScreenMixin<C extends PatternProviderMenu>
         extends AEBaseScreen<C>
         implements HelperProviderButtons {
     @Unique
-    private EAEPServerCycleButton eaep$buttonSmartBlocking;
+    protected EAEPServerCycleButton eaep$buttonSmartBlocking;
     @Unique
-    private EAEPServerCycleButton eaep$buttonSmartDoubling;
+    protected EAEPServerCycleButton eaep$buttonSmartDoubling;
 
     @Unique
     public final List<EAEPActionButton> eaep$scalingButtons = new ArrayList<>();
@@ -66,7 +66,7 @@ public abstract class PatternProviderScreenMixin<C extends PatternProviderMenu>
 
     // 每帧刷新：仅从菜单(@GuiSync)同步布尔值，保持按钮状态一致
     @Inject(method = "updateBeforeRender", at = @At("HEAD"), remap = false)
-    private void eap$updateAdvancedBlocking(CallbackInfo ci) {
+    private void updateBeforeRender(CallbackInfo ci) {
         try {
             this.eaep$updateButtonsStates();
         } catch (Throwable ignore) {

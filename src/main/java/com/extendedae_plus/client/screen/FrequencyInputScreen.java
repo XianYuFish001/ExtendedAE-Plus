@@ -1,7 +1,7 @@
 package com.extendedae_plus.client.screen;
 
 import com.extendedae_plus.common.init.ModItems;
-import com.extendedae_plus.network.SetWirelessFrequencyC2SPacket;
+import com.extendedae_plus.network.CPacketSetTransceiverFrequency;
 import com.extendedae_plus.util.UtilGetKey;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -202,7 +202,7 @@ public class FrequencyInputScreen extends Screen {
             
             // 发送数据包到服务端
             // API说明：NeoForge使用PacketDistributor.sendToServer
-            PacketDistributor.sendToServer(new SetWirelessFrequencyC2SPacket(pos, frequency));
+            PacketDistributor.sendToServer(new CPacketSetTransceiverFrequency(pos, frequency));
             
             this.onClose();
         } catch (NumberFormatException e) {

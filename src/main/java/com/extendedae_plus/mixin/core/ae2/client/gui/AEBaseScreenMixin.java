@@ -15,8 +15,8 @@ import appeng.client.gui.style.TextAlignment;
 import appeng.menu.slot.AppEngSlot;
 import com.extendedae_plus.client.ClientPatternHighlightStore;
 import com.extendedae_plus.mixin.impl.bridge.ExPatternPageAccessor;
-import com.extendedae_plus.network.CraftingMonitorJumpC2SPacket;
-import com.extendedae_plus.network.CraftingMonitorOpenProviderC2SPacket;
+import com.extendedae_plus.network.CPacketOpenScreenCraftingNodeMachine;
+import com.extendedae_plus.network.CPacketOpenScreenCraftingNodeProvider;
 import com.extendedae_plus.util.GuiUtil;
 import com.extendedae_plus.util.UtilGetKey;
 import com.glodblock.github.extendedae.client.gui.GuiExPatternProvider;
@@ -76,7 +76,7 @@ public abstract class AEBaseScreenMixin {
             if (key == null) {
                 return;
             }
-            PacketDistributor.sendToServer(new CraftingMonitorJumpC2SPacket(key));
+            PacketDistributor.sendToServer(new CPacketOpenScreenCraftingNodeMachine(key));
             cir.setReturnValue(true);
         } catch (Throwable ignored) {
         }
@@ -106,7 +106,7 @@ public abstract class AEBaseScreenMixin {
             if (key == null) {
                 return;
             }
-            PacketDistributor.sendToServer(new CraftingMonitorOpenProviderC2SPacket(key));
+            PacketDistributor.sendToServer(new CPacketOpenScreenCraftingNodeProvider(key));
             cir.setReturnValue(true);
         } catch (Throwable ignored) {
         }

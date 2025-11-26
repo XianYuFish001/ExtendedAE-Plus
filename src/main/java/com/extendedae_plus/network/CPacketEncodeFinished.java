@@ -1,15 +1,17 @@
 package com.extendedae_plus.network;
 
-import com.extendedae_plus.ExtendedAEPlus;
+import com.extendedae_plus.network.base.CPacketGeneric;
+import com.extendedae_plus.network.base.EAEPNetworkPacket;
+import com.extendedae_plus.network.base.PacketGeneric;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public record CPacketEncodeFinished() implements CustomPacketPayload {
-    public static final Type<CPacketEncodeFinished> TYPE = new Type<>(
-            ExtendedAEPlus.getLocation("encode_finished"));
+@EAEPNetworkPacket
+public class CPacketEncodeFinished implements CPacketGeneric {
+    public static final Type<CPacketEncodeFinished> TYPE = PacketGeneric.createType("encode_finished");
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
@@ -20,7 +22,13 @@ public record CPacketEncodeFinished() implements CustomPacketPayload {
 
     public static final StreamCodec<RegistryFriendlyByteBuf, CPacketEncodeFinished> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 
-    public static void handle(final CPacketEncodeFinished packet, final IPayloadContext context) {
-        if (context.player().level().isClientSide) PacketDistributor.sendToServer(RequestUploadingC2SPacket.INSTANCE);
+    @Override
+    public void handleServer(ServerPlayer player) {
+    }
+
+    @Override
+    public void handle(final IPayloadContext context) {
+//        if (context.player().level().isClientSide) PacketDistributor.sendToServer(CPacketRequestUploading.INSTANCE);
+        context.reply(CPacketRequestUploading.INSTANCE);
     }
 }

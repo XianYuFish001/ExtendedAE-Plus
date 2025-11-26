@@ -1,50 +1,78 @@
 package com.extendedae_plus.common.init;
 
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.network.*;
+import com.extendedae_plus.network.base.*;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import org.objectweb.asm.Type;
+
+import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 @EventBusSubscriber(modid = ExtendedAEPlus.MODID)
 public class ModNetwork {
     @SubscribeEvent
     public static void registerPayloadHandlers(final RegisterPayloadHandlersEvent event) {
         var registrar = event.registrar(ExtendedAEPlus.MODID);
-        registrar.playToServer(ToggleEntityTickerC2SPacket.TYPE, ToggleEntityTickerC2SPacket.STREAM_CODEC, ToggleEntityTickerC2SPacket::handle);
-        registrar.playToServer(CPacketToggleSmartBlocking.TYPE, CPacketToggleSmartBlocking.STREAM_CODEC, CPacketToggleSmartBlocking::handle);
-        registrar.playToServer(ToggleSmartDoublingC2SPacket.TYPE, ToggleSmartDoublingC2SPacket.STREAM_CODEC, ToggleSmartDoublingC2SPacket::handle);
-        registrar.playToServer(CPacketScalePatterns.TYPE, CPacketScalePatterns.STREAM_CODEC, CPacketScalePatterns::handle);
-        registrar.playToServer(CPacketInterfaceScaling.TYPE, CPacketInterfaceScaling.STREAM_CODEC, CPacketInterfaceScaling::handle);
-        registrar.playToClient(SetPatternHighlightS2CPacket.TYPE, SetPatternHighlightS2CPacket.STREAM_CODEC, SetPatternHighlightS2CPacket::handle);
-        registrar.playToClient(AdvancedBlockingSyncS2CPacket.TYPE, AdvancedBlockingSyncS2CPacket.STREAM_CODEC, AdvancedBlockingSyncS2CPacket::handle);
-        registrar.playToClient(ProvidersListS2CPacket.TYPE, ProvidersListS2CPacket.STREAM_CODEC, ProvidersListS2CPacket::handle);
-        registrar.playToServer(RequestUploadingC2SPacket.TYPE, RequestUploadingC2SPacket.STREAM_CODEC, RequestUploadingC2SPacket::handle);
-        registrar.playToClient(SetProviderPageS2CPacket.TYPE, SetProviderPageS2CPacket.STREAM_CODEC, SetProviderPageS2CPacket::handle);
-        registrar.playToServer(CPacketProviderControllerOperation.TYPE, CPacketProviderControllerOperation.STREAM_CODEC, CPacketProviderControllerOperation::handle);
-        registrar.playToServer(CraftingMonitorJumpC2SPacket.TYPE, CraftingMonitorJumpC2SPacket.STREAM_CODEC, CraftingMonitorJumpC2SPacket::handle);
-        registrar.playToServer(CraftingMonitorOpenProviderC2SPacket.TYPE, CraftingMonitorOpenProviderC2SPacket.STREAM_CODEC, CraftingMonitorOpenProviderC2SPacket::handle);
-        registrar.playToServer(UploadEncodedPatternToProviderC2SPacket.TYPE, UploadEncodedPatternToProviderC2SPacket.STREAM_CODEC, UploadEncodedPatternToProviderC2SPacket::handle);
-        registrar.playToServer(UploadInventoryPatternToProviderC2SPacket.TYPE, UploadInventoryPatternToProviderC2SPacket.STREAM_CODEC, UploadInventoryPatternToProviderC2SPacket::handle);
 
-        registrar.playToServer(CPacketPickFromNetwork.TYPE,
-                CPacketPickFromNetwork.STREAM_CODEC,
-                CPacketPickFromNetwork::handle);
-        registrar.playToServer(CPacketPullFromNetwork.TYPE,
-                CPacketPullFromNetwork.STREAM_CODEC,
-                CPacketPullFromNetwork::handle);
-        registrar.playToServer(CPacketChannelCardBind.TYPE,
-                CPacketChannelCardBind.STREAM_CODEC,
-                CPacketChannelCardBind::handle);
-        registrar.playToServer(SetWirelessFrequencyC2SPacket.TYPE,
-                SetWirelessFrequencyC2SPacket.STREAM_CODEC,
-                SetWirelessFrequencyC2SPacket::handle);
+        findAnnotatedClasses().forEach(packetClass -> {
+            if (BPacketGeneric.class.isAssignableFrom(packetClass))
+                registerBiDirectional(registrar, packetClass.asSubclass(BPacketGeneric.class));
+            else if (CPacketGeneric.class.isAssignableFrom(packetClass))
+                registerClient(registrar, packetClass.asSubclass(CPacketGeneric.class));
+            else if (SPacketGeneric.class.isAssignableFrom(packetClass))
+                registerServer(registrar, packetClass.asSubclass(SPacketGeneric.class));
+        });
+    }
 
-        registrar.playToClient(CPacketEncodeFinished.TYPE,
-                CPacketEncodeFinished.STREAM_CODEC,
-                CPacketEncodeFinished::handle);
-        registrar.playToServer(CPacketTargetKeyTriggered.TYPE,
-                CPacketTargetKeyTriggered.STREAM_CODEC,
-                CPacketTargetKeyTriggered::handle);
+    private static Set<Class<?>> findAnnotatedClasses() {
+        return ModList.get().getAllScanData().stream()
+                .flatMap(scanData -> scanData.getAnnotations().stream())
+                .filter(annotationData -> annotationData.annotationType().equals(Type.getType(EAEPNetworkPacket.class)))
+                .map(annotationData -> {
+                    try {
+                        return Class.forName(annotationData.memberName());
+                    } catch (ClassNotFoundException e) {
+                        throw new RuntimeException("Failed to find a PacketGeneric class: ", e);
+                    }
+                })
+                .filter(clazz -> clazz.getPackageName().startsWith("com.extendedae_plus.network"))
+                .collect(Collectors.toSet());
+    }
+
+    private static <TPacket extends CPacketGeneric> void
+    registerClient(PayloadRegistrar registrar, final Class<TPacket> clazzPacket) {
+        register(clazzPacket, ((type, streamCodec) ->
+                registrar.playToServer(type, streamCodec, CPacketGeneric::handle)));
+    }
+
+    private static <TPacket extends SPacketGeneric> void
+    registerServer(PayloadRegistrar registrar, final Class<TPacket> clazzPacket) {
+        register(clazzPacket, ((type, streamCodec) ->
+                registrar.playToClient(type, streamCodec, SPacketGeneric::handle)));
+    }
+
+    private static <TPacket extends BPacketGeneric> void
+    registerBiDirectional(PayloadRegistrar registrar, final Class<TPacket> clazzPacket) {
+        register(clazzPacket, ((type, streamCodec) ->
+                registrar.playBidirectional(type, streamCodec, BPacketGeneric::handle)));
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <TPacket extends PacketGeneric> void
+    register(Class<TPacket> clazzPacket,
+             BiConsumer<CustomPacketPayload.Type<TPacket>, StreamCodec<RegistryFriendlyByteBuf, TPacket>> registeringAction) {
+        try {
+            registeringAction.accept((CustomPacketPayload.Type<TPacket>) clazzPacket.getField("TYPE").get(null),
+                    (StreamCodec<RegistryFriendlyByteBuf, TPacket>) clazzPacket.getField("STREAM_CODEC").get(null));
+        } catch (NoSuchFieldException | ClassCastException | IllegalAccessException ignored) {
+        }
     }
 }

@@ -8,6 +8,7 @@ import appeng.client.gui.style.ScreenStyle;
 import appeng.client.gui.widgets.IconButton;
 import appeng.menu.AEBaseMenu;
 import com.extendedae_plus.EAEPConfig;
+import com.extendedae_plus.network.CPacketUploadInventoryPattern;
 import com.extendedae_plus.util.GuiUtil;
 import com.extendedae_plus.util.UtilGetKey;
 import com.glodblock.github.extendedae.client.gui.GuiExPatternTerminal;
@@ -108,7 +109,7 @@ public abstract class GuiExPatternTerminalMixin extends AEBaseScreen<AEBaseMenu>
             if (!itemToUpload.isEmpty() && PatternDetailsHelper.isEncodedPattern(itemToUpload)) {
                 // 改用我们自己的网络包，直接将玩家槽位与选择的供应器ID发送到服务器
                 try {
-                    PacketDistributor.sendToServer(new com.extendedae_plus.network.UploadInventoryPatternToProviderC2SPacket(
+                    PacketDistributor.sendToServer(new CPacketUploadInventoryPattern(
                             playerSlotIndex,
                             eap$currentlyChoicePatterProvider
                     ));

@@ -8,10 +8,12 @@ import appeng.blockentity.crafting.PatternProviderBlockEntity;
 import appeng.helpers.patternprovider.PatternProviderLogic;
 import appeng.helpers.patternprovider.PatternProviderLogicHost;
 import appeng.parts.crafting.PatternProviderPart;
-import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.common.init.ModItems;
 import com.extendedae_plus.mixin.impl.bridge.ISmartBlockingObject;
 import com.extendedae_plus.mixin.impl.bridge.ISmartDoublingObject;
+import com.extendedae_plus.network.base.CPacketGeneric;
+import com.extendedae_plus.network.base.EAEPNetworkPacket;
+import com.extendedae_plus.network.base.PacketGeneric;
 import com.extendedae_plus.util.UtilGetKey;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,7 +22,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -32,15 +33,15 @@ import java.util.Set;
  * - 智能翻倍模式（SmartDoublingHolder mixin）
  * 负载为三个操作码（各1字节），分别对应：blocking、advancedBlocking、smartDoubling。
  */
+@EAEPNetworkPacket
 public record CPacketProviderControllerOperation(
         Operation operationBlocking,
         Operation operationAdvancedBlocking,
         Operation operationSmartDoubling,
         BlockPos gridPos,
         Direction clickedFace
-) implements CustomPacketPayload {
-    public static final Type<CPacketProviderControllerOperation> TYPE = new Type<>(
-            ExtendedAEPlus.getLocation("global_toggle_provider_modes"));
+) implements CPacketGeneric {
+    public static final Type<CPacketProviderControllerOperation> TYPE = PacketGeneric.createType("provider_controller_operation");
 
     public static final StreamCodec<RegistryFriendlyByteBuf, CPacketProviderControllerOperation> STREAM_CODEC = StreamCodec.composite(
             NeoForgeStreamCodecs.enumCodec(Operation.class), CPacketProviderControllerOperation::operationBlocking,
@@ -61,15 +62,6 @@ public record CPacketProviderControllerOperation(
         Operation(byte id) {
             this.id = id;
         }
-
-        public static Operation byId(byte id) {
-            return switch (id) {
-                case 1 -> SET_TRUE;
-                case 2 -> SET_FALSE;
-                case 3 -> TOGGLE;
-                default -> NOOP;
-            };
-        }
     }
 
     @Override
@@ -77,30 +69,27 @@ public record CPacketProviderControllerOperation(
         return TYPE;
     }
 
-    public static void handle(final CPacketProviderControllerOperation packet, final IPayloadContext context) {
-        context.enqueueWork(() -> {
-            if (!(context.player() instanceof ServerPlayer player)) return;
+    @Override
+    public void handleServer(ServerPlayer player) {
+        // 从控制方块实体的 AE2 节点确定 AE 网络上下文
+        var level = player.serverLevel();
+        var be = level.getBlockEntity(this.gridPos);
+        if (!(be instanceof IInWorldGridNodeHost host)) return;
+        var node = host.getGridNode(this.clickedFace);
+        if (node == null) return;
+        IGrid grid = node.getGrid();
+        if (grid == null) return;
 
-            // 从控制方块实体的 AE2 节点确定 AE 网络上下文
-            var level = player.serverLevel();
-            var be = level.getBlockEntity(packet.gridPos);
-            if (!(be instanceof IInWorldGridNodeHost host)) return;
-            var node = host.getGridNode(packet.clickedFace);
-            if (node == null) return;
-            IGrid grid = node.getGrid();
-            if (grid == null) return;
-
-            int affected = applyToAllProviders(grid, packet);
-            // 向发起玩家反馈影响数量，便于判断按钮是否生效
-            player.displayClientMessage(new UtilGetKey(UtilGetKey.message)
-                    .item(ModItems.PROVIDER_CONTROLLER)
-                    .addStr("global_switch")
-                    .args(affected)
-                    .build(), false);
-        });
+        int affected = applyToAllProviders(grid);
+        // 向发起玩家反馈影响数量，便于判断按钮是否生效
+        player.displayClientMessage(new UtilGetKey(UtilGetKey.message)
+                .item(ModItems.PROVIDER_CONTROLLER)
+                .addStr("global_switch")
+                .args(affected)
+                .build(), false);
     }
 
-    private static int applyToAllProviders(IGrid grid, CPacketProviderControllerOperation msg) {
+    private int applyToAllProviders(IGrid grid) {
         int affected = 0;
         // 去重集合，避免同一逻辑重复计数
         Set<PatternProviderLogic> all = new HashSet<>();
@@ -143,7 +132,7 @@ public record CPacketProviderControllerOperation(
         collectByClassName(grid, all, "com.glodblock.github.extendedae.common.tileentities.TileExPatternProvider");
 
         for (PatternProviderLogic logic : all) {
-            if (applyToLogic(logic, msg)) affected++;
+            if (applyToLogic(logic)) affected++;
         }
         return affected;
     }
@@ -175,13 +164,13 @@ public record CPacketProviderControllerOperation(
         }
     }
 
-    private static boolean applyToLogic(PatternProviderLogic logic, CPacketProviderControllerOperation msg) {
+    private boolean applyToLogic(PatternProviderLogic logic) {
         if (logic == null) return false;
         boolean changed = false;
         // 1) 阻挡模式（AE2 内置设置）
-        if (msg.operationBlocking != Operation.NOOP) {
+        if (this.operationBlocking != Operation.NOOP) {
             boolean current = safeIsBlocking(logic);
-            boolean target = computeTarget(current, msg.operationBlocking);
+            boolean target = computeTarget(current, this.operationBlocking);
             var cm = logic.getConfigManager();
             if (cm != null) {
                 cm.putSetting(Settings.BLOCKING_MODE, target ? YesNo.YES : YesNo.NO);
@@ -189,16 +178,16 @@ public record CPacketProviderControllerOperation(
             }
         }
         // 2) 高级阻挡（mixin 接口）
-        if (msg.operationAdvancedBlocking != Operation.NOOP && logic instanceof ISmartBlockingObject adv) {
+        if (this.operationAdvancedBlocking != Operation.NOOP && logic instanceof ISmartBlockingObject adv) {
             boolean current = adv.eaep$getBlockingState();
-            boolean target = computeTarget(current, msg.operationAdvancedBlocking);
+            boolean target = computeTarget(current, this.operationAdvancedBlocking);
             adv.eaep$setBlockingState(target);
             changed = changed || (current != target);
         }
         // 3) 智能翻倍（mixin 接口）
-        if (msg.operationSmartDoubling != Operation.NOOP && logic instanceof ISmartDoublingObject sd) {
+        if (this.operationSmartDoubling != Operation.NOOP && logic instanceof ISmartDoublingObject sd) {
             boolean current = sd.eaep$getDoublingState();
-            boolean target = computeTarget(current, msg.operationSmartDoubling);
+            boolean target = computeTarget(current, this.operationSmartDoubling);
             sd.eaep$setDoublingState(target);
             changed = changed || (current != target);
         }

@@ -11,7 +11,7 @@ import appeng.util.Platform;
 import com.extendedae_plus.common.impl.entitySpeed.PowerUtils;
 import com.extendedae_plus.common.init.ModItems;
 import com.extendedae_plus.common.menu.EntitySpeedTickerMenu;
-import com.extendedae_plus.network.ToggleEntityTickerC2SPacket;
+import com.extendedae_plus.network.CPacketToggleTickerState;
 import com.extendedae_plus.util.UtilGetKey;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -44,7 +44,7 @@ public class EntitySpeedTickerScreen<C extends EntitySpeedTickerMenu> extends Up
                 this.eap$entitySpeedTickerEnabled ? YesNo.YES : YesNo.NO,
                 (btn, backwards) -> {
                     // 不做本地切换，点击仅发送自定义C2S，显示由@GuiSync回传
-                    PacketDistributor.sendToServer(ToggleEntityTickerC2SPacket.INSTANCE);
+                    PacketDistributor.sendToServer(CPacketToggleTickerState.INSTANCE);
                 }
         ) {
             @Override

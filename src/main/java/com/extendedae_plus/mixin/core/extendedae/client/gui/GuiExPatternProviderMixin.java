@@ -7,6 +7,7 @@ import appeng.menu.SlotSemantics;
 import appeng.menu.slot.AppEngSlot;
 import com.extendedae_plus.EAEPConfig;
 import com.extendedae_plus.client.render.widgets.button.EAEPActionButton;
+import com.extendedae_plus.client.render.widgets.button.EAEPServerCycleButton;
 import com.extendedae_plus.mixin.impl.bridge.ExPatternPageAccessor;
 import com.extendedae_plus.mixin.impl.bridge.HelperProviderButtons;
 import com.extendedae_plus.mixin.impl.widget.ButtonImplementations;
@@ -220,6 +221,17 @@ public abstract class GuiExPatternProviderMixin extends PatternProviderScreen<Co
                 this.topPos + 50,
                 this.eaep$lastScreenInfo
         );
+
+        try {
+            var clazzProvider = this.getClass();
+            if (clazzProvider.getSuperclass()
+                    .getDeclaredField("eaep$buttonSmartBlocking").get(this)
+                    instanceof EAEPServerCycleButton button) button.updateState();
+            if (clazzProvider.getSuperclass()
+                    .getDeclaredField("eaep$buttonSmartDoubling").get(this)
+                    instanceof EAEPServerCycleButton button) button.updateState();
+        } catch (NoSuchFieldException | IllegalAccessException ignored) {
+        }
 
         // 每帧确保当前页槽位处于启用状态，非当前页禁用
         eap$updatePageSlotActivity();

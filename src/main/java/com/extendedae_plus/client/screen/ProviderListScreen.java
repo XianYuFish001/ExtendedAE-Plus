@@ -1,7 +1,7 @@
 package com.extendedae_plus.client.screen;
 
 import com.extendedae_plus.client.impl.AliasGetter;
-import com.extendedae_plus.network.UploadEncodedPatternToProviderC2SPacket;
+import com.extendedae_plus.network.CPacketUploadTerminalPattern;
 import com.extendedae_plus.util.UtilGetKey;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -245,7 +245,7 @@ public class ProviderListScreen extends Screen {
     private void onChoose(int idx) {
         if (idx < 0 || idx >= fIds.size()) return;
         long providerId = fIds.get(idx);
-        PacketDistributor.sendToServer(new UploadEncodedPatternToProviderC2SPacket(providerId));
+        PacketDistributor.sendToServer(new CPacketUploadTerminalPattern(providerId));
         this.onClose();
     }
 

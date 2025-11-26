@@ -4,7 +4,10 @@ import appeng.menu.AEBaseMenu;
 import appeng.menu.guisync.GuiSync;
 import com.extendedae_plus.mixin.impl.bridge.ISmartBlockingObject;
 import com.extendedae_plus.mixin.impl.bridge.SyncerSmartBlocking;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
 import net.pedroksl.advanced_ae.common.logic.AdvPatternProviderLogic;
+import net.pedroksl.advanced_ae.common.logic.AdvPatternProviderLogicHost;
 import net.pedroksl.advanced_ae.gui.advpatternprovider.AdvPatternProviderMenu;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,6 +23,9 @@ public abstract class MixinAdvProviderBlockingSyncing implements SyncerSmartBloc
     @Shadow(remap = false)
     protected AdvPatternProviderLogic logic;
 
+    @Shadow
+    public abstract void broadcastChanges();
+
     // 选择一个未占用的 GUI 同步 id（AE2 已用到 7），这里使用 20 以避冲突
     @Unique
     @GuiSync(22)
@@ -27,6 +33,12 @@ public abstract class MixinAdvProviderBlockingSyncing implements SyncerSmartBloc
     @Unique
     @GuiSync(23)
     public boolean eaep$blockingDisabled = false;
+
+    @Inject(method = "<init>(Lnet/minecraft/world/inventory/MenuType;ILnet/minecraft/world/entity/player/Inventory;Lnet/pedroksl/advanced_ae/common/logic/AdvPatternProviderLogicHost;)V",
+            at = @At("TAIL"))
+    private void onInit(MenuType<?> menuType, int id, Inventory playerInventory, AdvPatternProviderLogicHost host, CallbackInfo ci) {
+        this.broadcastChanges();
+    }
 
     @Inject(method = "broadcastChanges", at = @At("HEAD"))
     private void syncBlockingState(CallbackInfo ci) {

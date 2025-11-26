@@ -13,19 +13,21 @@ import appeng.helpers.patternprovider.PatternProviderLogic;
 import appeng.helpers.patternprovider.PatternProviderLogicHost;
 import appeng.me.service.CraftingService;
 import appeng.menu.me.crafting.CraftingCPUMenu;
-import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.mixin.core.ae2.accessor.PatternProviderLogicAccessor;
+import com.extendedae_plus.network.base.CPacketGeneric;
+import com.extendedae_plus.network.base.EAEPNetworkPacket;
+import com.extendedae_plus.network.base.PacketGeneric;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -37,27 +39,24 @@ import java.util.List;
  * 服务端在当前打开的 CraftingCPUMenu 所属网络中，定位匹配该 AEKey 的样板供应器，
  * 尝试打开其目标机器的 GUI。
  */
-public record CraftingMonitorJumpC2SPacket(AEKey what) implements CustomPacketPayload {
-    public static final Type<CraftingMonitorJumpC2SPacket> TYPE = new Type<>(
-            ExtendedAEPlus.getLocation("crafting_monitor_jump"));
+@EAEPNetworkPacket
+public record CPacketOpenScreenCraftingNodeMachine(AEKey what) implements CPacketGeneric {
+    public static final Type<CPacketOpenScreenCraftingNodeMachine> TYPE =
+            PacketGeneric.createType("open_screen_crafting_node_machine");
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
         return TYPE;
     }
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, CraftingMonitorJumpC2SPacket> STREAM_CODEC = StreamCodec.composite(
-            AEKey.STREAM_CODEC, CraftingMonitorJumpC2SPacket::what,
-            CraftingMonitorJumpC2SPacket::new);
+    public static final StreamCodec<RegistryFriendlyByteBuf, CPacketOpenScreenCraftingNodeMachine> STREAM_CODEC = StreamCodec.composite(
+            AEKey.STREAM_CODEC, CPacketOpenScreenCraftingNodeMachine::what,
+            CPacketOpenScreenCraftingNodeMachine::new
+    );
 
-    public static void handle(final CraftingMonitorJumpC2SPacket packet, final IPayloadContext ctx) {
-        Player player = ctx.player();
-        Level level = player.level();
-        if (level.isClientSide) return;
-        ctx.enqueueWork(() -> openMenu(player, level, packet));
-    }
-
-    private static void openMenu(Player player, Level level, CraftingMonitorJumpC2SPacket packet) {
+    @Override
+    public void handleServer(ServerPlayer player) {
+        Level level = player.serverLevel();
         if (!(player.containerMenu instanceof CraftingCPUMenu menu)) return;
 
         // 通过菜单 target（可能是 BlockEntity/Part/ItemHost）按 IActionHost 获取 Grid
@@ -72,7 +71,7 @@ public record CraftingMonitorJumpC2SPacket(AEKey what) implements CustomPacketPa
 
         // 根据 AEKey 找到可能的 Pattern, 遍历提供该样板的 Provider
         List<ICraftingProvider> providers = new ArrayList<>();
-        craftingService.getCraftingFor(packet.what).stream()
+        craftingService.getCraftingFor(this.what).stream()
                         .map(craftingService::getProviders)
                         .forEach(iteration ->
                                 iteration.forEach(providers::addLast));
@@ -89,6 +88,8 @@ public record CraftingMonitorJumpC2SPacket(AEKey what) implements CustomPacketPa
 
             // 尝试对邻居打开 GUI（优先通过 MenuProvider）
             // 这功能真是太™有效了, 是个大点的mod就不用menuProvider😅
+            // 好像有点烂, 之后重构吧
+            // TODO Refactor
             for (Direction dir : host.getTargets()) {
                 BlockPos targetPos = pbe.getBlockPos().relative(dir);
 
@@ -122,7 +123,7 @@ public record CraftingMonitorJumpC2SPacket(AEKey what) implements CustomPacketPa
                 if (blockEntityClassName.contains("mekanism") && blockEntityClassName.contains("tile")) {
                     try {
                         Method methodOpenGui = tbe.getClass().getMethod("openGui", Player.class);
-                        methodOpenGui.invoke(tbe, player);
+                        methodOpenGui.invoke(tbe, (Player) player);
                     } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {}
                     return;
                 }
@@ -139,4 +140,5 @@ public record CraftingMonitorJumpC2SPacket(AEKey what) implements CustomPacketPa
             }
         });
     }
+
 }

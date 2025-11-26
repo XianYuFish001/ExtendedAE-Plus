@@ -8,7 +8,7 @@ import com.extendedae_plus.integration.recipeViewer.emi.HelperPatternFilling;
 import com.extendedae_plus.mixin.MixinDependencies;
 import com.extendedae_plus.mixin.core.recipeViewer.emi.accessor.AccessorBoMScreenHover;
 import com.extendedae_plus.mixin.impl.bridge.BridgePlanToEncode;
-import com.extendedae_plus.network.RequestUploadingC2SPacket;
+import com.extendedae_plus.network.CPacketRequestUploading;
 import dev.emi.emi.api.recipe.VanillaEmiRecipeCategories;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.bom.BoM;
@@ -67,7 +67,7 @@ public abstract class MixinBoMScreen {
                             .map(EmiStackHelper::toGenericStack).toList());
 
             AliasGetter.tryCollectKeywords(node.recipe);
-            PacketDistributor.sendToServer(RequestUploadingC2SPacket.INSTANCE);
+            PacketDistributor.sendToServer(CPacketRequestUploading.INSTANCE);
         }
 
         Minecraft.getInstance().player.playSound(SoundEvents.UI_BUTTON_CLICK.value());

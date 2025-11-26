@@ -1,11 +1,14 @@
 package com.extendedae_plus.mixin.core.ae2.menu;
 
 import appeng.helpers.patternprovider.PatternProviderLogic;
+import appeng.helpers.patternprovider.PatternProviderLogicHost;
 import appeng.menu.AEBaseMenu;
 import appeng.menu.guisync.GuiSync;
 import appeng.menu.implementations.PatternProviderMenu;
 import com.extendedae_plus.mixin.impl.bridge.ISmartBlockingObject;
 import com.extendedae_plus.mixin.impl.bridge.SyncerSmartBlocking;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -20,6 +23,9 @@ public abstract class MixinProviderBlockingSyncing implements SyncerSmartBlockin
     @Shadow
     protected PatternProviderLogic logic;
 
+    @Shadow
+    public abstract void broadcastChanges();
+
     // 选择一个未占用的 GUI 同步 id（AE2 已用到 7），这里使用 20 以避冲突
     @Unique
     @GuiSync(20)
@@ -27,6 +33,11 @@ public abstract class MixinProviderBlockingSyncing implements SyncerSmartBlockin
     @Unique
     @GuiSync(21)
     public boolean eaep$blockingDisabled = false;
+
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void onInit(MenuType<?> menuType, int id, Inventory playerInventory, PatternProviderLogicHost host, CallbackInfo ci) {
+        this.broadcastChanges();
+    }
 
     @Inject(method = "broadcastChanges", at = @At("HEAD"))
     private void syncBlockingState(CallbackInfo ci) {

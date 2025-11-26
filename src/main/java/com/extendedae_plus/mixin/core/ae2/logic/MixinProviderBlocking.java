@@ -1,13 +1,19 @@
 package com.extendedae_plus.mixin.core.ae2.logic;
 
+import appeng.api.config.Settings;
+import appeng.api.config.YesNo;
 import appeng.api.crafting.IPatternDetails;
 import appeng.api.crafting.IPatternDetails.IInput;
+import appeng.api.networking.IManagedGridNode;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
+import appeng.api.util.IConfigManager;
 import appeng.helpers.patternprovider.PatternProviderLogic;
+import appeng.helpers.patternprovider.PatternProviderLogicHost;
 import appeng.helpers.patternprovider.PatternProviderTarget;
 import com.extendedae_plus.mixin.impl.bridge.ISmartBlockingObject;
 import net.minecraft.nbt.CompoundTag;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -20,6 +26,9 @@ import java.util.Collections;
 
 @Mixin(value = PatternProviderLogic.class, remap = false, priority = 1100)
 public class MixinProviderBlocking implements ISmartBlockingObject {
+    @Shadow
+    @Final
+    private IConfigManager configManager;
     @Unique
     private static final String COMPOUND_KEY_BLOCKING = "eaep_blocking";
     @Unique
@@ -49,6 +58,16 @@ public class MixinProviderBlocking implements ISmartBlockingObject {
     @Override
     public void eaep$disableBlocking() {
         this.eaep$blockingDisabled = true;
+    }
+
+    @Inject(method = "<init>(Lappeng/api/networking/IManagedGridNode;Lappeng/helpers/patternprovider/PatternProviderLogicHost;I)V", at = @At("TAIL"))
+    private void onInit(IManagedGridNode mainNode, PatternProviderLogicHost host, int patternInventorySize, CallbackInfo ci) {
+        if (!this.configManager.hasSetting(Settings.BLOCKING_MODE)) return;
+
+        var setting = this.configManager.getSetting(Settings.BLOCKING_MODE);
+        this.eaep$setBlockingState(setting.equals(YesNo.YES));
+        if (setting.equals(YesNo.NO))
+            this.eaep$disableBlocking();
     }
 
     @Inject(method = "writeToNBT", at = @At("TAIL"))

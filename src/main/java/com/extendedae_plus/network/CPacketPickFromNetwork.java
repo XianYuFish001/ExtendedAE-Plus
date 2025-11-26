@@ -6,8 +6,10 @@ import appeng.api.stacks.AEItemKey;
 import appeng.api.storage.MEStorage;
 import appeng.api.storage.StorageHelper;
 import appeng.me.helpers.PlayerSource;
-import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.common.impl.menuLocator.WirelessTerminalLocator;
+import com.extendedae_plus.network.base.CPacketGeneric;
+import com.extendedae_plus.network.base.EAEPNetworkPacket;
+import com.extendedae_plus.network.base.PacketGeneric;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -19,54 +21,52 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public record CPacketPickFromNetwork(BlockPos pos, Direction face, Vec3 hitLoc) implements CustomPacketPayload {
-    public static final Type<CPacketPickFromNetwork> TYPE = new Type<>(
-            ExtendedAEPlus.getLocation("pick_from_network"));
+@EAEPNetworkPacket
+public record CPacketPickFromNetwork(BlockPos pos, Direction face, Vec3 hitLoc) implements CPacketGeneric {
+    public static final Type<CPacketPickFromNetwork> TYPE = PacketGeneric.createType("pick_from_network");
 
     public static final StreamCodec<RegistryFriendlyByteBuf, CPacketPickFromNetwork> STREAM_CODEC = StreamCodec.composite(
             BlockPos.STREAM_CODEC, CPacketPickFromNetwork::pos,
             Direction.STREAM_CODEC, CPacketPickFromNetwork::face,
             ByteBufCodecs.fromCodec(Vec3.CODEC), CPacketPickFromNetwork::hitLoc,
-            CPacketPickFromNetwork::new);
+            CPacketPickFromNetwork::new
+    );
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
         return TYPE;
     }
 
-    public static void handle(final CPacketPickFromNetwork packet, final IPayloadContext context) {
-        context.enqueueWork(() -> {
-            if (!(context.player() instanceof ServerPlayer player)) return;
-            if (player.isCreative()) return;
+    @Override
+    public void handleServer(ServerPlayer player) {
+        if (player.isCreative()) return;
 
-            var level = player.serverLevel();
-            var state = level.getBlockState(packet.pos);
-            if (state.isAir()) return;
+        var level = player.serverLevel();
+        var state = level.getBlockState(this.pos);
+        if (state.isAir()) return;
 
-            var infoOptional = WirelessTerminalLocator.locate(player);
-            if (infoOptional.isEmpty()) return;
-            var info = infoOptional.get();
+        var infoOptional = WirelessTerminalLocator.locate(player);
+        if (infoOptional.isEmpty()) return;
+        var info = infoOptional.get();
 
-            var terminalStack = info.terminalStack();
-            var terminal = info.terminal();
-            if (terminalStack.isEmpty()) return;
+        var terminalStack = info.terminalStack();
+        var terminal = info.terminal();
+        if (terminalStack.isEmpty()) return;
 
-            var gridOptional = info.grid();
-            if (gridOptional.isEmpty()) return;
-            var grid = gridOptional.get();
+        var gridOptional = info.grid();
+        if (gridOptional.isEmpty()) return;
+        var grid = gridOptional.get();
 
-            double powerUsage = pullItem(packet, player, state, grid);
-            if (powerUsage > 0) terminal.usePower(player, powerUsage, info.terminalStack());
+        double powerUsage = pullItem(player, state, grid);
+        if (powerUsage > 0) terminal.usePower(player, powerUsage, info.terminalStack());
 
-            player.containerMenu.broadcastChanges();
-        });
+        player.containerMenu.broadcastChanges();
     }
 
-    private static double pullItem(CPacketPickFromNetwork packet, ServerPlayer player, BlockState blockState, IGrid grid) {
-        var hitResult = new BlockHitResult(packet.hitLoc, packet.face, packet.pos, true);
-        var picked = blockState.getCloneItemStack(hitResult, player.serverLevel(), packet.pos, player);
+    private double pullItem(ServerPlayer player, BlockState blockState, IGrid grid) {
+        var hitResult = new BlockHitResult(this.hitLoc, this.face, this.pos, true);
+        var picked = blockState.getCloneItemStack(hitResult, player.serverLevel(), this.pos, player);
         if (picked.isEmpty()) picked = blockState.getBlock().asItem().getDefaultInstance();
         if (picked.isEmpty()) return 0;
 

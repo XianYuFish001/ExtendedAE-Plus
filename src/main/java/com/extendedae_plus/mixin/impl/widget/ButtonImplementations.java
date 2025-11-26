@@ -7,7 +7,7 @@ import com.extendedae_plus.mixin.impl.bridge.HelperProviderButtons;
 import com.extendedae_plus.mixin.impl.bridge.SyncerSmartBlocking;
 import com.extendedae_plus.mixin.impl.bridge.SyncerSmartDoubling;
 import com.extendedae_plus.network.CPacketToggleSmartBlocking;
-import com.extendedae_plus.network.ToggleSmartDoublingC2SPacket;
+import com.extendedae_plus.network.CPacketToggleSmartDoubling;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.jetbrains.annotations.Nullable;
@@ -33,7 +33,7 @@ public class ButtonImplementations {
 
     public static EAEPServerCycleButton buttonDoubling(AbstractContainerMenu menu) {
         EAEPServerCycleButton button = new EAEPServerCycleButton.Builder()
-                .setTask(ToggleSmartDoublingC2SPacket.INSTANCE)
+                .setTask(CPacketToggleSmartDoubling.INSTANCE)
                 .addPart(EAEPActionItems.DOUBLING_DISABLED)
                 .addPart(EAEPActionItems.DOUBLING_ENABLED)
                 .setSyncedStateGetter(() -> menu instanceof SyncerSmartDoubling syncer && syncer.eaep$getDoublingState())
