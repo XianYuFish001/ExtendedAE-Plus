@@ -27,7 +27,7 @@ public class ModUpgradeCards {
         String ioBusGroup = GuiText.IOBuses.getTranslationKey();
         String storageGroup = "group.storage.name";
 
-        var channelCardGroups = List.of(
+        var machineGroups = List.of(
                 List.of(
                         AEBlocks.INTERFACE,
                         AEParts.INTERFACE,
@@ -60,21 +60,23 @@ public class ModUpgradeCards {
                 )
         );
         if (ModList.get().isLoaded("advanced_ae")) {
-            channelCardGroups.get(1).addAll(List.of(
+            machineGroups.get(1).addAll(List.of(
                     AAEBlocks.SMALL_ADV_PATTERN_PROVIDER,
                     AAEBlocks.ADV_PATTERN_PROVIDER,
                     AAEItems.SMALL_ADV_PATTERN_PROVIDER,
                     AAEItems.ADV_PATTERN_PROVIDER
             ));
 
-            channelCardGroups.get(2).add(AAEItems.IMPORT_EXPORT_BUS);
-            channelCardGroups.get(2).add(AAEItems.STOCK_EXPORT_BUS);
+            machineGroups.get(2).add(AAEItems.IMPORT_EXPORT_BUS);
+            machineGroups.get(2).add(AAEItems.STOCK_EXPORT_BUS);
         }
 
-        register(ModItems.CHANNEL_CARD, channelCardGroups.get(0), 1, interfaceGroup);
-        register(ModItems.CHANNEL_CARD, channelCardGroups.get(1), 1, patternProviderGroup);
-        register(ModItems.CHANNEL_CARD, channelCardGroups.get(2), 1, ioBusGroup);
-        register(ModItems.CHANNEL_CARD, channelCardGroups.get(3), 1, storageGroup);
+        register(ModItems.CHANNEL_CARD, machineGroups.get(0), 1, interfaceGroup);
+        register(ModItems.CHANNEL_CARD, machineGroups.get(1), 1, patternProviderGroup);
+        register(ModItems.CHANNEL_CARD, machineGroups.get(2), 1, ioBusGroup);
+        register(ModItems.CHANNEL_CARD, machineGroups.get(3), 1, storageGroup);
+
+        register(ModItems.CARD_AUTO_COMPLETION, machineGroups.get(1), 1, patternProviderGroup);
     }
 
     private static void register(DeferredItem<?> card, Collection<ItemLike> machines, int maxSupported, String tooltipGroup) {

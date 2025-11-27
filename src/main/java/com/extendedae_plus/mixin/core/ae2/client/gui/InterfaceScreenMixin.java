@@ -110,7 +110,7 @@ public abstract class InterfaceScreenMixin<TMenu extends InterfaceMenu>
     }
 
     @Override
-    public List<EAEPActionButton> eaep$getScalingButtons() {
+    public List<EAEPActionButton> eaep$getButtons() {
         return this.eaep$scalingButtons;
     }
 }

@@ -1,4 +1,4 @@
-package com.extendedae_plus.mixin.core.ae2.logic.channelCard;
+package com.extendedae_plus.mixin.core.ae2.logic.upgradeCard;
 
 import appeng.api.networking.IManagedGridNode;
 import appeng.api.upgrades.IUpgradeInventory;
@@ -18,13 +18,16 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @MixinDependencies("appflux")
 @Mixin(value = PatternProviderLogic.class, priority = 1100)
-public class MixinProviderLinkAppFlux implements HelperProviderUpgradesInv {
+public class MixinProviderCardSlotAppFlux implements HelperProviderUpgradesInv {
     @Unique
     private static final Logger eaep$LOGGER = LogUtils.getLogger();
     @Unique
-    private Runnable eaep$onUpgradesChanged;
+    private final Set<Runnable> eaep$onUpgradesChanged = new HashSet<>();
 
     @Shadow
     private IUpgradeInventory af_upgrades;
@@ -36,7 +39,7 @@ public class MixinProviderLinkAppFlux implements HelperProviderUpgradesInv {
     private void onInit(IManagedGridNode mainNode, PatternProviderLogicHost host, int patternInventorySize, CallbackInfo ci) {
         try {
             this.af_upgrades = UpgradeInventories.forMachine(
-                    host.getTerminalIcon().getItem(), Math.min(this.af_upgrades.size() + 1, 8), this::af_onUpgradesChanged);
+                    host.getTerminalIcon().getItem(), Math.min(this.af_upgrades.size() + 2, 8), this::af_onUpgradesChanged);
         } catch (Throwable ignore) {
         }
     }
@@ -44,7 +47,7 @@ public class MixinProviderLinkAppFlux implements HelperProviderUpgradesInv {
     @Inject(method = "af_onUpgradesChanged", at = @At("HEAD"))
     private void eaep$onUpgradesChanged(CallbackInfo ci) {
         try {
-            this.eaep$onUpgradesChanged.run();
+            this.eaep$onUpgradesChanged.forEach(Runnable::run);
         } catch (Throwable throwable) {
             eaep$LOGGER.warn("[EAEP] PatternProvider 初始化频道链接失败", throwable);
         }
@@ -53,15 +56,15 @@ public class MixinProviderLinkAppFlux implements HelperProviderUpgradesInv {
     @Inject(method = "readFromNBT", at = @At("TAIL"))
     private void onReadingComponents(CompoundTag tag, HolderLookup.Provider registries, CallbackInfo ci) {
         try {
-            this.eaep$onUpgradesChanged.run();
+            this.eaep$onUpgradesChanged.forEach(Runnable::run);
         } catch (Throwable throwable) {
             eaep$LOGGER.warn("[EAEP] PatternProvider 初始化频道链接失败", throwable);
         }
     }
 
     @Override
-    public void eaep$bindAction(Runnable action) {
-        this.eaep$onUpgradesChanged = action;
+    public void eaep$addAction(Runnable action) {
+        this.eaep$onUpgradesChanged.add(action);
     }
 
     @Override

@@ -4,10 +4,7 @@ import appeng.items.materials.UpgradeCardItem;
 import appeng.items.parts.PartItem;
 import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.common.block.EAEPCraftingUnitType;
-import com.extendedae_plus.common.item.ChannelCardItem;
-import com.extendedae_plus.common.item.EntitySpeedCardItem;
-import com.extendedae_plus.common.item.EntitySpeedTickerPartItem;
-import com.extendedae_plus.common.item.ItemProviderController;
+import com.extendedae_plus.common.item.*;
 import com.extendedae_plus.common.item.infinityBigIntegerCell.InfinityBigIntegerCellItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -42,6 +39,8 @@ public final class ModItems {
 
     public static final DeferredItem<UpgradeCardItem> CHANNEL_CARD =
             regItem("channel_card", ChannelCardItem::new);
+    public static final DeferredItem<UpgradeCardItem> CARD_AUTO_COMPLETION =
+            regItem("card_auto_completion", ItemCardAutoCompletion::new);
 
     /// 随机数, 嘻嘻😋
     public static final DeferredItem<UpgradeCardItem> ENTITY_SPEED_CARD =

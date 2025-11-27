@@ -214,24 +214,25 @@ public abstract class GuiExPatternProviderMixin extends PatternProviderScreen<Co
         }
 
         if (this.eaep$scalingButtons.isEmpty())
-            this.eaep$scalingButtons.addAll(this.eaep$getScalingButtons());
+            this.eaep$getButtons().forEach(button -> {
+                var action = button.getAction();
+                if (action == null) return;
+                if (!"scaling".equals(action.getGroup())) return;
+                if (!(button instanceof EAEPActionButton actionButton)) return;
+                this.eaep$scalingButtons.add(actionButton);
+            });
+
         this.eaep$lastScreenInfo = ButtonImplementations.updateScalingButtonsLayout(
                 this,
                 this.leftPos + this.imageWidth + 3,
-                this.topPos + 50,
+                this.topPos + 68,
                 this.eaep$lastScreenInfo
         );
 
-        try {
-            var clazzProvider = this.getClass();
-            if (clazzProvider.getSuperclass()
-                    .getDeclaredField("eaep$buttonSmartBlocking").get(this)
-                    instanceof EAEPServerCycleButton button) button.updateState();
-            if (clazzProvider.getSuperclass()
-                    .getDeclaredField("eaep$buttonSmartDoubling").get(this)
-                    instanceof EAEPServerCycleButton button) button.updateState();
-        } catch (NoSuchFieldException | IllegalAccessException ignored) {
-        }
+        this.eaep$getButtons().forEach(button -> {
+            if (!(button instanceof EAEPServerCycleButton cycleButton)) return;
+            cycleButton.updateState();
+        });
 
         // 每帧确保当前页槽位处于启用状态，非当前页禁用
         eap$updatePageSlotActivity();

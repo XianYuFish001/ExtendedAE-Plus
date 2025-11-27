@@ -7,9 +7,9 @@ TODO
         <fixed>
             empty
     <feature>
-        frequency gui
-        controller gui(我是大懒狗)
         智能倍增考虑容器容量
         advProvider倍增(哇有点难搞, scaler的逻辑交杂在一起)
+        frequency gui
+        controller gui(我是大懒狗)
         <executed>
-            empty
+            自动完成卡

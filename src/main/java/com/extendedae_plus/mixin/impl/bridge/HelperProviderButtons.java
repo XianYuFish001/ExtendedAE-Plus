@@ -1,6 +1,6 @@
 package com.extendedae_plus.mixin.impl.bridge;
 
-import com.extendedae_plus.client.render.widgets.button.EAEPActionButton;
+import com.extendedae_plus.client.render.widgets.button.EAEPButton;
 
 import java.util.List;
 
@@ -8,5 +8,5 @@ import java.util.List;
 public interface HelperProviderButtons {
     void eaep$updateButtonsStates();
 
-    List<EAEPActionButton> eaep$getScalingButtons();
+    List<? extends EAEPButton> eaep$getButtons();
 }

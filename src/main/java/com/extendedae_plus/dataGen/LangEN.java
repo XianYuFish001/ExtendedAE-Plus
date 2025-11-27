@@ -25,6 +25,7 @@ public class LangEN extends LanguageProvider {
         this.addItem(ModItems.INFINITY_BIGINTEGER_CELL_ITEM, "§4De§cvou§6rer §eof §aCo§bsmic §dSilence");
         this.addItem(ModItems.PROVIDER_CONTROLLER, "Pattern Provider Controller");
         this.addItem(ModItems.CHANNEL_CARD, "Channel Card");
+        this.addItem(ModItems.CARD_AUTO_COMPLETION, "Auto Completion Card");
         this.addItem(ModItems.ENTITY_SPEED_CARD, "Entity Speed Card");
         new UtilGetKey(ModItems.ENTITY_SPEED_CARD)
                 .addStr("multiplier").buildInto("Entity Speed Card (x%s)");
@@ -78,6 +79,10 @@ public class LangEN extends LanguageProvider {
                         \n---------§aExtendedAE Plus§r---------
                         Hold §6[Ctrl]§r and Right click a node,
                         to encode & upload a pattern automatically""");
+        new UtilGetKey(UtilGetKey.tooltip)
+                .item(ModItems.CARD_AUTO_COMPLETION)
+                .branch("advanced_tip", "What you need is just copy one from NAE2")
+                .buildInto("Cancel the crafting task automatically when items in patterns be pushed");
 
         new UtilGetKey(UtilGetKey.screenTooltip)
                 .item(ModItems.ENTITY_TICKER_PART_ITEM)

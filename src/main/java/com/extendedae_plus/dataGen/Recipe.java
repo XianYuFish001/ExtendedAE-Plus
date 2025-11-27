@@ -65,6 +65,11 @@ public class Recipe extends RecipeProvider {
                 .requires(AEItems.CELL_COMPONENT_256K, 2)
                 .unlockedBy("has_accelerator", has(AEBlocks.CRAFTING_ACCELERATOR))
                 .save(recipeOutput);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.CARD_AUTO_COMPLETION)
+                .requires(AEItems.ADVANCED_CARD)
+                .requires(Items.CRAFTER)
+                .unlockedBy("has_card", has(AEItems.ADVANCED_CARD))
+                .save(recipeOutput);
 
         // NeoForged我们喜欢你, 我们喜欢Tags, NeoForgeRegistries, DataComponentIngredient😋
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, DataSpeedCard.toStack(2))

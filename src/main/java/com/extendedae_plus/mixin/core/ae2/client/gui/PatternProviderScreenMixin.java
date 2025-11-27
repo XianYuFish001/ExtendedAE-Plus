@@ -6,6 +6,7 @@ import appeng.client.gui.style.ScreenStyle;
 import appeng.menu.implementations.PatternProviderMenu;
 import com.extendedae_plus.client.render.widgets.button.EAEPActionButton;
 import com.extendedae_plus.client.render.widgets.button.EAEPActionItems;
+import com.extendedae_plus.client.render.widgets.button.EAEPButton;
 import com.extendedae_plus.client.render.widgets.button.EAEPServerCycleButton;
 import com.extendedae_plus.mixin.impl.bridge.HelperProviderButtons;
 import com.extendedae_plus.mixin.impl.widget.ButtonImplementations;
@@ -36,6 +37,8 @@ public abstract class PatternProviderScreenMixin<C extends PatternProviderMenu>
     @Unique
     protected EAEPServerCycleButton eaep$buttonSmartDoubling;
 
+    @Unique
+    public final List<EAEPButton> eaep$buttons = new ArrayList<>();
     @Unique
     public final List<EAEPActionButton> eaep$scalingButtons = new ArrayList<>();
     @Unique
@@ -74,8 +77,13 @@ public abstract class PatternProviderScreenMixin<C extends PatternProviderMenu>
     }
 
     @Override
-    public List<EAEPActionButton> eaep$getScalingButtons() {
-        return this.eaep$scalingButtons;
+    public List<? extends EAEPButton> eaep$getButtons() {
+        if (this.eaep$buttons.isEmpty()) {
+            this.eaep$buttons.addAll(this.eaep$scalingButtons);
+            this.eaep$buttons.add(this.eaep$buttonSmartBlocking);
+            this.eaep$buttons.add(this.eaep$buttonSmartDoubling);
+        }
+        return this.eaep$buttons;
     }
 
     @Override
@@ -86,7 +94,7 @@ public abstract class PatternProviderScreenMixin<C extends PatternProviderMenu>
         this.eaep$lastScreenInfo = ButtonImplementations.updateScalingButtonsLayout(
                 this,
                 this.leftPos + this.imageWidth + 3,
-                this.topPos + 50,
+                this.topPos + 68,
                 this.eaep$lastScreenInfo
         );
     }

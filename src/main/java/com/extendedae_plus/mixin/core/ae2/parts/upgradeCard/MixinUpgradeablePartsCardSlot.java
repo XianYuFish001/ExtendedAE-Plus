@@ -1,4 +1,4 @@
-package com.extendedae_plus.mixin.core.ae2.parts.channelCard;
+package com.extendedae_plus.mixin.core.ae2.parts.upgradeCard;
 
 import appeng.api.parts.IPartItem;
 import appeng.api.upgrades.IUpgradeInventory;
@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(UpgradeablePart.class)
-public abstract class MixinUpgradeablePartsLink implements HelperPartLinkLogic {
+public abstract class MixinUpgradeablePartsCardSlot implements HelperPartLinkLogic {
     @Unique
     private HolderLinkChannelCard eaep$linkLogic = HolderLinkChannelCard.EMPTY;
     @Unique

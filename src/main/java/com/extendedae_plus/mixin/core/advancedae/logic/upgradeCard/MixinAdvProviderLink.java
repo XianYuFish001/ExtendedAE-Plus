@@ -1,40 +1,35 @@
-package com.extendedae_plus.mixin.core.ae2.logic.channelCard;
+package com.extendedae_plus.mixin.core.advancedae.logic.upgradeCard;
 
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.IManagedGridNode;
 import appeng.api.networking.ticking.TickRateModulation;
-import appeng.api.upgrades.IUpgradeInventory;
-import appeng.api.upgrades.UpgradeInventories;
-import appeng.helpers.InterfaceLogic;
-import appeng.helpers.InterfaceLogicHost;
 import com.extendedae_plus.common.wireless.HolderLinkChannelCard;
-import net.minecraft.world.item.Item;
-import org.spongepowered.asm.mixin.*;
+import com.extendedae_plus.mixin.impl.bridge.HelperProviderUpgradesInv;
+import net.pedroksl.advanced_ae.common.logic.AdvPatternProviderLogic;
+import net.pedroksl.advanced_ae.common.logic.AdvPatternProviderLogicHost;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(value = InterfaceLogic.class)
-public class MixinInterfaceLink {
+@Mixin(AdvPatternProviderLogic.class)
+public class MixinAdvProviderLink {
     @Shadow
     @Final
-    protected IManagedGridNode mainNode;
-    @Mutable
-    @Shadow
-    @Final
-    private IUpgradeInventory upgrades;
+    private IManagedGridNode mainNode;
     @Unique
     private HolderLinkChannelCard eaep$linkLogic = HolderLinkChannelCard.EMPTY;
 
-    @Shadow
-    private void onUpgradesChanged() {}
-
-    @Inject(method = "<init>(Lappeng/api/networking/IManagedGridNode;Lappeng/helpers/InterfaceLogicHost;Lnet/minecraft/world/item/Item;I)V", at = @At("TAIL"))
-    private void onInit(IManagedGridNode gridNode, InterfaceLogicHost host, Item is, int slots, CallbackInfo ci) {
-        this.eaep$linkLogic = new HolderLinkChannelCard(mainNode,
-                host::getBlockEntity, host::getUpgrades);
-        this.upgrades = UpgradeInventories.forMachine(is, Math.min(this.upgrades.size()+ 1, 8), this::onUpgradesChanged);
+    @Inject(method = "<init>(Lappeng/api/networking/IManagedGridNode;Lnet/pedroksl/advanced_ae/common/logic/AdvPatternProviderLogicHost;I)V", at = @At("TAIL"))
+    private void onInit(IManagedGridNode mainNode, AdvPatternProviderLogicHost host, int patternInventorySize, CallbackInfo ci) {
+        this.eaep$linkLogic = new HolderLinkChannelCard(this.mainNode,
+                host::getBlockEntity,
+                ((HelperProviderUpgradesInv) this)::eaep$getUpgradeInventory);
+        ((HelperProviderUpgradesInv) this).eaep$addAction(this.eaep$linkLogic::onUpgradesChanged);
     }
 
     @Inject(method = "hasWorkToDo", at = @At("TAIL"), cancellable = true)
@@ -43,14 +38,9 @@ public class MixinInterfaceLink {
         cir.setReturnValue(this.eaep$linkNeedsInitialize());
     }
 
-    @Inject(method = "updateStorage", at = @At("HEAD"))
+    @Inject(method = "doWork", at = @At("HEAD"))
     private void doAdditionalWork(CallbackInfoReturnable<Boolean> cir) {
         this.eaep$linkLogic.onTickingInitialize();
-    }
-
-    @Inject(method = "onUpgradesChanged", at = @At("HEAD"))
-    private void onUpgradesChanged(CallbackInfo ci) {
-        this.eaep$linkLogic.onUpgradesChanged();
     }
 
     @Unique
@@ -58,11 +48,11 @@ public class MixinInterfaceLink {
         return this.eaep$linkLogic.needsInitialize();
     }
 
-    @Mixin(targets = "appeng.helpers.InterfaceLogic$Ticker")
-    private static class MixinProviderTicker {
+    @Mixin(targets = "net.pedroksl.advanced_ae.common.logic.AdvPatternProviderLogic$Ticker")
+    private static class MixinAdvProviderTicker {
         @Shadow
         @Final
-        InterfaceLogic this$0;
+        AdvPatternProviderLogic this$0;
 
         @Inject(method = "tickingRequest", at = @At("HEAD"))
         private void onTicking(IGridNode node, int ticksSinceLastCall, CallbackInfoReturnable<TickRateModulation> cir) {

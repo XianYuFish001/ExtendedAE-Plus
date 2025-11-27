@@ -5,5 +5,5 @@ import appeng.api.upgrades.IUpgradeInventory;
 public interface HelperProviderUpgradesInv {
     IUpgradeInventory eaep$getUpgradeInventory();
 
-    void eaep$bindAction(Runnable action);
+    void eaep$addAction(Runnable action);
 }

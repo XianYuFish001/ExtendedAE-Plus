@@ -1,4 +1,4 @@
-package com.extendedae_plus.mixin.core.ae2.logic.channelCard;
+package com.extendedae_plus.mixin.core.ae2.logic.upgradeCard;
 
 import appeng.api.networking.IManagedGridNode;
 import appeng.api.upgrades.IUpgradeInventory;
@@ -18,29 +18,31 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.StreamSupport;
 
 @MixinDependencies(conflict = "appflux")
 @Mixin(PatternProviderLogic.class)
-public class MixinProviderLinkNormal implements HelperProviderUpgradesInv {
+public class MixinProviderCardSlotNormal implements HelperProviderUpgradesInv {
     @Unique
     private static final Logger eaep$LOGGER = LogUtils.getLogger();
     @Unique
     private IUpgradeInventory eaep$upgradeInventory = UpgradeInventories.empty();
     @Unique
-    private Runnable eaep$onUpgradesChanged;
+    private final Set<Runnable> eaep$onUpgradesChanged = new HashSet<>();
 
     @Inject(method = "<init>(Lappeng/api/networking/IManagedGridNode;Lappeng/helpers/patternprovider/PatternProviderLogicHost;I)V", at = @At("TAIL"))
     private void onInit(IManagedGridNode mainNode, PatternProviderLogicHost host, int patternInventorySize, CallbackInfo ci) {
         this.eaep$upgradeInventory = UpgradeInventories.forMachine(
-                host.getTerminalIcon().getItem(), 1, this::eaep$onUpgradesChanged);
+                host.getTerminalIcon().getItem(), 2, this::eaep$onUpgradesChanged);
     }
 
     @Unique
     private void eaep$onUpgradesChanged() {
         try {
-            this.eaep$onUpgradesChanged.run();
+            this.eaep$onUpgradesChanged.forEach(Runnable::run);
         } catch (Throwable throwable) {
             eaep$LOGGER.warn("[EAEP] PatternProvider 初始化频道链接失败", throwable);
         }
@@ -55,7 +57,7 @@ public class MixinProviderLinkNormal implements HelperProviderUpgradesInv {
     private void onReadingComponents(CompoundTag tag, HolderLookup.Provider registries, CallbackInfo ci) {
         try {
             this.eaep$upgradeInventory.readFromNBT(tag, "upgrades", registries);
-            this.eaep$onUpgradesChanged.run();
+            this.eaep$onUpgradesChanged.forEach(Runnable::run);
         } catch (Throwable throwable) {
             eaep$LOGGER.warn("[EAEP] PatternProvider 初始化频道链接失败", throwable);
         }
@@ -74,8 +76,8 @@ public class MixinProviderLinkNormal implements HelperProviderUpgradesInv {
     }
 
     @Override
-    public void eaep$bindAction(Runnable action) {
-        this.eaep$onUpgradesChanged = action;
+    public void eaep$addAction(Runnable action) {
+        this.eaep$onUpgradesChanged.add(action);
     }
 
     @Override

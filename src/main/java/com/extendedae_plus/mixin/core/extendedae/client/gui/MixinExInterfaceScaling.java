@@ -63,7 +63,7 @@ public class MixinExInterfaceScaling extends UpgradeableScreen<ContainerExInterf
     }
 
     @Override
-    public List<EAEPActionButton> eaep$getScalingButtons() {
+    public List<EAEPActionButton> eaep$getButtons() {
         return this.eaep$scalingButtons;
     }
 }

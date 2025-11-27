@@ -36,7 +36,7 @@ public abstract class EAEPButton extends IconButton {
                     this.getNonnullAction().getTooltip()));
     }
 
-    protected @Nullable abstract EAEPActionItems getAction();
+    public @Nullable abstract EAEPActionItems getAction();
 
     private EAEPActionItems getNonnullAction() {
         var action = this.getAction();

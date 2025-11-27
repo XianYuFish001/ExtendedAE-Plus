@@ -1,28 +1,3 @@
-repositories {
-    maven {
-        name = "TerraformersMC"
-        url = uri("https://maven.terraformersmc.com/")
-    }
-    maven {
-        name = 'CurseMaven'
-        url = uri("https://www.cursemaven.com")
-    }
-    maven {
-        name = "ModMaven"
-        url = uri("https://modmaven.dev/")
-    }
-    maven {
-        url = uri("https://maven.shedaniel.me/")
-    }
-    maven {
-        url = uri("https://maven.architectury.dev/")
-    }
-    maven {
-        url = uri("https://maven.latvian.dev/releases/")
-    }
-    mavenCentral()
-}
-
 dependencies {
     implementation libs.ae2
     implementation libs.guideME
@@ -56,5 +31,30 @@ dependencies {
     runtimeOnly libs.architectury
     runtimeOnly libs.modernUI
 
-    runtimeOnly fileTree(dir: 'libs', includes: ['*.jar'])
+//    runtimeOnly fileTree(dir: 'libs', includes: ['*.jar'])
+}
+
+repositories {
+    maven {
+        name = "TerraformersMC"
+        url = uri("https://maven.terraformersmc.com/")
+    }
+    maven {
+        name = 'CurseMaven'
+        url = uri("https://www.cursemaven.com")
+    }
+    maven {
+        name = "ModMaven"
+        url = uri("https://modmaven.dev/")
+    }
+    maven {
+        url = uri("https://maven.shedaniel.me/")
+    }
+    maven {
+        url = uri("https://maven.architectury.dev/")
+    }
+    maven {
+        url = uri("https://maven.latvian.dev/releases/")
+    }
+    mavenCentral()
 }

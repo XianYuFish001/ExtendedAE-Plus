@@ -71,6 +71,10 @@ public enum EAEPActionItems {
         else return Icon.INVALID.getBlitter();
     }
 
+    public String getGroup() {
+        return actionGroup;
+    }
+
     public IIcon getIcon() {
         return icon;
     }

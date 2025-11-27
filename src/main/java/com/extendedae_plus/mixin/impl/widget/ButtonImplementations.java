@@ -51,8 +51,8 @@ public class ButtonImplementations {
                 || screen.height != lastScreenInfo.getSecond();
         if (flagReplaceButton) lastScreenInfo = new Pair<>(screen.width, screen.height);
 
-        int spacing = helper.eaep$getScalingButtons().getFirst().getHeight() + 6;
-        helper.eaep$getScalingButtons().forEach(button -> {
+        int spacing = helper.eaep$getButtons().getFirst().getHeight() + 6;
+        helper.eaep$getButtons().forEach(button -> {
             if (button == null) return;
             button.setVisibility(true);
             if (!screen.renderables.contains(button))
@@ -64,7 +64,7 @@ public class ButtonImplementations {
             }
 
             button.setX(bx);
-            button.setY(by + spacing * helper.eaep$getScalingButtons().indexOf(button));
+            button.setY(by + spacing * helper.eaep$getButtons().indexOf(button));
         });
 
         return lastScreenInfo;

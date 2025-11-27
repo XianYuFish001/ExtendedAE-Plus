@@ -1,4 +1,4 @@
-package com.extendedae_plus.mixin.core.ae2.logic.channelCard;
+package com.extendedae_plus.mixin.core.ae2.logic.upgradeCard;
 
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.IManagedGridNode;
@@ -29,7 +29,7 @@ public class MixinProviderLink {
         this.eaep$linkLogic = new HolderLinkChannelCard(this.mainNode,
                 host::getBlockEntity,
                 ((HelperProviderUpgradesInv) this)::eaep$getUpgradeInventory);
-        ((HelperProviderUpgradesInv) this).eaep$bindAction(this.eaep$linkLogic::onUpgradesChanged);
+        ((HelperProviderUpgradesInv) this).eaep$addAction(this.eaep$linkLogic::onUpgradesChanged);
     }
 
     @Inject(method = "hasWorkToDo", at = @At("TAIL"), cancellable = true)

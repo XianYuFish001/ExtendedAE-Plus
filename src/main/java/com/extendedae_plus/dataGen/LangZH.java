@@ -25,6 +25,7 @@ public class LangZH extends LanguageProvider {
         this.addItem(ModItems.INFINITY_BIGINTEGER_CELL_ITEM, "§4吞§c噬§6万§e籁§a的§b寂§d静");
         this.addItem(ModItems.PROVIDER_CONTROLLER, "样板供应器管理工具");
         this.addItem(ModItems.CHANNEL_CARD, "频道卡");
+        this.addItem(ModItems.CARD_AUTO_COMPLETION, "自动完成卡");
         this.addItem(ModItems.ENTITY_SPEED_CARD, "实体加速卡");
         new UtilGetKey(ModItems.ENTITY_SPEED_CARD)
                 .addStr("multiplier").buildInto("实体加速卡 %s倍");
@@ -76,6 +77,10 @@ public class LangZH extends LanguageProvider {
                         \n---------§aExtendedAE Plus§r---------
                         使用 §6[Ctrl + 中键]§r 点击一个节点,
                         EMI会自动编写并上传该节点配方的样板""");
+        new UtilGetKey(UtilGetKey.tooltip)
+                .item(ModItems.CARD_AUTO_COMPLETION)
+                .branch("advanced_tip", "NAE2 我们喜欢你口牙")
+                .buildInto("还是顾名思义, 可以在供应器发配完成时自动取消合成任务");
 
         new UtilGetKey(UtilGetKey.screenTooltip)
                 .item(ModItems.ENTITY_TICKER_PART_ITEM)
