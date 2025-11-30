@@ -1,12 +1,12 @@
 {
   "$schema": "schema.json",
   "includes": [
-    "common/common.json",
-    "common/player_inventory.json",
-    "common/toolbox.json"
+    "../common/common.json",
+    "../common/player_inventory.json",
+    "../common/toolbox.json"
   ],
   "background": {
-    "texture": "guis/blank_background.png",
+    "texture": "guis/extendedae_plus/ticker.png",
     "srcRect": [
       0,
       0,
@@ -17,7 +17,7 @@
   "text": {
     "dialog_title": {
       "text": {
-        "translate": "item.extendedae_plus.entity_speed_ticker"
+        "translate": "item.extendedae_plus.ticker"
       },
       "position": {
         "left": 8,
@@ -26,38 +26,38 @@
     },
     "state": {
       "position": {
-        "top": 20,
-        "left": 88
+        "top": 26,
+        "left": 8
       },
-      "align": "CENTER"
+      "align": "LEFT"
     },
-    "speed": {
+    "speed_multiplier": {
       "position": {
-        "top": 35,
-        "left": 88
+        "top": 42,
+        "left": 8
       },
-      "align": "CENTER"
+      "align": "LEFT"
     },
-    "energy": {
+    "energy_cost": {
       "position": {
-        "top": 50,
-        "left": 88
+        "top": 58,
+        "left": 8
       },
-      "align": "CENTER"
+      "align": "LEFT"
     },
     "power_ratio": {
       "position": {
-        "top": 65,
-        "left": 88
+        "top": 74,
+        "left": 8
       },
-      "align": "CENTER"
+      "align": "LEFT"
     },
-    "multiplier": {
+    "cost_multiplier": {
       "position": {
-        "top": 80,
-        "left": 88
+        "top": 90,
+        "left": 8
       },
-      "align": "CENTER"
+      "align": "LEFT"
     }
   },
   "widgets": {

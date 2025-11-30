@@ -2,9 +2,9 @@ package com.extendedae_plus.common.init;
 
 import appeng.menu.implementations.MenuTypeBuilder;
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.common.menu.EntitySpeedTickerMenu;
 import com.extendedae_plus.common.menu.MenuProviderController;
-import com.extendedae_plus.common.part.EntitySpeedTickerPart;
+import com.extendedae_plus.common.menu.MenuTicker;
+import com.extendedae_plus.common.part.ticker.PartTicker;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.inventory.MenuType;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
@@ -12,18 +12,16 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 public final class ModMenuTypes {
-    private ModMenuTypes() {}
-
-    public static final DeferredRegister<MenuType<?>> MENUS =
+    public static final DeferredRegister<MenuType<?>> MENU =
             DeferredRegister.create(Registries.MENU, ExtendedAEPlus.MODID);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<MenuProviderController>> NETWORK_PATTERN_CONTROLLER =
-            MENUS.register("network_pattern_controller",
+    public static final DeferredHolder<MenuType<?>, MenuType<MenuProviderController>> PROVIDER_CONTROLLER =
+            MENU.register("provider_controller",
                     () -> IMenuTypeExtension.create(MenuProviderController::new));
 
-    public static final DeferredHolder<MenuType<?>, MenuType<EntitySpeedTickerMenu>> ENTITY_TICKER_MENU =
-            MENUS.register("entity_speed_ticker",
+    public static final DeferredHolder<MenuType<?>, MenuType<MenuTicker>> TICKER =
+            MENU.register("ticker",
                     () -> MenuTypeBuilder
-                            .create(EntitySpeedTickerMenu::new, EntitySpeedTickerPart.class)
-                            .build("entity_speed_ticker"));
+                            .create(MenuTicker::new, PartTicker.class)
+                            .build("ticker"));
 }

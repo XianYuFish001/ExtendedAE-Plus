@@ -5,7 +5,7 @@ import appeng.client.gui.style.Blitter;
 import com.extendedae_plus.ExtendedAEPlus;
 import net.minecraft.resources.ResourceLocation;
 
-public enum EAEPIcon implements IIcon {
+public enum EAEPIcon implements IButtonIcon {
     MUL2(0, 0),
     DIV2(16, 0),
     MUL3(32, 0),
@@ -50,11 +50,11 @@ public enum EAEPIcon implements IIcon {
         return Icon.INVALID;
     }
 
-    public static IIcon fromAEIcon(Icon aeIcon) {
+    public static IButtonIcon fromAEIcon(Icon aeIcon) {
         return new AEIcon(aeIcon);
     }
 
-    private record AEIcon(Icon aeIcon) implements IIcon {
+    private record AEIcon(Icon aeIcon) implements IButtonIcon {
         @Override
         public Blitter getBlitter() {
             return this.aeIcon.getBlitter();

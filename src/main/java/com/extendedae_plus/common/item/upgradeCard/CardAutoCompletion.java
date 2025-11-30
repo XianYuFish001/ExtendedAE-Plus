@@ -1,4 +1,4 @@
-package com.extendedae_plus.common.item;
+package com.extendedae_plus.common.item.upgradeCard;
 
 import appeng.items.materials.UpgradeCardItem;
 import com.extendedae_plus.common.init.ModItems;
@@ -9,8 +9,8 @@ import net.minecraft.world.item.TooltipFlag;
 
 import java.util.List;
 
-public class ItemCardAutoCompletion extends UpgradeCardItem {
-    public ItemCardAutoCompletion() {
+public class CardAutoCompletion extends UpgradeCardItem {
+    public CardAutoCompletion() {
         super(new Properties());
     }
 

@@ -5,11 +5,12 @@
     "a": {
       "type": "neoforge:components",
       "components": {
-        "extendedae_plus:data_speed_card": {
+        "extendedae_plus:data_ticking_card": {
+          "max_multiplier": 192,
           "multiplier": 4
         }
       },
-      "items": "extendedae_plus:entity_speed_card"
+      "items": "extendedae_plus:card_ticking"
     },
     "b": {
       "item": "ae2:cell_component_256k"
@@ -28,11 +29,12 @@
   ],
   "result": {
     "components": {
-      "extendedae_plus:data_speed_card": {
+      "extendedae_plus:data_ticking_card": {
+        "max_multiplier": 512,
         "multiplier": 8
       }
     },
     "count": 1,
-    "id": "extendedae_plus:entity_speed_card"
+    "id": "extendedae_plus:card_ticking"
   }
 }

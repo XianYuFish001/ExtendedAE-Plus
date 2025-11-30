@@ -32,6 +32,7 @@ public class UtilGetKey {
     private String additionalKey = "";
     private Object[] args;
 
+    // TODO 迁移
     // Data-Only Fields
     private static final boolean checkedEnv = "data".equals(System.getProperty("extendedae_plus.environment"));
     private static final Map<String, BiConsumer<String, String>> translators = new HashMap<>();

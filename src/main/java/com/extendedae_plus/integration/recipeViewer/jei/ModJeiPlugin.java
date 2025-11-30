@@ -1,7 +1,8 @@
 package com.extendedae_plus.integration.recipeViewer.jei;
 
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.common.dataComponent.DataSpeedCard;
+import com.extendedae_plus.common.dataComponent.DataTickingCard;
+import com.extendedae_plus.common.init.ModItems;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaTypes;
@@ -34,18 +35,18 @@ public class ModJeiPlugin implements IModPlugin {
         // Register NBT-based subtype interpreter so JEI treats different multipliers as distinct items
         registration.registerSubtypeInterpreter(
                 VanillaTypes.ITEM_STACK,
-                com.extendedae_plus.common.init.ModItems.ENTITY_SPEED_CARD.get(),
+                ModItems.TICKING_CARD.get(),
                 new ISubtypeInterpreter<>() {
                     @Override
                     public @NotNull Object getSubtypeData(@NotNull ItemStack ingredient, @NotNull UidContext context) {
                         // 返回你想让 JEI 区分子类型的数据，这里用 multiplier
-                        return DataSpeedCard.fromStack(ingredient);
+                        return DataTickingCard.fromStack(ingredient);
                     }
 
                     @Override
                     public @NotNull String getLegacyStringSubtypeInfo(@NotNull ItemStack ingredient, @NotNull UidContext context) {
                         // 返回同样的值给旧接口兼容
-                        return String.valueOf(DataSpeedCard.fromStack(ingredient));
+                        return String.valueOf(DataTickingCard.fromStack(ingredient));
                     }
                 }
         );

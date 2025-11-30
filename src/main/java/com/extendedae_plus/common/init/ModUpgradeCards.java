@@ -19,8 +19,8 @@ import java.util.List;
 public class ModUpgradeCards {
     /// 在commonSetup时注册
     public static void init() {
-        Upgrades.add(AEItems.ENERGY_CARD, ModItems.ENTITY_TICKER_PART_ITEM.get(), 8);
-        Upgrades.add(ModItems.ENTITY_SPEED_CARD.get(), ModItems.ENTITY_TICKER_PART_ITEM.get(), 4);
+        Upgrades.add(AEItems.ENERGY_CARD, ModItems.PART_TICKER.get(), 8);
+        Upgrades.add(ModItems.TICKING_CARD.get(), ModItems.PART_TICKER.get(), 4);
 
         String interfaceGroup = GuiText.Interface.getTranslationKey();
         String patternProviderGroup = "group.pattern_provider.name";

@@ -2,10 +2,10 @@ package com.extendedae_plus.mixin.core.extendedae.client.gui;
 
 import appeng.client.gui.implementations.UpgradeableScreen;
 import appeng.client.gui.style.ScreenStyle;
+import com.extendedae_plus.client.render.widgets.button.ButtonImplementations;
 import com.extendedae_plus.client.render.widgets.button.EAEPActionButton;
 import com.extendedae_plus.client.render.widgets.button.EAEPActionItems;
 import com.extendedae_plus.mixin.impl.bridge.HelperProviderButtons;
-import com.extendedae_plus.mixin.impl.widget.ButtonImplementations;
 import com.extendedae_plus.network.CPacketInterfaceScaling;
 import com.glodblock.github.extendedae.client.gui.GuiExInterface;
 import com.glodblock.github.extendedae.container.ContainerExInterface;

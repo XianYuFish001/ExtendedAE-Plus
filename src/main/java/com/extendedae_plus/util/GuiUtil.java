@@ -4,10 +4,17 @@ import appeng.api.crafting.PatternDetailsHelper;
 import appeng.api.stacks.GenericStack;
 import appeng.client.gui.me.patternaccess.PatternContainerRecord;
 import appeng.client.gui.me.patternaccess.PatternSlot;
+import com.mojang.blaze3d.platform.Lighting;
+import net.minecraft.CrashReport;
+import net.minecraft.CrashReportCategory;
+import net.minecraft.ReportedException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
 import java.text.DecimalFormat;
@@ -48,6 +55,7 @@ public final class GuiUtil {
 
     /**
      * 格式化带小数的数字，支持流体等需要显示小数的场景
+     *
      * @param value 小数值
      * @return 格式化后的字符串
      */
@@ -75,12 +83,13 @@ public final class GuiUtil {
 
     /**
      * 在槽位右下角绘制数量文本
+     *
      * @param guiGraphics GUI图形上下文
-     * @param font 字体
-     * @param text 要绘制的文本
-     * @param slotX 槽位X坐标
-     * @param slotY 槽位Y坐标
-     * @param scale 缩放比例
+     * @param font        字体
+     * @param text        要绘制的文本
+     * @param slotX       槽位X坐标
+     * @param slotY       槽位Y坐标
+     * @param scale       缩放比例
      */
     public static void drawAmountText(GuiGraphics guiGraphics, Font font, String text, int slotX, int slotY, float scale) {
         if (text.isEmpty()) {
@@ -88,14 +97,14 @@ public final class GuiUtil {
         }
 
         // 计算缩放后的字体宽度，确保右对齐
-        int scaledWidth = (int)(font.width(text) * scale);
+        int scaledWidth = (int) (font.width(text) * scale);
         int textX = slotX + 16 - scaledWidth;
         int textY = slotY + 11; // 右下角显示
 
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(0, 0, 300); // 提升 Z，确保在最上层
         guiGraphics.pose().scale(scale, scale, 1.0f); // 缩小字体
-        guiGraphics.drawString(font, text, (int)(textX / scale), (int)(textY / scale), 0xFFFFFFFF, true);
+        guiGraphics.drawString(font, text, (int) (textX / scale), (int) (textY / scale), 0xFFFFFFFF, true);
         guiGraphics.pose().popPose();
     }
 
@@ -118,12 +127,36 @@ public final class GuiUtil {
         float t = v * (1.0f - s * (1.0f - f));
         float r, g, b;
         switch (sector) {
-            case 0: r = v; g = t; b = p; break;
-            case 1: r = q; g = v; b = p; break;
-            case 2: r = p; g = v; b = t; break;
-            case 3: r = p; g = q; b = v; break;
-            case 4: r = t; g = p; b = v; break;
-            default: r = v; g = p; b = q; break;
+            case 0:
+                r = v;
+                g = t;
+                b = p;
+                break;
+            case 1:
+                r = q;
+                g = v;
+                b = p;
+                break;
+            case 2:
+                r = p;
+                g = v;
+                b = t;
+                break;
+            case 3:
+                r = p;
+                g = q;
+                b = v;
+                break;
+            case 4:
+                r = t;
+                g = p;
+                b = v;
+                break;
+            default:
+                r = v;
+                g = p;
+                b = q;
+                break;
         }
         int ri = Math.round(r * 255.0f);
         int gi = Math.round(g * 255.0f);
@@ -198,5 +231,50 @@ public final class GuiUtil {
         int borderColor = withAlpha(rainbowRgb, 0xA0);
         int backgroundColor = withAlpha(rainbowRgb, 0x3C);
         drawSlotBox(guiGraphics, sx, sy, borderColor, backgroundColor);
+    }
+
+    public static void renderScalableFakeItem(GuiGraphics guiGraphics,
+                                              ItemStack itemStack,
+                                              int x, int y, float scale) {
+        if (itemStack.isEmpty()) return;
+
+        var pose = guiGraphics.pose();
+        var minecraft = Minecraft.getInstance();
+
+        BakedModel bakedmodel = minecraft.getItemRenderer().getModel(itemStack, minecraft.level, null, 0);
+        pose.pushPose();
+        pose.translate(x + 8 * scale, y + 8 * scale, 150F);
+
+        try {
+            pose.scale(16.0F * scale, -16.0F * scale, 16.0F * scale);
+            boolean flag = !bakedmodel.usesBlockLight();
+            if (flag) {
+                Lighting.setupForFlatItems();
+            }
+
+            minecraft
+                    .getItemRenderer()
+                    .render(itemStack,
+                            ItemDisplayContext.GUI,
+                            false,
+                            pose,
+                            guiGraphics.bufferSource(),
+                            15728880,
+                            OverlayTexture.NO_OVERLAY,
+                            bakedmodel);
+            guiGraphics.flush();
+            if (flag) {
+                Lighting.setupFor3DItems();
+            }
+        } catch (Throwable throwable) {
+            CrashReport crashreport = CrashReport.forThrowable(throwable, "Rendering item");
+            CrashReportCategory crashreportcategory = crashreport.addCategory("Item being rendered");
+            crashreportcategory.setDetail("Item Type", () -> String.valueOf(itemStack.getItem()));
+            crashreportcategory.setDetail("Item Components", () -> String.valueOf(itemStack.getComponents()));
+            crashreportcategory.setDetail("Item Foil", () -> String.valueOf(itemStack.hasFoil()));
+            throw new ReportedException(crashreport);
+        }
+
+        guiGraphics.pose().popPose();
     }
 } 

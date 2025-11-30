@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -38,9 +37,9 @@ public class HelperI18nKeySaver {
         if (testEnv) loadExistingKeys();
     }
     
-    public static void recordKey(String key, Object... args) {
+    public static void recordKey(String key) {
         if (testEnv && key != null && !key.isEmpty()) {
-            GENERATED_KEYS.add(key + ',' + Arrays.toString(args));
+            GENERATED_KEYS.add(key);
         }
     }
 

@@ -1,4 +1,4 @@
-package com.extendedae_plus.common.item;
+package com.extendedae_plus.common.item.upgradeCard;
 
 import appeng.api.upgrades.Upgrades;
 import appeng.blockentity.networking.CableBusBlockEntity;

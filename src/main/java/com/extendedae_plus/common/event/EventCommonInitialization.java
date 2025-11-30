@@ -71,7 +71,7 @@ public class EventCommonInitialization {
 
     private static void partModel() {
         PartModels.registerModels(PartModelsHelper.createModels(
-                ModItems.ENTITY_TICKER_PART_ITEM.get().getPartClass().asSubclass(IPart.class)));
+                ModItems.PART_TICKER.get().getPartClass().asSubclass(IPart.class)));
     }
 
     private static void blockEntity() {

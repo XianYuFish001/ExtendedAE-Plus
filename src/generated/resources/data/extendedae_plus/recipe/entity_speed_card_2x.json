@@ -22,11 +22,12 @@
   ],
   "result": {
     "components": {
-      "extendedae_plus:data_speed_card": {
+      "extendedae_plus:data_ticking_card": {
+        "max_multiplier": 16,
         "multiplier": 2
       }
     },
     "count": 1,
-    "id": "extendedae_plus:entity_speed_card"
+    "id": "extendedae_plus:card_ticking"
   }
 }

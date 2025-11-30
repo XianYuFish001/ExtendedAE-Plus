@@ -35,8 +35,8 @@ import java.util.Set;
  */
 @EAEPNetworkPacket
 public record CPacketProviderControllerOperation(
-        Operation operationBlocking,
-        Operation operationAdvancedBlocking,
+        Operation operationNormalBlocking,
+        Operation operationSmartBlocking,
         Operation operationSmartDoubling,
         BlockPos gridPos,
         Direction clickedFace
@@ -44,8 +44,8 @@ public record CPacketProviderControllerOperation(
     public static final Type<CPacketProviderControllerOperation> TYPE = PacketGeneric.createType("provider_controller_operation");
 
     public static final StreamCodec<RegistryFriendlyByteBuf, CPacketProviderControllerOperation> STREAM_CODEC = StreamCodec.composite(
-            NeoForgeStreamCodecs.enumCodec(Operation.class), CPacketProviderControllerOperation::operationBlocking,
-            NeoForgeStreamCodecs.enumCodec(Operation.class), CPacketProviderControllerOperation::operationAdvancedBlocking,
+            NeoForgeStreamCodecs.enumCodec(Operation.class), CPacketProviderControllerOperation::operationNormalBlocking,
+            NeoForgeStreamCodecs.enumCodec(Operation.class), CPacketProviderControllerOperation::operationSmartBlocking,
             NeoForgeStreamCodecs.enumCodec(Operation.class), CPacketProviderControllerOperation::operationSmartDoubling,
             BlockPos.STREAM_CODEC, CPacketProviderControllerOperation::gridPos,
             Direction.STREAM_CODEC, CPacketProviderControllerOperation::clickedFace,
@@ -69,6 +69,7 @@ public record CPacketProviderControllerOperation(
         return TYPE;
     }
 
+    // TODO Refactor
     @Override
     public void handleServer(ServerPlayer player) {
         // 从控制方块实体的 AE2 节点确定 AE 网络上下文
@@ -168,9 +169,9 @@ public record CPacketProviderControllerOperation(
         if (logic == null) return false;
         boolean changed = false;
         // 1) 阻挡模式（AE2 内置设置）
-        if (this.operationBlocking != Operation.NOOP) {
+        if (this.operationNormalBlocking != Operation.NOOP) {
             boolean current = safeIsBlocking(logic);
-            boolean target = computeTarget(current, this.operationBlocking);
+            boolean target = computeTarget(current, this.operationNormalBlocking);
             var cm = logic.getConfigManager();
             if (cm != null) {
                 cm.putSetting(Settings.BLOCKING_MODE, target ? YesNo.YES : YesNo.NO);
@@ -178,9 +179,9 @@ public record CPacketProviderControllerOperation(
             }
         }
         // 2) 高级阻挡（mixin 接口）
-        if (this.operationAdvancedBlocking != Operation.NOOP && logic instanceof ISmartBlockingObject adv) {
+        if (this.operationSmartBlocking != Operation.NOOP && logic instanceof ISmartBlockingObject adv) {
             boolean current = adv.eaep$getBlockingState();
-            boolean target = computeTarget(current, this.operationAdvancedBlocking);
+            boolean target = computeTarget(current, this.operationSmartBlocking);
             adv.eaep$setBlockingState(target);
             changed = changed || (current != target);
         }

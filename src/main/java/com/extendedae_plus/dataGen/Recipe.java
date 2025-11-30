@@ -5,7 +5,7 @@ import appeng.core.definitions.AEBlocks;
 import appeng.core.definitions.AEItems;
 import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.common.block.EAEPCraftingUnitType;
-import com.extendedae_plus.common.dataComponent.DataSpeedCard;
+import com.extendedae_plus.common.dataComponent.DataTickingCard;
 import com.extendedae_plus.common.init.ModItems;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipeBuilder;
@@ -72,7 +72,7 @@ public class Recipe extends RecipeProvider {
                 .save(recipeOutput);
 
         // NeoForged我们喜欢你, 我们喜欢Tags, NeoForgeRegistries, DataComponentIngredient😋
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, DataSpeedCard.toStack(2))
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, DataTickingCard.toStack(2, 16))
                 .pattern("aba")
                 .pattern("cdc")
                 .pattern("aba")
@@ -82,37 +82,37 @@ public class Recipe extends RecipeProvider {
                 .define('d', AEItems.SINGULARITY)
                 .unlockedBy("has_card", has(AEItems.SPEED_CARD))
                 .save(recipeOutput, ExtendedAEPlus.getLocation("entity_speed_card_2x"));
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, DataSpeedCard.toStack(4))
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, DataTickingCard.toStack(4, 192))
                 .pattern("aba")
                 .pattern("cdc")
                 .pattern("aba")
-                .define('a', DataSpeedCard.toIngredient(2))
+                .define('a', DataTickingCard.toIngredient(2, 16))
                 .define('b', AEItems.CELL_COMPONENT_64K)
                 .define('c', AEItems.SPATIAL_2_CELL_COMPONENT)
                 .define('d', AEItems.SINGULARITY)
                 .unlockedBy("has_card", has(AEItems.SPEED_CARD))
                 .save(recipeOutput, ExtendedAEPlus.getLocation("entity_speed_card_4x"));
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, DataSpeedCard.toStack(8))
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, DataTickingCard.toStack(8, 512))
                 .pattern("aba")
                 .pattern("cdc")
                 .pattern("aba")
-                .define('a', DataSpeedCard.toIngredient(4))
+                .define('a', DataTickingCard.toIngredient(4, 192))
                 .define('b', AEItems.CELL_COMPONENT_256K)
                 .define('c', AEItems.SPATIAL_16_CELL_COMPONENT)
                 .define('d', AEItems.SINGULARITY)
                 .unlockedBy("has_card", has(AEItems.SPEED_CARD))
                 .save(recipeOutput, ExtendedAEPlus.getLocation("entity_speed_card_8x"));
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, DataSpeedCard.toStack(16))
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, DataTickingCard.toStack(16, 1024))
                 .pattern("aba")
                 .pattern("cdc")
                 .pattern("aba")
-                .define('a', DataSpeedCard.toIngredient(8))
+                .define('a', DataTickingCard.toIngredient(8, 512))
                 .define('b', AEItems.SINGULARITY)
                 .define('c', AEItems.SPATIAL_128_CELL_COMPONENT)
                 .define('d', Items.NETHER_STAR)
                 .unlockedBy("has_card", has(AEItems.SPEED_CARD))
                 .save(recipeOutput, ExtendedAEPlus.getLocation("entity_speed_card_16x"));
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.ENTITY_TICKER_PART_ITEM)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.PART_TICKER)
                 .pattern("ses")
                 .pattern("apf")
                 .pattern("ses")

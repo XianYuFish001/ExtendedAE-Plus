@@ -42,10 +42,10 @@ displayName="ExtendedAE Plus" #mandatory
 #credits="" #optional
 
 # A text field displayed in the mod UI
-authors="GaLicn, XianYuFish001" #optional
+authors="GaLicn, C-H716, XianYuFish001" #optional
 
 # The description text for the mod (multi line!) (#mandatory)
-description=''''''
+description='''Extended ExtendedAE-Plus.'''
 
 # The [[mixins]] block allows you to declare your mixin config to FML so that it gets loaded.
 [[mixins]]

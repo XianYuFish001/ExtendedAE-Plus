@@ -7,9 +7,15 @@ TODO
         <fixed>
             empty
     <feature>
+        迁移新keyBuilder
+        重构供应器管理
+        重构智能倍增
         智能倍增考虑容器容量
         advProvider倍增(哇有点难搞, scaler的逻辑交杂在一起)
         frequency gui
         controller gui(我是大懒狗)
         <executed>
-            自动完成卡
+            empty
+
+更改ticker和card
+更改设置项ticker下所有

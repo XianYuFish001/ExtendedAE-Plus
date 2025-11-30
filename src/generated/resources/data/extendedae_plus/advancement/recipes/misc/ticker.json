@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "extendedae_plus:entity_speed_ticker"
+        "recipe": "extendedae_plus:ticker"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "extendedae_plus:entity_speed_ticker"
+      "extendedae_plus:ticker"
     ]
   }
 }

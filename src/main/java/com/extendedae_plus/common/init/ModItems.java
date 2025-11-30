@@ -4,8 +4,12 @@ import appeng.items.materials.UpgradeCardItem;
 import appeng.items.parts.PartItem;
 import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.common.block.EAEPCraftingUnitType;
-import com.extendedae_plus.common.item.*;
+import com.extendedae_plus.common.item.ItemProviderController;
+import com.extendedae_plus.common.item.ItemTicker;
 import com.extendedae_plus.common.item.infinityBigIntegerCell.InfinityBigIntegerCellItem;
+import com.extendedae_plus.common.item.upgradeCard.CardAutoCompletion;
+import com.extendedae_plus.common.item.upgradeCard.CardTicking;
+import com.extendedae_plus.common.item.upgradeCard.ChannelCardItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -29,8 +33,7 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> ASSEMBLER_MATRIX_UPLOAD_CORE =
             regCommonBlockItem("assembler_matrix_upload_core", ModBlocks.ASSEMBLER_MATRIX_UPLOAD_CORE);
 
-    public static final DeferredItem<PartItem<?>> ENTITY_TICKER_PART_ITEM =
-            regItem("entity_speed_ticker", EntitySpeedTickerPartItem::new);
+    public static final DeferredItem<PartItem<?>> PART_TICKER = regItem("ticker", ItemTicker::new);
 
     public static final DeferredItem<Item> INFINITY_BIGINTEGER_CELL_ITEM =
             regItem("infinity_biginteger_cell", InfinityBigIntegerCellItem::new);
@@ -40,11 +43,12 @@ public final class ModItems {
     public static final DeferredItem<UpgradeCardItem> CHANNEL_CARD =
             regItem("channel_card", ChannelCardItem::new);
     public static final DeferredItem<UpgradeCardItem> CARD_AUTO_COMPLETION =
-            regItem("card_auto_completion", ItemCardAutoCompletion::new);
+            regItem("card_auto_completion", CardAutoCompletion::new);
 
     /// 随机数, 嘻嘻😋
-    public static final DeferredItem<UpgradeCardItem> ENTITY_SPEED_CARD =
-            ITEM.register("entity_speed_card", () -> new EntitySpeedCardItem(RandomGenerator.getDefault().nextInt(64)));
+    public static final DeferredItem<UpgradeCardItem> TICKING_CARD =
+            ITEM.register("card_ticking", () ->
+                    new CardTicking(RandomGenerator.getDefault().nextInt(64), 114514));
 
     public static <T extends Item> DeferredItem<T> regItem(String name, Supplier<T> factory) {
         var holder = ITEM.register(name, factory);

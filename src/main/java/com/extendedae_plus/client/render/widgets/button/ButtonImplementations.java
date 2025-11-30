@@ -1,11 +1,10 @@
-package com.extendedae_plus.mixin.impl.widget;
+package com.extendedae_plus.client.render.widgets.button;
 
 import appeng.client.gui.AEBaseScreen;
-import com.extendedae_plus.client.render.widgets.button.EAEPActionItems;
-import com.extendedae_plus.client.render.widgets.button.EAEPServerCycleButton;
 import com.extendedae_plus.mixin.impl.bridge.HelperProviderButtons;
 import com.extendedae_plus.mixin.impl.bridge.SyncerSmartBlocking;
 import com.extendedae_plus.mixin.impl.bridge.SyncerSmartDoubling;
+import com.extendedae_plus.mixin.impl.widget.HelperRenderablesModifier;
 import com.extendedae_plus.network.CPacketToggleSmartBlocking;
 import com.extendedae_plus.network.CPacketToggleSmartDoubling;
 import com.mojang.datafixers.util.Pair;

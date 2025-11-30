@@ -2,8 +2,8 @@ package com.extendedae_plus.mixin.core.advancedae.client.gui;
 
 import appeng.client.gui.AEBaseScreen;
 import appeng.client.gui.style.ScreenStyle;
+import com.extendedae_plus.client.render.widgets.button.ButtonImplementations;
 import com.extendedae_plus.client.render.widgets.button.EAEPServerCycleButton;
-import com.extendedae_plus.mixin.impl.widget.ButtonImplementations;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.pedroksl.advanced_ae.client.gui.AdvPatternProviderScreen;

@@ -5,13 +5,12 @@ import appeng.init.client.InitScreens;
 import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.client.RegistriesBuiltInModel;
 import com.extendedae_plus.client.render.crafting.EAEPCraftingCubeModelProvider;
-import com.extendedae_plus.client.screen.EntitySpeedTickerScreen;
 import com.extendedae_plus.client.screen.ScreenProviderController;
+import com.extendedae_plus.client.screen.ScreenTicker;
 import com.extendedae_plus.common.block.EAEPCraftingUnitType;
-import com.extendedae_plus.common.dataComponent.DataSpeedCard;
+import com.extendedae_plus.common.dataComponent.DataTickingCard;
 import com.extendedae_plus.common.init.ModItems;
 import com.extendedae_plus.common.init.ModMenuTypes;
-import com.extendedae_plus.common.menu.EntitySpeedTickerMenu;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.neoforged.api.distmarker.Dist;
@@ -30,11 +29,11 @@ public final class EventClientInitialization {
     @SubscribeEvent
     public static void regScreens(RegisterMenuScreensEvent event) {
         event.register(
-                ModMenuTypes.NETWORK_PATTERN_CONTROLLER.get(),
+                ModMenuTypes.PROVIDER_CONTROLLER.get(),
                 ScreenProviderController::new);
 
-        InitScreens.register(event, ModMenuTypes.ENTITY_TICKER_MENU.get(),
-                EntitySpeedTickerScreen<EntitySpeedTickerMenu>::new, "/screens/entity_speed_ticker.json");
+        InitScreens.register(event, ModMenuTypes.TICKER.get(),
+                ScreenTicker::new, "/screens/extendedae_plus/ticker.json");
     }
 
     @SubscribeEvent
@@ -51,8 +50,8 @@ public final class EventClientInitialization {
         if (MODEL_REGISTERED) return;
         MODEL_REGISTERED = true;
 
-        ItemProperties.register(ModItems.ENTITY_SPEED_CARD.get(), ExtendedAEPlus.getLocation("multiplier"),
-                (stack, world, entity, seed) -> DataSpeedCard.fromStack(stack));
+        ItemProperties.register(ModItems.TICKING_CARD.get(), ExtendedAEPlus.getLocation("multiplier"),
+                (stack, world, entity, seed) -> DataTickingCard.fromStack(stack).multiplier());
 
         addCrafterModel("accelerator_4x_formed_v2", EAEPCraftingUnitType.ACCELERATOR_4x);
         addCrafterModel("accelerator_16x_formed_v2", EAEPCraftingUnitType.ACCELERATOR_16x);

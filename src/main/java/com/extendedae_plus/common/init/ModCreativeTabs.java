@@ -1,7 +1,7 @@
 package com.extendedae_plus.common.init;
 
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.common.dataComponent.DataSpeedCard;
+import com.extendedae_plus.common.dataComponent.DataTickingCard;
 import com.extendedae_plus.util.UtilGetKey;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.CreativeModeTab;
@@ -20,6 +20,11 @@ public final class ModCreativeTabs {
                     .icon(ModItems.WIRELESS_TRANSCEIVER::toStack)
                     .displayItems((params, output) -> {
                         ModItems.ITEMS.forEach(output::accept);
-                        Stream.of(2, 4, 8, 16).map(DataSpeedCard::toStack).forEach(output::accept);
+                        Stream.of(
+                                new DataTickingCard(2, 16),
+                                new DataTickingCard(4, 192),
+                                new DataTickingCard(8, 512),
+                                new DataTickingCard(16, 1024)
+                        ).map(DataTickingCard::toStack).forEach(output::accept);
                     }).build());
 }

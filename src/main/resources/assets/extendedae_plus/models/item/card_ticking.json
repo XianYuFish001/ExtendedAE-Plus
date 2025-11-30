@@ -1,0 +1,14 @@
+{
+  "parent": "item/generated",
+  "overrides": [
+    { "predicate": { "extendedae_plus:multiplier": 2.0 }, "model": "extendedae_plus:item/card_ticking_2x" },
+    { "predicate": { "extendedae_plus:multiplier": 4.0 }, "model": "extendedae_plus:item/card_ticking_4x" },
+    { "predicate": { "extendedae_plus:multiplier": 8.0 }, "model": "extendedae_plus:item/card_ticking_8x" },
+    { "predicate": { "extendedae_plus:multiplier": 16.0 }, "model": "extendedae_plus:item/card_ticking_16x" }
+  ],
+  "textures": {
+    "layer0": "extendedae_plus:item/card_ticking_2x"
+  }
+}
+
+

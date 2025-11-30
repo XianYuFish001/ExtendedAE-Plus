@@ -2,6 +2,7 @@ package com.extendedae_plus.client.render.widgets.button;
 
 import appeng.client.gui.Icon;
 import appeng.client.gui.style.Blitter;
+import appeng.core.localization.ButtonToolTips;
 import com.extendedae_plus.util.UtilGetKey;
 import net.minecraft.network.chat.Component;
 
@@ -18,15 +19,28 @@ public enum EAEPActionItems {
     DIV3(EAEPIcon.DIV3, "scaling"),
     MUL5(EAEPIcon.MUL5, "scaling"),
     DIV5(EAEPIcon.DIV5, "scaling"),
+
     DOUBLING_DISABLED(EAEPIcon.PATTERN_SINGLE, "smart_doubling", "disabled"),
     DOUBLING_ENABLED(EAEPIcon.PATTERN_MULTI, "smart_doubling", "enabled"),
     BLOCKING_DISABLED_BY_SUPER(EAEPIcon.fromAEIcon(Icon.ARROW_RIGHT), "smart_blocking", "disabled_by_super"),
+
     BLOCKING_DISABLED(EAEPIcon.fromAEIcon(Icon.BLOCKING_MODE_NO), "smart_blocking", "disabled"),
     BLOCKING_ENABLED(EAEPIcon.BLOCKING_TRANSPARENT, "smart_blocking", "enabled"),
 
+    TICKER_ENABLED(EAEPIcon.fromAEIcon(Icon.AUTO_EXPORT_ON), "state_ticker", "enabled"),
+    TICKER_DISABLED(EAEPIcon.fromAEIcon(Icon.AUTO_EXPORT_OFF), "state_ticker", "disabled"),
+    TICKER_BLACKLISTED(EAEPIcon.fromAEIcon(Icon.INVALID), "state_ticker", "blacklisted"),
+
+    REDSTONE_IGNORE(EAEPIcon.fromAEIcon(Icon.REDSTONE_IGNORE),
+            ButtonToolTips.RedstoneMode.text(), ButtonToolTips.AlwaysActive.text(), "redstone_mode"),
+    REDSTONE_LOW(EAEPIcon.fromAEIcon(Icon.REDSTONE_LOW),
+            ButtonToolTips.RedstoneMode.text(), ButtonToolTips.ActiveWithoutSignal.text(), "redstone_mode"),
+    REDSTONE_HIGH(EAEPIcon.fromAEIcon(Icon.REDSTONE_HIGH),
+            ButtonToolTips.RedstoneMode.text(), ButtonToolTips.ActiveWithSignal.text(), "redstone_mode"),
+
     ;
 
-    private final IIcon icon;
+    private final IButtonIcon icon;
     private final Component name;
     private final Component tooltip;
     private final String actionGroup;
@@ -41,11 +55,11 @@ public enum EAEPActionItems {
         }
     }
 
-    EAEPActionItems(IIcon icon, String actionGroup) {
+    EAEPActionItems(IButtonIcon icon, String actionGroup) {
         this(icon, Component.empty(), Component.empty(), actionGroup);
     }
 
-    EAEPActionItems(IIcon icon, String actionGroup, String additionalKey) {
+    EAEPActionItems(IButtonIcon icon, String actionGroup, String additionalKey) {
         this(
                 icon,
                 new UtilGetKey(UtilGetKey.screenTooltip)
@@ -59,7 +73,7 @@ public enum EAEPActionItems {
         );
     }
 
-    EAEPActionItems(IIcon icon, Component name, Component tooltip, String actionGroup) {
+    EAEPActionItems(IButtonIcon icon, Component name, Component tooltip, String actionGroup) {
         this.icon = icon;
         this.name = name;
         this.tooltip = tooltip;
@@ -75,7 +89,7 @@ public enum EAEPActionItems {
         return actionGroup;
     }
 
-    public IIcon getIcon() {
+    public IButtonIcon getIcon() {
         return icon;
     }
     public Icon getAEIcon() {

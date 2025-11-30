@@ -4,7 +4,7 @@ import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.common.block.wirelessTransceiver.BlockEntityWirelessTransceiver;
 import com.extendedae_plus.common.dataComponent.DataChannelCard;
 import com.extendedae_plus.common.dataComponent.DataEncoderProfile;
-import com.extendedae_plus.common.dataComponent.DataSpeedCard;
+import com.extendedae_plus.common.dataComponent.DataTickingCard;
 import com.extendedae_plus.mixin.impl.DataProviderSettings;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.component.DataComponentType;
@@ -21,8 +21,8 @@ public class ModDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<DataChannelCard>> DATA_CHANNEL_CARD =
             register("data_channel_card", DataChannelCard.CODEC, DataChannelCard.STREAM_CODEC);
 
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<DataSpeedCard>> DATA_SPEED_CARD =
-            register("data_speed_card", DataSpeedCard.CODEC, DataSpeedCard.STREAM_CODEC);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<DataTickingCard>> DATA_TICKING_CARD =
+            register("data_ticking_card", DataTickingCard.CODEC, DataTickingCard.STREAM_CODEC);
 
     public static final DeferredHolder<DataComponentType<?>,
             DataComponentType<BlockEntityWirelessTransceiver.DataSettings>> DATA_TRANSCEIVER_SETTINGS =

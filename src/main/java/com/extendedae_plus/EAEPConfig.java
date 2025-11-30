@@ -1,8 +1,13 @@
 package com.extendedae_plus;
 
+import com.extendedae_plus.common.part.ticker.ParserTickerConfig;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 public final class EAEPConfig {
     static final ModConfigSpec COMMON_SPEC;
@@ -12,7 +17,7 @@ public final class EAEPConfig {
     static final ModConfigSpec CLIENT_SPEC;
     public static final ModConfigSpec.BooleanValue SHOW_ENCODER_PATTERN_PLAYER;
     public static final ModConfigSpec.BooleanValue PATTERN_TERMINAL_SHOW_SLOTS_DEFAULT;
-    public static final ModConfigSpec.BooleanValue PRIORITIZE_DISK_ENERGY;
+    public static final ModConfigSpec.BooleanValue ALLOW_DISK_ENERGY;
     public static final ModConfigSpec.BooleanValue OVERRIDE_AE2WT_PICKING;
 
     static final ModConfigSpec SERVER_SPEC;
@@ -22,40 +27,43 @@ public final class EAEPConfig {
     public static final ModConfigSpec.IntValue CRAFTING_PAUSE_THRESHOLD;
     public static final ModConfigSpec.DoubleValue WIRELESS_MAX_RANGE;
     public static final ModConfigSpec.BooleanValue WIRELESS_CROSS_DIM_ENABLE;
-    public static final ModConfigSpec.IntValue ENTITY_TICKER_COST;
-    public static final ModConfigSpec.ConfigValue<List<? extends String>> ENTITY_TICKER_BLACK_LIST;
-    public static final ModConfigSpec.ConfigValue<List<? extends String>> ENTITY_TICKER_MULTIPLIERS;
+    public static final ModConfigSpec.IntValue TICKER_BASE_COST;
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> TICKER_BLACKLIST;
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> TICKER_EXTERNAL_MULTIPLIER;
+
+    static void init(ModContainer modContainer) {
+        modContainer.registerConfig(ModConfig.Type.COMMON, EAEPConfig.COMMON_SPEC, "extendedae_plus/common.toml");
+        modContainer.registerConfig(ModConfig.Type.CLIENT, EAEPConfig.CLIENT_SPEC, "extendedae_plus/client.toml");
+        modContainer.registerConfig(ModConfig.Type.SERVER, EAEPConfig.SERVER_SPEC, "extendedae_plus/server.toml");
+
+        if (modContainer.getEventBus() == null)
+            throw new IllegalStateException("EventBus is null");
+        modContainer.getEventBus().addListener(ModConfigEvent.Loading.class, event -> reloadSetting(event.getConfig()));
+        modContainer.getEventBus().addListener(ModConfigEvent.Reloading.class, event -> reloadSetting(event.getConfig()));
+    }
+
+    private static void reloadSetting(ModConfig config) {
+        if (config.getSpec() == SERVER_SPEC) {
+            ParserTickerConfig.parseSettings();
+        }
+    }
 
     static {
         // Common 配置
         ModConfigSpec.Builder commonBuilder = new ModConfigSpec.Builder();
         PAGE_MULTIPLIER = commonBuilder
-//                .comment(
-//                        "扩展样板供应器总槽位容量的倍率",
-//                        "基础为36，每页仍显示36格，倍率会增加总页数/总容量",
-//                        "建议范围 1-16"
-//                )
                 .defineInRange("pageMultiplier", 1, 1, 64);
         INDEPENDENT_UPLOADING_BUTTON = commonBuilder
-//                .comment("启用后,在样板编码终端会出现一个独立的按钮用于上传样板")
                 .define("independentUploadingButton", false);
         COMMON_SPEC = commonBuilder.build();
 
         // Client 配置
         ModConfigSpec.Builder clientBuilder = new ModConfigSpec.Builder();
         SHOW_ENCODER_PATTERN_PLAYER = clientBuilder
-//                .comment(
-//                        "是否显示样板编码玩家",
-//                        "开启后将在样板 HoverText 上添加样板的编码玩家")
                 .define("showEncoderPatternPlayer", true);
         PATTERN_TERMINAL_SHOW_SLOTS_DEFAULT = clientBuilder
-//                .comment(
-//                        "样板终端默认是否显示槽位",
-//                        "影响进入界面时SlotsRow的默认可见性，仅影响客户端显示")
                 .define("patternTerminalShowSlotsDefault", true);
         OVERRIDE_AE2WT_PICKING = clientBuilder
-//                .comment("是否覆盖AE2WT使用中键从终端选取方块的逻辑",
-//                        "开启后选取方块的数量将不被限制在32个")
                 .define("overrideAE2WTPicking", false);
         CLIENT_SPEC = clientBuilder.build();
 
@@ -63,77 +71,42 @@ public final class EAEPConfig {
         ModConfigSpec.Builder serverBuilder = new ModConfigSpec.Builder();
         serverBuilder.push("ae");
         PROVIDER_ROUND_ROBIN_ENABLE = serverBuilder
-//                .comment(
-//                        "智能倍增时是否对样板供应器轮询分配",
-//                        "仅多个供应器有相同样板时生效，开启后请求会均分到所有可用供应器，关闭则全部分配给单一供应器",
-//                        "注意：所有相关供应器需开启智能倍增，否则可能失效"
-//                )
                 .define("providerRoundRobinEnable", true);
         SMART_SCALING_MAX_MULTIPLIER = serverBuilder
-//                .comment(
-//                        "智能倍增的最大倍数（0 表示不限制）",
-//                        "此倍数是针对单次样板产出的放大倍数上限，用于限制一次推送中按倍增缩放的规模"
-//                )
                 .defineInRange("smartScalingMaxMultiplier", 0, 0, 1048576);
         CRAFTING_PAUSE_THRESHOLD = serverBuilder
-//                .comment(
-//                        "值越大则AE构建合成计划过程中的 wait/notify 次数越少，提升吞吐但会降低调度响应性"
-//                )
                 .defineInRange("craftingPauseThreshold", 100000, 100, Integer.MAX_VALUE);
         serverBuilder.pop();
 
         serverBuilder.push("wireless");
         WIRELESS_MAX_RANGE = serverBuilder
-//                .comment(
-//                        "无线收发器最大连接距离（单位：方块）",
-//                        "从端与主端的直线距离需小于等于该值才会建立连接。"
-//                )
                 .defineInRange("wirelessMaxRange", 256.0D, 1.0D, 4096.0D);
         WIRELESS_CROSS_DIM_ENABLE = serverBuilder
-//                .comment(
-//                        "是否允许无线收发器跨维度建立连接",
-//                        "开启后，从端可连接到不同维度的主端（忽略距离限制）"
-//                )
                 .define("wirelessCrossDimEnable", true);
         serverBuilder.pop();
 
-        serverBuilder.push("entitySpeedTicker");
-        ENTITY_TICKER_COST = serverBuilder
-//                .comment(
-//                        "实体加速器能量消耗基础值"
-//                )
-                .defineInRange("entityTickerCost", 512, 0, Integer.MAX_VALUE);
-        ENTITY_TICKER_BLACK_LIST = serverBuilder
-//                .comment(
-//                        "实体加速器黑名单：匹配的方块将不会被加速。支持通配符/正则（例如：minecraft:*）",
-//                        "格式：全名或通配符/正则字符串，例如 'minecraft:chest'、'minecraft:*'、'modid:.*_fluid'"
-//                )
+        serverBuilder.push("ticker");
+        TICKER_BASE_COST = serverBuilder
+                .defineInRange("tickerBaseCost", 512, 0, Integer.MAX_VALUE);
+        ALLOW_DISK_ENERGY = serverBuilder
+                .define("allowDiskEnergy", true);
+        TICKER_BLACKLIST = serverBuilder
                 .defineListAllowEmpty(
-                        List.of("entityTickerBlackList"),
+                        List.of("tickerBlacklist"),
                         List::of,
-                        () -> "",
-                        obj -> obj instanceof String
+                        String::new,
+                        object -> object instanceof String
                 );
-        ENTITY_TICKER_MULTIPLIERS = serverBuilder
-//                .comment(
-//                        "额外消耗倍率配置：为某些方块设置额外能量倍率，格式 'modid:blockid multiplier'，例如 'minecraft:chest 2x'",
-//                        "支持通配符/正则匹配（例如 'minecraft:* 2x' 会对整个命名空间生效）。"
-//                )
+        TICKER_EXTERNAL_MULTIPLIER = serverBuilder
                 .defineListAllowEmpty(
-                        List.of("entityTickerMultipliers"),
+                        List.of("tickerExternalMultiplier"),
                         List::of,
-                        () -> "",
-                        obj -> obj instanceof String
+                        String::new,
+                        object -> object instanceof String value
+                                && Pattern.matches("^#?\\w+:\\w+\\[[\\d.]+]$", value)
                 );
-        PRIORITIZE_DISK_ENERGY = serverBuilder
-//                .comment(
-//                        "是否优先从磁盘提取FE能量（仅当Applied Flux模组存在时生效）",
-//                        "开启后，将优先尝试从磁盘提取FE能量；反之优先消耗AE网络中的能量"
-//                )
-                .define("prioritizeDiskEnergy", true);
         serverBuilder.pop();
         NEEDS_UPLOADING_CORE = serverBuilder
-//                .comment("启用后, 样板只能被上传到装有上传核心的装配矩阵")
                 .define("needsUploadingCore", true);
         SERVER_SPEC = serverBuilder.build();
     }
