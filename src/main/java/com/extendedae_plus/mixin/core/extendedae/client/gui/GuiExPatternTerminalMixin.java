@@ -10,7 +10,7 @@ import appeng.menu.AEBaseMenu;
 import com.extendedae_plus.EAEPConfig;
 import com.extendedae_plus.network.CPacketUploadInventoryPattern;
 import com.extendedae_plus.util.GuiUtil;
-import com.extendedae_plus.util.UtilGetKey;
+import com.extendedae_plus.util.UtilKeyBuilder;
 import com.glodblock.github.extendedae.client.gui.GuiExPatternTerminal;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -63,6 +63,7 @@ public abstract class GuiExPatternTerminalMixin extends AEBaseScreen<AEBaseMenu>
      */
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true, require = 0)
     private void onMouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
+        // 古埃及奇观: 金字塔
         // 检查是否是左键点击 + Shift键
         if (button == 0 && hasShiftDown()) {
             // 获取点击的槽位
@@ -84,7 +85,7 @@ public abstract class GuiExPatternTerminalMixin extends AEBaseScreen<AEBaseMenu>
                         // 显示提示消息：请先选择一个样板供应器
                         if (this.minecraft.player != null) {
                             this.minecraft.player.displayClientMessage(
-                                    new UtilGetKey(UtilGetKey.message)
+                                    UtilKeyBuilder.of(UtilKeyBuilder.message)
                                             .addStr("provider_to_upload")
                                             .addStr("unset")
                                             .build(),
@@ -116,7 +117,7 @@ public abstract class GuiExPatternTerminalMixin extends AEBaseScreen<AEBaseMenu>
                 } catch (Throwable t) {
                     // 理论上不会失败，若失败则给出简要提示
                     this.minecraft.player.displayClientMessage(
-                            new UtilGetKey(UtilGetKey.message)
+                            UtilKeyBuilder.of(UtilKeyBuilder.message)
                                     .addStr("provider_to_upload")
                                     .addStr("failed")
                                     .build(),
@@ -125,7 +126,7 @@ public abstract class GuiExPatternTerminalMixin extends AEBaseScreen<AEBaseMenu>
                 }
             } else {
                 this.minecraft.player.displayClientMessage(
-                        new UtilGetKey(UtilGetKey.message)
+                        UtilKeyBuilder.of(UtilKeyBuilder.message)
                                 .addStr("provider_to_upload")
                                 .addStr("invalid_pattern")
                                 .build(),
@@ -173,7 +174,7 @@ public abstract class GuiExPatternTerminalMixin extends AEBaseScreen<AEBaseMenu>
         };
 
         // 设置按钮提示文本
-        this.eap$toggleSlotsButton.setTooltip(Tooltip.create(new UtilGetKey(UtilGetKey.screenTooltip)
+        this.eap$toggleSlotsButton.setTooltip(Tooltip.create(UtilKeyBuilder.of(UtilKeyBuilder.screenTooltip)
                 .addStr("toggle_slots_display")
                 .build()));
 
@@ -192,7 +193,7 @@ public abstract class GuiExPatternTerminalMixin extends AEBaseScreen<AEBaseMenu>
     private void onRefreshListStart(CallbackInfo ci) {
         // 更新按钮图标
         if (this.eap$toggleSlotsButton != null) {
-            this.eap$toggleSlotsButton.setTooltip(Tooltip.create(new UtilGetKey(UtilGetKey.screenTooltip)
+            this.eap$toggleSlotsButton.setTooltip(Tooltip.create(UtilKeyBuilder.of(UtilKeyBuilder.screenTooltip)
                     .addStr("toggle_slot_display")
                     .addStr(this.eap$showSlots, "enabled", "disabled")
                     .build()));

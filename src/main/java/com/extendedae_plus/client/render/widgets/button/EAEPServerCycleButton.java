@@ -1,7 +1,5 @@
 package com.extendedae_plus.client.render.widgets.button;
 
-import appeng.api.config.Setting;
-import appeng.core.network.serverbound.ConfigButtonPacket;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
@@ -9,7 +7,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.IntUnaryOperator;
 import java.util.function.Supplier;
 
@@ -76,50 +73,14 @@ public class EAEPServerCycleButton extends EAEPCycleButton {
             return this;
         }
 
+        public <TEnum extends Enum<TEnum>> Builder
+        setSyncedStateGetter(SyncerGenericEnumState<TEnum> getter) {
+            this.getterSyncedStateIndex = getter;
+            return this;
+        }
+
         public EAEPServerCycleButton build() {
             return new EAEPServerCycleButton(this.states, this.task, this.stateIterator, this.getterSyncedStateIndex);
-        }
-    }
-
-    public static final class BuilderSetting<TEnum extends Enum<TEnum>> {
-        private final Setting<TEnum> setting;
-        private final List<EAEPActionItems> states = new ArrayList<>();
-        private final List<TEnum> values;
-        private IntUnaryOperator stateIterator = null;
-        private Supplier<Integer> getterSyncedStateIndex = () -> 0;
-
-        public BuilderSetting(Setting<TEnum> setting) {
-            this.setting = setting;
-            this.values = new ArrayList<>(this.setting.getValues());
-        }
-
-        public BuilderSetting<TEnum> addPart(TEnum value, EAEPActionItems action) {
-            this.states.set(this.values.indexOf(value), action);
-            return this;
-        }
-
-        public BuilderSetting<TEnum> addPart(EAEPActionItems action) {
-            this.states.add(action);
-            return this;
-        }
-
-        public BuilderSetting<TEnum> setIterator(Function<TEnum, TEnum> stateIterator) {
-            this.stateIterator = prevIndex ->
-                    this.values.indexOf(stateIterator.apply(this.values.get(prevIndex)));
-            return this;
-        }
-
-        public BuilderSetting<TEnum> setSyncedStateGetter(Supplier<TEnum> getter) {
-            this.getterSyncedStateIndex = () -> this.values.indexOf(getter.get());
-            return this;
-        }
-
-        public EAEPServerCycleButton build() {
-            return new EAEPServerCycleButton(this.states,
-                    action -> PacketDistributor.sendToServer(
-                            new ConfigButtonPacket(this.setting, false)),
-                    this.stateIterator,
-                    this.getterSyncedStateIndex);
         }
     }
 
@@ -129,6 +90,15 @@ public class EAEPServerCycleButton extends EAEPCycleButton {
 
         default Integer get() {
             return this.getState() ? 1 : 0;
+        }
+    }
+
+    @FunctionalInterface
+    public interface SyncerGenericEnumState<TEnum extends Enum<TEnum>> extends Supplier<Integer> {
+        TEnum getState();
+
+        default Integer get() {
+            return this.getState().ordinal();
         }
     }
 }

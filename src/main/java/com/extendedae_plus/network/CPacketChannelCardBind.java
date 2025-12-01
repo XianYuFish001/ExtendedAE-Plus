@@ -5,7 +5,7 @@ import com.extendedae_plus.common.init.ModItems;
 import com.extendedae_plus.network.base.CPacketGeneric;
 import com.extendedae_plus.network.base.EAEPNetworkPacket;
 import com.extendedae_plus.network.base.PacketGeneric;
-import com.extendedae_plus.util.UtilGetKey;
+import com.extendedae_plus.util.UtilKeyBuilder;
 import com.extendedae_plus.util.WirelessTeamUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -50,7 +50,7 @@ public record CPacketChannelCardBind(InteractionHand hand) implements CPacketGen
             // 已有所有者，清除
             DataChannelCard.clearOwner(stack);
             player.displayClientMessage(
-                    new UtilGetKey(UtilGetKey.actionBar)
+                    UtilKeyBuilder.of(UtilKeyBuilder.actionBar)
                             .item(ModItems.CHANNEL_CARD)
                             .addStr("binding")
                             .addStr("clear")
@@ -67,7 +67,7 @@ public record CPacketChannelCardBind(InteractionHand hand) implements CPacketGen
             DataChannelCard.setOwnerName(stack, teamName.getString());
 
             player.displayClientMessage(
-                    new UtilGetKey(UtilGetKey.actionBar)
+                    UtilKeyBuilder.of(UtilKeyBuilder.actionBar)
                             .item(ModItems.CHANNEL_CARD)
                             .addStr("binding")
                             .args(teamName.getString())

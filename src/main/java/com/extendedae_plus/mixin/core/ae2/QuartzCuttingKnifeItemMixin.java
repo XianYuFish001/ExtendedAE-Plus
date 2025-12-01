@@ -4,7 +4,7 @@ import appeng.api.parts.IPartHost;
 import appeng.api.parts.SelectedPart;
 import appeng.core.definitions.AEItems;
 import appeng.items.tools.quartz.QuartzCuttingKnifeItem;
-import com.extendedae_plus.util.UtilGetKey;
+import com.extendedae_plus.util.UtilKeyBuilder;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
@@ -91,7 +91,7 @@ public abstract class QuartzCuttingKnifeItemMixin {
         name = eap$cleanBlockName(name);
 
         // 复制到剪贴板并反馈
-        player.displayClientMessage(new UtilGetKey(UtilGetKey.actionBar)
+        player.displayClientMessage(UtilKeyBuilder.of(UtilKeyBuilder.actionBar)
                         .item(AEItems.CERTUS_QUARTZ_KNIFE.get())
                         .addStr("block_name_coping")
                         .addStr(eap$tryCopyToClipboard(name), "success", "failed")

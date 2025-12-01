@@ -4,7 +4,7 @@ import appeng.items.materials.UpgradeCardItem;
 import com.extendedae_plus.common.dataComponent.DataTickingCard;
 import com.extendedae_plus.common.init.ModDataComponents;
 import com.extendedae_plus.common.init.ModItems;
-import com.extendedae_plus.util.UtilGetKey;
+import com.extendedae_plus.util.UtilKeyBuilder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -25,7 +25,7 @@ public class CardTicking extends UpgradeCardItem {
 
     @Override
     public @NotNull Component getName(@NotNull ItemStack stack) {
-        return new UtilGetKey("item.%s.card_ticking%s")
+        return UtilKeyBuilder.of("item.%s.card_ticking%s")
                 .addStr("multiplier")
                 .args(DataTickingCard.fromStack(stack).multiplier())
                 .build();
@@ -34,12 +34,12 @@ public class CardTicking extends UpgradeCardItem {
     public List<Component> getTooltipLines(ItemStack stack) {
         var data = DataTickingCard.fromStack(stack);
         return List.of(
-                new UtilGetKey(UtilGetKey.tooltip)
+                UtilKeyBuilder.of(UtilKeyBuilder.tooltip)
                         .item(ModItems.TICKING_CARD)
                         .addStr("multiplier")
                         .args(data.multiplier())
                         .build(),
-                new UtilGetKey(UtilGetKey.tooltip)
+                UtilKeyBuilder.of(UtilKeyBuilder.tooltip)
                         .item(ModItems.TICKING_CARD)
                         .addStr("max")
                         .args(data.maxMultiplier()).build()

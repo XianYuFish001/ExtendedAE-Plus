@@ -11,7 +11,7 @@ import com.extendedae_plus.mixin.core.ae2.accessor.AEBaseScreenAccessor;
 import com.extendedae_plus.mixin.core.minecraft.accessor.AbstractContainerScreenAccessor;
 import com.extendedae_plus.mixin.impl.widget.HelperRenderablesModifier;
 import com.extendedae_plus.network.CPacketRequestUploading;
-import com.extendedae_plus.util.UtilGetKey;
+import com.extendedae_plus.util.UtilKeyBuilder;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
@@ -93,7 +93,7 @@ public abstract class PatternEncodingTermScreenMixin {
                     return new Rect2i(getX(), getY(), Math.round(16 * eap$scale), Math.round(16 * eap$scale));
                 }
             };
-            eap$uploadBtn.setTooltip(Tooltip.create(new UtilGetKey(UtilGetKey.screenTooltip)
+            eap$uploadBtn.setTooltip(Tooltip.create(UtilKeyBuilder.of(UtilKeyBuilder.screenTooltip)
                     .addStr("upload_button")
                     .build()));
         }

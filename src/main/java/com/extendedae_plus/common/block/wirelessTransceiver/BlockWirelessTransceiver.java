@@ -6,7 +6,7 @@ import appeng.util.InteractionUtil;
 import com.extendedae_plus.client.screen.FrequencyInputScreen;
 import com.extendedae_plus.common.dataComponent.DataChannelCard;
 import com.extendedae_plus.common.init.ModItems;
-import com.extendedae_plus.util.UtilGetKey;
+import com.extendedae_plus.util.UtilKeyBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
@@ -44,7 +44,7 @@ public class BlockWirelessTransceiver extends AEBaseEntityBlock<BlockEntityWirel
         if (InteractionUtil.canWrenchDisassemble(player.getMainHandItem())) {
             var newState = state.setValue(LOCKED, !state.getValue(LOCKED));
             level.setBlock(pos, newState, Block.UPDATE_CLIENTS);
-            player.displayClientMessage(new UtilGetKey(UtilGetKey.actionBar)
+            player.displayClientMessage(UtilKeyBuilder.of(UtilKeyBuilder.actionBar)
                             .item(ModItems.WIRELESS_TRANSCEIVER)
                             .addStr(!state.getValue(LOCKED), "switch_locked", "switch_unlock")
                             .build(),
@@ -75,7 +75,7 @@ public class BlockWirelessTransceiver extends AEBaseEntityBlock<BlockEntityWirel
         } else if (stack.is(AEItems.MEMORY_CARD.get())) {
             return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
         } else if (state.getValue(LOCKED)) {
-            player.displayClientMessage(new UtilGetKey(UtilGetKey.actionBar)
+            player.displayClientMessage(UtilKeyBuilder.of(UtilKeyBuilder.actionBar)
                             .item(ModItems.WIRELESS_TRANSCEIVER)
                             .addStr("locked")
                             .build(),
@@ -85,7 +85,7 @@ public class BlockWirelessTransceiver extends AEBaseEntityBlock<BlockEntityWirel
             if (!shift) {
                 var newState = state.setValue(MASTER_MODE, !state.getValue(MASTER_MODE));
                 level.setBlock(pos, newState, Block.UPDATE_CLIENTS);
-                player.displayClientMessage(new UtilGetKey(UtilGetKey.actionBar)
+                player.displayClientMessage(UtilKeyBuilder.of(UtilKeyBuilder.actionBar)
                                 .item(ModItems.WIRELESS_TRANSCEIVER)
                                 .addStr("mode")
                                 .addStr(!state.getValue(MASTER_MODE), "master", "slave")
@@ -102,7 +102,7 @@ public class BlockWirelessTransceiver extends AEBaseEntityBlock<BlockEntityWirel
         step = Math.max(step + blockEntity.getFrequency(), 0);
         blockEntity.setFrequency(step, false);
 
-        player.displayClientMessage(new UtilGetKey(UtilGetKey.actionBar)
+        player.displayClientMessage(UtilKeyBuilder.of(UtilKeyBuilder.actionBar)
                         .item(ModItems.WIRELESS_TRANSCEIVER)
                         .addStr("frequency")
                         .addStr(blockEntity.getFrequency() == 0, "unset")

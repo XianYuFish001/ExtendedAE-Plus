@@ -2,7 +2,7 @@ package com.extendedae_plus.client.screen;
 
 import com.extendedae_plus.client.impl.AliasGetter;
 import com.extendedae_plus.network.CPacketUploadTerminalPattern;
-import com.extendedae_plus.util.UtilGetKey;
+import com.extendedae_plus.util.UtilKeyBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -61,7 +61,7 @@ public class ProviderListScreen extends Screen {
     private final List<Button> entryButtons = new ArrayList<>();
 
     public ProviderListScreen(Screen parent, List<Long> ids, List<String> names, List<String> i18nKeys, List<Integer> emptySlots) {
-        super(new UtilGetKey(UtilGetKey.screen)
+        super(UtilKeyBuilder.of(UtilKeyBuilder.screen)
                 .addStr("provider_list")
                 .build());
         this.parent = parent;
@@ -93,7 +93,7 @@ public class ProviderListScreen extends Screen {
         // 搜索框（置于条目上方）
         if (searchBox == null) {
             searchBox = new EditBox(this.font, centerX - 120, startY - 25, 240, 18,
-                    new UtilGetKey(UtilGetKey.screen)
+                    UtilKeyBuilder.of(UtilKeyBuilder.screen)
                             .addStr("provider_list")
                             .addStr("query")
                             .build());
@@ -152,7 +152,7 @@ public class ProviderListScreen extends Screen {
         this.addRenderableWidget(next);
 
         // 重载映射按钮（热重载 recipe_type_names.json）——移至下一行，与关闭按钮并排
-        Button reload = Button.builder(new UtilGetKey(UtilGetKey.screen)
+        Button reload = Button.builder(UtilKeyBuilder.of(UtilKeyBuilder.screen)
                         .addStr("provider_list")
                         .addStr("remap_aliases")
                         .build(), b -> reloadMapping())
@@ -163,7 +163,7 @@ public class ProviderListScreen extends Screen {
         // 中文名输入框（用于新增映射的值）
         if (aliasInput == null) {
             aliasInput = new EditBox(this.font, centerX + 50, navY + 30, 120, 20,
-                    new UtilGetKey(UtilGetKey.screen)
+                    UtilKeyBuilder.of(UtilKeyBuilder.screen)
                             .addStr("provider_list")
                             .addStr("alias")
                             .build());
@@ -175,7 +175,7 @@ public class ProviderListScreen extends Screen {
         this.addRenderableWidget(aliasInput);
 
         // 增加映射按钮（使用当前搜索关键字 -> 中文）
-        Button addMap = Button.builder(new UtilGetKey(UtilGetKey.screen)
+        Button addMap = Button.builder(UtilKeyBuilder.of(UtilKeyBuilder.screen)
                                 .addStr("provider_list")
                                 .addStr("add_alias")
                                 .build(),
@@ -185,7 +185,7 @@ public class ProviderListScreen extends Screen {
         this.addRenderableWidget(addMap);
 
         // 删除映射（按中文值精确匹配删除）按钮
-        Button delByCn = Button.builder(new UtilGetKey(UtilGetKey.screen)
+        Button delByCn = Button.builder(UtilKeyBuilder.of(UtilKeyBuilder.screen)
                                 .addStr("provider_list")
                                 .addStr("delete_alias")
                                 .build(),
@@ -215,7 +215,7 @@ public class ProviderListScreen extends Screen {
             AliasGetter.loadAliases();
             var player = Minecraft.getInstance().player;
             if (player != null) {
-                player.displayClientMessage(new UtilGetKey(UtilGetKey.message)
+                player.displayClientMessage(UtilKeyBuilder.of(UtilKeyBuilder.message)
                                 .addStr("provider_list")
                                 .addStr("remap_success")
                                 .build(),
@@ -225,7 +225,7 @@ public class ProviderListScreen extends Screen {
         } catch (Throwable t) {
             var player = Minecraft.getInstance().player;
             if (player != null) {
-                player.displayClientMessage(new UtilGetKey(UtilGetKey.message)
+                player.displayClientMessage(UtilKeyBuilder.of(UtilKeyBuilder.message)
                                 .addStr("provider_list")
                                 .addStr("remap_failed")
                                 .build(),
@@ -319,7 +319,7 @@ public class ProviderListScreen extends Screen {
             return;
         }
 
-        MutableComponent candidateQuery = new UtilGetKey(UtilGetKey.screenTooltip)
+        MutableComponent candidateQuery = UtilKeyBuilder.of(UtilKeyBuilder.screenTooltip)
                 .addStr("provider_list")
                 .addStr("candidate_keywords")
                 .build();
@@ -427,7 +427,7 @@ public class ProviderListScreen extends Screen {
 
         if (selectedQuery().isEmpty()) {
             if (player != null) player.displayClientMessage(
-                    new UtilGetKey(UtilGetKey.message)
+                    UtilKeyBuilder.of(UtilKeyBuilder.message)
                             .addStr("provider_list")
                             .addStr("add_alias")
                             .addStr("empty_query")
@@ -437,7 +437,7 @@ public class ProviderListScreen extends Screen {
         }
         if (aliasToSet.isEmpty()) {
             if (player != null) player.displayClientMessage(
-                    new UtilGetKey(UtilGetKey.message)
+                    UtilKeyBuilder.of(UtilKeyBuilder.message)
                             .addStr("provider_list")
                             .addStr("add_alias")
                             .addStr("empty_alias")
@@ -448,7 +448,7 @@ public class ProviderListScreen extends Screen {
 
         if (AliasGetter.addOrUpdateAlias(searchKey, aliasToSet)) {
             if (player != null) player.displayClientMessage(
-                    new UtilGetKey(UtilGetKey.message)
+                    UtilKeyBuilder.of(UtilKeyBuilder.message)
                             .addStr("provider_list")
                             .addStr("add_alias")
                             .addStr("success")
@@ -470,7 +470,7 @@ public class ProviderListScreen extends Screen {
             needsRefresh = true;
         } else {
             if (player != null) player.displayClientMessage(
-                    new UtilGetKey(UtilGetKey.message)
+                    UtilKeyBuilder.of(UtilKeyBuilder.message)
                             .addStr("provider_list")
                             .addStr("add_alias")
                             .addStr("failed")
@@ -486,7 +486,7 @@ public class ProviderListScreen extends Screen {
         var player = Minecraft.getInstance().player;
         if (aliasToDelete.isEmpty()) {
             if (player != null) player.displayClientMessage(
-                    new UtilGetKey(UtilGetKey.message)
+                    UtilKeyBuilder.of(UtilKeyBuilder.message)
                             .addStr("provider_list")
                             .addStr("delete_alias")
                             .addStr("empty_alias")
@@ -499,7 +499,7 @@ public class ProviderListScreen extends Screen {
         int removed = AliasGetter.removeAliases(aliasToDelete);
         if (removed > 0) {
             if (player != null) player.displayClientMessage(
-                    new UtilGetKey(UtilGetKey.message)
+                    UtilKeyBuilder.of(UtilKeyBuilder.message)
                             .addStr("provider_list")
                             .addStr("delete_alias")
                             .addStr("success")
@@ -510,7 +510,7 @@ public class ProviderListScreen extends Screen {
             needsRefresh = true;
         } else {
             if (player != null) player.displayClientMessage(
-                    new UtilGetKey(UtilGetKey.message)
+                    UtilKeyBuilder.of(UtilKeyBuilder.message)
                             .addStr("provider_list")
                             .addStr("delete_alias")
                             .addStr("failed")

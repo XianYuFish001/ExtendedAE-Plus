@@ -4,7 +4,7 @@ import appeng.api.config.FuzzyMode;
 import appeng.api.storage.cells.ICellWorkbenchItem;
 import com.extendedae_plus.common.impl.storage.infinityCell.InfinityConstants;
 import com.extendedae_plus.common.init.ModItems;
-import com.extendedae_plus.util.UtilGetKey;
+import com.extendedae_plus.util.UtilKeyBuilder;
 import com.google.common.base.Preconditions;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
@@ -26,7 +26,7 @@ public class InfinityBigIntegerCellItem extends Item implements ICellWorkbenchIt
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag tooltipFlag) {
-        tooltip.add(new UtilGetKey(UtilGetKey.tooltip)
+        tooltip.add(UtilKeyBuilder.of(UtilKeyBuilder.tooltip)
                 .item(ModItems.INFINITY_BIGINTEGER_CELL_ITEM)
                 .addStr("description")
                 .build());

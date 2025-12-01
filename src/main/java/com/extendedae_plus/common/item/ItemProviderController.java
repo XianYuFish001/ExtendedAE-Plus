@@ -3,7 +3,7 @@ package com.extendedae_plus.common.item;
 import appeng.api.networking.IInWorldGridNodeHost;
 import com.extendedae_plus.common.init.ModItems;
 import com.extendedae_plus.common.menu.MenuProviderController;
-import com.extendedae_plus.util.UtilGetKey;
+import com.extendedae_plus.util.UtilKeyBuilder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
@@ -42,7 +42,7 @@ public class ItemProviderController extends Item implements MenuProvider {
 
     @Override
     public Component getDisplayName() {
-        return new UtilGetKey(UtilGetKey.screen)
+        return UtilKeyBuilder.of(UtilKeyBuilder.screen)
                 .item(ModItems.PROVIDER_CONTROLLER)
                 .build();
     }

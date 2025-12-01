@@ -1,0 +1,35 @@
+{
+    "$schema": "schema.json",
+    "includes": [
+        "../common/common.json"
+    ],
+    "background": {
+        "texture": "guis/extendedae_plus/priority_tool.png",
+        "srcRect": [0, 0, 176, 95]
+    },
+    "text": {
+        "dialog_title": {
+            "text": {
+                "translate": "screen.item.extendedae_plus.priority_tool"
+            },
+            "position": {
+                "left": 8,
+                "top": 6
+            }
+        }
+    },
+    "widgets": {
+        "priority": {
+            "left": 20,
+            "top": 21,
+            "width": 138,
+            "height": 62
+        },
+        "priorityInput": {
+            "left": 60,
+            "top": 46,
+            "width": 61,
+            "height": 12
+        }
+    }
+}

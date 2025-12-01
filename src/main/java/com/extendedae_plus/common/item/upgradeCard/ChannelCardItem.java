@@ -5,7 +5,7 @@ import appeng.blockentity.networking.CableBusBlockEntity;
 import appeng.items.materials.UpgradeCardItem;
 import com.extendedae_plus.common.dataComponent.DataChannelCard;
 import com.extendedae_plus.common.init.ModItems;
-import com.extendedae_plus.util.UtilGetKey;
+import com.extendedae_plus.util.UtilKeyBuilder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -40,7 +40,7 @@ public class ChannelCardItem extends UpgradeCardItem {
 
         // 显示频道
         long ch = DataChannelCard.getFrequency(stack);
-        lines.add(new UtilGetKey(UtilGetKey.tooltip)
+        lines.add(UtilKeyBuilder.of(UtilKeyBuilder.tooltip)
                 .item(ModItems.CHANNEL_CARD)
                 .addStr("frequency")
                 .addStr(ch == 0, "unset")
@@ -51,7 +51,7 @@ public class ChannelCardItem extends UpgradeCardItem {
         UUID ownerUUID = DataChannelCard.getOwnerUUID(stack);
         String teamName = DataChannelCard.getOwnerName(stack);
 
-        lines.add(new UtilGetKey(UtilGetKey.tooltip)
+        lines.add(UtilKeyBuilder.of(UtilKeyBuilder.tooltip)
                 .item(ModItems.CHANNEL_CARD)
                 .addStr(!teamName.isEmpty(), "name")
                 .addStr(teamName.isEmpty() && ownerUUID != null, "id")
@@ -69,7 +69,7 @@ public class ChannelCardItem extends UpgradeCardItem {
 
         if (next != ch) {
             DataChannelCard.setFrequency(stack, next);
-            player.displayClientMessage(new UtilGetKey(UtilGetKey.tooltip)
+            player.displayClientMessage(UtilKeyBuilder.of(UtilKeyBuilder.tooltip)
                             .item(ModItems.CHANNEL_CARD)
                             .addStr("frequency")
                             .addStr("set_to")

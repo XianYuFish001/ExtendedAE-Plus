@@ -95,7 +95,8 @@ public final class EAEPConfig {
                         List.of("tickerBlacklist"),
                         List::of,
                         String::new,
-                        object -> object instanceof String
+                        object -> object instanceof String value
+                                && Pattern.matches("^#?\\w+:\\w+$", value)
                 );
         TICKER_EXTERNAL_MULTIPLIER = serverBuilder
                 .defineListAllowEmpty(

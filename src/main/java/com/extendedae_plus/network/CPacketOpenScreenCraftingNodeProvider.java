@@ -15,7 +15,7 @@ import com.extendedae_plus.mixin.core.ae2.accessor.PatternProviderLogicAccessor;
 import com.extendedae_plus.network.base.CPacketGeneric;
 import com.extendedae_plus.network.base.EAEPNetworkPacket;
 import com.extendedae_plus.network.base.PacketGeneric;
-import com.extendedae_plus.util.UtilGetKey;
+import com.extendedae_plus.util.UtilKeyBuilder;
 import com.glodblock.github.extendedae.util.FCClientUtil;
 import com.glodblock.github.glodium.util.GlodUtil;
 import net.minecraft.core.BlockPos;
@@ -156,7 +156,7 @@ public record CPacketOpenScreenCraftingNodeProvider(AEKey what) implements CPack
         }
 
         if (player != null) {
-            player.displayClientMessage(new UtilGetKey(UtilGetKey.message)
+            player.displayClientMessage(UtilKeyBuilder.of(UtilKeyBuilder.message)
                     .addStr("opened_provider_info")
                     .args(pos.toShortString(), dim.location().getPath())
                     .build(), false);

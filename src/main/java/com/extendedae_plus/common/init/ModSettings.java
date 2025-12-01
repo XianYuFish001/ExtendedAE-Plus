@@ -2,19 +2,18 @@ package com.extendedae_plus.common.init;
 
 import appeng.api.config.RedstoneMode;
 import appeng.api.config.Setting;
-import appeng.client.gui.Icon;
 import com.extendedae_plus.client.render.widgets.button.EAEPActionItems;
 import com.extendedae_plus.common.part.ticker.PartTicker;
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+/// 好割裂啊, 到底是用CycleButton好还是应该选择SettingToggleButton呢🧐
 public class ModSettings {
     public static final Map<String, Setting<?>> EAEP_SETTINGS = new HashMap<>();
-    public static final Map<Enum<?>, ButtonAppearance> appearances = new HashMap<>();
+    public static final Map<ValueEntry, ButtonAppearance> appearances = new HashMap<>();
 
     public static final Setting<PartTicker.StateTicker> STATE_TICKER =
             register("state_ticker", PartTicker.StateTicker.class)
@@ -34,6 +33,32 @@ public class ModSettings {
 
     private static <TEnum extends Enum<TEnum>> Builder<TEnum> register(String name, Class<TEnum> clazzSetting) {
         return new Builder<>(name, clazzSetting);
+    }
+
+    public static <TEnum extends Enum<TEnum>> ButtonAppearance findAppearance(Setting<TEnum> setting, TEnum value) {
+        return appearances.get(new ValueEntry(setting.getName(), value));
+    }
+
+    public record ValueEntry(String setting, Enum<?> value) {
+        @Override
+        public int hashCode() {
+            return this.setting.hashCode() ^ this.value.hashCode();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            }
+            if (this.getClass() != obj.getClass()) {
+                return false;
+            }
+            final ValueEntry other = (ValueEntry) obj;
+            return Objects.equals(other.setting, this.setting) && other.value == this.value;
+        }
+    }
+
+    public record ButtonAppearance(EAEPActionItems action, @Nullable Item item) {
     }
 
     private static class Builder<TEnum extends Enum<TEnum>> {
@@ -82,7 +107,7 @@ public class ModSettings {
                     ? null : EnumSet.noneOf(this.clazzSetting);
 
             this.entryPairs.forEach(entryPair -> {
-                appearances.put(entryPair.getFirst(), entryPair.getSecond());
+                appearances.put(new ValueEntry(this.name, entryPair.getFirst()), entryPair.getSecond());
 
                 if (flagValidValuesSet) return;
                 boundValues.add(entryPair.getFirst());
@@ -93,16 +118,6 @@ public class ModSettings {
             EAEP_SETTINGS.put(this.name, setting);
 
             return setting;
-        }
-    }
-
-    public record ButtonAppearance(EAEPActionItems action, @Nullable Item item) {
-        public Icon icon() {
-            return this.action.getAEIcon();
-        }
-
-        public List<Component> tooltipLines() {
-            return List.of(this.action.getName(), this.action.getTooltip());
         }
     }
 }

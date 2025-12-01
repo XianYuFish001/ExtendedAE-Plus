@@ -8,7 +8,7 @@ import com.extendedae_plus.mixin.core.ae2.accessor.AccessorProviderMenu;
 import com.extendedae_plus.network.base.CPacketGeneric;
 import com.extendedae_plus.network.base.EAEPNetworkPacket;
 import com.extendedae_plus.network.base.PacketGeneric;
-import com.extendedae_plus.util.UtilGetKey;
+import com.extendedae_plus.util.UtilKeyBuilder;
 import com.mojang.logging.LogUtils;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -87,7 +87,7 @@ public record CPacketScalePatterns(int scale, boolean mul) implements CPacketGen
 
             // 回显结果到玩家
             player.displayClientMessage(
-                    new UtilGetKey(UtilGetKey.message)
+                    UtilKeyBuilder.of(UtilKeyBuilder.message)
                             .addStr("pattern_scaling")
                             .addStr(multiply, "mul", "div")
                             .args(

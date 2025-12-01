@@ -1,0 +1,15 @@
+{
+    DataVersion: 3955,
+    size: [3, 2, 1],
+    data: [
+        {pos: [0, 0, 0], state: "minecraft:furnace{facing:north,lit:true}", nbt: {BurnTime: 15806, CookTime: 195, CookTimeTotal: 200, Items: [{Slot: 0b, count: 47, id: "minecraft:sand"}, {Slot: 1b, count: 62, id: "minecraft:coal_block"}], RecipesUsed: {}, id: "minecraft:furnace"}},
+        {pos: [1, 0, 0], state: "ae2:cable_bus{light_level:0,waterlogged:false}", nbt: {cable: {gn: {p: 0}, id: "ae2:green_glass_cable", visual: {channelsEast: 8, connections: ["east"], missingChannel: 0b, powered: 1b}}, facadeUp: {Name: "ae2:sky_stone_small_brick"}, hasRedstone: 2, id: "ae2:cable_bus", visual: {}, west: {gn: {p: 0}, id: "extendedae_plus:ticker", optional_redstone_mode: "IGNORE", state_ticker: "DISABLED", visual: {missingChannel: 0b, powered: 1b}}}},
+        {pos: [1, 1, 0], state: "minecraft:lever{face:floor,facing:south,powered:true}"}
+    ],
+    entities: [],
+    palette: [
+        "minecraft:lever{face:floor,facing:south,powered:true}",
+        "minecraft:furnace{facing:north,lit:true}",
+        "ae2:cable_bus{light_level:0,waterlogged:false}"
+    ]
+}

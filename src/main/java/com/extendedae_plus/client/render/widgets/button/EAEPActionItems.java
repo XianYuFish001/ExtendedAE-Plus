@@ -3,7 +3,7 @@ package com.extendedae_plus.client.render.widgets.button;
 import appeng.client.gui.Icon;
 import appeng.client.gui.style.Blitter;
 import appeng.core.localization.ButtonToolTips;
-import com.extendedae_plus.util.UtilGetKey;
+import com.extendedae_plus.util.UtilKeyBuilder;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
@@ -38,6 +38,10 @@ public enum EAEPActionItems {
     REDSTONE_HIGH(EAEPIcon.fromAEIcon(Icon.REDSTONE_HIGH),
             ButtonToolTips.RedstoneMode.text(), ButtonToolTips.ActiveWithSignal.text(), "redstone_mode"),
 
+    PRIORITY_KEEP(EAEPIcon.SAVE_CENTER, "priority_tool", "keep"),
+    PRIORITY_INCREMENT(EAEPIcon.SAVE_UP, "priority_tool", "increment"),
+    PRIORITY_DECREMENT(EAEPIcon.SAVE_DOWN, "priority_tool", "decrement"),
+
     ;
 
     private final IButtonIcon icon;
@@ -62,10 +66,10 @@ public enum EAEPActionItems {
     EAEPActionItems(IButtonIcon icon, String actionGroup, String additionalKey) {
         this(
                 icon,
-                new UtilGetKey(UtilGetKey.screenTooltip)
+                UtilKeyBuilder.of(UtilKeyBuilder.screenTooltip)
                         .addStr(actionGroup)
                         .build(),
-                new UtilGetKey(UtilGetKey.screenTooltip)
+                UtilKeyBuilder.of(UtilKeyBuilder.screenTooltip)
                         .addStr(actionGroup)
                         .addStr(additionalKey)
                         .build(),

@@ -7,6 +7,7 @@ import com.extendedae_plus.common.block.EAEPCraftingUnitType;
 import com.extendedae_plus.common.item.ItemProviderController;
 import com.extendedae_plus.common.item.ItemTicker;
 import com.extendedae_plus.common.item.infinityBigIntegerCell.InfinityBigIntegerCellItem;
+import com.extendedae_plus.common.item.priorityTool.ItemPriorityTool;
 import com.extendedae_plus.common.item.upgradeCard.CardAutoCompletion;
 import com.extendedae_plus.common.item.upgradeCard.CardTicking;
 import com.extendedae_plus.common.item.upgradeCard.ChannelCardItem;
@@ -39,6 +40,8 @@ public final class ModItems {
             regItem("infinity_biginteger_cell", InfinityBigIntegerCellItem::new);
     public static final DeferredItem<Item> PROVIDER_CONTROLLER =
             regItem("provider_controller", ItemProviderController::new);
+    public static final DeferredItem<Item> PRIORITY_TOOL =
+            regItem("priority_tool", ItemPriorityTool::new);
 
     public static final DeferredItem<UpgradeCardItem> CHANNEL_CARD =
             regItem("channel_card", ChannelCardItem::new);
@@ -57,8 +60,6 @@ public final class ModItems {
     }
     
     public static DeferredItem<BlockItem> regCommonBlockItem(String name, DeferredBlock<?> block) {
-        var holder = ITEM.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
-        ITEMS.add(holder);
-        return holder;
+        return regItem(name, () -> new BlockItem(block.get(), new Item.Properties()));
     }
 }

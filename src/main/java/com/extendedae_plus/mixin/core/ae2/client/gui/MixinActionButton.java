@@ -3,7 +3,7 @@ package com.extendedae_plus.mixin.core.ae2.client.gui;
 import appeng.client.gui.widgets.ActionButton;
 import appeng.core.localization.ButtonToolTips;
 import com.extendedae_plus.EAEPConfig;
-import com.extendedae_plus.util.UtilGetKey;
+import com.extendedae_plus.util.UtilKeyBuilder;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,7 +18,7 @@ public class MixinActionButton {
                                            CallbackInfoReturnable<Component> cir) {
         if (displayValue == ButtonToolTips.EncodeDescription && !EAEPConfig.INDEPENDENT_UPLOADING_BUTTON.getAsBoolean())
             cir.setReturnValue(cir.getReturnValue().copy().append(
-                    new UtilGetKey(UtilGetKey.screenTooltip)
+                    UtilKeyBuilder.of(UtilKeyBuilder.screenTooltip)
                             .addStr("upload_button")
                             .addStr("auto_upload")
                             .build()));

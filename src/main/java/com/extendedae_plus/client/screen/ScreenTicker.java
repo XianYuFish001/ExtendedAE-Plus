@@ -29,12 +29,12 @@ public class ScreenTicker extends UpgradeableScreen<MenuTicker> {
 
         menu.setRefreshAction(this::textTooltip);
 
-        this.buttonStateSwitcher = new SettingToggleButton<>(
-                ModSettings.STATE_TICKER, PartTicker.StateTicker.ENABLED,
+        this.buttonStateSwitcher = new SettingToggleButton<>(ModSettings.STATE_TICKER, PartTicker.StateTicker.ENABLED,
                 (button, reversed) -> {
                     if (PartTicker.StateTicker.BLACKLISTED.equals(this.getMenu().getTickerState())) return;
                     PacketDistributor.sendToServer(new ConfigButtonPacket(button.getSetting(), reversed));
-                });
+                }
+        );
         this.buttonRSMode = new ServerSettingToggleButton<>(ModSettings.OPTIONAL_REDSTONE_MODE, RedstoneMode.IGNORE);
 
         this.addToLeftToolbar(this.buttonStateSwitcher);

@@ -35,7 +35,8 @@ public class ButtonImplementations {
                 .setTask(CPacketToggleSmartDoubling.INSTANCE)
                 .addPart(EAEPActionItems.DOUBLING_DISABLED)
                 .addPart(EAEPActionItems.DOUBLING_ENABLED)
-                .setSyncedStateGetter(() -> menu instanceof SyncerSmartDoubling syncer && syncer.eaep$getDoublingState())
+                .setSyncedStateGetter(() -> menu instanceof SyncerSmartDoubling syncer
+                        && syncer.eaep$getDoublingState())
                 .build();
         button.updateState();
         return button;

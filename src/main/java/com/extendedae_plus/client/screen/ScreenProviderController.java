@@ -3,7 +3,7 @@ package com.extendedae_plus.client.screen;
 import com.extendedae_plus.common.init.ModItems;
 import com.extendedae_plus.common.menu.MenuProviderController;
 import com.extendedae_plus.network.CPacketProviderControllerOperation;
-import com.extendedae_plus.util.UtilGetKey;
+import com.extendedae_plus.util.UtilKeyBuilder;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -12,7 +12,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 
 public class ScreenProviderController extends AbstractContainerScreen<MenuProviderController> {
     private static final Component CUSTOM_TITLE =
-            new UtilGetKey(UtilGetKey.screen)
+            UtilKeyBuilder.of(UtilKeyBuilder.screen)
                     .item(ModItems.PROVIDER_CONTROLLER)
                     .build();
     public ScreenProviderController(MenuProviderController menu, Inventory inv, Component title) {
@@ -33,7 +33,7 @@ public class ScreenProviderController extends AbstractContainerScreen<MenuProvid
         int x = this.leftPos + (this.imageWidth - totalW3) / 2;
 
         // 行1：三个单项切换
-        addRenderableWidget(Button.builder(new UtilGetKey(UtilGetKey.screen)
+        addRenderableWidget(Button.builder(UtilKeyBuilder.of(UtilKeyBuilder.screen)
                 .item(ModItems.PROVIDER_CONTROLLER)
                 .addStr("blocking")
                 .build(), b ->
@@ -45,7 +45,7 @@ public class ScreenProviderController extends AbstractContainerScreen<MenuProvid
                         this.menu.getClickedFace()
                 ))).bounds(x, y, w, h).build());
 
-        addRenderableWidget(Button.builder(new UtilGetKey(UtilGetKey.screen)
+        addRenderableWidget(Button.builder(UtilKeyBuilder.of(UtilKeyBuilder.screen)
                 .item(ModItems.PROVIDER_CONTROLLER)
                 .addStr("smart_blocking")
                 .build(), b ->
@@ -57,7 +57,7 @@ public class ScreenProviderController extends AbstractContainerScreen<MenuProvid
                         this.menu.getClickedFace()
                 ))).bounds(x + w + s, y, w, h).build());
 
-        addRenderableWidget(Button.builder(new UtilGetKey(UtilGetKey.screen)
+        addRenderableWidget(Button.builder(UtilKeyBuilder.of(UtilKeyBuilder.screen)
                 .item(ModItems.PROVIDER_CONTROLLER)
                 .addStr("smart_doubling")
                 .build(), b ->
@@ -74,7 +74,7 @@ public class ScreenProviderController extends AbstractContainerScreen<MenuProvid
         // 第二行：两列按钮，总宽并居中
         int totalW2 = w * 2 + s;
         int x2 = this.leftPos + (this.imageWidth - totalW2) / 2;
-        addRenderableWidget(Button.builder(new UtilGetKey(UtilGetKey.screen)
+        addRenderableWidget(Button.builder(UtilKeyBuilder.of(UtilKeyBuilder.screen)
                 .item(ModItems.PROVIDER_CONTROLLER)
                 .addStr("all_on")
                 .build(), b ->
@@ -86,7 +86,7 @@ public class ScreenProviderController extends AbstractContainerScreen<MenuProvid
                         this.menu.getClickedFace()
                 ))).bounds(x2, y2, w, h).build());
 
-        addRenderableWidget(Button.builder(new UtilGetKey(UtilGetKey.screen)
+        addRenderableWidget(Button.builder(UtilKeyBuilder.of(UtilKeyBuilder.screen)
                 .item(ModItems.PROVIDER_CONTROLLER)
                 .addStr("all_off")
                 .build(), b ->

@@ -15,26 +15,20 @@ import appeng.menu.locator.MenuLocators;
 import appeng.parts.PartModel;
 import appeng.parts.automation.UpgradeablePart;
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.common.init.ModItems;
 import com.extendedae_plus.common.init.ModMenuTypes;
 import com.extendedae_plus.common.init.ModSettings;
 import com.extendedae_plus.common.menu.MenuTicker;
-import com.extendedae_plus.util.UtilGetKey;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.phys.Vec3;
 
-public class PartTicker extends UpgradeablePart implements MenuProvider {
+public class PartTicker extends UpgradeablePart {
     public static final ResourceLocation MODEL_BASE =
             ExtendedAEPlus.getLocation("part/ticker_base");
 
@@ -73,12 +67,11 @@ public class PartTicker extends UpgradeablePart implements MenuProvider {
         if (!this.getConfigManager().getSetting(ModSettings.STATE_TICKER).equals(StateTicker.ENABLED)) return;
         if (this.getGridNode() == null) return;
 
-        boolean flagSkip = switch (this.getConfigManager().getSetting(ModSettings.OPTIONAL_REDSTONE_MODE)) {
+        if (switch (this.getConfigManager().getSetting(ModSettings.OPTIONAL_REDSTONE_MODE)) {
             case LOW_SIGNAL -> this.getHost().hasRedstone();
             case HIGH_SIGNAL -> !this.getHost().hasRedstone();
             default -> false;
-        };
-        if (flagSkip) return;
+        }) return;
 
         var ticker = blockEntity.getBlockState().getTicker(getLevel(), blockEntity.getType());
         if (ticker == null) return;
@@ -187,18 +180,6 @@ public class PartTicker extends UpgradeablePart implements MenuProvider {
     public void getBoxes(IPartCollisionHelper collisionHelper) {
         collisionHelper.addBox(2, 2, 14, 14, 14, 16);
         collisionHelper.addBox(5, 5, 12, 11, 11, 14);
-    }
-
-    @Override
-    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
-        return new MenuTicker(containerId, playerInventory, this);
-    }
-
-    @Override
-    public Component getDisplayName() {
-        return new UtilGetKey(UtilGetKey.screen)
-                .item(ModItems.PART_TICKER)
-                .build();
     }
 
     private class TickerTicker implements IGridTickable {

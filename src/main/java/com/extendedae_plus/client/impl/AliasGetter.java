@@ -1,6 +1,6 @@
 package com.extendedae_plus.client.impl;
 
-import com.extendedae_plus.util.UtilGetKey;
+import com.extendedae_plus.util.UtilKeyBuilder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -237,15 +237,15 @@ public class AliasGetter {
                         })
                 );
 
-                var workstationGroup = new KeywordGroup(workstationKeys,
-                        new UtilGetKey(UtilGetKey.keywordGroup)
+                var groupWorkstation = new KeywordGroup(workstationKeys,
+                        UtilKeyBuilder.of(UtilKeyBuilder.keywordGroup)
                                 .addStr("workstations")
                                 .args(categoryName.getString())
                                 .build());
-                workstationGroup.setPriority(4);
-                workstationGroup.findMapping(false);
+                groupWorkstation.setPriority(4);
+                groupWorkstation.findMapping(false);
 
-                recipeKeywords.add(workstationGroup);
+                recipeKeywords.add(groupWorkstation);
             }
         }
 

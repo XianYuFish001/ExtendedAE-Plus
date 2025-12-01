@@ -14,7 +14,7 @@ import com.extendedae_plus.mixin.impl.bridge.ISmartDoublingObject;
 import com.extendedae_plus.network.base.CPacketGeneric;
 import com.extendedae_plus.network.base.EAEPNetworkPacket;
 import com.extendedae_plus.network.base.PacketGeneric;
-import com.extendedae_plus.util.UtilGetKey;
+import com.extendedae_plus.util.UtilKeyBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -44,24 +44,19 @@ public record CPacketProviderControllerOperation(
     public static final Type<CPacketProviderControllerOperation> TYPE = PacketGeneric.createType("provider_controller_operation");
 
     public static final StreamCodec<RegistryFriendlyByteBuf, CPacketProviderControllerOperation> STREAM_CODEC = StreamCodec.composite(
-            NeoForgeStreamCodecs.enumCodec(Operation.class), CPacketProviderControllerOperation::operationNormalBlocking,
-            NeoForgeStreamCodecs.enumCodec(Operation.class), CPacketProviderControllerOperation::operationSmartBlocking,
-            NeoForgeStreamCodecs.enumCodec(Operation.class), CPacketProviderControllerOperation::operationSmartDoubling,
+            Operation.STREAM_CODEC, CPacketProviderControllerOperation::operationNormalBlocking,
+            Operation.STREAM_CODEC, CPacketProviderControllerOperation::operationSmartBlocking,
+            Operation.STREAM_CODEC, CPacketProviderControllerOperation::operationSmartDoubling,
             BlockPos.STREAM_CODEC, CPacketProviderControllerOperation::gridPos,
             Direction.STREAM_CODEC, CPacketProviderControllerOperation::clickedFace,
             CPacketProviderControllerOperation::new
     );
 
     public enum Operation {
-        NOOP((byte) 0),
-        SET_TRUE((byte) 1),
-        SET_FALSE((byte) 2),
-        TOGGLE((byte) 3);
-        public final byte id;
+        NOOP, SET_TRUE, SET_FALSE, TOGGLE;
 
-        Operation(byte id) {
-            this.id = id;
-        }
+        public static final StreamCodec<RegistryFriendlyByteBuf, Operation> STREAM_CODEC =
+                NeoForgeStreamCodecs.enumCodec(Operation.class);
     }
 
     @Override
@@ -83,7 +78,7 @@ public record CPacketProviderControllerOperation(
 
         int affected = applyToAllProviders(grid);
         // 向发起玩家反馈影响数量，便于判断按钮是否生效
-        player.displayClientMessage(new UtilGetKey(UtilGetKey.message)
+        player.displayClientMessage(UtilKeyBuilder.of(UtilKeyBuilder.message)
                 .item(ModItems.PROVIDER_CONTROLLER)
                 .addStr("global_switch")
                 .args(affected)

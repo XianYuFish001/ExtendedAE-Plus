@@ -1,5 +1,6 @@
 TODO
     <bug>
+        网络工具gui
         样板自动填充功能失效(真的有这个功能吗?)
         <fixing/testing>
             智能倍增样板有时出现null:
@@ -7,15 +8,17 @@ TODO
         <fixed>
             empty
     <feature>
-        迁移新keyBuilder
-        重构供应器管理
+        添加guideME
+        迁移设置到新强兼的setting(呜呜呜我的cycleButton😭😭😭)
+        重构供应器管理packet
         重构智能倍增
         智能倍增考虑容器容量
         advProvider倍增(哇有点难搞, scaler的逻辑交杂在一起)
         frequency gui
         controller gui(我是大懒狗)
         <executed>
-            empty
-
-更改ticker和card
-更改设置项ticker下所有
+            迁移新keyBuilder
+            优先卡:
+                右键打开优先级menu
+                三个模式: 应用, 应用递增, 应用递减
+                右键优先级机器应用

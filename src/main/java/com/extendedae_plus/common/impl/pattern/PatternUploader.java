@@ -18,7 +18,7 @@ import appeng.util.inv.filter.IAEItemFilter;
 import com.extendedae_plus.EAEPConfig;
 import com.extendedae_plus.common.block.uploadCore.UploadCoreBlockEntity;
 import com.extendedae_plus.mixin.core.ae2.accessor.PatternEncodingTermMenuAccessor;
-import com.extendedae_plus.util.UtilGetKey;
+import com.extendedae_plus.util.UtilKeyBuilder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
@@ -95,7 +95,7 @@ public class PatternUploader {
         // 在尝试上传之前，检查装配矩阵是否已经存在相同样板（物品与NBT完全一致）
         if (matrixContainsPattern(grid, stack)) {
             // 直接提醒并跳过上传，并将同等数量的空白样板放回空白样板槽，否则退回玩家背包
-            player.sendSystemMessage(new UtilGetKey(UtilGetKey.message)
+            player.sendSystemMessage(UtilKeyBuilder.of(UtilKeyBuilder.message)
                     .addStr("pattern_uploading")
                     .addStr("duplicate_pattern")
                     .build());

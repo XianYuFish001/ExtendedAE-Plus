@@ -3,7 +3,7 @@ package com.extendedae_plus.integration.jade;
 import appeng.core.localization.InGameTooltip;
 import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.common.init.ModItems;
-import com.extendedae_plus.util.UtilGetKey;
+import com.extendedae_plus.util.UtilKeyBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -35,7 +35,7 @@ public enum TooltipWirelessTransceiver implements IBlockComponentProvider {
     FREQUENCY("frequency", (accessor, tooltip, config, data) -> {
         if (data.contains("frequency")) {
             long frequency = data.getLong("frequency");
-            tooltip.add(new UtilGetKey(UtilGetKey.jadeInfo)
+            tooltip.add(UtilKeyBuilder.of(UtilKeyBuilder.jadeInfo)
                     .item(ModItems.WIRELESS_TRANSCEIVER)
                     .addStr("frequency")
                     .addStr(frequency == 0, "unset")
@@ -46,7 +46,7 @@ public enum TooltipWirelessTransceiver implements IBlockComponentProvider {
     MODE("master_mode", (accessor, tooltip, config, data) -> {
         if (data.contains("masterMode")) {
             boolean masterMode = data.getBoolean("masterMode");
-            tooltip.add(new UtilGetKey(UtilGetKey.jadeInfo)
+            tooltip.add(UtilKeyBuilder.of(UtilKeyBuilder.jadeInfo)
                     .item(ModItems.WIRELESS_TRANSCEIVER)
                     .addStr("mode")
                     .addStr(masterMode, "master", "slave")
@@ -59,13 +59,13 @@ public enum TooltipWirelessTransceiver implements IBlockComponentProvider {
             String dim = data.contains("masterDim") ? data.getString("masterDim") : "";
             String customName = data.contains("customName") ? data.getString("customName") : null;
 
-            tooltip.add(new UtilGetKey(UtilGetKey.jadeInfo)
+            tooltip.add(UtilKeyBuilder.of(UtilKeyBuilder.jadeInfo)
                     .item(ModItems.WIRELESS_TRANSCEIVER)
                     .addStr("master_location")
                     .addStr(customName != null, "custom_name")
                     .args(pos.getX(), pos.getY(), pos.getZ(), customName)
                     .build());
-            if (!dim.isEmpty()) tooltip.add(new UtilGetKey(UtilGetKey.jadeInfo)
+            if (!dim.isEmpty()) tooltip.add(UtilKeyBuilder.of(UtilKeyBuilder.jadeInfo)
                     .item(ModItems.WIRELESS_TRANSCEIVER)
                     .addStr("master_location")
                     .addStr("dim")
@@ -75,7 +75,7 @@ public enum TooltipWirelessTransceiver implements IBlockComponentProvider {
     }),
     LOCKED("locked", (accessor, tooltip, config, data) -> {
         if (data.contains("locked") && data.getBoolean("locked"))
-            tooltip.add(new UtilGetKey(UtilGetKey.jadeInfo)
+            tooltip.add(UtilKeyBuilder.of(UtilKeyBuilder.jadeInfo)
                     .item(ModItems.WIRELESS_TRANSCEIVER)
                     .addStr("locked")
                     .build());
@@ -84,7 +84,7 @@ public enum TooltipWirelessTransceiver implements IBlockComponentProvider {
         String placerName = data.contains("placerName") ? data.getString("placerName") : "";
         UUID placer = data.hasUUID("placer") ? data.getUUID("placer") : null;
 
-        tooltip.add(new UtilGetKey(UtilGetKey.jadeInfo)
+        tooltip.add(UtilKeyBuilder.of(UtilKeyBuilder.jadeInfo)
                 .item(ModItems.WIRELESS_TRANSCEIVER)
                 .addStr(!placerName.isEmpty(), "name")
                 .addStr(placerName.isEmpty() && placer != null, "id")

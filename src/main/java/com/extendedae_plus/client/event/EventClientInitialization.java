@@ -5,6 +5,7 @@ import appeng.init.client.InitScreens;
 import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.client.RegistriesBuiltInModel;
 import com.extendedae_plus.client.render.crafting.EAEPCraftingCubeModelProvider;
+import com.extendedae_plus.client.screen.ScreenPriorityTool;
 import com.extendedae_plus.client.screen.ScreenProviderController;
 import com.extendedae_plus.client.screen.ScreenTicker;
 import com.extendedae_plus.common.block.EAEPCraftingUnitType;
@@ -33,7 +34,9 @@ public final class EventClientInitialization {
                 ScreenProviderController::new);
 
         InitScreens.register(event, ModMenuTypes.TICKER.get(),
-                ScreenTicker::new, "/screens/extendedae_plus/ticker.json");
+                ScreenTicker::new, getStylePath("ticker"));
+        InitScreens.register(event, ModMenuTypes.PRIORITY_TOOL.get(),
+                ScreenPriorityTool::new, getStylePath("priority_tool"));
     }
 
     @SubscribeEvent
@@ -68,5 +71,9 @@ public final class EventClientInitialization {
         RegistriesBuiltInModel.addBuiltInModel(
                 ExtendedAEPlus.getLocation("block/crafting/" + location),
                 new CraftingCubeModel(new EAEPCraftingCubeModelProvider(type)));
+    }
+
+    private static String getStylePath(String fileName) {
+        return "/screens/extendedae_plus/" + fileName + ".json";
     }
 }

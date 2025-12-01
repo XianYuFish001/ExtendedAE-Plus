@@ -2,7 +2,7 @@ package com.extendedae_plus.client.screen;
 
 import com.extendedae_plus.common.init.ModItems;
 import com.extendedae_plus.network.CPacketSetTransceiverFrequency;
-import com.extendedae_plus.util.UtilGetKey;
+import com.extendedae_plus.util.UtilKeyBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -38,7 +38,7 @@ public class FrequencyInputScreen extends Screen {
      * @param currentFrequency 当前频率
      */
     public FrequencyInputScreen(BlockPos pos, long currentFrequency) {
-        super(new UtilGetKey(UtilGetKey.screen)
+        super(UtilKeyBuilder.of(UtilKeyBuilder.screen)
                 .item(ModItems.WIRELESS_TRANSCEIVER)
                 .addStr("frequency_input")
                 .build());
@@ -62,7 +62,7 @@ public class FrequencyInputScreen extends Screen {
                 y + 30,
                 WINDOW_WIDTH - 20,
                 20,
-                new UtilGetKey(UtilGetKey.screen)
+                UtilKeyBuilder.of(UtilKeyBuilder.screen)
                         .item(ModItems.WIRELESS_TRANSCEIVER)
                         .addStr("frequency_input")
                         .addStr("input_field")
@@ -81,7 +81,7 @@ public class FrequencyInputScreen extends Screen {
         // 创建确认按钮
         // API说明：Button.builder方法在1.21.1中使用
         this.confirmButton = Button.builder(
-                new UtilGetKey(UtilGetKey.screen)
+                UtilKeyBuilder.of(UtilKeyBuilder.screen)
                         .item(ModItems.WIRELESS_TRANSCEIVER)
                         .addStr("frequency_input")
                         .addStr("confirm")
@@ -95,7 +95,7 @@ public class FrequencyInputScreen extends Screen {
         
         // 创建取消按钮
         Button cancelButton = Button.builder(
-                        new UtilGetKey(UtilGetKey.screen)
+                        UtilKeyBuilder.of(UtilKeyBuilder.screen)
                                 .item(ModItems.WIRELESS_TRANSCEIVER)
                                 .addStr("frequency_input")
                                 .addStr("cancel")
@@ -173,7 +173,7 @@ public class FrequencyInputScreen extends Screen {
         guiGraphics.fill(x + WINDOW_WIDTH - 1, y, x + WINDOW_WIDTH, y + WINDOW_HEIGHT, 0xFFFFFFFF); // 右侧
         
         // 绘制标题
-        Component title = new UtilGetKey(UtilGetKey.screen)
+        Component title = UtilKeyBuilder.of(UtilKeyBuilder.screen)
                 .item(ModItems.WIRELESS_TRANSCEIVER)
                 .addStr("frequency_input")
                 .build();

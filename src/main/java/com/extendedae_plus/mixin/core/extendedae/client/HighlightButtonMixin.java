@@ -1,6 +1,6 @@
 package com.extendedae_plus.mixin.core.extendedae.client;
 
-import com.extendedae_plus.util.UtilGetKey;
+import com.extendedae_plus.util.UtilKeyBuilder;
 import com.glodblock.github.extendedae.client.button.HighlightButton;
 import com.glodblock.github.extendedae.client.gui.GuiExPatternTerminal;
 import net.minecraft.client.gui.components.Button;
@@ -58,7 +58,7 @@ public abstract class HighlightButtonMixin {
 								// 提示玩家已选择供应器
 								if (minecraft.player != null) {
 									minecraft.player.displayClientMessage(
-										new UtilGetKey(UtilGetKey.message)
+										UtilKeyBuilder.of(UtilKeyBuilder.message)
                                                 .addStr("provider_to_upload")
                                                 .addStr("selected")
                                                 .args(serverId)

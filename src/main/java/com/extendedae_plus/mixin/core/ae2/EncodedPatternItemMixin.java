@@ -4,7 +4,7 @@ import appeng.core.definitions.AEItems;
 import appeng.crafting.pattern.EncodedPatternItem;
 import com.extendedae_plus.EAEPConfig;
 import com.extendedae_plus.common.init.ModDataComponents;
-import com.extendedae_plus.util.UtilGetKey;
+import com.extendedae_plus.util.UtilKeyBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -30,7 +30,7 @@ public class EncodedPatternItemMixin {
         if (!stack.has(ModDataComponents.DATA_ENCODER_PROFILE)) return;
 
         var data = stack.get(ModDataComponents.DATA_ENCODER_PROFILE);
-        lines.add(new UtilGetKey(UtilGetKey.tooltip)
+        lines.add(UtilKeyBuilder.of(UtilKeyBuilder.tooltip)
                 .item(AEItems.PROCESSING_PATTERN.get())
                 .addStr("encoder")
                 .args(data.name())

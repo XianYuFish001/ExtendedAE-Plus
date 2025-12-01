@@ -70,6 +70,11 @@ public class Recipe extends RecipeProvider {
                 .requires(Items.CRAFTER)
                 .unlockedBy("has_card", has(AEItems.ADVANCED_CARD))
                 .save(recipeOutput);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.PRIORITY_TOOL)
+                .requires(AEItems.MEMORY_CARD)
+                .requires(AEItems.ENGINEERING_PROCESSOR)
+                .unlockedBy("has_memory_card", has(AEItems.MEMORY_CARD))
+                .save(recipeOutput);
 
         // NeoForged我们喜欢你, 我们喜欢Tags, NeoForgeRegistries, DataComponentIngredient😋
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, DataTickingCard.toStack(2, 16))

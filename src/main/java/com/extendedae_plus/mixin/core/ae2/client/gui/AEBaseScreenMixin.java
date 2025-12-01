@@ -18,7 +18,7 @@ import com.extendedae_plus.mixin.impl.bridge.ExPatternPageAccessor;
 import com.extendedae_plus.network.CPacketOpenScreenCraftingNodeMachine;
 import com.extendedae_plus.network.CPacketOpenScreenCraftingNodeProvider;
 import com.extendedae_plus.util.GuiUtil;
-import com.extendedae_plus.util.UtilGetKey;
+import com.extendedae_plus.util.UtilKeyBuilder;
 import com.glodblock.github.extendedae.client.gui.GuiExPatternProvider;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import net.minecraft.client.Minecraft;
@@ -280,7 +280,7 @@ public abstract class AEBaseScreenMixin {
             } catch (Throwable ignored) {
             }
 
-            String pageText = new UtilGetKey(UtilGetKey.screen)
+            String pageText = UtilKeyBuilder.of(UtilKeyBuilder.screen)
                     .item(EAESingletons.EX_PATTERN_PROVIDER.asItem())
                     .addStr("pages")
                     .args(cur, max)
