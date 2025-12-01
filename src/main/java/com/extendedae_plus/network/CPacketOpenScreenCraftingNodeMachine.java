@@ -87,8 +87,6 @@ public record CPacketOpenScreenCraftingNodeMachine(AEKey what) implements CPacke
             List<Direction> delayedBlocks = new ArrayList<>();
 
             // 尝试对邻居打开 GUI（优先通过 MenuProvider）
-            // 这功能真是太™有效了, 是个大点的mod就不用menuProvider😅
-            // 好像有点烂, 之后重构吧
             // TODO Refactor
             for (Direction dir : host.getTargets()) {
                 BlockPos targetPos = pbe.getBlockPos().relative(dir);

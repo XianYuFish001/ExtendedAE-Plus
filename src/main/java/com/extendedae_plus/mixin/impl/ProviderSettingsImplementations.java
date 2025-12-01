@@ -18,7 +18,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public final class ProviderSettingsImplementations {
-    private static final List<IConfigManager> flagChanging = new ArrayList<>();
+    public static final List<IConfigManager> flagChanging = new ArrayList<>();
 
     public static void onSettingsChanged(IConfigManager manager,
                                          Setting<?> setting,

@@ -6,7 +6,6 @@ import com.extendedae_plus.common.dataComponent.DataChannelCard;
 import com.extendedae_plus.common.dataComponent.DataEncoderProfile;
 import com.extendedae_plus.common.dataComponent.DataTickingCard;
 import com.extendedae_plus.common.item.priorityTool.DataPriority;
-import com.extendedae_plus.mixin.impl.DataProviderSettings;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
@@ -34,9 +33,6 @@ public class ModDataComponents {
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<DataEncoderProfile>> DATA_ENCODER_PROFILE =
             register("data_encoder_profile", DataEncoderProfile.CODEC, DataEncoderProfile.STREAM_CODEC);
-
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<DataProviderSettings>> DATA_PROVIDER_SETTINGS =
-            register("data_provider_settings", DataProviderSettings.CODEC, DataProviderSettings.STREAM_CODEC);
 
     private static <T> DeferredHolder<DataComponentType<?>, DataComponentType<T>> register(
             String name, Codec<T> codec, StreamCodec<RegistryFriendlyByteBuf, T> streamCodec) {

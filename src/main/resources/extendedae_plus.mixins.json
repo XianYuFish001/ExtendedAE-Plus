@@ -22,6 +22,7 @@
     "ae2.CraftingCalculationMixin",
     "ae2.CraftingCPUClusterMixin",
     "ae2.EncodedPatternItemMixin",
+    "ae2.MixinMemoryCard",
     "ae2.MixinSettingsInitialization",
     "ae2.accessor.AccessorCraftingCPULogic",
     "ae2.accessor.AccessorExecutingCraftingJob",

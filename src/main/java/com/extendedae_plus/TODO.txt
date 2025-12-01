@@ -15,11 +15,4 @@ TODO
             frequency
             controller
         <executed>
-            重构供应器管理packet
-            迁移设置到新强兼的setting(呜呜呜我的cycleButton😭😭😭)
-            添加guideME
-            迁移新keyBuilder
-            优先卡:
-                右键打开优先级menu
-                三个模式: 应用, 应用递增, 应用递减
-                右键优先级机器应用
+            empty
