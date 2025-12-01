@@ -8,15 +8,16 @@ TODO
         <fixed>
             empty
     <feature>
-        添加guideME
-        迁移设置到新强兼的setting(呜呜呜我的cycleButton😭😭😭)
-        重构供应器管理packet
-        重构智能倍增
-        智能倍增考虑容器容量
-        advProvider倍增(哇有点难搞, scaler的逻辑交杂在一起)
-        frequency gui
-        controller gui(我是大懒狗)
+        重构智能倍增:
+            智能倍增考虑容器容量
+            advProvider倍增(哇有点难搞, scaler的逻辑交杂在一起)
+        重构gui(我是大懒狗):
+            frequency
+            controller
         <executed>
+            重构供应器管理packet
+            迁移设置到新强兼的setting(呜呜呜我的cycleButton😭😭😭)
+            添加guideME
             迁移新keyBuilder
             优先卡:
                 右键打开优先级menu

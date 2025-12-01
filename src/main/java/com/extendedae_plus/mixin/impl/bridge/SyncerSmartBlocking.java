@@ -1,6 +1,7 @@
 package com.extendedae_plus.mixin.impl.bridge;
 
+import com.extendedae_plus.common.settings.StateSmartBlocking;
+
 public interface SyncerSmartBlocking {
-    boolean eaep$getBlockingState();
-    boolean eaep$isBlockingDisabled();
+    StateSmartBlocking eaep$getBlockingState();
 }

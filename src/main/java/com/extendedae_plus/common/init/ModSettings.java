@@ -2,15 +2,17 @@ package com.extendedae_plus.common.init;
 
 import appeng.api.config.RedstoneMode;
 import appeng.api.config.Setting;
+import appeng.api.config.YesNo;
 import com.extendedae_plus.client.render.widgets.button.EAEPActionItems;
 import com.extendedae_plus.common.part.ticker.PartTicker;
+import com.extendedae_plus.common.settings.StateSmartBlocking;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-/// 好割裂啊, 到底是用CycleButton好还是应该选择SettingToggleButton呢🧐
+/// 使用EAEPCycleButton喵, 使用EAEPCycleButton谢谢喵
 public class ModSettings {
     public static final Map<String, Setting<?>> EAEP_SETTINGS = new HashMap<>();
     public static final Map<ValueEntry, ButtonAppearance> appearances = new HashMap<>();
@@ -20,8 +22,7 @@ public class ModSettings {
                     .bindAll(EAEPActionItems.TICKER_ENABLED,
                             EAEPActionItems.TICKER_DISABLED,
                             EAEPActionItems.TICKER_BLACKLISTED)
-                    .setValidValue(PartTicker.StateTicker.ENABLED,
-                            PartTicker.StateTicker.DISABLED)
+                    .setInvalidValue(PartTicker.StateTicker.BLACKLISTED)
                     .build();
 
     public static final Setting<RedstoneMode> OPTIONAL_REDSTONE_MODE =
@@ -29,6 +30,20 @@ public class ModSettings {
                     .addPart(RedstoneMode.IGNORE, EAEPActionItems.REDSTONE_IGNORE)
                     .addPart(RedstoneMode.LOW_SIGNAL, EAEPActionItems.REDSTONE_LOW)
                     .addPart(RedstoneMode.HIGH_SIGNAL, EAEPActionItems.REDSTONE_HIGH)
+                    .build();
+
+    public static final Setting<StateSmartBlocking> SMART_BLOCKING =
+            register("smart_blocking", StateSmartBlocking.class)
+                    .bindAll(EAEPActionItems.BLOCKING_ENABLED,
+                            EAEPActionItems.BLOCKING_DISABLED,
+                            EAEPActionItems.BLOCKING_DISABLED_BY_SUPER)
+                    .setInvalidValue(StateSmartBlocking.DISABLED_BY_SUPER)
+                    .build();
+
+    public static final Setting<YesNo> SMART_DOUBLING =
+            register("smart_doubling", YesNo.class)
+                    .addPart(YesNo.YES, EAEPActionItems.DOUBLING_ENABLED)
+                    .addPart(YesNo.NO, EAEPActionItems.DOUBLING_DISABLED)
                     .build();
 
     private static <TEnum extends Enum<TEnum>> Builder<TEnum> register(String name, Class<TEnum> clazzSetting) {
@@ -65,7 +80,7 @@ public class ModSettings {
         private final String name;
         private final Class<TEnum> clazzSetting;
         private final List<Pair<TEnum, ButtonAppearance>> entryPairs = new ArrayList<>();
-        private EnumSet<TEnum> validValues = null;
+        private EnumSet<TEnum> invalidValues = null;
 
         public Builder(String name, Class<TEnum> clazzSetting) {
             this.name = name;
@@ -95,26 +110,22 @@ public class ModSettings {
         }
 
         @SafeVarargs
-        public final Builder<TEnum> setValidValue(TEnum... validValues) {
-            this.validValues = EnumSet.noneOf(this.clazzSetting);
-            this.validValues.addAll(Arrays.asList(validValues));
+        public final Builder<TEnum> setInvalidValue(TEnum... invalidValues) {
+            this.invalidValues = EnumSet.noneOf(this.clazzSetting);
+            this.invalidValues.addAll(Arrays.asList(invalidValues));
             return this;
         }
 
         public Setting<TEnum> build() {
-            boolean flagValidValuesSet = this.validValues != null;
-            var boundValues = flagValidValuesSet
-                    ? null : EnumSet.noneOf(this.clazzSetting);
-
+            var boundValues = EnumSet.noneOf(this.clazzSetting);
             this.entryPairs.forEach(entryPair -> {
                 appearances.put(new ValueEntry(this.name, entryPair.getFirst()), entryPair.getSecond());
-
-                if (flagValidValuesSet) return;
                 boundValues.add(entryPair.getFirst());
             });
+            if (this.invalidValues != null)
+                boundValues.removeAll(this.invalidValues);
 
-            var setting = new Setting<>(this.name, this.clazzSetting,
-                    flagValidValuesSet ? this.validValues : boundValues);
+            var setting = new Setting<>(this.name, this.clazzSetting, boundValues);
             EAEP_SETTINGS.put(this.name, setting);
 
             return setting;

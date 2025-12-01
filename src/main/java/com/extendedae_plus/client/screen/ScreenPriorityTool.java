@@ -30,7 +30,7 @@ public class ScreenPriorityTool extends AEBaseScreen<MenuPriorityTool> {
         });
 
         this.buttonCycleMode = new EAEPServerCycleButton.Builder()
-                .setTask(new CPacketPriorityToolOperation(this.priority.getIntValue().orElse(0), true))
+                .setTask(new CPacketPriorityToolOperation(null, true))
                 .addPart(EAEPActionItems.PRIORITY_KEEP)
                 .addPart(EAEPActionItems.PRIORITY_INCREMENT)
                 .addPart(EAEPActionItems.PRIORITY_DECREMENT)

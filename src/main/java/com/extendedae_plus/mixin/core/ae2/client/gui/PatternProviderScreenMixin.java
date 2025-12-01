@@ -45,7 +45,7 @@ public abstract class PatternProviderScreenMixin<C extends PatternProviderMenu>
     }
 
     @Inject(method = "<init>", at = @At("RETURN"), remap = false)
-    private void eap$initAdvancedBlocking(C menu, Inventory playerInventory, Component title, ScreenStyle style, CallbackInfo ci) {
+    private void onInit(C menu, Inventory playerInventory, Component title, ScreenStyle style, CallbackInfo ci) {
         // 初始化后立刻对齐当前@GuiSync状态，避免首帧显示不一致
 
         this.eaep$buttonSmartBlocking = ButtonImplementations.buttonBlocking(menu);

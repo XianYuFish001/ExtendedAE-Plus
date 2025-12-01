@@ -13,6 +13,7 @@ import java.util.Map;
 
 public enum EAEPActionItems {
     BACKING_OUT(EAEPIcon.fromAEIcon(Icon.INVALID), Component.empty(), Component.empty(), ""),
+
     MUL2(EAEPIcon.MUL2, "scaling"),
     DIV2(EAEPIcon.DIV2, "scaling"),
     MUL3(EAEPIcon.MUL3, "scaling"),
@@ -20,12 +21,12 @@ public enum EAEPActionItems {
     MUL5(EAEPIcon.MUL5, "scaling"),
     DIV5(EAEPIcon.DIV5, "scaling"),
 
-    DOUBLING_DISABLED(EAEPIcon.PATTERN_SINGLE, "smart_doubling", "disabled"),
-    DOUBLING_ENABLED(EAEPIcon.PATTERN_MULTI, "smart_doubling", "enabled"),
-    BLOCKING_DISABLED_BY_SUPER(EAEPIcon.fromAEIcon(Icon.ARROW_RIGHT), "smart_blocking", "disabled_by_super"),
-
     BLOCKING_DISABLED(EAEPIcon.fromAEIcon(Icon.BLOCKING_MODE_NO), "smart_blocking", "disabled"),
     BLOCKING_ENABLED(EAEPIcon.BLOCKING_TRANSPARENT, "smart_blocking", "enabled"),
+    BLOCKING_DISABLED_BY_SUPER(EAEPIcon.fromAEIcon(Icon.ARROW_RIGHT), "smart_blocking", "disabled_by_super"),
+
+    DOUBLING_DISABLED(EAEPIcon.PATTERN_SINGLE, "smart_doubling", "disabled"),
+    DOUBLING_ENABLED(EAEPIcon.PATTERN_MULTI, "smart_doubling", "enabled"),
 
     TICKER_ENABLED(EAEPIcon.fromAEIcon(Icon.AUTO_EXPORT_ON), "state_ticker", "enabled"),
     TICKER_DISABLED(EAEPIcon.fromAEIcon(Icon.AUTO_EXPORT_OFF), "state_ticker", "disabled"),

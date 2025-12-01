@@ -1,12 +1,13 @@
 package com.extendedae_plus.client.render.widgets.button;
 
+import appeng.api.config.YesNo;
 import appeng.client.gui.AEBaseScreen;
+import appeng.core.network.serverbound.ConfigButtonPacket;
+import com.extendedae_plus.common.init.ModSettings;
 import com.extendedae_plus.mixin.impl.bridge.HelperProviderButtons;
 import com.extendedae_plus.mixin.impl.bridge.SyncerSmartBlocking;
 import com.extendedae_plus.mixin.impl.bridge.SyncerSmartDoubling;
 import com.extendedae_plus.mixin.impl.widget.HelperRenderablesModifier;
-import com.extendedae_plus.network.CPacketToggleSmartBlocking;
-import com.extendedae_plus.network.CPacketToggleSmartDoubling;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.jetbrains.annotations.Nullable;
@@ -14,16 +15,18 @@ import org.jetbrains.annotations.Nullable;
 public class ButtonImplementations {
     public static EAEPServerCycleButton buttonBlocking(AbstractContainerMenu menu) {
         EAEPServerCycleButton button = new EAEPServerCycleButton.Builder()
-                .setTask(CPacketToggleSmartBlocking.INSTANCE)
+                .setTask(new ConfigButtonPacket(ModSettings.SMART_BLOCKING, false))
                 .addPart(EAEPActionItems.BLOCKING_DISABLED)
                 .addPart(EAEPActionItems.BLOCKING_ENABLED)
                 .addPart(EAEPActionItems.BLOCKING_DISABLED_BY_SUPER)
                 .setIterator(index -> (index + 1) % 2)
                 .setSyncedStateGetter(() -> {
                     if (!(menu instanceof SyncerSmartBlocking syncer)) return 0;
-                    else if (syncer.eaep$isBlockingDisabled()) return 2;
-                    else if (syncer.eaep$getBlockingState()) return 1;
-                    else return 0;
+                    else return switch (syncer.eaep$getBlockingState()) {
+                        case DISABLED -> 0;
+                        case ENABLED -> 1;
+                        case DISABLED_BY_SUPER -> 2;
+                    };
                 })
                 .build();
         button.updateState();
@@ -32,11 +35,11 @@ public class ButtonImplementations {
 
     public static EAEPServerCycleButton buttonDoubling(AbstractContainerMenu menu) {
         EAEPServerCycleButton button = new EAEPServerCycleButton.Builder()
-                .setTask(CPacketToggleSmartDoubling.INSTANCE)
+                .setTask(new ConfigButtonPacket(ModSettings.SMART_DOUBLING, false))
                 .addPart(EAEPActionItems.DOUBLING_DISABLED)
                 .addPart(EAEPActionItems.DOUBLING_ENABLED)
                 .setSyncedStateGetter(() -> menu instanceof SyncerSmartDoubling syncer
-                        && syncer.eaep$getDoublingState())
+                        && YesNo.YES.equals(syncer.eaep$getDoublingState()))
                 .build();
         button.updateState();
         return button;

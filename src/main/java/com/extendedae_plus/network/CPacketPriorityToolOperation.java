@@ -11,17 +11,22 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 @EAEPNetworkPacket
-public record CPacketPriorityToolOperation(int priority, boolean rotate) implements CPacketGeneric {
+public record CPacketPriorityToolOperation(@Nullable Integer priority, boolean rotateMode) implements CPacketGeneric {
     public static final Type<CPacketPriorityToolOperation> TYPE =
             PacketGeneric.createType("priority_tool_operation");
 
     public static final StreamCodec<RegistryFriendlyByteBuf, CPacketPriorityToolOperation> STREAM_CODEC =
             StreamCodec.composite(
-                    ByteBufCodecs.INT, CPacketPriorityToolOperation::priority,
-                    ByteBufCodecs.BOOL, CPacketPriorityToolOperation::rotate,
-                    CPacketPriorityToolOperation::new);
+                    ByteBufCodecs.optional(ByteBufCodecs.INT), data ->
+                            Optional.ofNullable(data.priority),
+                    ByteBufCodecs.BOOL, CPacketPriorityToolOperation::rotateMode,
+                    (priority, rotateMode) ->
+                            new CPacketPriorityToolOperation(priority.orElse(null), rotateMode));
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
@@ -32,8 +37,10 @@ public record CPacketPriorityToolOperation(int priority, boolean rotate) impleme
     public void handleServer(ServerPlayer player) {
         if (!(player.containerMenu instanceof MenuPriorityTool menu)) return;
         var data = menu.getData();
-        menu.setData(this.rotate
-                ? new DataPriority(data.priority(), EnumCycler.next(data.modeTool()))
-                : new DataPriority(this.priority, data.modeTool()));
+        var newData = new DataPriority(
+                this.priority == null ? data.priority() : this.priority,
+                this.rotateMode ? EnumCycler.next(data.modeTool()) : data.modeTool()
+        );
+        menu.setData(newData);
     }
 }
