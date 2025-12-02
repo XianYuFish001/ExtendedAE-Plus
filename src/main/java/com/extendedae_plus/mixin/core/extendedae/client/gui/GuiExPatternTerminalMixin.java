@@ -41,7 +41,7 @@ public abstract class GuiExPatternTerminalMixin extends AEBaseScreen<AEBaseMenu>
     @Unique
     private boolean eap$showSlots = false; // 默认由配置初始化
     @Unique
-    private long eap$currentlyChoicePatterProvider = -1; // 当前选择的样板供应器ID
+    private long eaep$selectedProvider = -1; // 当前选择的样板供应器ID
     @Unique
     private final Map<Integer, Button> eap$openUIButtons = new HashMap<>();
 
@@ -53,8 +53,8 @@ public abstract class GuiExPatternTerminalMixin extends AEBaseScreen<AEBaseMenu>
      * 设置当前选择的样板供应器ID
      */
     @Unique
-    public void setCurrentlyChoicePatternProvider(long id) {
-        this.eap$currentlyChoicePatterProvider = id;
+    public void eaep$chooseProvider(long id) {
+        this.eaep$selectedProvider = id;
     }
 
     /**
@@ -75,7 +75,7 @@ public abstract class GuiExPatternTerminalMixin extends AEBaseScreen<AEBaseMenu>
                 // 检查是否是有效的编码样板
                 if (!clickedItem.isEmpty() && PatternDetailsHelper.isEncodedPattern(clickedItem)) {
                     // 检查是否选择了样板供应器
-                    if (eap$currentlyChoicePatterProvider != -1) {
+                    if (eaep$selectedProvider != -1) {
                         // 执行快速上传
                         this.eap$quickUploadPattern(hoveredSlot.getSlotIndex());
 
@@ -112,7 +112,7 @@ public abstract class GuiExPatternTerminalMixin extends AEBaseScreen<AEBaseMenu>
                 try {
                     PacketDistributor.sendToServer(new CPacketUploadInventoryPattern(
                             playerSlotIndex,
-                            eap$currentlyChoicePatterProvider
+                            eaep$selectedProvider
                     ));
                 } catch (Throwable t) {
                     // 理论上不会失败，若失败则给出简要提示

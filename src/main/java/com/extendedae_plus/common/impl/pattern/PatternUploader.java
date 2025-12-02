@@ -10,7 +10,6 @@ import appeng.crafting.pattern.AECraftingPattern;
 import appeng.crafting.pattern.AESmithingTablePattern;
 import appeng.crafting.pattern.AEStonecuttingPattern;
 import appeng.helpers.patternprovider.PatternContainer;
-import appeng.menu.AEBaseMenu;
 import appeng.menu.implementations.PatternAccessTermMenu;
 import appeng.menu.me.items.PatternEncodingTermMenu;
 import appeng.util.inv.FilteredInternalInventory;
@@ -19,6 +18,7 @@ import com.extendedae_plus.EAEPConfig;
 import com.extendedae_plus.common.block.uploadCore.UploadCoreBlockEntity;
 import com.extendedae_plus.mixin.core.ae2.accessor.PatternEncodingTermMenuAccessor;
 import com.extendedae_plus.util.UtilKeyBuilder;
+import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixPattern;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
@@ -59,11 +59,10 @@ public class PatternUploader {
      *
      * @param player 服务器玩家
      * @param menu   PatternEncodingTermMenu
-     * @return 是否成功插入矩阵
      */
-    public static boolean uploadFromEncodingMenuToMatrix(ServerPlayer player, PatternEncodingTermMenu menu) {
+    public static void uploadFromEncodingMenuToMatrix(ServerPlayer player, PatternEncodingTermMenu menu) {
         if (player == null || menu == null) {
-            return false;
+            return;
         }
 
         // 读取已编码槽位的物品
@@ -71,7 +70,7 @@ public class PatternUploader {
                 .eap$getEncodedPatternSlot();
         ItemStack stack = encodedSlot.getItem();
         if (stack.isEmpty() || !PatternDetailsHelper.isEncodedPattern(stack)) {
-            return false;
+            return;
         }
 
         // 仅允许“合成/锻造台/切石机图样”
@@ -79,7 +78,7 @@ public class PatternUploader {
         if (!(details instanceof AECraftingPattern
                 || details instanceof AESmithingTablePattern
                 || details instanceof AEStonecuttingPattern)) {
-            return false;
+            return;
         }
 
         // 获取 AE 网络
@@ -89,7 +88,7 @@ public class PatternUploader {
                 grid = host.getActionableNode().getGrid();
         } catch (Throwable ignored) {}
         if (grid == null) {
-            return false;
+            return;
         }
 
         // 在尝试上传之前，检查装配矩阵是否已经存在相同样板（物品与NBT完全一致）
@@ -105,21 +104,19 @@ public class PatternUploader {
                 ItemStack blanks = AEItems.BLANK_PATTERN.stack(stack.getCount());
                 if (blankSlot != null && blankSlot.mayPlace(blanks)) {
                     ItemStack remain = blankSlot.safeInsert(blanks);
-                    if (!remain.isEmpty() && player != null) {
+                    if (!remain.isEmpty()) {
                         player.getInventory().placeItemBackInInventory(remain, false);
                     }
-                } else if (player != null) {
+                } else {
                     player.getInventory().placeItemBackInInventory(blanks, false);
                 }
             } catch (Throwable t) {
-                if (player != null) {
-                    // 兜底：直接还给玩家背包
-                    player.getInventory().placeItemBackInInventory(AEItems.BLANK_PATTERN.stack(stack.getCount()), false);
-                }
+                // 兜底：直接还给玩家背包
+                player.getInventory().placeItemBackInInventory(AEItems.BLANK_PATTERN.stack(stack.getCount()), false);
             }
             // 清空编码样板槽，防止再次输出
             encodedSlot.set(ItemStack.EMPTY);
-            return false;
+            return;
         }
 
         // 收集所有可用的装配矩阵（图样模块）内部库存并逐一尝试（遵循其过滤规则）
@@ -134,29 +131,11 @@ public class PatternUploader {
                     if (stack.isEmpty()) {
                         encodedSlot.set(ItemStack.EMPTY);
                     }
-                    return true;
+                    return;
                 }
             }
             // 所有内部库存都无法接收 -> 尝试 capability 回退
         }
-
-        // 回退：尝试 Forge 能力（可能为聚合图样仓），同样遍历所有矩阵
-        List<?> handlers = findAllMatrixPatternHandlers(grid);
-        if (!handlers.isEmpty()) {
-            for (Object cap : handlers) {
-                ItemStack toInsert = stack.copy();
-                ItemStack remain = insertIntoAnySlot(cap, toInsert);
-                if (remain.getCount() < stack.getCount()) {
-                    int inserted = stack.getCount() - remain.getCount();
-                    stack.shrink(inserted);
-                    if (stack.isEmpty()) {
-                        encodedSlot.set(ItemStack.EMPTY);
-                    }
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     /**
@@ -166,28 +145,18 @@ public class PatternUploader {
     private static List<InternalInventory> findAllMatrixPatternInventories(IGrid grid) {
         List<InternalInventory> result = new ArrayList<>();
         try {
-            var tiles = grid.getMachines(com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixPattern.class);
-            int idx = 0;
-            for (com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixPattern tile : tiles) {
+            var tiles = grid.getMachines(TileAssemblerMatrixPattern.class);
+            for (TileAssemblerMatrixPattern tile : tiles) {
                 if (tile != null && tile.isFormed() && tile.getMainNode().isActive() && clusterHasSingleUploadCore(tile)) {
                     var inv = tile.getExposedInventory();
                     if (inv != null) {
                         result.add(inv);
                     }
                 }
-                idx++;
             }
         } catch (Throwable ignored) {
         }
         return result;
-    }
-
-    /**
-     * 在给定 AE Grid 中收集所有已成型的装配矩阵的聚合图样仓 IItemHandler（若可用）。
-     */
-    private static List<?> findAllMatrixPatternHandlers(IGrid grid) {
-        // NeoForge 1.21 能力系统与 API 变更，此处先返回空列表，避免编译期依赖旧能力系统
-        return java.util.Collections.emptyList();
     }
 
     private static boolean matrixContainsPattern(IGrid grid, ItemStack pattern) {
@@ -211,64 +180,41 @@ public class PatternUploader {
     }
 
     /**
-     * 能力系统（IItemHandler）未迁移前的占位插入：直接返回原始栈，表示未能插入。
-     */
-    private static ItemStack insertIntoAnySlot(Object handler, ItemStack stack) {
-        return stack.copy();
-    }
-
-    /**
-     * 检查当前菜单是否为ExtendedAE的扩展样板管理终端
-     * 
-     * @param player 玩家
-     * @return 是否为ExtendedAE扩展终端
-     */
-    public static boolean isExtendedAETerminal(ServerPlayer player) {
-        if (player == null || player.containerMenu == null) {
-            return false;
-        }
-        
-        String containerClassName = player.containerMenu.getClass().getName();
-        return containerClassName.equals("com.glodblock.github.extendedae.container.ContainerExPatternTerminal");
-    }
-
-    /**
      * 将玩家背包中的样板上传到指定的样板供应器
      * 兼容ExtendedAE和原版AE2
-     * 
-     * @param player 玩家
+     *
+     * @param player          玩家
      * @param playerSlotIndex 玩家背包槽位索引
-     * @param providerId 目标样板供应器的服务器ID
-     * @return 是否上传成功
+     * @param providerId      目标样板供应器的服务器ID
      */
-    public static boolean uploadPatternToProvider(ServerPlayer player, int playerSlotIndex, long providerId) {
+    public static void uploadPatternToProvider(ServerPlayer player, int playerSlotIndex, long providerId) {
         // 1. 验证玩家是否打开了样板访问终端
         PatternAccessTermMenu menu = getPatternAccessMenu(player);
         if (menu == null) {
-            return false;
+            return;
         }
 
         // 2. 获取玩家背包中的物品
         ItemStack playerItem = player.getInventory().getItem(playerSlotIndex);
         if (playerItem.isEmpty()) {
-            return false;
+            return;
         }
 
         // 3. 验证是否是编码样板
         if (!PatternDetailsHelper.isEncodedPattern(playerItem)) {
-            return false;
+            return;
         }
 
         // 4. 获取目标样板供应器
         PatternContainer patternContainer = getPatternContainerById(menu, providerId);
         if (patternContainer == null) {
-            return false;
+            return;
         }
 
         // 5. 获取样板供应器的库存
         InternalInventory patternInventory = patternContainer.getTerminalPatternInventory();
         if (patternInventory == null) {
-            return false;
+            return;
         }
 
         // 6. 使用AE2的标准样板过滤器进行插入
@@ -287,62 +233,7 @@ public class PatternUploader {
             if (playerItem.isEmpty()) {
                 player.getInventory().setItem(playerSlotIndex, ItemStack.EMPTY);
             }
-
-            return true;
-        } else {
-            return false;
         }
-    }
-
-    /**
-     * 批量上传样板到指定供应器（支持ExtendedAE和原版AE2）
-     * 
-     * @param player 玩家
-     * @param playerSlotIndices 玩家背包槽位索引数组
-     * @param providerId 目标样板供应器ID
-     * @return 成功上传的样板数量
-     */
-    public static int uploadMultiplePatterns(ServerPlayer player, int[] playerSlotIndices, long providerId) {
-        int successCount = 0;
-        
-        for (int slotIndex : playerSlotIndices) {
-            if (uploadPatternToProvider(player, slotIndex, providerId)) {
-                successCount++;
-            }
-        }
-        return successCount;
-    }
-
-    /**
-     * 检查样板供应器是否有足够的空槽位
-     * 
-     * @param providerId 供应器ID
-     * @param menu 样板访问终端菜单（支持ExtendedAE）
-     * @param requiredSlots 需要的槽位数
-     * @return 是否有足够的空槽位
-     */
-    public static boolean hasEnoughSlots(long providerId, PatternAccessTermMenu menu, int requiredSlots) {
-        PatternContainer container = getPatternContainerById(menu, providerId);
-        if (container == null) {
-            return false;
-        }
-
-        InternalInventory inventory = container.getTerminalPatternInventory();
-        if (inventory == null) {
-            return false;
-        }
-
-        int availableSlots = 0;
-        for (int i = 0; i < inventory.size(); i++) {
-            if (inventory.getStackInSlot(i).isEmpty()) {
-                availableSlots++;
-                if (availableSlots >= requiredSlots) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 
     /**
@@ -445,11 +336,6 @@ public class PatternUploader {
      */
     private static class ExtendedAEPatternFilter implements IAEItemFilter {
         @Override
-        public boolean allowExtract(InternalInventory inv, int slot, int amount) {
-            return true;
-        }
-
-        @Override
         public boolean allowInsert(InternalInventory inv, int slot, ItemStack stack) {
             return !stack.isEmpty() && PatternDetailsHelper.isEncodedPattern(stack);
         }
@@ -530,121 +416,22 @@ public class PatternUploader {
     }
 
     /**
-     * 获取当前终端类型的描述
-     *
-     * @param player 玩家
-     * @return 终端类型描述
-     */
-    public static String getTerminalTypeDescription(ServerPlayer player) {
-        if (isExtendedAETerminal(player)) {
-            return "ExtendedAE扩展样板管理终端";
-        } else if (getPatternAccessMenu(player) != null) {
-            return "AE2样板访问终端";
-        } else {
-            return "未知终端类型";
-        }
-    }
-
-    /**
-     * 从 AE2 的图样编码终端菜单上传当前“已编码图样”至当前网络中任意可用的样板供应器。
-     * 策略：
-     * 1) 仅当 encoded 槽位存在有效编码样板时执行；
-     * 2) 通过 menu.getNetworkNode() 获取 IGrid，遍历在线的 PatternContainer；
-     * 3) 仅选择在终端中可见（isVisibleInTerminal）且库存存在空位的供应器；
-     * 4) 使用 AE2 的标准 FilteredInternalInventory + Pattern 过滤器尝试插入；
-     * 5) 成功后清空 encoded 槽位，返回 true；否则返回 false。
-     */
-    public static boolean uploadFromEncodingMenuToAnyProvider(ServerPlayer player, PatternEncodingTermMenu menu) {
-        if (player == null || menu == null) {
-            return false;
-        }
-        // 读取已编码槽位的物品（通过 accessor）
-        var encodedSlot = ((PatternEncodingTermMenuAccessor) menu)
-                .eap$getEncodedPatternSlot();
-        ItemStack stack = encodedSlot.getItem();
-        if (stack.isEmpty() || !PatternDetailsHelper.isEncodedPattern(stack)) {
-            return false;
-        }
-
-        // 获取 AE 网络（1.21 经由 AEBaseMenu target + IActionHost）
-        IGrid grid = null;
-        try {
-            if (menu instanceof AEBaseMenu abm) {
-                Object target = abm.getTarget();
-                if (target instanceof IActionHost host && host.getActionableNode() != null) {
-                    grid = host.getActionableNode().getGrid();
-                }
-            }
-        } catch (Throwable ignored) {}
-        if (grid == null) {
-            return false;
-        }
-
-        // 遍历在线的 PatternContainer，寻找第一个可见且有空位的供应器
-        try {
-            for (var machineClass : grid.getMachineClasses()) {
-                if (PatternContainer.class.isAssignableFrom(machineClass)) {
-                    @SuppressWarnings("unchecked")
-                    Class<? extends PatternContainer> containerClass = (Class<? extends PatternContainer>) machineClass;
-                    for (var container : grid.getActiveMachines(containerClass)) {
-                        if (container == null || !container.isVisibleInTerminal()) {
-                            continue;
-                        }
-                        InternalInventory inv = container.getTerminalPatternInventory();
-                        if (inv == null || inv.size() <= 0) {
-                            continue;
-                        }
-                        boolean hasEmpty = false;
-                        for (int i = 0; i < inv.size(); i++) {
-                            if (inv.getStackInSlot(i).isEmpty()) {
-                                hasEmpty = true;
-                                break;
-                            }
-                        }
-                        if (!hasEmpty) {
-                            continue;
-                        }
-
-                        // 按 AE2 样板过滤规则尝试插入
-                        var filtered = new FilteredInternalInventory(inv, new ExtendedAEPatternFilter());
-                        ItemStack toInsert = stack.copy();
-                        ItemStack remain = filtered.addItems(toInsert);
-                        if (remain.getCount() < toInsert.getCount()) {
-                            int inserted = toInsert.getCount() - remain.getCount();
-                            stack.shrink(inserted);
-                            if (stack.isEmpty()) {
-                                encodedSlot.set(ItemStack.EMPTY);
-                            } else {
-                                encodedSlot.set(stack);
-                            }
-                            return true;
-                        }
-                    }
-                }
-            }
-        } catch (Throwable t) {
-            // 忽略异常以避免噪声
-        }
-        return false;
-    }
-
-    /**
      * 将图样编码终端的“已编码图样”上传到指定的样板供应器（通过 providerId 定位）。
      */
-    public static boolean uploadFromEncodingMenuToProvider(ServerPlayer player, PatternEncodingTermMenu menu, long providerId) {
+    public static void uploadFromEncodingMenuToProvider(ServerPlayer player, PatternEncodingTermMenu menu, long providerId) {
         if (player == null || menu == null) {
-            return false;
+            return;
         }
         var encodedSlot = ((PatternEncodingTermMenuAccessor) menu)
                 .eap$getEncodedPatternSlot();
         ItemStack stack = encodedSlot.getItem();
         if (stack.isEmpty() || !PatternDetailsHelper.isEncodedPattern(stack)) {
-            return false;
+            return;
         }
 
         PatternAccessTermMenu accessMenu = getPatternAccessMenu(player);
         if (accessMenu == null) {
-            return false;
+            return;
         }
         // 先确定目标容器名称，用于同名回退
         String targetName = getProviderDisplayName(providerId, accessMenu);
@@ -656,7 +443,7 @@ public class PatternUploader {
             for (Long id : all) {
                 if (id == null || id == providerId) continue;
                 String name = getProviderDisplayName(id, accessMenu);
-                if (name != null && name.equals(targetName)) {
+                if (name.equals(targetName)) {
                     tryIds.add(id);
                 }
             }
@@ -680,10 +467,9 @@ public class PatternUploader {
                 } else {
                     encodedSlot.set(stack);
                 }
-                return true;
+                return;
             }
         }
-        return false;
     }
 
     /**
@@ -715,11 +501,9 @@ public class PatternUploader {
         if (menu == null) return list;
         try {
             IGrid grid = null;
-            if (menu instanceof AEBaseMenu abm) {
-                Object target = abm.getTarget();
-                if (target instanceof IActionHost host && host.getActionableNode() != null) {
-                    grid = host.getActionableNode().getGrid();
-                }
+            Object target = menu.getTarget();
+            if (target instanceof IActionHost host && host.getActionableNode() != null) {
+                grid = host.getActionableNode().getGrid();
             }
             if (grid == null) return list;
             for (var machineClass : grid.getMachineClasses()) {
@@ -762,18 +546,18 @@ public class PatternUploader {
      * 基于“索引”的定向上传：使用 listAvailableProvidersFromGrid(menu) 的顺序，
      * 将编码槽样板插入到第 index 个供应器。
      */
-    public static boolean uploadFromEncodingMenuToProviderByIndex(ServerPlayer player, PatternEncodingTermMenu menu, int index) {
-        if (player == null || menu == null || index < 0) return false;
+    public static void uploadFromEncodingMenuToProviderByIndex(ServerPlayer player, PatternEncodingTermMenu menu, int index) {
+        if (player == null || menu == null || index < 0) return;
         List<PatternContainer> list = listAvailableProvidersFromGrid(menu);
-        if (index >= list.size()) return false;
+        if (index >= list.size()) return;
         var container = list.get(index);
-        if (container == null) return false;
+        if (container == null) return;
 
         var encodedSlot = ((PatternEncodingTermMenuAccessor) menu)
                 .eap$getEncodedPatternSlot();
         ItemStack stack = encodedSlot.getItem();
         if (stack.isEmpty() || !PatternDetailsHelper.isEncodedPattern(stack)) {
-            return false;
+            return;
         }
 
         // 以名称为键，同名供应器依次尝试：先 index 指定的，再同名的其他
@@ -784,7 +568,7 @@ public class PatternUploader {
             for (PatternContainer c : list) {
                 if (c == null || c == container) continue;
                 String name = getProviderDisplayName(c);
-                if (name != null && name.equals(targetName)) {
+                if (name.equals(targetName)) {
                     tryList.add(c);
                 }
             }
@@ -804,10 +588,9 @@ public class PatternUploader {
                 } else {
                     encodedSlot.set(stack);
                 }
-                return true;
+                return;
             }
         }
-        return false;
     }
 
     /**
