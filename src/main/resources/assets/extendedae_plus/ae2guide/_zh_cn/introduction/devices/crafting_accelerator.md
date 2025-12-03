@@ -2,7 +2,7 @@
 navigation:
   parent: introduction/index.md
   title: 并行处理单元
-  position: 4
+  position: 3
   icon: extendedae_plus:accelerator_1024x
 categories:
   - extendedae_plus devices

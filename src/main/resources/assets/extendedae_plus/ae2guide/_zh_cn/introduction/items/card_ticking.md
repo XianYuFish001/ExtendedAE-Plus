@@ -2,7 +2,7 @@
 navigation:
   parent: introduction/index.md
   title: Ticking 倍增卡
-  position: 6
+  position: 7
   icon: extendedae_plus:card_ticking
 categories:
   - extendedae_plus items

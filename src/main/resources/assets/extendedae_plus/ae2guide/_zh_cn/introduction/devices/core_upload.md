@@ -2,7 +2,7 @@
 navigation:
   parent: introduction/index.md
   title: 装配矩阵上传核心
-  position: 8
+  position: 2
   icon: extendedae_plus:assembler_matrix_upload_core
 categories:
   - extendedae_plus devices

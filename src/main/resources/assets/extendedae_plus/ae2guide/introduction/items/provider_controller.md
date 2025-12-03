@@ -2,7 +2,7 @@
 navigation:
   parent: introduction/index.md
   title: Provider Controller
-  position: 3
+  position: 11
   icon: extendedae_plus:provider_controller
 categories:
   - extendedae_plus devices

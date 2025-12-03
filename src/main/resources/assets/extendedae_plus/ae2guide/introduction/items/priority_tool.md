@@ -2,7 +2,7 @@
 navigation:
   parent: introduction/index.md
   title: Priority Tool
-  position: 3
+  position: 10
   icon: extendedae_plus:priority_tool
 categories:
   - extendedae_plus devices

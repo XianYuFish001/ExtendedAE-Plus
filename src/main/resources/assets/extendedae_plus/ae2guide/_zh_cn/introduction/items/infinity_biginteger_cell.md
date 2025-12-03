@@ -2,7 +2,7 @@
 navigation:
   parent: introduction/index.md
   title: "吞噬万籁的寂静"
-  position: 7
+  position: 9
   icon: extendedae_plus:infinity_biginteger_cell
 categories:
   - extendedae_plus items

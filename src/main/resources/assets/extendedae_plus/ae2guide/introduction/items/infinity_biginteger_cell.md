@@ -2,7 +2,7 @@
 navigation:
   parent: introduction/index.md
   title: "Devourer of Cosmic Silence"
-  position: 7
+  position: 9
   icon: extendedae_plus:infinity_biginteger_cell
 categories:
   - extendedae_plus items

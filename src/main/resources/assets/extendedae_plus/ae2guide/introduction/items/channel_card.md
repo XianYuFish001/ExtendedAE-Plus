@@ -2,7 +2,7 @@
 navigation:
   parent: introduction/index.md
   title: Channel Card
-  position: 2
+  position: 8
   icon: extendedae_plus:channel_card
 categories:
   - extendedae_plus items

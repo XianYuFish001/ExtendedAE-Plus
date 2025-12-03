@@ -2,7 +2,7 @@
 navigation:
   parent: introduction/index.md
   title: 优先级覆写卡
-  position: 3
+  position: 10
   icon: extendedae_plus:priority_tool
 categories:
   - extendedae_plus devices

@@ -2,7 +2,7 @@
 navigation:
   parent: introduction/index.md
   title: Assembler Matrix Upload Core
-  position: 8
+  position: 2
   icon: extendedae_plus:assembler_matrix_upload_core
 categories:
   - extendedae_plus devices

@@ -33,7 +33,10 @@ public class LangZH extends LanguageProvider {
                 .buildInto("Ticking倍增卡 %s倍");
 
         this.addBlock(ModBlocks.WIRELESS_TRANSCEIVER, "无线收发器");
-        this.addBlock(ModBlocks.ASSEMBLER_MATRIX_UPLOAD_CORE, "装配矩阵上传核心");
+        this.addBlock(ModBlocks.CORE_UPLOAD, "装配矩阵上传核心");
+        this.addBlock(ModBlocks.CORE_ADVANCED_CRAFTER, "装配矩阵高级合成核心");
+        this.addBlock(ModBlocks.CORE_ADVANCED_PATTERN, "装配矩阵高级样板核心");
+        this.addBlock(ModBlocks.CORE_ADVANCED_SPEED, "装配矩阵高级速度核心");
         Arrays.stream(EAEPCraftingUnitType.values()).forEach(type ->
                 this.addBlock(type.getBlock(), type.getAcceleratorThreads() + "x并行处理单元"));
 

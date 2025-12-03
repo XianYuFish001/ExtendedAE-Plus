@@ -10,7 +10,6 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 @Pseudo
 @Mixin(value = PartExPatternProvider.class, priority = 1100, remap = false)
 public abstract class PartExPatternProviderMixin {
-
     @ModifyArg(
             method = "createLogic",
             at = @At(

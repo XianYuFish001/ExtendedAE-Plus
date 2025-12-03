@@ -15,7 +15,7 @@ import appeng.menu.me.items.PatternEncodingTermMenu;
 import appeng.util.inv.FilteredInternalInventory;
 import appeng.util.inv.filter.IAEItemFilter;
 import com.extendedae_plus.EAEPConfig;
-import com.extendedae_plus.common.block.uploadCore.UploadCoreBlockEntity;
+import com.extendedae_plus.common.block.assemblerMatrix.coreUpload.UploadCoreBlockEntity;
 import com.extendedae_plus.mixin.core.ae2.accessor.PatternEncodingTermMenuAccessor;
 import com.extendedae_plus.util.UtilKeyBuilder;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixPattern;

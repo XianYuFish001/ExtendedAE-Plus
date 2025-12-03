@@ -2,7 +2,7 @@
 navigation:
   parent: introduction/index.md
   title: Auto Completion Card
-  position: 3
+  position: 6
   icon: extendedae_plus:card_auto_completion
 categories:
   - extendedae_plus items

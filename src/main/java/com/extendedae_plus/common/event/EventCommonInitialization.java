@@ -1,20 +1,15 @@
 package com.extendedae_plus.common.event;
 
-import appeng.api.AECapabilities;
 import appeng.api.parts.IPart;
 import appeng.api.parts.PartModels;
 import appeng.api.storage.StorageCells;
-import appeng.blockentity.AEBaseBlockEntity;
 import appeng.blockentity.crafting.CraftingBlockEntity;
 import appeng.items.parts.PartModelsHelper;
 import appeng.menu.locator.MenuLocators;
 import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.common.block.EAEPCraftingUnitType;
-import com.extendedae_plus.common.block.uploadCore.UploadCoreBlockEntity;
-import com.extendedae_plus.common.block.wirelessTransceiver.BlockEntityWirelessTransceiver;
 import com.extendedae_plus.common.impl.menuLocator.CuriosItemLocator;
 import com.extendedae_plus.common.init.ModBlockEntities;
-import com.extendedae_plus.common.init.ModBlocks;
 import com.extendedae_plus.common.init.ModItems;
 import com.extendedae_plus.common.init.ModUpgradeCards;
 import com.extendedae_plus.common.item.infinityBigIntegerCell.InfinityBigIntegerCellHandler;
@@ -33,14 +28,7 @@ public class EventCommonInitialization {
 
     @SubscribeEvent
     public static void onCapabilitiesRegistering(RegisterCapabilitiesEvent event) {
-        event.registerBlockEntity(
-                AECapabilities.IN_WORLD_GRID_NODE_HOST,
-                ModBlockEntities.WIRELESS_TRANSCEIVER.get(),
-                (be, ctx) -> be);
-        event.registerBlockEntity(
-                AECapabilities.IN_WORLD_GRID_NODE_HOST,
-                ModBlockEntities.EAEP_CRAFTING_UNIT.get(),
-                (be, ctx) -> be);
+        ModBlockEntities.onCapabilitiesRegistering(event);
     }
 
     @SubscribeEvent
@@ -75,14 +63,19 @@ public class EventCommonInitialization {
     }
 
     private static void blockEntity() {
-        ModBlocks.WIRELESS_TRANSCEIVER.get().setBlockEntity(
-                BlockEntityWirelessTransceiver.class,
-                ModBlockEntities.WIRELESS_TRANSCEIVER.get(),
-                null, null);
-        ModBlocks.ASSEMBLER_MATRIX_UPLOAD_CORE.get().setBlockEntity(
-                UploadCoreBlockEntity.class,
-                ModBlockEntities.UPLOAD_CORE.get(),
-                null, null);
+//        ModBlocks.WIRELESS_TRANSCEIVER.get().setBlockEntity(
+//                BlockEntityWirelessTransceiver.class,
+//                ModBlockEntities.WIRELESS_TRANSCEIVER.get(),
+//                null, null);
+//        ModBlocks.CORE_UPLOAD.get().setBlockEntity(
+//                UploadCoreBlockEntity.class,
+//                ModBlockEntities.CORE_UPLOAD.get(),
+//                null, null);
+//        AEBaseBlockEntity.registerBlockEntityItem(
+//                ModBlockEntities.WIRELESS_TRANSCEIVER.get(), ModItems.WIRELESS_TRANSCEIVER.get());
+//        AEBaseBlockEntity.registerBlockEntityItem(
+//                ModBlockEntities.CORE_UPLOAD.get(), ModItems.CORE_UPLOAD.get());
+        ModBlockEntities.onBlockEntityBinding();
 
         Arrays.stream(EAEPCraftingUnitType.values()).forEach(unit ->
                 unit.getBlock().get().setBlockEntity(
@@ -90,9 +83,5 @@ public class EventCommonInitialization {
                         ModBlockEntities.EAEP_CRAFTING_UNIT.get(),
                         null, null));
 
-        AEBaseBlockEntity.registerBlockEntityItem(
-                ModBlockEntities.WIRELESS_TRANSCEIVER.get(), ModItems.WIRELESS_TRANSCEIVER.get());
-        AEBaseBlockEntity.registerBlockEntityItem(
-                ModBlockEntities.UPLOAD_CORE.get(), ModItems.ASSEMBLER_MATRIX_UPLOAD_CORE.get());
     }
 }

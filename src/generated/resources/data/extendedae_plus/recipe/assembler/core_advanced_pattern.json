@@ -1,0 +1,33 @@
+{
+  "type": "extendedae:crystal_assembler",
+  "input_items": [
+    {
+      "amount": 6,
+      "ingredient": {
+        "item": "extendedae:assembler_matrix_pattern"
+      }
+    },
+    {
+      "amount": 8,
+      "ingredient": {
+        "tag": "extendedae:extended_pattern_provider"
+      }
+    },
+    {
+      "amount": 6,
+      "ingredient": {
+        "item": "ae2:engineering_processor"
+      }
+    },
+    {
+      "amount": 4,
+      "ingredient": {
+        "item": "minecraft:blue_dye"
+      }
+    }
+  ],
+  "output": {
+    "count": 1,
+    "id": "extendedae_plus:assembler_matrix_advanced_pattern"
+  }
+}

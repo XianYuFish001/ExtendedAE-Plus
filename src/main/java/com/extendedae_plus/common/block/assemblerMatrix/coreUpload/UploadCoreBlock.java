@@ -1,4 +1,4 @@
-package com.extendedae_plus.common.block.uploadCore;
+package com.extendedae_plus.common.block.assemblerMatrix.coreUpload;
 
 import com.glodblock.github.extendedae.common.blocks.matrix.BlockAssemblerMatrixBase;
 import net.minecraft.world.item.Item;
@@ -19,6 +19,6 @@ public class UploadCoreBlock extends BlockAssemblerMatrixBase<UploadCoreBlockEnt
     @Override
     public Item getPresentItem() {
         // 由对应的 BlockItem 注册返回，上传核心不需要特殊的 PresentItem，可返回自身的 BlockItem
-        return com.extendedae_plus.common.init.ModItems.ASSEMBLER_MATRIX_UPLOAD_CORE.get();
+        return com.extendedae_plus.common.init.ModItems.CORE_UPLOAD.get();
     }
 }

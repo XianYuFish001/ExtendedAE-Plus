@@ -2,7 +2,7 @@
 navigation:
   parent: introduction/index.md
   title: Ticker
-  position: 5
+  position: 4
   icon: extendedae_plus:ticker
 categories:
   - extendedae_plus devices
@@ -10,13 +10,13 @@ item_ids:
   - extendedae_plus:ticker
 ---
 
+<GameScene zoom="8" background="transparent">
+    <ImportStructure src="../../structure/ticker.snbt" />
+</GameScene>
+
 # Ticker
 
 The **Ticker** consumes energy from the AE2 network to accelerate block entities in the front block space, functioning similarly to a “Time in a bottle”.
-
-<GameScene zoom="8" background="transparent">
-<ImportStructure src="../../structure/ticker.snbt"></ImportStructure>
-</GameScene>
 
 ## Operating Mechanism
 

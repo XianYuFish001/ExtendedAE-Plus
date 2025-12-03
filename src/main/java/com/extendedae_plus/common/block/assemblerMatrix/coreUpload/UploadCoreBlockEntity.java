@@ -1,4 +1,4 @@
-package com.extendedae_plus.common.block.uploadCore;
+package com.extendedae_plus.common.block.assemblerMatrix.coreUpload;
 
 import com.extendedae_plus.common.init.ModBlockEntities;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixBase;
@@ -11,6 +11,6 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public class UploadCoreBlockEntity extends TileAssemblerMatrixBase {
     public UploadCoreBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.UPLOAD_CORE.get(), pos, state);
+        super(ModBlockEntities.CORE_UPLOAD.get(), pos, state);
     }
 }

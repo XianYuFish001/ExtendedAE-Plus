@@ -7,6 +7,7 @@ import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.common.block.EAEPCraftingUnitType;
 import com.extendedae_plus.common.dataComponent.DataTickingCard;
 import com.extendedae_plus.common.init.ModItems;
+import com.extendedae_plus.dataGen.recipeBuilder.BuilderCrystalAssembler;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipeBuilder;
 import com.glodblock.github.extendedae.util.EAETags;
@@ -137,7 +138,7 @@ public class Recipe extends RecipeProvider {
                 .unlockedBy("has_singularity", has(AEItems.SINGULARITY))
                 .save(recipeOutput);
 
-        CrystalAssemblerRecipeBuilder.assemble(ModItems.ASSEMBLER_MATRIX_UPLOAD_CORE)
+        CrystalAssemblerRecipeBuilder.assemble(ModItems.CORE_UPLOAD)
                 .input(EAESingletons.ASSEMBLER_MATRIX_WALL)
                 .input(AEItems.SINGULARITY)
                 .input(AEItems.COLORED_LUMEN_PAINT_BALL.item(AEColor.LIME), 6)
@@ -150,5 +151,24 @@ public class Recipe extends RecipeProvider {
                 .input(AEItems.FLUID_CELL_256K)
                 .fluid(Fluids.LAVA, 2000)
                 .save(recipeOutput, ExtendedAEPlus.getLocation("assembler/infinity_cell_item"));
+        CrystalAssemblerRecipeBuilder.assemble(ModItems.CORE_ADVANCED_CRAFTER)
+                .input(EAESingletons.ASSEMBLER_MATRIX_CRAFTER, 6)
+                .input(EAESingletons.EX_ASSEMBLER, 8)
+                .input(AEItems.LOGIC_PROCESSOR, 6)
+                .input(Items.PURPLE_DYE, 4)
+                .save(recipeOutput, ExtendedAEPlus.getLocation("assembler/core_advanced_crafter"));
+        CrystalAssemblerRecipeBuilder.assemble(ModItems.CORE_ADVANCED_PATTERN)
+                .input(EAESingletons.ASSEMBLER_MATRIX_PATTERN, 6)
+                .input(EAETags.EX_PATTERN_PROVIDER, 8)
+                .input(AEItems.ENGINEERING_PROCESSOR, 6)
+                .input(Items.BLUE_DYE, 4)
+                .save(recipeOutput, ExtendedAEPlus.getLocation("assembler/core_advanced_pattern"));
+
+        BuilderCrystalAssembler.of(ModItems.CORE_ADVANCED_SPEED, builder -> builder
+                .input(EAESingletons.ASSEMBLER_MATRIX_SPEED, 6))
+                .input(DataTickingCard.toIngredient(2, 16), 8)
+                .input(EAESingletons.CONCURRENT_PROCESSOR, 6)
+                .input(Items.RED_DYE, 4)
+                .save(recipeOutput, ExtendedAEPlus.getLocation("assembler/core_advanced_speed"));
     }
 }

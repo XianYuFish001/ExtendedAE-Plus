@@ -18,7 +18,7 @@ public class ExtendedAEPlus {
 
         ModBlocks.BLOCK.register(modEventBus);
         ModItems.ITEM.register(modEventBus);
-        ModBlockEntities.BLOCK_ENTITY_TYPES.register(modEventBus);
+        ModBlockEntities.BLOCK_ENTITY_TYPE.register(modEventBus);
         ModCreativeTabs.TABS.register(modEventBus);
         ModMenuTypes.MENU.register(modEventBus);
         ModDataComponents.COMPONENT.register(modEventBus);

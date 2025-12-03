@@ -1,0 +1,33 @@
+{
+  "type": "extendedae:crystal_assembler",
+  "input_items": [
+    {
+      "amount": 6,
+      "ingredient": {
+        "item": "extendedae:assembler_matrix_crafter"
+      }
+    },
+    {
+      "amount": 8,
+      "ingredient": {
+        "item": "extendedae:ex_molecular_assembler"
+      }
+    },
+    {
+      "amount": 6,
+      "ingredient": {
+        "item": "ae2:logic_processor"
+      }
+    },
+    {
+      "amount": 4,
+      "ingredient": {
+        "item": "minecraft:purple_dye"
+      }
+    }
+  ],
+  "output": {
+    "count": 1,
+    "id": "extendedae_plus:assembler_matrix_advanced_crafter"
+  }
+}

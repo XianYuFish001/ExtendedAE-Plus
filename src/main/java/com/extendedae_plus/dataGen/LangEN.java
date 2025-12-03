@@ -33,7 +33,10 @@ public class LangEN extends LanguageProvider {
                 .buildInto("Ticking Card (x%s)");
 
         this.addBlock(ModBlocks.WIRELESS_TRANSCEIVER, "Wireless Transceiver");
-        this.addBlock(ModBlocks.ASSEMBLER_MATRIX_UPLOAD_CORE, "Assembly Matrix Upload Core");
+        this.addBlock(ModBlocks.CORE_UPLOAD, "Assembly Matrix Upload Core");
+        this.addBlock(ModBlocks.CORE_ADVANCED_CRAFTER, "Assembler Matrix Advanced Craft Core");
+        this.addBlock(ModBlocks.CORE_ADVANCED_PATTERN, "Assembler Matrix Advanced Pattern Core");
+        this.addBlock(ModBlocks.CORE_ADVANCED_SPEED, "Assembler Matrix Advanced Speed Core");
         Arrays.stream(EAEPCraftingUnitType.values()).forEach(type ->
                 this.addBlock(type.getBlock(), type.getAcceleratorThreads() + "x Crafting Accelerator"));
 

@@ -2,7 +2,7 @@
 navigation:
   parent: introduction/index.md
   title: 样板供应器管理工具
-  position: 3
+  position: 11
   icon: extendedae_plus:provider_controller
 categories:
   - extendedae_plus devices

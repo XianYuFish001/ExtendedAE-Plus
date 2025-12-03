@@ -2,7 +2,7 @@
 navigation:
   parent: introduction/index.md
   title: Ticker
-  position: 5
+  position: 4
   icon: extendedae_plus:ticker
 categories:
   - extendedae_plus devices
@@ -10,12 +10,12 @@ item_ids:
   - extendedae_plus:ticker
 ---
 
+<GameScene zoom="8" background="transparent">
+    <ImportStructure src="../../structure/ticker.snbt" />
+</GameScene>
+
 # Ticker
 Ticker 通过消耗网络中的能量，为面对的方块提供 Tick 加速，其功能与「时间之瓶」类似。
-
-<GameScene zoom="8" background="transparent">
-<ImportStructure src="../../structure/ticker.snbt"></ImportStructure>
-</GameScene>
 
 ## 工作机制
 1. **启用条件**：应用升级卡 **<ItemLink id="extendedae_plus:card_ticking" tag="{'extendedae_plus:data_ticking_card':{'multiplier':16,'max_multiplier':1024}}" />** 以累积倍数

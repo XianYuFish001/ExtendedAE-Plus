@@ -1,4 +1,4 @@
-package com.extendedae_plus.mixin.core.extendedae.container;
+package com.extendedae_plus.mixin.core.extendedae.menu;
 
 import appeng.api.crafting.PatternDetailsHelper;
 import appeng.api.stacks.GenericStack;

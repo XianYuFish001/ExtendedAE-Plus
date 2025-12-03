@@ -1,0 +1,40 @@
+{
+  "type": "extendedae:crystal_assembler",
+  "input_items": [
+    {
+      "amount": 6,
+      "ingredient": {
+        "item": "extendedae:assembler_matrix_speed"
+      }
+    },
+    {
+      "amount": 8,
+      "ingredient": {
+        "type": "neoforge:components",
+        "components": {
+          "extendedae_plus:data_ticking_card": {
+            "max_multiplier": 16,
+            "multiplier": 2
+          }
+        },
+        "items": "extendedae_plus:card_ticking"
+      }
+    },
+    {
+      "amount": 6,
+      "ingredient": {
+        "item": "extendedae:concurrent_processor"
+      }
+    },
+    {
+      "amount": 4,
+      "ingredient": {
+        "item": "minecraft:red_dye"
+      }
+    }
+  ],
+  "output": {
+    "count": 1,
+    "id": "extendedae_plus:assembler_matrix_advanced_speed"
+  }
+}

@@ -2,7 +2,7 @@
 navigation:
   parent: introduction/index.md
   title: 自动完成卡
-  position: 3
+  position: 6
   icon: extendedae_plus:card_auto_completion
 categories:
   - extendedae_plus items

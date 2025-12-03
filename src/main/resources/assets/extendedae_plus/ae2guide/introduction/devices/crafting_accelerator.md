@@ -2,7 +2,7 @@
 navigation:
   parent: introduction/index.md
   title: Parallel Processing Unit
-  position: 4
+  position: 3
   icon: extendedae_plus:accelerator_1024x
 categories:
   - extendedae_plus devices

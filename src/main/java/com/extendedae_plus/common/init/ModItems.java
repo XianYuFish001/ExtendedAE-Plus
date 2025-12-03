@@ -30,9 +30,15 @@ public final class ModItems {
     public static final List<DeferredItem<?>> ITEMS = new ArrayList<>();
 
     public static final DeferredItem<BlockItem> WIRELESS_TRANSCEIVER =
-            regCommonBlockItem("wireless_transceiver", ModBlocks.WIRELESS_TRANSCEIVER);
-    public static final DeferredItem<BlockItem> ASSEMBLER_MATRIX_UPLOAD_CORE =
-            regCommonBlockItem("assembler_matrix_upload_core", ModBlocks.ASSEMBLER_MATRIX_UPLOAD_CORE);
+            regCommonBlockItem(ModBlocks.WIRELESS_TRANSCEIVER);
+    public static final DeferredItem<BlockItem> CORE_UPLOAD =
+            regCommonBlockItem(ModBlocks.CORE_UPLOAD);
+    public static final DeferredItem<BlockItem> CORE_ADVANCED_CRAFTER =
+            regCommonBlockItem(ModBlocks.CORE_ADVANCED_CRAFTER);
+    public static final DeferredItem<BlockItem> CORE_ADVANCED_PATTERN =
+            regCommonBlockItem(ModBlocks.CORE_ADVANCED_PATTERN);
+    public static final DeferredItem<BlockItem> CORE_ADVANCED_SPEED =
+            regCommonBlockItem(ModBlocks.CORE_ADVANCED_SPEED);
 
     public static final DeferredItem<PartItem<?>> PART_TICKER = regItem("ticker", ItemTicker::new);
 
@@ -57,6 +63,10 @@ public final class ModItems {
         var holder = ITEM.register(name, factory);
         ITEMS.add(holder);
         return holder;
+    }
+
+    public static DeferredItem<BlockItem> regCommonBlockItem(DeferredBlock<?> block) {
+        return regCommonBlockItem(block.getId().getPath(), block);
     }
     
     public static DeferredItem<BlockItem> regCommonBlockItem(String name, DeferredBlock<?> block) {

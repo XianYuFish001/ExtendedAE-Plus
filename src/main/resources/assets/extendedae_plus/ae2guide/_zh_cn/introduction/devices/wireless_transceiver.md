@@ -2,7 +2,7 @@
 navigation:
   parent: introduction/index.md
   title: 无线收发器
-  position: 1
+  position: 5
   icon: extendedae_plus:wireless_transceiver
 categories:
   - extendedae_plus devices
