@@ -26,6 +26,8 @@ import java.util.Arrays;
 public class EventCommonInitialization {
     private static final Logger LOGGER = LogUtils.getLogger();
 
+    private static volatile boolean registered;
+
     @SubscribeEvent
     public static void onCapabilitiesRegistering(RegisterCapabilitiesEvent event) {
         ModBlockEntities.onCapabilitiesRegistering(event);
@@ -33,6 +35,9 @@ public class EventCommonInitialization {
 
     @SubscribeEvent
     private static void onCommonSetup(FMLCommonSetupEvent event) {
+        if (registered) return;
+        registered = true;
+
         event.enqueueWork(() -> {
             ModUpgradeCards.init();
 
