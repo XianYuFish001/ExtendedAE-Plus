@@ -73,6 +73,10 @@ public class LinkMaster {
         this.registered = false;
     }
 
+    public boolean connected() {
+        return LinkRegistry.countListener(LinkRegistry.LinkInfo.fromHost(this.host)) > 0;
+    }
+
     public void onUnloadOrRemove() {
         unregister();
     }

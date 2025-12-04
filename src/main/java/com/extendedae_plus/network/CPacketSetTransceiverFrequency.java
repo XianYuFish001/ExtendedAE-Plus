@@ -1,6 +1,6 @@
 package com.extendedae_plus.network;
 
-import com.extendedae_plus.common.block.wirelessTransceiver.BlockEntityWirelessTransceiver;
+import com.extendedae_plus.common.api.IBlockEntityFrequency;
 import com.extendedae_plus.network.base.CPacketGeneric;
 import com.extendedae_plus.network.base.EAEPNetworkPacket;
 import com.extendedae_plus.network.base.PacketGeneric;
@@ -44,15 +44,15 @@ public record CPacketSetTransceiverFrequency(BlockPos pos, long frequency) imple
 
         // 获取方块实体
         BlockEntity be = player.level().getBlockEntity(this.pos);
-        if (!(be instanceof BlockEntityWirelessTransceiver transceiver)) {
-            LOGGER.warn("Invalid block entity at {} for frequency setting", this.pos);
+        if (!(be instanceof IBlockEntityFrequency helper)) {
+            LOGGER.warn("Invalid blockEntity at {} for frequency setting", this.pos);
             return;
         }
 
         // 使用强制设置方法，忽略锁定状态
         // 扳手GUI调整频率时应该能够绕过锁定限制
-        transceiver.setFrequency(this.frequency, true);
-        LOGGER.debug("Set transceiver frequency at {} to {} (forced)", this.pos, this.frequency);
+        helper.setFrequency(this.frequency, true);
+        LOGGER.debug("Set blockEntity frequency at {} to {} (forced)", this.pos, this.frequency);
     }
 }
 

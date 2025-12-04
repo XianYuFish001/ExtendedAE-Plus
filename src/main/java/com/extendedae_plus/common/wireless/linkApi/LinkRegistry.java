@@ -24,6 +24,11 @@ public class LinkRegistry {
         return activeMasters.get(info).get();
     }
 
+    public static synchronized int countListener(LinkInfo info) {
+        if (!activeListeners.containsKey(info)) return 0;
+        return activeListeners.get(info).size();
+    }
+
     public static synchronized boolean registerMaster(ILinkHost master) {
         var info = LinkInfo.fromHost(master);
         if (info == null) return false;
@@ -73,6 +78,7 @@ public class LinkRegistry {
 
         var listeners = activeListeners.get(info);
         if (listeners == null) return true;
+        master.onConnectionChanged(false);
         for (var listener : Set.copyOf(listeners)) {
             listener.get().onMasterUnavailable(master);
         }
@@ -91,7 +97,11 @@ public class LinkRegistry {
         if (existing == null) return false;
         existing.removeIf(existingListener -> existingListener.get() == listener);
         listener.onListenerRemoved();
-        if (existing.isEmpty()) activeListeners.remove(info);
+        if (existing.isEmpty()) {
+            activeListeners.remove(info);
+            var master = findMaster(LinkInfo.fromFrequency(level, frequency, placer));
+            if (master != null) master.onConnectionChanged(false);
+        }
         return true;
     }
 

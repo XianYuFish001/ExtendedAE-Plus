@@ -11,7 +11,7 @@ import com.extendedae_plus.common.block.EAEPCraftingUnitType;
 import com.extendedae_plus.common.block.assemblerMatrix.coreAdvancedCrafter.BlockEntityAdvancedCrafter;
 import com.extendedae_plus.common.block.assemblerMatrix.coreAdvancedPattern.BlockEntityAdvancedPattern;
 import com.extendedae_plus.common.block.assemblerMatrix.coreAdvancedSpeed.BlockEntityAdvancedSpeed;
-import com.extendedae_plus.common.block.assemblerMatrix.coreUpload.UploadCoreBlockEntity;
+import com.extendedae_plus.common.block.assemblerMatrix.portUpload.BlockEntityUpload;
 import com.extendedae_plus.common.block.wirelessTransceiver.BlockEntityWirelessTransceiver;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
@@ -40,10 +40,10 @@ public final class ModBlockEntities {
             regCommonBlockEntity(BlockEntityWirelessTransceiver.class,
                     BlockEntityWirelessTransceiver::new,
                     ModBlocks.WIRELESS_TRANSCEIVER);
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<UploadCoreBlockEntity>> CORE_UPLOAD =
-            regCommonBlockEntity(UploadCoreBlockEntity.class,
-                    UploadCoreBlockEntity::new,
-                    ModBlocks.CORE_UPLOAD);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockEntityUpload>> PORT_UPLOAD =
+            regCommonBlockEntity(BlockEntityUpload.class,
+                    BlockEntityUpload::new,
+                    ModBlocks.PORT_UPLOAD);
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockEntityAdvancedCrafter>> CORE_ADVANCED_CRAFTER =
             regCommonBlockEntity(BlockEntityAdvancedCrafter.class,
                     BlockEntityAdvancedCrafter::new,
@@ -80,7 +80,7 @@ public final class ModBlockEntities {
                         infoCapability.register(event, infoBlockEntity)));
     }
 
-//    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public static void onBlockEntityBinding() {
         BLOCK_ENTITIES.forEach(info -> {
             if (!AEBaseBlockEntity.class.isAssignableFrom(info.clazz)) return;

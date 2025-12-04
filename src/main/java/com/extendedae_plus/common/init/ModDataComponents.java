@@ -1,6 +1,7 @@
 package com.extendedae_plus.common.init;
 
 import com.extendedae_plus.ExtendedAEPlus;
+import com.extendedae_plus.common.block.assemblerMatrix.portUpload.BlockEntityUpload;
 import com.extendedae_plus.common.block.wirelessTransceiver.BlockEntityWirelessTransceiver;
 import com.extendedae_plus.common.dataComponent.DataChannelCard;
 import com.extendedae_plus.common.dataComponent.DataEncoderProfile;
@@ -27,6 +28,10 @@ public class ModDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<BlockEntityWirelessTransceiver.DataSettings>>
             DATA_TRANSCEIVER_SETTINGS = register("data_transceiver_settings",
             BlockEntityWirelessTransceiver.DataSettings.CODEC, BlockEntityWirelessTransceiver.DataSettings.STREAM_CODEC);
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<BlockEntityUpload.DataSettings>>
+            DATA_PORT_UPLOAD_SETTINGS = register("data_port_upload_settings",
+            BlockEntityUpload.DataSettings.CODEC, BlockEntityUpload.DataSettings.STREAM_CODEC);
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<DataPriority>> DATA_PRIORITY =
             register("data_priority", DataPriority.CODEC, DataPriority.STREAM_CODEC);

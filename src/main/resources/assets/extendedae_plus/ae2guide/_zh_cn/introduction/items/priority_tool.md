@@ -10,7 +10,7 @@ item_ids:
   - extendedae_plus:priority_tool
 ---
 
-<ItemImage id="extendedae_plus:proirity_tool" scale="4" />
+<ItemImage id="extendedae_plus:priority_tool" scale="4" />
 
 # 优先级覆写卡
 简单的优先级设置工具

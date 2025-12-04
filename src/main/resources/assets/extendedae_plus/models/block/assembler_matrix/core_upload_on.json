@@ -1,0 +1,6 @@
+{
+    "parent": "extendedae_plus:block/assembler_matrix/core_upload_off",
+    "textures": {
+        "light" : "extendedae_plus:block/assembler_matrix/core_upload/on"
+    }
+}

@@ -63,18 +63,6 @@ public class EventCommonInitialization {
     }
 
     private static void blockEntity() {
-//        ModBlocks.WIRELESS_TRANSCEIVER.get().setBlockEntity(
-//                BlockEntityWirelessTransceiver.class,
-//                ModBlockEntities.WIRELESS_TRANSCEIVER.get(),
-//                null, null);
-//        ModBlocks.CORE_UPLOAD.get().setBlockEntity(
-//                UploadCoreBlockEntity.class,
-//                ModBlockEntities.CORE_UPLOAD.get(),
-//                null, null);
-//        AEBaseBlockEntity.registerBlockEntityItem(
-//                ModBlockEntities.WIRELESS_TRANSCEIVER.get(), ModItems.WIRELESS_TRANSCEIVER.get());
-//        AEBaseBlockEntity.registerBlockEntityItem(
-//                ModBlockEntities.CORE_UPLOAD.get(), ModItems.CORE_UPLOAD.get());
         ModBlockEntities.onBlockEntityBinding();
 
         Arrays.stream(EAEPCraftingUnitType.values()).forEach(unit ->

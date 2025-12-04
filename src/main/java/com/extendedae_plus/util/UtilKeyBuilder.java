@@ -8,6 +8,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.data.loading.DatagenModLoader;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
@@ -186,7 +187,6 @@ public class UtilKeyBuilder {
     }
 
     public static class BuilderDataGen extends BuilderGeneric<BuilderDataGen> {
-        private static final boolean checkedEnv = "data".equals(System.getProperty("extendedae_plus.environment"));
         private static final Map<String, BiConsumer<String, String>> translators = new HashMap<>();
         private static final ThreadLocal<String> selectedLocale = ThreadLocal.withInitial(() -> "en_us");
 
@@ -229,7 +229,8 @@ public class UtilKeyBuilder {
         }
 
         public static void checkEnvironment() {
-            if (!checkedEnv) throw new IllegalStateException("Cannot use data-only methods outside of the runData phase");
+            if (!DatagenModLoader.isRunningDataGen())
+                throw new IllegalStateException("Cannot use data-only methods outside of the runData phase");
         }
     }
 

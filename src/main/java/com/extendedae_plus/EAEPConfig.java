@@ -21,7 +21,7 @@ public final class EAEPConfig {
     public static final ModConfigSpec.BooleanValue OVERRIDE_AE2WT_PICKING;
 
     static final ModConfigSpec SERVER_SPEC;
-    public static final ModConfigSpec.BooleanValue NEEDS_UPLOADING_CORE;
+    public static final ModConfigSpec.BooleanValue NEEDS_UPLOADING_PORT;
     public static final ModConfigSpec.BooleanValue PROVIDER_ROUND_ROBIN_ENABLE;
     public static final ModConfigSpec.IntValue SMART_SCALING_MAX_MULTIPLIER;
     public static final ModConfigSpec.IntValue CRAFTING_PAUSE_THRESHOLD;
@@ -107,8 +107,8 @@ public final class EAEPConfig {
                                 && Pattern.matches("^#?\\w+:\\w+\\[[\\d.]+]$", value)
                 );
         serverBuilder.pop();
-        NEEDS_UPLOADING_CORE = serverBuilder
-                .define("needsUploadingCore", true);
+        NEEDS_UPLOADING_PORT = serverBuilder
+                .define("needsUploadingPort", true);
         SERVER_SPEC = serverBuilder.build();
     }
 }

@@ -8,4 +8,8 @@ public interface HelperAssemblerMatrixModifier {
     void eaep$addSpeedCore();
 
     void eaep$updateCrafter(TileAssemblerMatrixCrafter crafter);
+
+    void eaep$markUploadCore();
+
+    boolean eaep$hasUploadCore();
 }

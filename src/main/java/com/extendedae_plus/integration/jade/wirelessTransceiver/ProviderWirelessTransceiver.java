@@ -1,26 +1,26 @@
-package com.extendedae_plus.integration.jade;
+package com.extendedae_plus.integration.jade.wirelessTransceiver;
 
 import appeng.api.networking.IGridConnection;
+import com.extendedae_plus.common.api.IBlockEntityFrequency;
 import com.extendedae_plus.common.block.wirelessTransceiver.BlockEntityWirelessTransceiver;
 import com.extendedae_plus.common.block.wirelessTransceiver.BlockWirelessTransceiver;
 import com.extendedae_plus.common.wireless.linkApi.LinkRegistry;
+import com.extendedae_plus.integration.jade.CommonProvider;
 import com.extendedae_plus.util.WirelessTeamUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import snownee.jade.api.BlockAccessor;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.function.BiConsumer;
 
-public enum ProviderWirelessTransceiver {
+public enum ProviderWirelessTransceiver implements CommonProvider.IObjectedProvider {
     MASTER_MODE((data, accessor) -> {
         var blockState = accessor.getBlockState();
         if (!(accessor.getBlockEntity() instanceof BlockEntityWirelessTransceiver)) return;
         data.putBoolean("masterMode", blockState.getValue(BlockWirelessTransceiver.MASTER_MODE));
     }),
     FREQUENCY((data, accessor) -> {
-        if (!(accessor.getBlockEntity() instanceof BlockEntityWirelessTransceiver blockEntity)) return;
+        if (!(accessor.getBlockEntity() instanceof IBlockEntityFrequency blockEntity)) return;
         data.putLong("frequency", blockEntity.getFrequency());
     }),
     CHANNELS((data, accessor) -> {
@@ -81,8 +81,8 @@ public enum ProviderWirelessTransceiver {
         this.provider = provider;
     }
 
-    public static Collection<BiConsumer<CompoundTag, BlockAccessor>> getProviders() {
-        return Arrays.stream(ProviderWirelessTransceiver.values())
-                .map(object -> object.provider).toList();
+    @Override
+    public BiConsumer<CompoundTag, BlockAccessor> getProvider() {
+        return this.provider;
     }
 }

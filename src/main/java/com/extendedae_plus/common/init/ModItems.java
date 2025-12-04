@@ -31,8 +31,8 @@ public final class ModItems {
 
     public static final DeferredItem<BlockItem> WIRELESS_TRANSCEIVER =
             regCommonBlockItem(ModBlocks.WIRELESS_TRANSCEIVER);
-    public static final DeferredItem<BlockItem> CORE_UPLOAD =
-            regCommonBlockItem(ModBlocks.CORE_UPLOAD);
+    public static final DeferredItem<BlockItem> PORT_UPLOAD =
+            regCommonBlockItem(ModBlocks.PORT_UPLOAD);
     public static final DeferredItem<BlockItem> CORE_ADVANCED_CRAFTER =
             regCommonBlockItem(ModBlocks.CORE_ADVANCED_CRAFTER);
     public static final DeferredItem<BlockItem> CORE_ADVANCED_PATTERN =

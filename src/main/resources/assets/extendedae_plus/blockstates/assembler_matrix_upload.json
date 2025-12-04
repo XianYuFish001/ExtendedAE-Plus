@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=true": {
+      "model": "extendedae_plus:block/assembler_matrix/core_upload_on"
+    },
+    "powered=false": {
+      "model": "extendedae_plus:block/assembler_matrix/core_upload_off"
+    }
+  }
+}

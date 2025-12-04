@@ -9,6 +9,7 @@ import it.unimi.dsi.fastutil.objects.ReferenceSet;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(ClusterAssemblerMatrix.class)
 public class MixinClusterAssemblerMatrix implements HelperAssemblerMatrixModifier {
@@ -23,6 +24,9 @@ public class MixinClusterAssemblerMatrix implements HelperAssemblerMatrixModifie
     private Reference2IntMap<TileAssemblerMatrixCrafter> crafterStatusCache;
     @Shadow
     private int speedCore;
+
+    @Unique
+    private boolean eaep$uploadCore = false;
 
     @Override
     public void eaep$addCrafter(TileAssemblerMatrixCrafter crafter) {
@@ -49,5 +53,15 @@ public class MixinClusterAssemblerMatrix implements HelperAssemblerMatrixModifie
         this.availableCrafters.remove(crafter);
         this.busyCrafters.remove(crafter);
         this.eaep$addCrafter(crafter);
+    }
+
+    @Override
+    public void eaep$markUploadCore() {
+        this.eaep$uploadCore = true;
+    }
+
+    @Override
+    public boolean eaep$hasUploadCore() {
+        return this.eaep$uploadCore;
     }
 }

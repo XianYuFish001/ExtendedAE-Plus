@@ -33,7 +33,7 @@ public class LangZH extends LanguageProvider {
                 .buildInto("Ticking倍增卡 %s倍");
 
         this.addBlock(ModBlocks.WIRELESS_TRANSCEIVER, "无线收发器");
-        this.addBlock(ModBlocks.CORE_UPLOAD, "装配矩阵上传核心");
+        this.addBlock(ModBlocks.PORT_UPLOAD, "装配矩阵上传接口");
         this.addBlock(ModBlocks.CORE_ADVANCED_CRAFTER, "装配矩阵高级合成核心");
         this.addBlock(ModBlocks.CORE_ADVANCED_PATTERN, "装配矩阵高级样板核心");
         this.addBlock(ModBlocks.CORE_ADVANCED_SPEED, "装配矩阵高级速度核心");
@@ -337,9 +337,9 @@ public class LangZH extends LanguageProvider {
                         注意: 仅当Applied Flux模组存在时生效""")
                 .buildInto("允许Ticker提取磁盘能量");
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.config)
-                .addStr("needsUploadingCore")
-                .branch("tooltip", "启用后, 样板只能被上传到装有上传核心的装配矩阵")
-                .buildInto("需要装配矩阵上传核心");
+                .addStr("needsUploadingPort")
+                .branch("tooltip", "启用后, 样板只能被上传到装有上传接口的装配矩阵")
+                .buildInto("需要装配矩阵上传接口");
 
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.jadeInfo)
                 .item(ModItems.WIRELESS_TRANSCEIVER)

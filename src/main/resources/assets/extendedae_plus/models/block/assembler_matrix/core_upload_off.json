@@ -1,0 +1,71 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "frame": "extendedae_plus:block/assembler_matrix/core_upload/frame",
+    "light": "extendedae_plus:block/assembler_matrix/core_upload/off",
+    "particle": "extendedae_plus:block/assembler_matrix/core_upload/frame"
+  },
+  "render_type": "cutout",
+  "elements": [
+    {
+      "faces": {
+        "down": {
+          "texture": "#light",
+          "uv": [0, 0, 16, 16]
+        },
+        "east": {
+          "texture": "#light",
+          "uv": [0, 0, 16, 16]
+        },
+        "north": {
+          "texture": "#light",
+          "uv": [0, 0, 16, 16]
+        },
+        "south": {
+          "texture": "#light",
+          "uv": [0, 0, 16, 16]
+        },
+        "up": {
+          "texture": "#light",
+          "uv": [0, 0, 16, 16]
+        },
+        "west": {
+          "texture": "#light",
+          "uv": [0, 0, 16, 16]
+        }
+      },
+      "from": [0, 0, 0],
+      "to": [16, 16, 16]
+    },
+    {
+      "faces": {
+        "down": {
+          "texture": "#frame",
+          "uv": [0, 0, 16, 16]
+        },
+        "east": {
+          "texture": "#frame",
+          "uv": [0, 0, 16, 16]
+        },
+        "north": {
+          "texture": "#frame",
+          "uv": [0, 0, 16, 16]
+        },
+        "south": {
+          "texture": "#frame",
+          "uv": [0, 0, 16, 16]
+        },
+        "up": {
+          "texture": "#frame",
+          "uv": [0, 0, 16, 16]
+        },
+        "west": {
+          "texture": "#frame",
+          "uv": [0, 0, 16, 16]
+        }
+      },
+      "from": [0, 0, 0],
+      "to": [16, 16, 16]
+    }
+  ]
+}

@@ -16,6 +16,7 @@ public final class HostGeneric implements ILinkHost {
 
     private long frequency = 0;
     private @Nullable UUID placer = null;
+    private String placerName = "";
 
     public HostGeneric(Supplier<BlockEntity> getterBlockEntity,
                        Supplier<IGridNode> getterNode) {
@@ -51,10 +52,6 @@ public final class HostGeneric implements ILinkHost {
     }
 
     @Override
-    public void updateBlockState() {
-    }
-
-    @Override
     public long getFrequency() {
         return this.frequency;
     }
@@ -67,11 +64,18 @@ public final class HostGeneric implements ILinkHost {
     @Override
     public void setFrequency(long frequency) {
         this.frequency = frequency;
-        this.updateBlockState();
     }
 
     @Override
     public void setPlacer(@Nullable UUID placer) {
         this.placer = placer;
-        this.updateBlockState();
-    }}
+    }
+
+    public String getPlacerName() {
+        return this.placerName;
+    }
+
+    public void setPlacerName(String placerName) {
+        this.placerName = placerName;
+    }
+}

@@ -71,7 +71,7 @@ public class LinkSlave {
         } catch (Throwable ignored) {
         }
         this.wrapper.setConnection(null);
-        this.host.updateBlockState();
+        this.host.onConnectionChanged(false);
     }
 
     private boolean checkInfo() {
@@ -154,7 +154,8 @@ public class LinkSlave {
                 if (connection == null)
                     connection = GridHelper.createConnection(nodeA, nodeB);
                 LinkSlave.this.wrapper.setConnection(connection);
-                LinkSlave.this.host.updateBlockState();
+                LinkSlave.this.host.onConnectionChanged(true);
+                master.onConnectionChanged(true);
             } catch (Throwable ignore) {
             }
         }

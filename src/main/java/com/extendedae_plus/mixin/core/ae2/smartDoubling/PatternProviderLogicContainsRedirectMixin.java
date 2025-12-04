@@ -1,4 +1,4 @@
-package com.extendedae_plus.mixin.core.ae2.autopattern;
+package com.extendedae_plus.mixin.core.ae2.smartDoubling;
 
 import appeng.api.crafting.IPatternDetails;
 import appeng.helpers.patternprovider.PatternProviderLogic;

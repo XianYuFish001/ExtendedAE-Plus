@@ -10,9 +10,11 @@ item_ids:
   - extendedae_plus:wireless_transceiver
 ---
 
-# 无线收发器
+<GameScene zoom="7" background="transparent">
+    <ImportStructure src="../../structure/wireless_transceiver.snbt" />
+</GameScene>
 
-<BlockImage id="extendedae_plus:wireless_transceiver" scale="5" />
+# 无线收发器
 无线收发器是一种高级无线AE设备，它融合了无线连接器的便捷性与量子环的跨维度能力，能够将ME网络的频道以无线方式远程传输至多个地点。
 
 ## 工作机制

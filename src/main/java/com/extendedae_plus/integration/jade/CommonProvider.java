@@ -4,8 +4,10 @@ import com.extendedae_plus.ExtendedAEPlus;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import snownee.jade.api.Accessor;
+import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IServerDataProvider;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.function.BiConsumer;
 
@@ -25,5 +27,15 @@ public record CommonProvider<TAccessor extends Accessor<?>>
     @Override
     public ResourceLocation getUid() {
         return this.uid;
+    }
+
+    public interface IObjectedProvider {
+        BiConsumer<CompoundTag, BlockAccessor> getProvider();
+
+        static <TEntry extends Enum<TEntry> & IObjectedProvider>
+        Collection<BiConsumer<CompoundTag, BlockAccessor>> getProviders(Class<TEntry> clazzProvider) {
+            return Arrays.stream(clazzProvider.getEnumConstants())
+                    .map(IObjectedProvider::getProvider).toList();
+        }
     }
 }

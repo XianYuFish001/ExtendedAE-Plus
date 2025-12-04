@@ -138,12 +138,12 @@ public class Recipe extends RecipeProvider {
                 .unlockedBy("has_singularity", has(AEItems.SINGULARITY))
                 .save(recipeOutput);
 
-        CrystalAssemblerRecipeBuilder.assemble(ModItems.CORE_UPLOAD)
+        CrystalAssemblerRecipeBuilder.assemble(ModItems.PORT_UPLOAD)
                 .input(EAESingletons.ASSEMBLER_MATRIX_WALL)
-                .input(AEItems.SINGULARITY)
+                .input(ModItems.WIRELESS_TRANSCEIVER)
                 .input(AEItems.COLORED_LUMEN_PAINT_BALL.item(AEColor.LIME), 6)
-                .input(AEItems.LOGIC_PROCESSOR)
-                .save(recipeOutput, ExtendedAEPlus.getLocation("assembler/assembler_matrix_uploader"));
+                .input(AEItems.CALCULATION_PROCESSOR)
+                .save(recipeOutput, ExtendedAEPlus.getLocation("assembler/assembler_matrix_upload"));
         CrystalAssemblerRecipeBuilder.assemble(ModItems.INFINITY_BIGINTEGER_CELL_ITEM)
                 .input(AEItems.SINGULARITY, 64)
                 .input(Items.NETHER_STAR, 2)
@@ -155,12 +155,14 @@ public class Recipe extends RecipeProvider {
                 .input(EAESingletons.ASSEMBLER_MATRIX_CRAFTER, 6)
                 .input(EAESingletons.EX_ASSEMBLER, 8)
                 .input(AEItems.LOGIC_PROCESSOR, 6)
+                .input(AEItems.SINGULARITY, 6)
                 .input(Items.PURPLE_DYE, 4)
                 .save(recipeOutput, ExtendedAEPlus.getLocation("assembler/core_advanced_crafter"));
         CrystalAssemblerRecipeBuilder.assemble(ModItems.CORE_ADVANCED_PATTERN)
                 .input(EAESingletons.ASSEMBLER_MATRIX_PATTERN, 6)
                 .input(EAETags.EX_PATTERN_PROVIDER, 8)
                 .input(AEItems.ENGINEERING_PROCESSOR, 6)
+                .input(AEItems.SINGULARITY, 6)
                 .input(Items.BLUE_DYE, 4)
                 .save(recipeOutput, ExtendedAEPlus.getLocation("assembler/core_advanced_pattern"));
 
@@ -168,6 +170,7 @@ public class Recipe extends RecipeProvider {
                 .input(EAESingletons.ASSEMBLER_MATRIX_SPEED, 6))
                 .input(DataTickingCard.toIngredient(2, 16), 8)
                 .input(EAESingletons.CONCURRENT_PROCESSOR, 6)
+                .input(AEItems.SINGULARITY, 6)
                 .input(Items.RED_DYE, 4)
                 .save(recipeOutput, ExtendedAEPlus.getLocation("assembler/core_advanced_speed"));
     }

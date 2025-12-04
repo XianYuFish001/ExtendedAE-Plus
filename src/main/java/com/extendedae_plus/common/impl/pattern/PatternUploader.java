@@ -15,9 +15,11 @@ import appeng.menu.me.items.PatternEncodingTermMenu;
 import appeng.util.inv.FilteredInternalInventory;
 import appeng.util.inv.filter.IAEItemFilter;
 import com.extendedae_plus.EAEPConfig;
-import com.extendedae_plus.common.block.assemblerMatrix.coreUpload.UploadCoreBlockEntity;
+import com.extendedae_plus.common.block.assemblerMatrix.coreAdvancedPattern.BlockEntityAdvancedPattern;
 import com.extendedae_plus.mixin.core.ae2.accessor.PatternEncodingTermMenuAccessor;
+import com.extendedae_plus.mixin.impl.bridge.HelperAssemblerMatrixModifier;
 import com.extendedae_plus.util.UtilKeyBuilder;
+import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixBase;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixPattern;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -34,7 +36,7 @@ import java.util.Map;
 public class PatternUploader {
     /**
      * 获取玩家当前的样板访问终端菜单（支持ExtendedAE和原版AE2）
-     * 
+     *
      * @param player 玩家
      * @return PatternAccessTermMenu实例，如果玩家没有打开则返回null
      */
@@ -86,7 +88,8 @@ public class PatternUploader {
         try {
             if (menu.getTarget() instanceof IActionHost host && host.getActionableNode() != null)
                 grid = host.getActionableNode().getGrid();
-        } catch (Throwable ignored) {}
+        } catch (Throwable ignored) {
+        }
         if (grid == null) {
             return;
         }
@@ -120,7 +123,7 @@ public class PatternUploader {
         }
 
         // 收集所有可用的装配矩阵（图样模块）内部库存并逐一尝试（遵循其过滤规则）
-        List<InternalInventory> inventories = findAllMatrixPatternInventories(grid);
+        List<InternalInventory> inventories = collectCorePatternInv(grid);
         if (!inventories.isEmpty()) {
             for (InternalInventory inv : inventories) {
                 ItemStack toInsert = stack.copy();
@@ -142,40 +145,35 @@ public class PatternUploader {
      * 在给定 AE Grid 中收集所有已成型且在线的装配矩阵“图样模块”的用于外部插入的内部库存。
      * 优先使用 TileAssemblerMatrixPattern#getExposedInventory（仅允许插入，且已带AE过滤规则）。
      */
-    private static List<InternalInventory> findAllMatrixPatternInventories(IGrid grid) {
+    private static List<InternalInventory> collectCorePatternInv(IGrid grid) {
         List<InternalInventory> result = new ArrayList<>();
-        try {
-            var tiles = grid.getMachines(TileAssemblerMatrixPattern.class);
-            for (TileAssemblerMatrixPattern tile : tiles) {
-                if (tile != null && tile.isFormed() && tile.getMainNode().isActive() && clusterHasSingleUploadCore(tile)) {
-                    var inv = tile.getExposedInventory();
-                    if (inv != null) {
-                        result.add(inv);
-                    }
-                }
-            }
-        } catch (Throwable ignored) {
-        }
+        if (grid == null) return result;
+
+        var patternCores = grid.getActiveMachines(TileAssemblerMatrixPattern.class);
+        patternCores.addAll(grid.getActiveMachines(BlockEntityAdvancedPattern.class));
+
+        patternCores.forEach(core -> {
+            if (core == null || !core.isFormed() || !hasUploadCore(core)) return;
+            var patternInv = core.getPatternInventory();
+            if (patternInv == null) return;
+            result.add(patternInv);
+        });
+
         return result;
     }
 
     private static boolean matrixContainsPattern(IGrid grid, ItemStack pattern) {
-        if (grid == null || pattern == null || pattern.isEmpty()) return false;
-        try {
-            // 先检查提供外部插入视图的内部库存
-            List<InternalInventory> inventories = findAllMatrixPatternInventories(grid);
-            for (InternalInventory inv : inventories) {
-                if (inv == null) continue;
-                for (int i = 0; i < inv.size(); i++) {
-                    ItemStack s = inv.getStackInSlot(i);
-                    if (!s.isEmpty() && net.minecraft.world.item.ItemStack.isSameItemSameComponents(s, pattern)) {
-                        return true;
-                    }
+        if (pattern == null || pattern.isEmpty()) return false;
+        // 先检查提供外部插入视图的内部库存
+        for (InternalInventory inv : collectCorePatternInv(grid)) {
+            if (inv == null) continue;
+            for (int i = 0; i < inv.size(); i++) {
+                ItemStack s = inv.getStackInSlot(i);
+                if (!s.isEmpty() && ItemStack.isSameItemSameComponents(s, pattern)) {
+                    return true;
                 }
             }
-        } catch (Throwable ignored) {
         }
-        // 1.21 暂不检查聚合能力视图，能力系统适配后再补充
         return false;
     }
 
@@ -229,7 +227,7 @@ public class PatternUploader {
             // 插入成功（部分或全部）
             int insertedCount = itemToInsert.getCount() - remaining.getCount();
             playerItem.shrink(insertedCount);
-            
+
             if (playerItem.isEmpty()) {
                 player.getInventory().setItem(playerSlotIndex, ItemStack.EMPTY);
             }
@@ -238,9 +236,9 @@ public class PatternUploader {
 
     /**
      * 获取样板供应器中的空槽位数量
-     * 
+     *
      * @param providerId 供应器ID
-     * @param menu 样板访问终端菜单（支持ExtendedAE）
+     * @param menu       样板访问终端菜单（支持ExtendedAE）
      * @return 空槽位数量，如果无法访问则返回-1
      */
     public static int getAvailableSlots(long providerId, PatternAccessTermMenu menu) {
@@ -267,8 +265,8 @@ public class PatternUploader {
     /**
      * 通过服务器ID获取PatternContainer
      * 兼容ExtendedAE的ContainerExPatternTerminal和原版PatternAccessTermMenu
-     * 
-     * @param menu 样板访问终端菜单
+     *
+     * @param menu       样板访问终端菜单
      * @param providerId 供应器服务器ID
      * @return PatternContainer实例，如果不存在则返回null
      */
@@ -277,12 +275,12 @@ public class PatternUploader {
             // 通过反射访问byId字段（ExtendedAE继承了这个字段）
             Field byIdField = findByIdField(menu.getClass());
             if (byIdField == null) return null;
-            
+
             byIdField.setAccessible(true);
-            
+
             @SuppressWarnings("unchecked")
             Map<Long, Object> byId = (Map<Long, Object>) byIdField.get(menu);
-            
+
             Object containerTracker = byId.get(providerId);
             if (containerTracker == null) {
                 return null;
@@ -291,10 +289,10 @@ public class PatternUploader {
             // 从ContainerTracker中获取PatternContainer
             Field containerField = findContainerField(containerTracker.getClass());
             if (containerField == null) return null;
-            
+
             containerField.setAccessible(true);
             return (PatternContainer) containerField.get(containerTracker);
-            
+
         } catch (Exception e) {
             return null;
         }
@@ -343,9 +341,9 @@ public class PatternUploader {
 
     /**
      * 获取样板供应器的显示名称
-     * 
+     *
      * @param providerId 供应器ID
-     * @param menu 样板访问终端菜单
+     * @param menu       样板访问终端菜单
      * @return 显示名称，如果无法获取则返回"未知供应器"
      */
     public static String getProviderDisplayName(long providerId, PatternAccessTermMenu menu) {
@@ -367,7 +365,9 @@ public class PatternUploader {
         return "样板供应器 #" + providerId;
     }
 
-    /** 获取供应器显示名（优先组名） */
+    /**
+     * 获取供应器显示名（优先组名）
+     */
     public static String getProviderDisplayName(PatternContainer container) {
         if (container == null) return "未知供应器";
         try {
@@ -382,14 +382,17 @@ public class PatternUploader {
         return getProviderI18nName(getPatternContainerById(menu, providerId));
     }
 
-    /** 获取样板供应器默认选取的方块名称 */
+    /**
+     * 获取样板供应器默认选取的方块名称
+     */
     public static String getProviderI18nName(PatternContainer container) {
         if (container == null) return "";
         try {
             var group = container.getTerminalGroup();
             var name = group.name();
             return name.toString().contains("literal") ? "" : name.toString();
-        } catch (Throwable ignored) {}
+        } catch (Throwable ignored) {
+        }
         return "";
     }
 
@@ -397,7 +400,7 @@ public class PatternUploader {
      * 验证样板供应器是否可用
      *
      * @param providerId 供应器ID
-     * @param menu 样板访问终端菜单
+     * @param menu       样板访问终端菜单
      * @return 是否可用
      */
     public static boolean isProviderAvailable(long providerId, PatternAccessTermMenu menu) {
@@ -447,7 +450,8 @@ public class PatternUploader {
                     tryIds.add(id);
                 }
             }
-        } catch (Throwable ignored) {}
+        } catch (Throwable ignored) {
+        }
 
         // 按顺序逐个尝试插入
         for (Long id : tryIds) {
@@ -530,7 +534,9 @@ public class PatternUploader {
         return list;
     }
 
-    /** 计算供应器空槽位数量 */
+    /**
+     * 计算供应器空槽位数量
+     */
     public static int getAvailableSlots(PatternContainer container) {
         if (container == null) return -1;
         InternalInventory inv = container.getTerminalPatternInventory();
@@ -572,7 +578,8 @@ public class PatternUploader {
                     tryList.add(c);
                 }
             }
-        } catch (Throwable ignored) {}
+        } catch (Throwable ignored) {
+        }
 
         for (PatternContainer c : tryList) {
             InternalInventory inv = c.getTerminalPatternInventory();
@@ -598,21 +605,11 @@ public class PatternUploader {
      * 要求：至少存在 1 个即可，不限制数量。
      * 传入任意属于该集群的 Tile（如 Pattern/Crafter/Frame 等）。
      */
-    private static boolean clusterHasSingleUploadCore(com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixBase any) {
-        if (!EAEPConfig.NEEDS_UPLOADING_CORE.getAsBoolean()) return true;
-        try {
-            if (any == null || any.getCluster() == null) return false;
-            int cores = 0;
-            var it = any.getCluster().getBlockEntities();
-            while (it.hasNext()) {
-                var te = it.next();
-                if (te instanceof UploadCoreBlockEntity) {
-                    cores++;
-                }
-            }
-            return cores >= 1; // 至少一个即可
-        } catch (Throwable t) {
+    private static boolean hasUploadCore(TileAssemblerMatrixBase blockEntity) {
+        if (!EAEPConfig.NEEDS_UPLOADING_PORT.getAsBoolean()) return true;
+
+        if (!(blockEntity.getCluster() instanceof HelperAssemblerMatrixModifier cluster))
             return false;
-        }
+        return cluster.eaep$hasUploadCore();
     }
 }

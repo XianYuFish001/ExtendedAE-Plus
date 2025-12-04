@@ -1,0 +1,16 @@
+{
+    DataVersion: 3955,
+    size: [4, 2, 1],
+    data: [
+        {pos: [0, 0, 0], state: "ae2:cable_bus{light_level:0,waterlogged:false}", nbt: {cable: {gn: {p: 0}, id: "ae2:green_smart_cable", visual: {channelsEast: 8, channelsWest: 8, connections: ["west", "east"], missingChannel: 0b, powered: 1b}}, hasRedstone: 2, id: "ae2:cable_bus", visual: {}}},
+        {pos: [1, 0, 0], state: "extendedae_plus:wireless_transceiver{locked:false,master_mode:true,powered:true}", nbt: {frequency: 1L, id: "extendedae_plus:wireless_transceiver", placer: [I; 940439953, -167562164, -1601161573, -1389718966], placer_name: "Dev", visual: {}, wireless_transceiver_node: {p: 0}}},
+        {pos: [2, 1, 0], state: "extendedae_plus:wireless_transceiver{locked:false,master_mode:false,powered:true}", nbt: {frequency: 1L, id: "extendedae_plus:wireless_transceiver", placer: [I; 940439953, -167562164, -1601161573, -1389718966], placer_name: "Dev", visual: {}, wireless_transceiver_node: {p: 0}}},
+        {pos: [3, 1, 0], state: "ae2:cable_bus{light_level:0,waterlogged:false}", nbt: {cable: {gn: {p: 0}, id: "ae2:green_smart_cable", visual: {channelsWest: 8, connections: ["west"], missingChannel: 0b, powered: 1b}}, hasRedstone: 2, id: "ae2:cable_bus", visual: {}}}
+    ],
+    entities: [],
+    palette: [
+        "ae2:cable_bus{light_level:0,waterlogged:false}",
+        "extendedae_plus:wireless_transceiver{locked:false,master_mode:true,powered:true}",
+        "extendedae_plus:wireless_transceiver{locked:false,master_mode:false,powered:true}"
+    ]
+}

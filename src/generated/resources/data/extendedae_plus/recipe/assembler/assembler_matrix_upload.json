@@ -8,7 +8,7 @@
     },
     {
       "ingredient": {
-        "item": "ae2:singularity"
+        "item": "extendedae_plus:wireless_transceiver"
       }
     },
     {
@@ -19,12 +19,12 @@
     },
     {
       "ingredient": {
-        "item": "ae2:logic_processor"
+        "item": "ae2:calculation_processor"
       }
     }
   ],
   "output": {
     "count": 1,
-    "id": "extendedae_plus:assembler_matrix_upload_core"
+    "id": "extendedae_plus:assembler_matrix_upload"
   }
 }

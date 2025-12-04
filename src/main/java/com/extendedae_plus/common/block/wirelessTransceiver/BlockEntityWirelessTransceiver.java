@@ -3,10 +3,9 @@ package com.extendedae_plus.common.block.wirelessTransceiver;
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.GridHelper;
 import appeng.api.networking.IGridNode;
-import appeng.api.networking.IManagedGridNode;
 import appeng.blockentity.grid.AENetworkedBlockEntity;
-import appeng.me.helpers.BlockEntityNodeListener;
 import appeng.util.SettingsFrom;
+import com.extendedae_plus.common.api.IBlockEntityFrequency;
 import com.extendedae_plus.common.init.ModBlockEntities;
 import com.extendedae_plus.common.init.ModDataComponents;
 import com.extendedae_plus.common.wireless.LinkMaster;
@@ -32,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
-public class BlockEntityWirelessTransceiver extends AENetworkedBlockEntity {
+public class BlockEntityWirelessTransceiver extends AENetworkedBlockEntity implements IBlockEntityFrequency {
     private final LinkHostTransceiver host;
 
     private final LinkMaster linkMaster;
@@ -62,30 +61,6 @@ public class BlockEntityWirelessTransceiver extends AENetworkedBlockEntity {
         super.setRemoved();
         this.linkMaster.onUnloadOrRemove();
         this.linkSlave.onUnloadOrRemove();
-    }
-
-    @Override
-    protected IManagedGridNode createMainNode() {
-        return GridHelper.createManagedNode(this, new BlockEntityNodeListener<>() {
-            @Override
-            public void onStateChanged(BlockEntityWirelessTransceiver nodeOwner, IGridNode node, State state) {
-                super.onStateChanged(nodeOwner, node, state);
-                if (!(getLevel() instanceof ServerLevel level)) return;
-                if (!state.equals(State.CHANNEL)) return;
-
-                boolean connected;
-                if (nodeOwner.getBlockState().getValue(BlockWirelessTransceiver.MASTER_MODE))
-                    connected = true;
-                else connected = linkSlave.connected();
-
-                if (!nodeOwner.isRemoved() &&
-                        nodeOwner.getBlockState().getValue(BlockWirelessTransceiver.POWERED) != connected) {
-                    level.setBlock(worldPosition,
-                            getBlockState().setValue(BlockWirelessTransceiver.POWERED, connected),
-                            Block.UPDATE_CLIENTS);
-                }
-            }
-        });
     }
 
     public void onSwitchMode() {
@@ -221,7 +196,15 @@ public class BlockEntityWirelessTransceiver extends AENetworkedBlockEntity {
         }
 
         @Override
-        public void updateBlockState() {
+        public void onConnectionChanged(boolean connected) {
+            if (!(BlockEntityWirelessTransceiver.this.getLevel() instanceof ServerLevel level)) return;
+            if (!BlockEntityWirelessTransceiver.this.isRemoved() &&
+                    BlockEntityWirelessTransceiver.this.getBlockState()
+                            .getValue(BlockWirelessTransceiver.POWERED) != connected) {
+                level.setBlock(BlockEntityWirelessTransceiver.this.getBlockPos(),
+                        getBlockState().setValue(BlockWirelessTransceiver.POWERED, connected),
+                        Block.UPDATE_CLIENTS);
+            }
         }
 
         @Override

@@ -33,7 +33,7 @@ public class LangEN extends LanguageProvider {
                 .buildInto("Ticking Card (x%s)");
 
         this.addBlock(ModBlocks.WIRELESS_TRANSCEIVER, "Wireless Transceiver");
-        this.addBlock(ModBlocks.CORE_UPLOAD, "Assembly Matrix Upload Core");
+        this.addBlock(ModBlocks.PORT_UPLOAD, "Assembly Matrix Upload Port");
         this.addBlock(ModBlocks.CORE_ADVANCED_CRAFTER, "Assembler Matrix Advanced Craft Core");
         this.addBlock(ModBlocks.CORE_ADVANCED_PATTERN, "Assembler Matrix Advanced Pattern Core");
         this.addBlock(ModBlocks.CORE_ADVANCED_SPEED, "Assembler Matrix Advanced Speed Core");
@@ -323,9 +323,9 @@ public class LangEN extends LanguageProvider {
                         Note: AppliedFlux only""")
                 .buildInto("Allow Disk Energy");
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.config)
-                .addStr("needsUploadingCore")
-                .branch("tooltip", "If true, patterns can only be uploaded to assembly matrix with upload core")
-                .buildInto("Needs Uploading Core");
+                .addStr("needsUploadingPort")
+                .branch("tooltip", "If true, patterns can only be uploaded to assembly matrix with upload port")
+                .buildInto("Needs Uploading Port");
 
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.jadeInfo)
                 .item(ModItems.WIRELESS_TRANSCEIVER)

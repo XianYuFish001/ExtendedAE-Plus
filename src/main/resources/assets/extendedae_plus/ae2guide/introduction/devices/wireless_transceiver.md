@@ -10,9 +10,11 @@ item_ids:
   - extendedae_plus:wireless_transceiver
 ---
 
-# Wireless Transceiver
+<GameScene zoom="7" background="transparent">
+    <ImportStructure src="../../structure/wireless_transceiver.snbt" />
+</GameScene>
 
-<BlockImage id="extendedae_plus:wireless_transceiver" scale="5" />
+# Wireless Transceiver
 
 The **Wireless Transceiver** is an advanced wireless AE device that combines the convenience of wireless connectors with the cross-dimensional capabilities of Quantum Rings, allowing ME network channels to be transmitted wirelessly to multiple locations.
 
