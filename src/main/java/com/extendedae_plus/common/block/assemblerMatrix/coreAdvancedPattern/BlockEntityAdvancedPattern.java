@@ -8,6 +8,7 @@ import appeng.api.networking.crafting.ICraftingProvider;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.KeyCounter;
 import appeng.util.inv.AppEngInternalInventory;
+import com.extendedae_plus.EAEPConfig;
 import com.extendedae_plus.common.init.ModBlockEntities;
 import com.extendedae_plus.common.init.ModItems;
 import com.glodblock.github.extendedae.common.me.matrix.ClusterAssemblerMatrix;
@@ -25,8 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BlockEntityAdvancedPattern extends TileAssemblerMatrixPattern {
-    public static final int INV_SIZE = 144;
-
     private final AppEngInternalInventory patternInventory =
             new AppEngInternalInventory(this, getInvSize(), 1);
     private final List<IPatternDetails> patterns = new ArrayList<>();
@@ -108,7 +107,7 @@ public class BlockEntityAdvancedPattern extends TileAssemblerMatrixPattern {
         return ModBlockEntities.CORE_ADVANCED_PATTERN.get();
     }
 
-    protected static int getInvSize() {
-        return INV_SIZE;
+    public static int getInvSize() {
+        return INV_SIZE * EAEPConfig.CORE_PATTERN_SLOT_MULTIPLIER.getAsInt();
     }
 }

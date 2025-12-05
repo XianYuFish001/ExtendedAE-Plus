@@ -30,7 +30,7 @@ public class MixinClusterAssemblerMatrix implements HelperAssemblerMatrixModifie
 
     @Override
     public void eaep$addCrafter(TileAssemblerMatrixCrafter crafter) {
-        if (crafter.usedThread() < BlockEntityAdvancedCrafter.MAX_THREAD)
+        if (crafter.usedThread() < BlockEntityAdvancedCrafter.getMaxThread())
             this.availableCrafters.add(crafter);
         else this.busyCrafters.add(crafter);
     }

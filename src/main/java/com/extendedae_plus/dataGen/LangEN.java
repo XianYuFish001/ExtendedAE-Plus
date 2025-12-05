@@ -323,6 +323,22 @@ public class LangEN extends LanguageProvider {
                         Note: AppliedFlux only""")
                 .buildInto("Allow Disk Energy");
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.config)
+                .addStr("baseCoreCrafterThreads")
+                .buildInto("Advanced Craft Core Base Threads");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.config)
+                .addStr("coreCrafterThreadAmplification")
+                .branch("tooltip", """
+                        Advanced Craft Core Thread Amplification per 5 speed multiplier(see GuideME),
+                        0 means disabled""")
+                .buildInto("Advanced Craft Core Thread Amplification");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.config)
+                .addStr("maximumCoreCrafterThreads")
+                .branch("tooltip", "Tip: The maximum threads cannot be less than the base threads")
+                .buildInto("Advanced Craft Core Maximum Threads");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.config)
+                .addStr("corePatternSlotMultiplier")
+                .buildInto("Advanced Pattern Core Slot Multiplier");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.config)
                 .addStr("needsUploadingPort")
                 .branch("tooltip", "If true, patterns can only be uploaded to assembly matrix with upload port")
                 .buildInto("Needs Uploading Port");

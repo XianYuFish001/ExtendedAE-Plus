@@ -252,7 +252,8 @@ public class LangZH extends LanguageProvider {
                 .branch("state_off", "关")
                 .branch("ae", "AE2配置")
                 .branch("wireless", "无线连接配置")
-                .branch("ticker", "Ticker配置");
+                .branch("ticker", "Ticker配置")
+                .branch("assembler_matrix", "装配矩阵配置");
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.config)
                 .addStr("pageMultiplier")
                 .branch("tooltip", """
@@ -336,6 +337,23 @@ public class LangZH extends LanguageProvider {
                         开启后，Ticker将优先尝试从磁盘提取能量
                         注意: 仅当Applied Flux模组存在时生效""")
                 .buildInto("允许Ticker提取磁盘能量");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.config)
+                .addStr("baseCoreCrafterThreads")
+                .buildInto("高级合成核心基础线程数");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.config)
+                .addStr("coreCrafterThreadAmplification")
+                .branch("tooltip", """
+                        每存在5速度增幅(具体见GuideME),
+                        高级合成核心线程数的涨幅,
+                        设置为0则不增长""")
+                .buildInto("高级合成核心线程涨幅");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.config)
+                .addStr("maximumCoreCrafterThreads")
+                .branch("tooltip", "注意: 最大线程数不可小于基础线程数")
+                .buildInto("高级合成核心最大线程数");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.config)
+                .addStr("corePatternSlotMultiplier")
+                .buildInto("高级样板核心槽位倍率");
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.config)
                 .addStr("needsUploadingPort")
                 .branch("tooltip", "启用后, 样板只能被上传到装有上传接口的装配矩阵")

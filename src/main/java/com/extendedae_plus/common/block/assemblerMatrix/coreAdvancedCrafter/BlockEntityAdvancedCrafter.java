@@ -10,6 +10,7 @@ import appeng.api.stacks.GenericStack;
 import appeng.api.stacks.KeyCounter;
 import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.CombinedInternalInventory;
+import com.extendedae_plus.EAEPConfig;
 import com.extendedae_plus.common.init.ModBlockEntities;
 import com.extendedae_plus.mixin.impl.bridge.HelperAssemblerMatrixModifier;
 import com.glodblock.github.extendedae.common.me.CraftingMatrixThread;
@@ -29,12 +30,10 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 public class BlockEntityAdvancedCrafter extends TileAssemblerMatrixCrafter {
-    public static final int MAX_THREAD = 128;
-
     private final CraftingThread[] threads;
     private final InternalInventory internalInv;
     private short states = 0;
-    private int currentThread = 32;
+    private int currentThread = EAEPConfig.BASE_CORE_CRAFTER_THREADS.getAsInt();
 
     public BlockEntityAdvancedCrafter(BlockPos pos, BlockState blockState) {
         super(pos, blockState);
@@ -146,9 +145,9 @@ public class BlockEntityAdvancedCrafter extends TileAssemblerMatrixCrafter {
         if (this.cluster == null) {
             return TickRateModulation.SLEEP;
         } else {
-            TickRateModulation rate = TickRateModulation.SLEEP;
+            this.calculateCurrentThread();
 
-            this.currentThread = Math.min(32 * (Math.floorDiv(cluster.getSpeedCore(), 5) + 1), getMaxThread());
+            TickRateModulation rate = TickRateModulation.SLEEP;
 
             for (int threadIndex = 0; threadIndex < this.currentThread; threadIndex++) {
                 var thread = this.threads[threadIndex];
@@ -194,12 +193,19 @@ public class BlockEntityAdvancedCrafter extends TileAssemblerMatrixCrafter {
         this.internalInv.clear();
     }
 
+    private void calculateCurrentThread() {
+        var multiplier = Math.floorDiv(cluster.getSpeedCore(), 5);
+        var amplification = EAEPConfig.CORE_CRAFTER_THREAD_AMPLIFICATION.getAsInt();
+        var baseThreads = EAEPConfig.BASE_CORE_CRAFTER_THREADS.getAsInt();
+        this.currentThread = Math.min(multiplier * amplification + baseThreads, getMaxThread());
+    }
+
     @Override
     public BlockEntityType<?> getType() {
         return ModBlockEntities.CORE_ADVANCED_CRAFTER.get();
     }
 
-    protected static int getMaxThread() {
-        return MAX_THREAD;
+    public static int getMaxThread() {
+        return EAEPConfig.MAXIMUM_CORE_CRAFTER_THREADS.getAsInt();
     }
 }

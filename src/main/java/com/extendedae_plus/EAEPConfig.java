@@ -21,15 +21,23 @@ public final class EAEPConfig {
     public static final ModConfigSpec.BooleanValue OVERRIDE_AE2WT_PICKING;
 
     static final ModConfigSpec SERVER_SPEC;
-    public static final ModConfigSpec.BooleanValue NEEDS_UPLOADING_PORT;
+    // AE
     public static final ModConfigSpec.BooleanValue PROVIDER_ROUND_ROBIN_ENABLE;
     public static final ModConfigSpec.IntValue SMART_SCALING_MAX_MULTIPLIER;
     public static final ModConfigSpec.IntValue CRAFTING_PAUSE_THRESHOLD;
+    // Wireless
     public static final ModConfigSpec.DoubleValue WIRELESS_MAX_RANGE;
     public static final ModConfigSpec.BooleanValue WIRELESS_CROSS_DIM_ENABLE;
+    // Ticker
     public static final ModConfigSpec.IntValue TICKER_BASE_COST;
     public static final ModConfigSpec.ConfigValue<List<? extends String>> TICKER_BLACKLIST;
     public static final ModConfigSpec.ConfigValue<List<? extends String>> TICKER_EXTERNAL_MULTIPLIER;
+    // Assembler Matrix
+    public static final ModConfigSpec.IntValue BASE_CORE_CRAFTER_THREADS;
+    public static final ModConfigSpec.IntValue CORE_CRAFTER_THREAD_AMPLIFICATION;
+    public static final ModConfigSpec.IntValue MAXIMUM_CORE_CRAFTER_THREADS;
+    public static final ModConfigSpec.IntValue CORE_PATTERN_SLOT_MULTIPLIER;
+    public static final ModConfigSpec.BooleanValue NEEDS_UPLOADING_PORT;
 
     static void init(ModContainer modContainer) {
         modContainer.registerConfig(ModConfig.Type.COMMON, EAEPConfig.COMMON_SPEC, "extendedae_plus/common.toml");
@@ -49,48 +57,48 @@ public final class EAEPConfig {
     }
 
     static {
-        // Common 配置
-        ModConfigSpec.Builder commonBuilder = new ModConfigSpec.Builder();
-        PAGE_MULTIPLIER = commonBuilder
+        // Common
+        var builderCommon = new ModConfigSpec.Builder();
+        PAGE_MULTIPLIER = builderCommon
                 .defineInRange("pageMultiplier", 1, 1, 64);
-        INDEPENDENT_UPLOADING_BUTTON = commonBuilder
+        INDEPENDENT_UPLOADING_BUTTON = builderCommon
                 .define("independentUploadingButton", false);
-        COMMON_SPEC = commonBuilder.build();
+        COMMON_SPEC = builderCommon.build();
 
-        // Client 配置
-        ModConfigSpec.Builder clientBuilder = new ModConfigSpec.Builder();
-        SHOW_ENCODER_PATTERN_PLAYER = clientBuilder
+        // Client
+        var builderClient = new ModConfigSpec.Builder();
+        SHOW_ENCODER_PATTERN_PLAYER = builderClient
                 .define("showEncoderPatternPlayer", true);
-        PATTERN_TERMINAL_SHOW_SLOTS_DEFAULT = clientBuilder
+        PATTERN_TERMINAL_SHOW_SLOTS_DEFAULT = builderClient
                 .define("patternTerminalShowSlotsDefault", true);
-        OVERRIDE_AE2WT_PICKING = clientBuilder
+        OVERRIDE_AE2WT_PICKING = builderClient
                 .define("overrideAE2WTPicking", false);
-        CLIENT_SPEC = clientBuilder.build();
+        CLIENT_SPEC = builderClient.build();
 
-        // Server 配置
-        ModConfigSpec.Builder serverBuilder = new ModConfigSpec.Builder();
-        serverBuilder.push("ae");
-        PROVIDER_ROUND_ROBIN_ENABLE = serverBuilder
+        // Server
+        var builderServer = new ModConfigSpec.Builder();
+        builderServer.push("ae");
+        PROVIDER_ROUND_ROBIN_ENABLE = builderServer
                 .define("providerRoundRobinEnable", true);
-        SMART_SCALING_MAX_MULTIPLIER = serverBuilder
+        SMART_SCALING_MAX_MULTIPLIER = builderServer
                 .defineInRange("smartScalingMaxMultiplier", 0, 0, 1048576);
-        CRAFTING_PAUSE_THRESHOLD = serverBuilder
+        CRAFTING_PAUSE_THRESHOLD = builderServer
                 .defineInRange("craftingPauseThreshold", 100000, 100, Integer.MAX_VALUE);
-        serverBuilder.pop();
+        builderServer.pop();
 
-        serverBuilder.push("wireless");
-        WIRELESS_MAX_RANGE = serverBuilder
+        builderServer.push("wireless");
+        WIRELESS_MAX_RANGE = builderServer
                 .defineInRange("wirelessMaxRange", 256.0D, 1.0D, 4096.0D);
-        WIRELESS_CROSS_DIM_ENABLE = serverBuilder
+        WIRELESS_CROSS_DIM_ENABLE = builderServer
                 .define("wirelessCrossDimEnable", true);
-        serverBuilder.pop();
+        builderServer.pop();
 
-        serverBuilder.push("ticker");
-        TICKER_BASE_COST = serverBuilder
+        builderServer.push("ticker");
+        TICKER_BASE_COST = builderServer
                 .defineInRange("tickerBaseCost", 512, 0, Integer.MAX_VALUE);
-        ALLOW_DISK_ENERGY = serverBuilder
+        ALLOW_DISK_ENERGY = builderServer
                 .define("allowDiskEnergy", true);
-        TICKER_BLACKLIST = serverBuilder
+        TICKER_BLACKLIST = builderServer
                 .defineListAllowEmpty(
                         List.of("tickerBlacklist"),
                         List::of,
@@ -98,7 +106,7 @@ public final class EAEPConfig {
                         object -> object instanceof String value
                                 && Pattern.matches("^#?\\w+:\\w+$", value)
                 );
-        TICKER_EXTERNAL_MULTIPLIER = serverBuilder
+        TICKER_EXTERNAL_MULTIPLIER = builderServer
                 .defineListAllowEmpty(
                         List.of("tickerExternalMultiplier"),
                         List::of,
@@ -106,9 +114,25 @@ public final class EAEPConfig {
                         object -> object instanceof String value
                                 && Pattern.matches("^#?\\w+:\\w+\\[[\\d.]+]$", value)
                 );
-        serverBuilder.pop();
-        NEEDS_UPLOADING_PORT = serverBuilder
+        builderServer.pop();
+
+        builderServer.push("assembler_matrix");
+        BASE_CORE_CRAFTER_THREADS = builderServer
+                .worldRestart()
+                .defineInRange("baseCoreCrafterThreads", 32, 1, 64);
+        CORE_CRAFTER_THREAD_AMPLIFICATION = builderServer
+                .worldRestart()
+                .defineInRange("coreCrafterThreadAmplification", 32, 0, 64);
+        MAXIMUM_CORE_CRAFTER_THREADS = builderServer
+                .worldRestart()
+                .defineInRange("maximumCoreCrafterThreads", 128, 1, 256);
+        CORE_PATTERN_SLOT_MULTIPLIER = builderServer
+                .worldRestart()
+                .defineInRange("corePatternSlotMultiplier", 4, 1, 16);
+        NEEDS_UPLOADING_PORT = builderServer
                 .define("needsUploadingPort", true);
-        SERVER_SPEC = serverBuilder.build();
+        builderServer.pop();
+
+        SERVER_SPEC = builderServer.build();
     }
 }
