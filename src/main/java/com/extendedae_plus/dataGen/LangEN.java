@@ -242,6 +242,9 @@ public class LangEN extends LanguageProvider {
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screen)
                 .item(ModItems.PRIORITY_TOOL)
                 .buildInto("Override Priority");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screen)
+                .addStr("stacks_rename")
+                .buildInto("Rename");
 
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.keywordGroup)
                 .addStr("workstations")

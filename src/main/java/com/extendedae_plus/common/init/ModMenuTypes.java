@@ -26,10 +26,6 @@ public final class ModMenuTypes {
 
     public static final DeferredHolder<MenuType<?>, MenuType<MenuTicker>> TICKER =
             regAEMenu("ticker", MenuTicker::new, PartTicker.class);
-//            MENU.register("ticker",
-//                    () -> MenuTypeBuilder
-//                            .create(MenuTicker::new, PartTicker.class)
-//                            .build(ExtendedAEPlus.getLocation("ticker")));
 
     public static final DeferredHolder<MenuType<?>, MenuType<MenuPriorityTool>> PRIORITY_TOOL =
             regAEMenu("priority_tool", MenuPriorityTool::new, HostPriorityTool.class);

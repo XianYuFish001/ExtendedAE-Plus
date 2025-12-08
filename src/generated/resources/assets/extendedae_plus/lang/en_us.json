@@ -115,6 +115,7 @@
   "screen.extendedae_plus.provider_list.delete_alias": "Delete a map",
   "screen.extendedae_plus.provider_list.query": "Input to search...",
   "screen.extendedae_plus.provider_list.remap_aliases": "Remap",
+  "screen.extendedae_plus.stacks_rename": "Rename",
   "screen.item.extendedae_plus.priority_tool": "Override Priority",
   "screen.item.extendedae_plus.provider_controller": "Pattern Provider Management Panel",
   "screen.item.extendedae_plus.provider_controller.all_off": "All Off",

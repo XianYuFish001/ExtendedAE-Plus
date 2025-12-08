@@ -34,6 +34,7 @@ public abstract class PatternEncodingTermScreenMixin {
     @Unique
     private IconButton eap$uploadBtn;
 
+    // TODO Refactor
     @Inject(method = "init", at = @At("TAIL"), remap = false)
     private void eap$addUploadButton(CallbackInfo ci) {
         // 仅在图样编码终端界面中添加按钮

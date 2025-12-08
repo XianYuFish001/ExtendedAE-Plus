@@ -1,0 +1,45 @@
+{
+  "$schema": "../schema.json",
+  "includes": ["../common/common.json"],
+  "background": {
+    "texture": "guis/extendedae_plus/stacks_rename.png",
+    "srcRect": [0, 0, 163, 72]
+  },
+  "slots": {
+    "MACHINE_OUTPUT": {
+      "left": 18,
+      "top": 40
+    }
+  },
+  "text": {
+    "dialog_title": {
+      "text": {
+        "translate": "screen.extendedae_plus.stacks_rename"
+      },
+      "position": {
+        "left": 8,
+        "top": 6
+      }
+    }
+  },
+  "widgets": {
+    "save": {
+      "left": 107,
+      "top": 38,
+      "width": 38,
+      "height": 20
+    },
+    "back": {
+      "left": 139,
+      "top": -5,
+      "width": 20,
+      "height": 20
+    },
+    "field_stacks_rename": {
+      "left": 17,
+      "top": 22,
+      "width": 128,
+      "height": 12
+    }
+  }
+}

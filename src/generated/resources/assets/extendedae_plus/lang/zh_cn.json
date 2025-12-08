@@ -120,6 +120,7 @@
   "screen.extendedae_plus.provider_list.delete_alias": "删除映射",
   "screen.extendedae_plus.provider_list.query": "输入关键词以搜索...",
   "screen.extendedae_plus.provider_list.remap_aliases": "重载映射表",
+  "screen.extendedae_plus.stacks_rename": "重命名",
   "screen.item.extendedae_plus.priority_tool": "配置覆写值",
   "screen.item.extendedae_plus.provider_controller": "样板供应器管理面板",
   "screen.item.extendedae_plus.provider_controller.all_off": "全部关闭",

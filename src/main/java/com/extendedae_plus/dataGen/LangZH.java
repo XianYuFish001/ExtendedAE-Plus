@@ -241,6 +241,9 @@ public class LangZH extends LanguageProvider {
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screen)
                 .item(ModItems.PRIORITY_TOOL)
                 .buildInto("配置覆写值");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screen)
+                .addStr("stacks_rename")
+                .buildInto("重命名");
 
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.keywordGroup)
                 .addStr("workstations")

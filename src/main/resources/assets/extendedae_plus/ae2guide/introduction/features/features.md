@@ -113,6 +113,7 @@ A multiplication control button is added in the pattern provider GUI, allowing p
 ### 3. Terminal Interaction Enhancements
 
 - **Search Highlight:** Adds a search highlight feature to ExtendedAE pattern management terminals (18x18 border + rainbow flow highlight).
+- **Quick Rename:** [Ctrl + Middle-Click] to rename a stack in encoding menu.
 
 ---
 
