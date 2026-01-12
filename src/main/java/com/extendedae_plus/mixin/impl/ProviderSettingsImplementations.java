@@ -9,7 +9,7 @@ import appeng.api.util.IConfigManager;
 import appeng.helpers.patternprovider.PatternProviderTarget;
 import com.extendedae_plus.common.impl.pattern.smartDoubling.SmartDoublingAwarePattern;
 import com.extendedae_plus.common.init.ModSettings;
-import com.extendedae_plus.common.settings.StateSmartBlocking;
+import com.extendedae_plus.common.registry.settings.StateSmartBlocking;
 
 import java.util.ArrayList;
 import java.util.Arrays;

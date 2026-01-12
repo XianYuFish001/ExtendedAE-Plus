@@ -1,8 +1,8 @@
 package com.extendedae_plus.integration.recipeViewer.jei;
 
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.common.dataComponent.DataTickingCard;
 import com.extendedae_plus.common.init.ModItems;
+import com.extendedae_plus.common.registry.dataComponent.DataTickingCard;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaTypes;

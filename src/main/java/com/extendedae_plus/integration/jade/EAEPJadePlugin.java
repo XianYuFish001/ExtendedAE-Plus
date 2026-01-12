@@ -1,9 +1,9 @@
 package com.extendedae_plus.integration.jade;
 
-import com.extendedae_plus.common.block.assemblerMatrix.portUpload.BlockEntityUpload;
-import com.extendedae_plus.common.block.assemblerMatrix.portUpload.BlockUpload;
-import com.extendedae_plus.common.block.wirelessTransceiver.BlockEntityWirelessTransceiver;
-import com.extendedae_plus.common.block.wirelessTransceiver.BlockWirelessTransceiver;
+import com.extendedae_plus.common.registry.block.assemblerMatrix.portUpload.BlockEntityUpload;
+import com.extendedae_plus.common.registry.block.assemblerMatrix.portUpload.BlockUpload;
+import com.extendedae_plus.common.registry.block.wirelessTransceiver.BlockEntityWirelessTransceiver;
+import com.extendedae_plus.common.registry.block.wirelessTransceiver.BlockWirelessTransceiver;
 import com.extendedae_plus.integration.jade.portUpload.ProviderPortUpload;
 import com.extendedae_plus.integration.jade.portUpload.TooltipPortUpload;
 import com.extendedae_plus.integration.jade.wirelessTransceiver.ProviderWirelessTransceiver;
@@ -50,7 +50,7 @@ public class EAEPJadePlugin implements IWailaPlugin {
     }
 
     private record InfoBlock<
-            TProvider extends Enum<TProvider> & CommonProvider.IObjectedProvider,
+            TProvider extends Enum<TProvider> & ObjectedProvider.IObjectedProvider<BlockAccessor>,
             TConsumer extends Enum<TConsumer> & IBlockComponentProvider>(
             String uid,
             Class<TProvider> clazzProvider,
@@ -60,8 +60,8 @@ public class EAEPJadePlugin implements IWailaPlugin {
     ) {
         public void registerProvider(IWailaCommonRegistration registration) {
             registration.registerBlockDataProvider(
-                    CommonProvider.create(this.uid,
-                            CommonProvider.IObjectedProvider.getProviders(this.clazzProvider)),
+                    ObjectedProvider.create(this.uid,
+                            ObjectedProvider.IObjectedProvider.getProviders(this.clazzProvider)),
                     this.clazzBlockEntity
             );
         }

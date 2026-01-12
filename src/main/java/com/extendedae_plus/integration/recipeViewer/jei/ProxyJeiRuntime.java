@@ -1,5 +1,6 @@
 package com.extendedae_plus.integration.recipeViewer.jei;
 
+import com.extendedae_plus.integration.ContextModLoaded;
 import com.extendedae_plus.mixin.core.recipeViewer.jei.accessor.AccessorBookmarkOverlay;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.ingredients.IIngredientType;
@@ -12,7 +13,6 @@ import mezz.jei.gui.bookmarks.BookmarkList;
 import mezz.jei.gui.bookmarks.IngredientBookmark;
 import mezz.jei.gui.overlay.elements.IElement;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -139,7 +139,7 @@ public final class ProxyJeiRuntime {
      * 如果存在 Mekanism/appmek，则将 Mekanism 化学堆栈添加到 JEI 书签。
      */
     public static void addBookmark(Object chemicalStack) {
-        if (!ModList.get().isLoaded("mekanism") && !ModList.get().isLoaded("appmek")) return;
+        if (!(ContextModLoaded.mekanism.isLoaded()) || ContextModLoaded.appliedMekanistics.isLoaded()) return;
 
         IJeiRuntime rt = RUNTIME;
         if (rt == null) return;

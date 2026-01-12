@@ -2,8 +2,8 @@ package com.extendedae_plus.common.wireless;
 
 import appeng.api.networking.IManagedGridNode;
 import appeng.api.upgrades.IUpgradeInventory;
-import com.extendedae_plus.common.dataComponent.DataChannelCard;
 import com.extendedae_plus.common.init.ModDataComponents;
+import com.extendedae_plus.common.registry.dataComponent.DataChannelCard;
 import com.extendedae_plus.common.wireless.host.HostGeneric;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
@@ -47,7 +47,7 @@ public class HolderLinkChannelCard {
         }
 
         if (data != null && this.lastData != data) {
-            this.getOrCreateLink().updateInfo(data.frequency(), data.owner());
+            this.getOrCreateLink().updateInfo(data.label().pack(), data.owner());
             this.lastData = data;
         }
     }

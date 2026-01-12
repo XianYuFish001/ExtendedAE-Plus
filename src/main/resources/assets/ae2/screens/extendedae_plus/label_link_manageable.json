@@ -1,0 +1,51 @@
+{
+  "includes": ["label_link.json"],
+  "widgets": {
+    "scrollbar": {
+      "left": -11,
+      "top": 18
+    },
+    "field_label_value": {
+      "left": 186,
+      "top": 13,
+      "width": 65,
+      "height": 12
+    },
+    "field_label_description": {
+      "left": 186,
+      "top": 28,
+      "width": 128,
+      "height": 12
+    },
+    "button_label_type": {
+      "left": 255,
+      "top": 5,
+      "width": 20,
+      "height": 20
+    },
+    "button_label_mode": {
+      "left": 276,
+      "top": 5,
+      "width": 20,
+      "height": 20
+    },
+    "button_label_add": {
+      "left": 297,
+      "top": 5,
+      "width": 20,
+      "height": 20
+    },
+    "button_lock": {
+      "left": 185,
+      "top": 55,
+      "width": 20,
+      "height": 20
+    },
+    "button_master": {
+      "left": 205,
+      "top": 55,
+      "width": 20,
+      "height": 20
+    }
+  }
+}

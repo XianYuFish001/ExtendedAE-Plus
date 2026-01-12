@@ -1,10 +1,10 @@
 package com.extendedae_plus.integration.recipeViewer;
 
 import appeng.api.stacks.GenericStack;
+import com.extendedae_plus.integration.ContextModLoaded;
 import com.extendedae_plus.integration.recipeViewer.emi.EmiHelper;
 import com.extendedae_plus.integration.recipeViewer.jei.JeiHelper;
 import com.mojang.datafixers.util.Pair;
-import net.neoforged.fml.ModList;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,8 +13,8 @@ public class HelperRecipeViewer {
     private static IHelperRecipeViewer activeViewer;
 
     public static void init() {
-        if (ModList.get().isLoaded("emi")) activeViewer = new EmiHelper();
-        else if (ModList.get().isLoaded("jei")) activeViewer = new JeiHelper();
+        if (ContextModLoaded.emi.isLoaded()) activeViewer = new EmiHelper();
+        else if (ContextModLoaded.jei.isLoaded()) activeViewer = new JeiHelper();
         else activeViewer = new EmptyHelper();
     }
 

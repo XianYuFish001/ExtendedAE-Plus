@@ -1,7 +1,6 @@
 package com.extendedae_plus.client.screen;
 
 import com.extendedae_plus.common.init.ModItems;
-import com.extendedae_plus.network.CPacketSetTransceiverFrequency;
 import com.extendedae_plus.util.UtilKeyBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -10,7 +9,6 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 /**
  * 频率输入GUI界面
@@ -202,7 +200,7 @@ public class FrequencyInputScreen extends Screen {
             
             // 发送数据包到服务端
             // API说明：NeoForge使用PacketDistributor.sendToServer
-            PacketDistributor.sendToServer(new CPacketSetTransceiverFrequency(pos, frequency));
+//            PacketDistributor.sendToServer(new CPacketSetTransceiverFrequency(pos, frequency));
             
             this.onClose();
         } catch (NumberFormatException e) {

@@ -6,4 +6,6 @@ public interface ILinkListener {
     void onMasterUnavailable(ILinkHost master);
 
     void onListenerRemoved();
+
+    void emptyLabel();
 }

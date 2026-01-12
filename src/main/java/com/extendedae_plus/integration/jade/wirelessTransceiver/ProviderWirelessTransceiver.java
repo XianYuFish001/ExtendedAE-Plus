@@ -1,79 +1,34 @@
 package com.extendedae_plus.integration.jade.wirelessTransceiver;
 
-import appeng.api.networking.IGridConnection;
-import com.extendedae_plus.common.api.IBlockEntityFrequency;
-import com.extendedae_plus.common.block.wirelessTransceiver.BlockEntityWirelessTransceiver;
-import com.extendedae_plus.common.block.wirelessTransceiver.BlockWirelessTransceiver;
-import com.extendedae_plus.common.wireless.linkApi.LinkRegistry;
-import com.extendedae_plus.integration.jade.CommonProvider;
-import com.extendedae_plus.util.WirelessTeamUtil;
+import com.extendedae_plus.common.registry.block.wirelessTransceiver.BlockEntityWirelessTransceiver;
+import com.extendedae_plus.common.registry.block.wirelessTransceiver.BlockWirelessTransceiver;
+import com.extendedae_plus.integration.jade.CommonProviders;
+import com.extendedae_plus.integration.jade.ObjectedProvider;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerLevel;
 import snownee.jade.api.BlockAccessor;
 
 import java.util.function.BiConsumer;
 
-public enum ProviderWirelessTransceiver implements CommonProvider.IObjectedProvider {
-    MASTER_MODE((data, accessor) -> {
+public enum ProviderWirelessTransceiver implements ObjectedProvider.IObjectedProvider<BlockAccessor> {
+    MODE((data, accessor) -> {
         var blockState = accessor.getBlockState();
         if (!(accessor.getBlockEntity() instanceof BlockEntityWirelessTransceiver)) return;
-        data.putBoolean("masterMode", blockState.getValue(BlockWirelessTransceiver.MASTER_MODE));
+        data.putBoolean("master_mode", blockState.getValue(BlockWirelessTransceiver.MASTER_MODE));
     }),
-    FREQUENCY((data, accessor) -> {
-        if (!(accessor.getBlockEntity() instanceof IBlockEntityFrequency blockEntity)) return;
-        data.putLong("frequency", blockEntity.getFrequency());
-    }),
-    CHANNELS((data, accessor) -> {
-        if (!(accessor.getBlockEntity() instanceof BlockEntityWirelessTransceiver blockEntity)) return;
-        var node = blockEntity.getGridNode();
-        if (node == null) return;
-
-        int usedChannels = 0;
-        for (IGridConnection connection : node.getConnections()) {
-            usedChannels = Math.max(connection.getUsedChannels(), usedChannels);
-        }
-        data.putInt("usedChannels", usedChannels);
-        data.putInt("maxChannels", node.getMaxChannels());
-    }),
-    MASTER_LOCATION((data, accessor) -> {
-        var blockState = accessor.getBlockState();
-        if (!(accessor.getBlockEntity() instanceof BlockEntityWirelessTransceiver blockEntity)) return;
-        if (!blockState.getValue(BlockWirelessTransceiver.MASTER_MODE)) return;
-
-        var info = blockEntity.getLinkInfo();
-        if (info == null) return;
-
-        var masterHost = LinkRegistry.findMaster(info);
-        if (masterHost == null || masterHost.isEndpointRemoved()) return;
-
-        var pos = masterHost.getBlockPos();
-        var level = masterHost.getServerLevel();
-        if (pos != null)
-            data.putLong("masterPos", masterHost.getBlockPos().asLong());
-        if (level != null)
-            data.putString("masterDim", level.dimension().location().toString());
-        if (pos != null && level != null) {
-            if (level.getBlockEntity(pos) instanceof BlockEntityWirelessTransceiver masterBlockEntity
-                    && masterBlockEntity.hasCustomName())
-                data.putString("masterName", masterBlockEntity.getCustomName().getString());
-        }
-    }),
-    LOCKED((data, accessor) -> {
-        var blockState = accessor.getBlockState();
-        if (!(accessor.getBlockEntity() instanceof BlockEntityWirelessTransceiver)) return;
-
-        data.putBoolean("locked", blockState.getValue(BlockWirelessTransceiver.LOCKED));
-    }),
-    PLACER((data, accessor) -> {
-        if (!(accessor.getBlockEntity() instanceof BlockEntityWirelessTransceiver blockEntity)) return;
-
-        var placer = blockEntity.getPlacer();
-        if (placer == null) return;
-        data.putUUID("placer", placer);
-
-        if (!(blockEntity.getLevel() instanceof ServerLevel level)) return;
-        data.putString("placerName", WirelessTeamUtil.getNetworkOwnerName(level, placer).getString());
-    });
+    LABEL(CommonProviders.linkLabel),
+    CHANNELS(CommonProviders.linkChannels),
+    MASTER_LOCATION(CommonProviders.locationMaster(accessor -> {
+        if (!(accessor.getBlockEntity() instanceof BlockEntityWirelessTransceiver blockEntity))
+            return null;
+        if (accessor.getBlockState().getValue(BlockWirelessTransceiver.MASTER_MODE)) return null;
+        return blockEntity.getLabel();
+    })),
+    LOCKED(CommonProviders.stateLocked(BlockWirelessTransceiver.LOCKED)),
+    PLACER(CommonProviders.infoPlacer(accessor -> {
+        if (!(accessor.getBlockEntity() instanceof BlockEntityWirelessTransceiver blockEntity))
+            return null;
+        return blockEntity.getPlacer();
+    }));
 
     private final BiConsumer<CompoundTag, BlockAccessor> provider;
 

@@ -5,9 +5,9 @@ import appeng.core.definitions.AEBlocks;
 import appeng.core.definitions.AEItems;
 import appeng.core.definitions.AEParts;
 import appeng.core.localization.GuiText;
+import com.extendedae_plus.integration.ContextModLoaded;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import net.minecraft.world.level.ItemLike;
-import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.pedroksl.advanced_ae.common.definitions.AAEBlocks;
 import net.pedroksl.advanced_ae.common.definitions.AAEItems;
@@ -59,7 +59,7 @@ public class ModUpgradeCards {
                         EAESingletons.PRECISE_STORAGE_BUS
                 )
         );
-        if (ModList.get().isLoaded("advanced_ae")) {
+        if (ContextModLoaded.advancedAE.isLoaded()) {
             machineGroups.get(1).addAll(List.of(
                     AAEBlocks.SMALL_ADV_PATTERN_PROVIDER,
                     AAEBlocks.ADV_PATTERN_PROVIDER,

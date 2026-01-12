@@ -25,6 +25,8 @@ public class EAEPCycleButton extends EAEPButton {
 
         this.states = states;
         this.stateIterator = stateIterator;
+
+        this.updateTooltip();
     }
 
     @Override

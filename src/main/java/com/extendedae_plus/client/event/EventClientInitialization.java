@@ -8,10 +8,12 @@ import com.extendedae_plus.client.render.crafting.EAEPCraftingCubeModelProvider;
 import com.extendedae_plus.client.screen.ScreenPriorityTool;
 import com.extendedae_plus.client.screen.ScreenProviderController;
 import com.extendedae_plus.client.screen.ScreenTicker;
-import com.extendedae_plus.common.block.EAEPCraftingUnitType;
-import com.extendedae_plus.common.dataComponent.DataTickingCard;
+import com.extendedae_plus.client.screen.labelLink.ScreenLabelLink;
+import com.extendedae_plus.client.screen.labelLink.ScreenLabelLinkManageable;
 import com.extendedae_plus.common.init.ModItems;
 import com.extendedae_plus.common.init.ModMenuTypes;
+import com.extendedae_plus.common.registry.block.EAEPCraftingUnitType;
+import com.extendedae_plus.common.registry.dataComponent.DataTickingCard;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.neoforged.api.distmarker.Dist;
@@ -30,13 +32,17 @@ public final class EventClientInitialization {
     @SubscribeEvent
     public static void regScreens(RegisterMenuScreensEvent event) {
         event.register(
-                ModMenuTypes.PROVIDER_CONTROLLER.get(),
+                ModMenuTypes.providerController.get(),
                 ScreenProviderController::new);
 
-        InitScreens.register(event, ModMenuTypes.TICKER.get(),
+        InitScreens.register(event, ModMenuTypes.ticker.get(),
                 ScreenTicker::new, getStylePath("ticker"));
-        InitScreens.register(event, ModMenuTypes.PRIORITY_TOOL.get(),
+        InitScreens.register(event, ModMenuTypes.priorityTool.get(),
                 ScreenPriorityTool::new, getStylePath("priority_tool"));
+        InitScreens.register(event, ModMenuTypes.labelLink.get(),
+                ScreenLabelLink::new, getStylePath("label_link"));
+        InitScreens.register(event, ModMenuTypes.labelLinkManageable.get(),
+                ScreenLabelLinkManageable::new, getStylePath("label_link_manageable"));
     }
 
     @SubscribeEvent

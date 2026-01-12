@@ -3,14 +3,14 @@ package com.extendedae_plus.common.init;
 import appeng.items.materials.UpgradeCardItem;
 import appeng.items.parts.PartItem;
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.common.block.EAEPCraftingUnitType;
-import com.extendedae_plus.common.item.ItemProviderController;
-import com.extendedae_plus.common.item.ItemTicker;
-import com.extendedae_plus.common.item.infinityBigIntegerCell.InfinityBigIntegerCellItem;
-import com.extendedae_plus.common.item.priorityTool.ItemPriorityTool;
-import com.extendedae_plus.common.item.upgradeCard.CardAutoCompletion;
-import com.extendedae_plus.common.item.upgradeCard.CardTicking;
-import com.extendedae_plus.common.item.upgradeCard.ChannelCardItem;
+import com.extendedae_plus.common.registry.block.EAEPCraftingUnitType;
+import com.extendedae_plus.common.registry.item.ItemProviderController;
+import com.extendedae_plus.common.registry.item.ItemTicker;
+import com.extendedae_plus.common.registry.item.infinityBigIntegerCell.InfinityBigIntegerCellItem;
+import com.extendedae_plus.common.registry.item.priorityTool.ItemPriorityTool;
+import com.extendedae_plus.common.registry.item.upgradeCard.CardAutoCompletion;
+import com.extendedae_plus.common.registry.item.upgradeCard.CardChannel;
+import com.extendedae_plus.common.registry.item.upgradeCard.CardTicking;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -50,7 +50,7 @@ public final class ModItems {
             regItem("priority_tool", ItemPriorityTool::new);
 
     public static final DeferredItem<UpgradeCardItem> CHANNEL_CARD =
-            regItem("channel_card", ChannelCardItem::new);
+            regItem("channel_card", CardChannel::new);
     public static final DeferredItem<UpgradeCardItem> CARD_AUTO_COMPLETION =
             regItem("card_auto_completion", CardAutoCompletion::new);
 

@@ -3,7 +3,7 @@ package com.extendedae_plus.mixin.core.advancedae.menu;
 import appeng.api.config.YesNo;
 import appeng.menu.guisync.GuiSync;
 import com.extendedae_plus.common.init.ModSettings;
-import com.extendedae_plus.common.settings.StateSmartBlocking;
+import com.extendedae_plus.common.registry.settings.StateSmartBlocking;
 import com.extendedae_plus.mixin.impl.bridge.SyncerSmartBlocking;
 import com.extendedae_plus.mixin.impl.bridge.SyncerSmartDoubling;
 import net.pedroksl.advanced_ae.common.logic.AdvPatternProviderLogic;

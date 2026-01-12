@@ -24,20 +24,20 @@ public interface ILinkHost {
     IGridNode getGridNode();
 
     /** 是否已移除/销毁（端点视角），用于在卸载或破坏时停止连接 */
-    boolean isEndpointRemoved();
+    boolean isRemoved();
 
-    long getFrequency();
+    Label getLabel();
 
     @Nullable
     UUID getPlacer();
 
-    void setFrequency(long frequency);
+    String getPlacerName();
+
+    void setLabel(Label label);
 
     void setPlacer(@Nullable UUID placer);
 
     void setPlacerName(String placerName);
-
-    String getPlacerName();
 
     default void onConnectionChanged(boolean connected) {
     }

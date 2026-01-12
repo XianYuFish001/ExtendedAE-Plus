@@ -4,11 +4,11 @@ import appeng.api.stacks.AEFluidKey;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
+import com.extendedae_plus.integration.ContextModLoaded;
 import com.extendedae_plus.integration.recipeViewer.IHelperRecipeViewer;
 import com.mojang.datafixers.util.Pair;
 import mezz.jei.api.ingredients.ITypedIngredient;
 import net.minecraft.client.gui.screens.Screen;
-import net.neoforged.fml.ModList;
 import org.lwjgl.glfw.GLFW;
 import tamaized.ae2jeiintegration.integration.modules.jei.GenericEntryStackHelper;
 
@@ -61,7 +61,7 @@ public class JeiHelper implements IHelperRecipeViewer {
             ProxyJeiRuntime.addBookmark(itemKey.toStack());
         else if (key instanceof AEFluidKey fluidKey)
             ProxyJeiRuntime.addBookmark(fluidKey.toStack(1000));
-        else if (ModList.get().isLoaded("mekanism") || ModList.get().isLoaded("appmek")) {
+        else if (ContextModLoaded.mekanism.isLoaded() && ContextModLoaded.appliedMekanistics.isLoaded()) {
             try {
                 Class<?> keyClass = key.getClass();
                 if (keyClass.getName().contains("MekanismKey")) {

@@ -2,9 +2,9 @@ package com.extendedae_plus.dataGen;
 
 import appeng.core.definitions.AEItems;
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.common.block.EAEPCraftingUnitType;
 import com.extendedae_plus.common.init.ModBlocks;
 import com.extendedae_plus.common.init.ModItems;
+import com.extendedae_plus.common.registry.block.EAEPCraftingUnitType;
 import com.extendedae_plus.util.UtilKeyBuilder;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import net.minecraft.data.PackOutput;
@@ -133,6 +133,51 @@ public class LangEN extends LanguageProvider {
                 .branch("increment", "Increment per apply")
                 .branch("decrement", "Decrement per apply")
                 .buildInto("Tool Mode");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screenTooltip)
+                .addStr("recipe_alias")
+                .branch("reload", "Reload Mappings")
+                .branch("add", "Add a Mapping")
+                .branch("remove", "Remove Mappings")
+                .buildInto("Alias Actions");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screenTooltip)
+                .addStr("row_slots_visible")
+                .branch("visible", "Visible")
+                .branch("invisible", "Invisible")
+                .buildInto("Pattern Slot Visibility");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screenTooltip)
+                .addStr("label_link")
+                .addStr("info_label")
+                .branch("public", "Public")
+                .buildInto("Owner: %s{%s}");
+
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screenTooltip)
+                .addStr("label_link")
+                .addStr("label_description")
+                .branch("empty", "Desc: Empty")
+                .buildInto("Desc: ");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screenTooltip)
+                .addStr("label_type")
+                .branch("frequency", "Frequency")
+                .branch("label", "String Label")
+                .buildInto("Link Label Type");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screenTooltip)
+                .addStr("label_mode")
+                .branch("public", "Public")
+                .branch("private", "Private/Team")
+                .buildInto("Link Label Mode");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screenTooltip)
+                .addStr("label_add")
+                .buildInto("Reg Link Label");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screenTooltip)
+                .addStr("label_locked")
+                .branch("locked", "Locked")
+                .branch("unlocked", "Unlocked")
+                .buildInto("Lock Device Label");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screenTooltip)
+                .addStr("transceiver_mode")
+                .branch("master", "Master")
+                .branch("slave", "Slave")
+                .buildInto("Device Mode");
 
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.message)
                 .addStr("provider_list")
@@ -245,6 +290,12 @@ public class LangEN extends LanguageProvider {
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screen)
                 .addStr("stacks_rename")
                 .buildInto("Rename");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screen)
+                .addStr("label_link")
+                .branch("register", "Reg Link Label")
+                .branch("label_value", "Link Label")
+                .branch("label_description", "Link Label Description")
+                .buildInto("Choose a Link Label");
 
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.keywordGroup)
                 .addStr("workstations")
@@ -253,8 +304,8 @@ public class LangEN extends LanguageProvider {
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.config)
                 .branch("title", "ExtendedAE Plus Config")
                 .branch("ae", "AE2")
-                .branch("wireless", "Wireless")
-                .branch("ticker", "Ticker");
+                .branch("ticker", "Ticker")
+                .branch("assembler_matrix", "Assembler Matrix");
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.config)
                 .addStr("pageMultiplier")
                 .branch("tooltip", """
@@ -292,16 +343,6 @@ public class LangEN extends LanguageProvider {
                 .addStr("providerRoundRobinEnable")
                 .branch("tooltip", " Note: All related providers need to enable smart doubling, otherwise they may fail")
                 .buildInto("Enable Pattern Provider Polling Assignment");
-        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.config)
-                .addStr("wirelessMaxRange")
-                .branch("tooltip", """
-                        The straight-line distance between the slave end and the master end must be less than or equal to this value before a connection can be established
-                        (0 means no limit)""")
-                .buildInto("Wireless Maximum Distance");
-        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.config)
-                .addStr("wirelessCrossDimEnable")
-                .branch("tooltip", "There should have something? Sorry I forgot")
-                .buildInto("Allow Transceiver Links Cross Dimensions");
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.config)
                 .addStr("tickerBaseCost")
                 .buildInto("Base Ticker Energy Cost");
@@ -348,9 +389,9 @@ public class LangEN extends LanguageProvider {
 
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.jadeInfo)
                 .item(ModItems.WIRELESS_TRANSCEIVER)
-                .addStr("frequency")
-                .branch("unset", "Frequency: Unset")
-                .buildInto("Frequency: %s");
+                .addStr("label")
+                .branch("unset", "Link Label: Unset")
+                .buildInto("Link Label: %s");
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.jadeInfo)
                 .item(ModItems.WIRELESS_TRANSCEIVER)
                 .addStr("mode")
@@ -374,12 +415,12 @@ public class LangEN extends LanguageProvider {
                 .item(ModItems.WIRELESS_TRANSCEIVER)
                 .branch("name", "Owner: %s")
                 .branch("id", "Owner{%2$s}")
-                .buildInto("Public Mode");
+                .buildInto("Public");
 
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.jadeConfig)
                 .addStr("wireless_transceiver")
                 .branch("channels", "Wireless Transceiver: Channels")
-                .branch("frequency", "Wireless Transceiver: Frequency")
+                .branch("label", "Wireless Transceiver: Link Label")
                 .branch("master_mode", "Wireless Transceiver: Mode")
                 .branch("master_location", "Wireless Transceiver: Master Location")
                 .branch("locked", "Wireless Transceiver: Locked")

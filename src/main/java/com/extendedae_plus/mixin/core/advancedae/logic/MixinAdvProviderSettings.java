@@ -10,7 +10,7 @@ import appeng.api.util.IConfigManager;
 import appeng.helpers.patternprovider.PatternProviderTarget;
 import appeng.util.ConfigManager;
 import com.extendedae_plus.common.init.ModSettings;
-import com.extendedae_plus.common.settings.StateSmartBlocking;
+import com.extendedae_plus.common.registry.settings.StateSmartBlocking;
 import com.extendedae_plus.mixin.impl.ProviderSettingsImplementations;
 import net.pedroksl.advanced_ae.common.logic.AdvPatternProviderLogic;
 import net.pedroksl.advanced_ae.common.logic.AdvPatternProviderLogicHost;

@@ -12,7 +12,7 @@ import appeng.helpers.patternprovider.PatternProviderLogicHost;
 import appeng.helpers.patternprovider.PatternProviderTarget;
 import appeng.util.ConfigManager;
 import com.extendedae_plus.common.init.ModSettings;
-import com.extendedae_plus.common.settings.StateSmartBlocking;
+import com.extendedae_plus.common.registry.settings.StateSmartBlocking;
 import com.extendedae_plus.mixin.impl.ProviderSettingsImplementations;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

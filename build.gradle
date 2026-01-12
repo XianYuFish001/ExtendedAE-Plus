@@ -20,7 +20,7 @@ group = mod_group_id
 apply from: "$rootDir/dependencies.gradle"
 
 base {
-    archivesName = mod_id
+    archivesName = mod_name
 }
 
 // Mojang ships Java 21 to end users in 1.21.1, so mods should target Java 21.

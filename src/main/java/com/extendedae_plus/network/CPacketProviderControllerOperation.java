@@ -11,7 +11,7 @@ import appeng.parts.crafting.PatternProviderPart;
 import appeng.util.EnumCycler;
 import com.extendedae_plus.common.init.ModItems;
 import com.extendedae_plus.common.init.ModSettings;
-import com.extendedae_plus.common.settings.StateSmartBlocking;
+import com.extendedae_plus.common.registry.settings.StateSmartBlocking;
 import com.extendedae_plus.network.base.CPacketGeneric;
 import com.extendedae_plus.network.base.EAEPNetworkPacket;
 import com.extendedae_plus.network.base.PacketGeneric;

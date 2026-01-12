@@ -1,5 +1,6 @@
 package com.extendedae_plus.client.impl;
 
+import com.extendedae_plus.integration.ContextModLoaded;
 import com.extendedae_plus.util.UtilKeyBuilder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -9,17 +10,15 @@ import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.jemi.JemiRecipe;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.contents.PlainTextContents;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLPaths;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 
 public class AliasGetter {
@@ -28,43 +27,22 @@ public class AliasGetter {
     private static final Map<String, String> ALIASES = new ConcurrentHashMap<>();
 
     static {
-        loadAliases();
+        tryLoadAliases();
     }
 
-    private static synchronized void createAliasTemplate(Path filePath) throws IOException {
-        if (Files.exists(filePath)) return;
-
-        Files.createDirectories(filePath.getParent());
-        JsonObject tmpl = new JsonObject();
-        tmpl.addProperty("minecraft:smelting", "熔炉");
-        tmpl.addProperty("minecraft:blasting", "高炉");
-        tmpl.addProperty("minecraft:smoking", "烟熏");
-        tmpl.addProperty("minecraft:campfire_cooking", "营火");
-        Files.writeString(filePath, GSON.toJson(tmpl));
-    }
-
-    /**
-     * 从配置文件加载 RecipeType → 中文名称映射。文件不存在则生成模板。
-     * 同时支持“别名”形式：不含冒号的键会被视为最终搜索关键字（大小写不敏感），如：
-     * {
-     *   "assembler": "组装机"
-     * }
-     */
-    public static synchronized void loadAliases() {
+    public static synchronized void tryLoadAliases() {
         try {
-            Path configPath = FMLPaths.CONFIGDIR.get();
-            Path filePath = configPath.resolve(CONFIG_RELATIVE);
+            var pathFile = FMLPaths.CONFIGDIR.get().resolve(CONFIG_RELATIVE);
+            if (!Files.exists(pathFile)) Files.createFile(pathFile);
 
-            if (!Files.exists(filePath)) createAliasTemplate(filePath);
-
-            String json = Files.readString(filePath);
-            JsonObject obj = GSON.fromJson(json, JsonObject.class);
+            var json = Files.readString(pathFile);
+            var obj = GSON.fromJson(json, JsonObject.class);
             if (obj == null) {
                 ALIASES.clear();
                 return;
             }
 
-            Map<String, String> resolvedAlias = new HashMap<>();
+            var resolvedAlias = new HashMap<String, String>();
 
             obj.entrySet().forEach(entry -> {
                 var typeKey = entry.getKey();
@@ -84,11 +62,10 @@ public class AliasGetter {
     }
 
     /**
-     * 向配置中新增或更新“别名 -> 中文”映射，并刷新内存映射。
-     * 仅用于非原版（或希望使用最终搜索关键字）场景。
+     * 向配置中新增或更新别名映射，并刷新内存映射。
      *
      * @param typeKey 最终搜索关键字（不含冒号），大小写不敏感
-     * @param alias  中文名称
+     * @param alias  别名
      * @return 是否写入成功
      */
     public static synchronized boolean addOrUpdateAlias(String typeKey, String alias) {
@@ -96,22 +73,20 @@ public class AliasGetter {
             return false;
 
         try {
-            Path configPath = FMLPaths.CONFIGDIR.get();
-            Path filePath = configPath.resolve(CONFIG_RELATIVE);
-
-            if (!Files.exists(filePath)) createAliasTemplate(filePath);
+            var pathFile = FMLPaths.CONFIGDIR.get().resolve(CONFIG_RELATIVE);
+            if (!Files.exists(pathFile)) Files.createFile(pathFile);
 
             JsonObject obj;
-            if (Files.exists(filePath)) {
-                String json = Files.readString(filePath);
+            if (Files.exists(pathFile)) {
+                String json = Files.readString(pathFile);
                 obj = GSON.fromJson(json, JsonObject.class);
                 if (obj == null) obj = new JsonObject();
             } else return false;
 
-            String key = typeKey.trim();
+            var key = typeKey.trim();
 
             obj.addProperty(key, alias);
-            Files.writeString(filePath, GSON.toJson(obj));
+            Files.writeString(pathFile, GSON.toJson(obj));
 
             ALIASES.put(key.toLowerCase(), alias);
             return true;
@@ -120,29 +95,24 @@ public class AliasGetter {
         }
     }
 
-    /**
-     * 按中文值精确匹配删除映射（支持别名与完整ID）。
-     * 返回删除的条目数量。
-     */
     public static synchronized int removeAliases(String alias) {
         if (alias == null) return 0;
 
-        String target = alias.trim();
+        var target = alias.trim();
         if (target.isBlank()) return 0;
 
         try {
-            Path configPath = FMLPaths.CONFIGDIR.get();
-            Path filePath = configPath.resolve(CONFIG_RELATIVE);
-            if (!Files.exists(filePath)) {
-                createAliasTemplate(filePath);
+            var pathFile = FMLPaths.CONFIGDIR.get().resolve(CONFIG_RELATIVE);
+            if (!Files.exists(pathFile)) {
+                Files.createFile(pathFile);
                 return 0;
             }
 
-            String json = Files.readString(filePath);
-            JsonObject obj = GSON.fromJson(json, JsonObject.class);
+            var json = Files.readString(pathFile);
+            var obj = GSON.fromJson(json, JsonObject.class);
             if (obj == null) return 0;
 
-            List<String> toRemove = new ArrayList<>();
+            var toRemove = new ArrayList<String>();
             obj.entrySet().forEach(entry -> {
                 var aliasValue = entry.getValue();
                 if (aliasValue == null || !aliasValue.isJsonPrimitive()) return;
@@ -155,7 +125,7 @@ public class AliasGetter {
 
             toRemove.forEach(ALIASES::remove);
             toRemove.forEach(obj::remove);
-            Files.writeString(filePath, GSON.toJson(obj));
+            Files.writeString(pathFile, GSON.toJson(obj));
             return toRemove.size();
         } catch (IOException e) {
             return 0;
@@ -191,8 +161,7 @@ public class AliasGetter {
 
     public static void collectRecipeKeyword(String name, int priority, boolean findMapping) {
         if (keyUsed) recipeKeywords.clear();
-
-        var group = new KeywordGroup(name);
+        var group = KeywordGroup.literal(name);
         group.setPriority(priority);
         if (findMapping) group.findMapping(true);
         recipeKeywords.add(group);
@@ -204,7 +173,7 @@ public class AliasGetter {
         if (recipe == null) return;
         var keys = new HashMap<String, Integer>();
 
-        if (ModList.get().isLoaded("emi")) {
+        if (ContextModLoaded.emi.isLoaded()) {
             List<EmiIngredient> workstations = new ArrayList<>();
             Component categoryName = Component.empty();
 
@@ -232,8 +201,16 @@ public class AliasGetter {
                 var workstationKeys = new ArrayList<String>();
                 workstations.reversed().forEach(ingredient -> ingredient.getEmiStacks().reversed()
                         .forEach(stack -> {
-                            workstationKeys.add(stack.getName().getString());
-                            workstationKeys.add(stack.getName().toString());
+                            var name = stack.getName();
+                            workstationKeys.add(name.getString());
+
+                            String key = null;
+                            if (name.getContents() instanceof PlainTextContents contents)
+                                key = contents.text();
+                            else if (name.getContents() instanceof TranslatableContents contents)
+                                key = contents.getKey();
+                            if (key == null) return;
+                            workstationKeys.add(key);
                         })
                 );
 
@@ -261,48 +238,53 @@ public class AliasGetter {
     }
 
     public static class KeywordGroup {
-        public static final KeywordGroup EMPTY = new KeywordGroup("");
+        private static HashMap<String, KeywordGroup> literalGroups;
 
         private final List<String> keywords = new ArrayList<>();
         private Component description;
         private boolean mapped = false;
         private int priority = 0;
 
-        public KeywordGroup(String keyword) {
-            this(List.of(keyword), Component.empty());
-        }
-
         public KeywordGroup(Collection<String> keywords, Component groupDescription) {
             this.keywords.addAll(keywords);
             this.description = groupDescription;
         }
 
-        public boolean match(String nameKey, String i18nKey) {
-            if (this.keywords.stream().map(String::isBlank).allMatch(Predicate.isEqual(true))) return true;
+        public static KeywordGroup literal(String value) {
+            if (literalGroups == null) literalGroups = new HashMap<>();
+            return literalGroups.computeIfAbsent(value, $ ->
+                    new KeywordGroup(List.of(value), Component.empty()));
+        }
 
-            boolean descMatched = nameMatches(this.description.getString(), nameKey);
-            boolean keywordsMatched = keywords.stream().anyMatch(
-                    key -> nameMatches(key, nameKey) || i18nKeyMatches(key, i18nKey));
+        public boolean matches(String nameKey, String i18nKey) {
+            if (this.keywords.stream().map(String::isBlank)
+                    .allMatch(Predicate.isEqual(true)))
+                return true;
 
-            return descMatched || keywordsMatched;
+            return nameMatches(this.description.getString(), nameKey)
+                    || this.keywords.stream().anyMatch(
+                            key -> nameMatches(key, nameKey)
+                                    || i18nKeyMatches(key, i18nKey));
         }
 
         private static boolean nameMatches(String matchKey, String searchKey) {
             if (matchKey == null || matchKey.isBlank()) return false;
             if (searchKey == null || searchKey.isBlank()) return true;
 
-            if (ModList.get().isLoaded("jecharacters")) {
+            var jechMatches = false;
+            if (ContextModLoaded.jech.isLoaded()) {
                 try {
-                    Method jecContains = Class.forName("me.towdium.jecharacters.utils.Match")
-                            .getMethod("contains", CharSequence.class, CharSequence.class);
-                    Object result = jecContains.invoke(null, matchKey, searchKey);
-                    if (result instanceof Boolean resultBool) return resultBool;
+                    var methodContains = Class.forName("me.towdium.jecharacters.utils.Match")
+                            .getMethod("contains", String.class, CharSequence.class);
+                    jechMatches = (boolean) methodContains.invoke(
+                            null, searchKey.toLowerCase(), matchKey.toLowerCase());
                 } catch (Throwable ignore) {
                 }
             }
 
-            return matchKey.toLowerCase().contains(searchKey.toLowerCase()) ||
-                    searchKey.toLowerCase().contains(matchKey.toLowerCase());
+            return jechMatches
+                    || matchKey.toLowerCase().contains(searchKey.toLowerCase())
+                    || searchKey.toLowerCase().contains(matchKey.toLowerCase());
         }
 
         private static boolean i18nKeyMatches(String matchKey, String searchKey) {
@@ -327,15 +309,15 @@ public class AliasGetter {
 
             if (!mappingKeywords) return;
 
-            AtomicBoolean mapped = new AtomicBoolean(false);
+            var mapped = new boolean[]{false};
             var mappedList = this.keywords.stream().map(keyword -> {
                 var mappedKey = AliasGetter.findMapping(keyword);
                 if (mappedKey != null) {
-                    mapped.set(true);
+                    mapped[0] = true;
                     return mappedKey;
                 } else return keyword;
             }).toList();
-            if (mapped.get()) this.mapped = true;
+            if (mapped[0]) this.mapped = true;
 
             this.keywords.clear();
             this.keywords.addAll(mappedList);

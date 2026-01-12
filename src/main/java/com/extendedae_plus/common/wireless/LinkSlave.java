@@ -4,10 +4,10 @@ import appeng.api.networking.GridHelper;
 import appeng.api.networking.IGridConnection;
 import appeng.api.networking.IGridNode;
 import appeng.me.service.helpers.ConnectionWrapper;
-import com.extendedae_plus.EAEPConfig;
 import com.extendedae_plus.common.wireless.linkApi.ILinkHost;
 import com.extendedae_plus.common.wireless.linkApi.ILinkListener;
-import com.extendedae_plus.common.wireless.linkApi.LinkRegistry;
+import com.extendedae_plus.common.wireless.linkApi.Label;
+import com.extendedae_plus.common.wireless.linkApi.RegistryLink;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -17,7 +17,7 @@ public class LinkSlave {
     private final ILinkHost host;
     private final ListenerSlave listener;
 
-    private ConnectionWrapper wrapper = new ConnectionWrapper(null);
+    private final ConnectionWrapper connection = new ConnectionWrapper(null);
 
     public LinkSlave(ILinkHost host) {
         this.host = Objects.requireNonNull(host, "host");
@@ -26,21 +26,19 @@ public class LinkSlave {
 
     public void register() {
         if (checkInfo()) return;
-        LinkRegistry.registerListener(this.listener, this.host.getServerLevel(),
-                this.host.getFrequency(), this.host.getPlacer());
+        RegistryLink.registerListener(this.listener, this.host.getLabel());
     }
 
     public void unregister() {
         if (checkInfo()) return;
-        LinkRegistry.unregisterListener(this.listener, this.host.getServerLevel(),
-                this.host.getFrequency(), this.host.getPlacer());
+        RegistryLink.unregisterListener(this.listener, this.host.getLabel());
     }
 
     private void destroyConnection() {
         IGridNode nodeA;
         IGridNode nodeB = null;
 
-        var connection = this.wrapper.getConnection();
+        var connection = this.connection.getConnection();
         if (connection != null) {
             nodeA = connection.a();
             nodeB = connection.b();
@@ -70,12 +68,14 @@ public class LinkSlave {
             }
         } catch (Throwable ignored) {
         }
-        this.wrapper.setConnection(null);
+        this.connection.setConnection(null);
         this.host.onConnectionChanged(false);
     }
 
     private boolean checkInfo() {
-        return this.host.getFrequency() <= 0L || this.host.isEndpointRemoved() || this.host.getServerLevel() == null;
+        return this.host.getLabel().data.isEmpty()
+                || this.host.isRemoved()
+                || this.host.getServerLevel() == null;
     }
 
     public void onUnloadOrRemove() {
@@ -84,32 +84,32 @@ public class LinkSlave {
     }
 
     public boolean connected() {
-        return this.wrapper.getConnection() != null;
+        return this.connection.getConnection() != null;
     }
 
-    public long getFrequency() {
-        return this.host.getFrequency();
+    public Label getLabel() {
+        return this.host.getLabel();
     }
 
     public @Nullable UUID getPlacer() {
         return this.host.getPlacer();
     }
 
-    public void updateInfo(long frequency, @Nullable UUID placer) {
-        if (this.host.getFrequency() == frequency
+    public void updateInfo(Label label, @Nullable UUID placer) {
+        if (this.host.getLabel().equals(label)
                 && this.host.getPlacer() == placer) return;
 
         this.unregister();
-        this.host.setFrequency(frequency);
+        this.host.setLabel(label);
         this.host.setPlacer(placer);
         this.register();
     }
 
-    public void setFrequency(long frequency) {
-        if (this.host.getFrequency() == frequency) return;
+    public void setLabel(Label label) {
+        if (this.host.getLabel().equals(label)) return;
 
         this.unregister();
-        this.host.setFrequency(frequency);
+        this.host.setLabel(label);
         this.register();
     }
 
@@ -138,11 +138,7 @@ public class LinkSlave {
     private class ListenerSlave implements ILinkListener {
         @Override
         public void onMasterAvailable(ILinkHost master) {
-            if (LinkSlave.this.host.isEndpointRemoved() || master.isEndpointRemoved()) return;
-            var distance = Math.sqrt(master.getBlockPos().distSqr(LinkSlave.this.host.getBlockPos()));
-            if (!EAEPConfig.WIRELESS_CROSS_DIM_ENABLE.getAsBoolean()
-                    && distance > EAEPConfig.WIRELESS_MAX_RANGE.getAsDouble()) return;
-
+            if (LinkSlave.this.host.isRemoved() || master.isRemoved()) return;
             LinkSlave.this.destroyConnection();
 
             try {
@@ -153,7 +149,7 @@ public class LinkSlave {
                 var connection = LinkSlave.findConnection(nodeA, nodeB);
                 if (connection == null)
                     connection = GridHelper.createConnection(nodeA, nodeB);
-                LinkSlave.this.wrapper.setConnection(connection);
+                LinkSlave.this.connection.setConnection(connection);
                 LinkSlave.this.host.onConnectionChanged(true);
                 master.onConnectionChanged(true);
             } catch (Throwable ignore) {
@@ -168,6 +164,11 @@ public class LinkSlave {
         @Override
         public void onListenerRemoved() {
             LinkSlave.this.destroyConnection();
+        }
+
+        @Override
+        public void emptyLabel() {
+            LinkSlave.this.host.setLabel(Label.EMPTY);
         }
     }
 }

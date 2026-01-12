@@ -31,7 +31,7 @@ public abstract class EAEPButton extends IconButton {
 
     protected void updateTooltip() {
         if (this.getNonnullAction().hasName())
-            this.setMessage(buildMessage(
+            this.setMessage(this.buildMessage(
                     this.getNonnullAction().getName(),
                     this.getNonnullAction().getTooltip()));
     }

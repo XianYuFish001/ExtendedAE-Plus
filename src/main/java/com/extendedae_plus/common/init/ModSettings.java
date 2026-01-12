@@ -4,8 +4,8 @@ import appeng.api.config.RedstoneMode;
 import appeng.api.config.Setting;
 import appeng.api.config.YesNo;
 import com.extendedae_plus.client.render.widgets.button.EAEPActionItems;
-import com.extendedae_plus.common.part.ticker.PartTicker;
-import com.extendedae_plus.common.settings.StateSmartBlocking;
+import com.extendedae_plus.common.registry.part.ticker.PartTicker;
+import com.extendedae_plus.common.registry.settings.StateSmartBlocking;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.Nullable;
@@ -15,7 +15,7 @@ import java.util.*;
 /// 使用EAEPCycleButton喵, 使用EAEPCycleButton谢谢喵
 public class ModSettings {
     public static final Map<String, Setting<?>> EAEP_SETTINGS = new HashMap<>();
-    public static final Map<ValueEntry, ButtonAppearance> appearances = new HashMap<>();
+    private static final Map<ValueEntry, ButtonAppearance> appearances = new HashMap<>();
 
     public static final Setting<PartTicker.StateTicker> STATE_TICKER =
             register("state_ticker", PartTicker.StateTicker.class)
@@ -24,14 +24,12 @@ public class ModSettings {
                             EAEPActionItems.TICKER_BLACKLISTED)
                     .setInvalidValue(PartTicker.StateTicker.BLACKLISTED)
                     .build();
-
     public static final Setting<RedstoneMode> OPTIONAL_REDSTONE_MODE =
             register("optional_redstone_mode", RedstoneMode.class)
                     .addPart(RedstoneMode.IGNORE, EAEPActionItems.REDSTONE_IGNORE)
                     .addPart(RedstoneMode.LOW_SIGNAL, EAEPActionItems.REDSTONE_LOW)
                     .addPart(RedstoneMode.HIGH_SIGNAL, EAEPActionItems.REDSTONE_HIGH)
                     .build();
-
     public static final Setting<StateSmartBlocking> SMART_BLOCKING =
             register("smart_blocking", StateSmartBlocking.class)
                     .bindAll(EAEPActionItems.BLOCKING_ENABLED,
@@ -39,11 +37,20 @@ public class ModSettings {
                             EAEPActionItems.BLOCKING_DISABLED_BY_SUPER)
                     .setInvalidValue(StateSmartBlocking.DISABLED_BY_SUPER)
                     .build();
-
     public static final Setting<YesNo> SMART_DOUBLING =
             register("smart_doubling", YesNo.class)
                     .addPart(YesNo.YES, EAEPActionItems.DOUBLING_ENABLED)
                     .addPart(YesNo.NO, EAEPActionItems.DOUBLING_DISABLED)
+                    .build();
+    public static final Setting<YesNo> LABEL_LOCKED =
+            register("label_locked", YesNo.class)
+                    .addPart(YesNo.YES, EAEPActionItems.LABEL_LOCKED)
+                    .addPart(YesNo.NO, EAEPActionItems.LABEL_UNLOCKED)
+                    .build();
+    public static final Setting<YesNo> TRANSCEIVER_MODE =
+            register("transceiver_mode", YesNo.class)
+                    .addPart(YesNo.YES, EAEPActionItems.TRANSCEIVER_MASTER)
+                    .addPart(YesNo.NO, EAEPActionItems.TRANSCEIVER_SLAVE)
                     .build();
 
     private static <TEnum extends Enum<TEnum>> Builder<TEnum> register(String name, Class<TEnum> clazzSetting) {
@@ -112,7 +119,7 @@ public class ModSettings {
         @SafeVarargs
         public final Builder<TEnum> setInvalidValue(TEnum... invalidValues) {
             this.invalidValues = EnumSet.noneOf(this.clazzSetting);
-            this.invalidValues.addAll(Arrays.asList(invalidValues));
+            Collections.addAll(this.invalidValues, invalidValues);
             return this;
         }
 

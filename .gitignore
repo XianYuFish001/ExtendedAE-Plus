@@ -31,4 +31,3 @@ crashreport
 /build/
 /build/generated/sources/modMetadata/META-INF/neoforge.mods.toml
 /src/generated/resources/.cache/
-/GeneratedTranslationKeys.json

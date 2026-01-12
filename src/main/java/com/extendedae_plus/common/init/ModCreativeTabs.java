@@ -1,7 +1,7 @@
 package com.extendedae_plus.common.init;
 
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.common.dataComponent.DataTickingCard;
+import com.extendedae_plus.common.registry.dataComponent.DataTickingCard;
 import com.extendedae_plus.util.UtilKeyBuilder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.CreativeModeTab;

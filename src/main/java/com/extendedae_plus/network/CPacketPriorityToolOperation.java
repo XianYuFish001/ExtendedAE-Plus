@@ -1,8 +1,8 @@
 package com.extendedae_plus.network;
 
 import appeng.util.EnumCycler;
-import com.extendedae_plus.common.item.priorityTool.DataPriority;
-import com.extendedae_plus.common.menu.MenuPriorityTool;
+import com.extendedae_plus.common.registry.item.priorityTool.DataPriority;
+import com.extendedae_plus.common.registry.menu.MenuPriorityTool;
 import com.extendedae_plus.network.base.CPacketGeneric;
 import com.extendedae_plus.network.base.EAEPNetworkPacket;
 import com.extendedae_plus.network.base.PacketGeneric;

@@ -7,12 +7,12 @@ import appeng.block.crafting.CraftingUnitBlock;
 import appeng.blockentity.AEBaseBlockEntity;
 import appeng.blockentity.crafting.CraftingBlockEntity;
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.common.block.EAEPCraftingUnitType;
-import com.extendedae_plus.common.block.assemblerMatrix.coreAdvancedCrafter.BlockEntityAdvancedCrafter;
-import com.extendedae_plus.common.block.assemblerMatrix.coreAdvancedPattern.BlockEntityAdvancedPattern;
-import com.extendedae_plus.common.block.assemblerMatrix.coreAdvancedSpeed.BlockEntityAdvancedSpeed;
-import com.extendedae_plus.common.block.assemblerMatrix.portUpload.BlockEntityUpload;
-import com.extendedae_plus.common.block.wirelessTransceiver.BlockEntityWirelessTransceiver;
+import com.extendedae_plus.common.registry.block.EAEPCraftingUnitType;
+import com.extendedae_plus.common.registry.block.assemblerMatrix.coreAdvancedCrafter.BlockEntityAdvancedCrafter;
+import com.extendedae_plus.common.registry.block.assemblerMatrix.coreAdvancedPattern.BlockEntityAdvancedPattern;
+import com.extendedae_plus.common.registry.block.assemblerMatrix.coreAdvancedSpeed.BlockEntityAdvancedSpeed;
+import com.extendedae_plus.common.registry.block.assemblerMatrix.portUpload.BlockEntityUpload;
+import com.extendedae_plus.common.registry.block.wirelessTransceiver.BlockEntityWirelessTransceiver;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -107,7 +107,7 @@ public final class ModBlockEntities {
                         factory,
                         Arrays.stream(currentBlocks).map(DeferredBlock::get).toArray(Block[]::new)
                 ).build(null));
-        BLOCK_ENTITIES.add(new InfoBlockEntity<>(clazzBlockEntity, holder, firstBlock));
+        BLOCK_ENTITIES.add(new InfoBlockEntity<>(clazzBlockEntity, holder, currentBlocks));
         return holder;
     }
 
@@ -127,8 +127,8 @@ public final class ModBlockEntities {
             if (!this.clazzCapability.isAssignableFrom(info.clazz)) return;
 
             var provider = this.provider;
-            if (provider == null) provider = (blockEntity, context) ->
-                    this.clazzCapability.cast(blockEntity);
+            if (provider == null) provider =
+                    (blockEntity, context) -> this.clazzCapability.cast(blockEntity);
 
             event.registerBlockEntity(this.capability, info.holder.get(), provider);
         }

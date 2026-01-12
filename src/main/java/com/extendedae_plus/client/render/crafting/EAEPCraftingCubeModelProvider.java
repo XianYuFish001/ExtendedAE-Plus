@@ -3,7 +3,7 @@ package com.extendedae_plus.client.render.crafting;
 import appeng.client.render.crafting.AbstractCraftingUnitModelProvider;
 import appeng.client.render.crafting.LightBakedModel;
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.common.block.EAEPCraftingUnitType;
+import com.extendedae_plus.common.registry.block.EAEPCraftingUnitType;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;

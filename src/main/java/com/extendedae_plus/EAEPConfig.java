@@ -1,6 +1,6 @@
 package com.extendedae_plus;
 
-import com.extendedae_plus.common.part.ticker.ParserTickerConfig;
+import com.extendedae_plus.common.registry.part.ticker.ParserTickerConfig;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.config.ModConfigEvent;
@@ -10,24 +10,21 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public final class EAEPConfig {
-    static final ModConfigSpec COMMON_SPEC;
+    static final ModConfigSpec SPEC_COMMON;
     public static final ModConfigSpec.IntValue PAGE_MULTIPLIER;
     public static final ModConfigSpec.BooleanValue INDEPENDENT_UPLOADING_BUTTON;
 
-    static final ModConfigSpec CLIENT_SPEC;
+    static final ModConfigSpec SPEC_CLIENT;
     public static final ModConfigSpec.BooleanValue SHOW_ENCODER_PATTERN_PLAYER;
     public static final ModConfigSpec.BooleanValue PATTERN_TERMINAL_SHOW_SLOTS_DEFAULT;
     public static final ModConfigSpec.BooleanValue ALLOW_DISK_ENERGY;
     public static final ModConfigSpec.BooleanValue OVERRIDE_AE2WT_PICKING;
 
-    static final ModConfigSpec SERVER_SPEC;
+    static final ModConfigSpec SPEC_SERVER;
     // AE
     public static final ModConfigSpec.BooleanValue PROVIDER_ROUND_ROBIN_ENABLE;
     public static final ModConfigSpec.IntValue SMART_SCALING_MAX_MULTIPLIER;
     public static final ModConfigSpec.IntValue CRAFTING_PAUSE_THRESHOLD;
-    // Wireless
-    public static final ModConfigSpec.DoubleValue WIRELESS_MAX_RANGE;
-    public static final ModConfigSpec.BooleanValue WIRELESS_CROSS_DIM_ENABLE;
     // Ticker
     public static final ModConfigSpec.IntValue TICKER_BASE_COST;
     public static final ModConfigSpec.ConfigValue<List<? extends String>> TICKER_BLACKLIST;
@@ -40,9 +37,9 @@ public final class EAEPConfig {
     public static final ModConfigSpec.BooleanValue NEEDS_UPLOADING_PORT;
 
     static void init(ModContainer modContainer) {
-        modContainer.registerConfig(ModConfig.Type.COMMON, EAEPConfig.COMMON_SPEC, "extendedae_plus/common.toml");
-        modContainer.registerConfig(ModConfig.Type.CLIENT, EAEPConfig.CLIENT_SPEC, "extendedae_plus/client.toml");
-        modContainer.registerConfig(ModConfig.Type.SERVER, EAEPConfig.SERVER_SPEC, "extendedae_plus/server.toml");
+        modContainer.registerConfig(ModConfig.Type.COMMON, EAEPConfig.SPEC_COMMON, "extendedae_plus/common.toml");
+        modContainer.registerConfig(ModConfig.Type.CLIENT, EAEPConfig.SPEC_CLIENT, "extendedae_plus/client.toml");
+        modContainer.registerConfig(ModConfig.Type.SERVER, EAEPConfig.SPEC_SERVER, "extendedae_plus/server.toml");
 
         if (modContainer.getEventBus() == null)
             throw new IllegalStateException("EventBus is null");
@@ -51,7 +48,7 @@ public final class EAEPConfig {
     }
 
     private static void reloadSetting(ModConfig config) {
-        if (config.getSpec() == SERVER_SPEC) {
+        if (config.getSpec() == SPEC_SERVER) {
             ParserTickerConfig.parseSettings();
         }
     }
@@ -63,7 +60,7 @@ public final class EAEPConfig {
                 .defineInRange("pageMultiplier", 1, 1, 64);
         INDEPENDENT_UPLOADING_BUTTON = builderCommon
                 .define("independentUploadingButton", false);
-        COMMON_SPEC = builderCommon.build();
+        SPEC_COMMON = builderCommon.build();
 
         // Client
         var builderClient = new ModConfigSpec.Builder();
@@ -73,7 +70,7 @@ public final class EAEPConfig {
                 .define("patternTerminalShowSlotsDefault", true);
         OVERRIDE_AE2WT_PICKING = builderClient
                 .define("overrideAE2WTPicking", false);
-        CLIENT_SPEC = builderClient.build();
+        SPEC_CLIENT = builderClient.build();
 
         // Server
         var builderServer = new ModConfigSpec.Builder();
@@ -86,13 +83,6 @@ public final class EAEPConfig {
                 .defineInRange("craftingPauseThreshold", 100000, 100, Integer.MAX_VALUE);
         builderServer.pop();
 
-        builderServer.push("wireless");
-        WIRELESS_MAX_RANGE = builderServer
-                .defineInRange("wirelessMaxRange", 256.0D, 1.0D, 4096.0D);
-        WIRELESS_CROSS_DIM_ENABLE = builderServer
-                .define("wirelessCrossDimEnable", true);
-        builderServer.pop();
-
         builderServer.push("ticker");
         TICKER_BASE_COST = builderServer
                 .defineInRange("tickerBaseCost", 512, 0, Integer.MAX_VALUE);
@@ -103,7 +93,7 @@ public final class EAEPConfig {
                         List.of("tickerBlacklist"),
                         List::of,
                         String::new,
-                        object -> object instanceof String value
+                        object -> object instanceof CharSequence value
                                 && Pattern.matches("^#?\\w+:\\w+$", value)
                 );
         TICKER_EXTERNAL_MULTIPLIER = builderServer
@@ -111,7 +101,7 @@ public final class EAEPConfig {
                         List.of("tickerExternalMultiplier"),
                         List::of,
                         String::new,
-                        object -> object instanceof String value
+                        object -> object instanceof CharSequence value
                                 && Pattern.matches("^#?\\w+:\\w+\\[[\\d.]+]$", value)
                 );
         builderServer.pop();
@@ -133,6 +123,6 @@ public final class EAEPConfig {
                 .define("needsUploadingPort", true);
         builderServer.pop();
 
-        SERVER_SPEC = builderServer.build();
+        SPEC_SERVER = builderServer.build();
     }
 }

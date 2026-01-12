@@ -10,6 +10,10 @@ public enum EAEPIcon implements IButtonIcon {
     DIV2(16, 0),
     MUL3(32, 0),
     DIV3(48, 0),
+    DISCONNECTED(64, 0),
+    CONNECTED(80, 0),
+    SIGNAL_SEND(96, 0),
+    SIGNAL_RECEIVE(112, 0),
 
     MUL5(0, 16),
     DIV5(16, 16),
@@ -21,6 +25,11 @@ public enum EAEPIcon implements IButtonIcon {
     SAVE_UP(32, 32),
     SAVE_DOWN(48, 32),
 
+    LIST_WITH_CHILDREN(0, 48),
+    LIST_MULTI(16, 48),
+    CHAR_F(32, 48),
+    CHAR_L(48, 48),
+
     ;
 
     public final int x;
@@ -30,8 +39,8 @@ public enum EAEPIcon implements IButtonIcon {
 
     public static final ResourceLocation TEXTURE =
             ExtendedAEPlus.getLocation("textures/gui/icons.png");
-    public static final int TEXTURE_WIDTH = 64;
-    public static final int TEXTURE_HEIGHT = 64;
+    public static final int TEXTURE_WIDTH = 128;
+    public static final int TEXTURE_HEIGHT = 128;
 
     EAEPIcon(int x, int y) {
         this(x, y, 16, 16);

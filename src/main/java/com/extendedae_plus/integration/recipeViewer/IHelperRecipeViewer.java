@@ -15,7 +15,7 @@ public interface IHelperRecipeViewer {
     Pair<Integer, Boolean> getPulled(int mouseKey);
 
     default boolean isCheatMode() {
-        return false;
+        return true;
     }
 
     void addFavorite(GenericStack stack);

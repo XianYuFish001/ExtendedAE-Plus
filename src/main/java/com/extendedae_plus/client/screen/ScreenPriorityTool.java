@@ -6,7 +6,7 @@ import appeng.client.gui.style.ScreenStyle;
 import appeng.client.gui.widgets.NumberEntryWidget;
 import com.extendedae_plus.client.render.widgets.button.EAEPActionItems;
 import com.extendedae_plus.client.render.widgets.button.EAEPServerCycleButton;
-import com.extendedae_plus.common.menu.MenuPriorityTool;
+import com.extendedae_plus.common.registry.menu.MenuPriorityTool;
 import com.extendedae_plus.network.CPacketPriorityToolOperation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;

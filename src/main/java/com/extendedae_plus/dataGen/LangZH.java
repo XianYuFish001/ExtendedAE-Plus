@@ -2,9 +2,9 @@ package com.extendedae_plus.dataGen;
 
 import appeng.core.definitions.AEItems;
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.common.block.EAEPCraftingUnitType;
 import com.extendedae_plus.common.init.ModBlocks;
 import com.extendedae_plus.common.init.ModItems;
+import com.extendedae_plus.common.registry.block.EAEPCraftingUnitType;
 import com.extendedae_plus.util.UtilKeyBuilder;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import net.minecraft.data.PackOutput;
@@ -132,6 +132,51 @@ public class LangZH extends LanguageProvider {
                 .branch("increment", "每次覆写值递增")
                 .branch("decrement", "每次覆写值递减")
                 .buildInto("覆写模式");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screenTooltip)
+                .addStr("recipe_alias")
+                .branch("reload", "重载映射")
+                .branch("add", "添加映射")
+                .branch("remove", "移除映射")
+                .buildInto("别名操作");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screenTooltip)
+                .addStr("row_slots_visible")
+                .branch("visible", "可见")
+                .branch("invisible", "不可见")
+                .buildInto("样板槽位可见性");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screenTooltip)
+                .addStr("label_link")
+                .addStr("info_label")
+                .branch("public", "公共频段")
+                .buildInto("所有者: %s{%s}");
+        
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screenTooltip)
+                .addStr("label_link")
+                .addStr("label_description")
+                .branch("empty", "无简介")
+                .buildInto("简介: ");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screenTooltip)
+                .addStr("label_type")
+                .branch("frequency", "频率")
+                .branch("label", "字符串标签")
+                .buildInto("Link标签种类");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screenTooltip)
+                .addStr("label_mode")
+                .branch("public", "公共频段")
+                .branch("private", "私人/队伍频段")
+                .buildInto("Link标签频段");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screenTooltip)
+                .addStr("label_add")
+                .buildInto("注册Link标签");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screenTooltip)
+                .addStr("label_locked")
+                .branch("locked", "已锁定")
+                .branch("unlocked", "未锁定")
+                .buildInto("锁定设备标签");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screenTooltip)
+                .addStr("transceiver_mode")
+                .branch("master", "主端")
+                .branch("slave", "从端")
+                .buildInto("设备模式");
 
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.message)
                 .addStr("provider_list")
@@ -244,6 +289,12 @@ public class LangZH extends LanguageProvider {
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screen)
                 .addStr("stacks_rename")
                 .buildInto("重命名");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screen)
+                .addStr("label_link")
+                .branch("register", "注册Link标签")
+                .branch("label_value", "Link标签")
+                .branch("label_description", "Link标签简介")
+                .buildInto("选择Link标签");
 
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.keywordGroup)
                 .addStr("workstations")
@@ -254,7 +305,6 @@ public class LangZH extends LanguageProvider {
                 .branch("state_on", "开")
                 .branch("state_off", "关")
                 .branch("ae", "AE2配置")
-                .branch("wireless", "无线连接配置")
                 .branch("ticker", "Ticker配置")
                 .branch("assembler_matrix", "装配矩阵配置");
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.config)
@@ -304,18 +354,6 @@ public class LangZH extends LanguageProvider {
                         注意：所有相关供应器需开启智能倍增，否则可能失效""")
                 .buildInto("启用样板供应器轮询分配");
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.config)
-                .addStr("wirelessMaxRange")
-                .branch("tooltip", """
-                        无线收发器最大连接距离（单位：方块）
-                        从端与主端的直线距离需小于等于该值才会建立连接。""")
-                .buildInto("无线最大距离");
-        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.config)
-                .addStr("wirelessCrossDimEnable")
-                .branch("tooltip", """
-                        是否允许无线收发器跨维度建立连接
-                        开启后，从端可连接到不同维度的主端（忽略距离限制）""")
-                .buildInto("无线收发器允许跨维度连接");
-        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.config)
                 .addStr("tickerBaseCost")
                 .buildInto("Ticker能量消耗基础值");
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.config)
@@ -364,9 +402,9 @@ public class LangZH extends LanguageProvider {
 
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.jadeInfo)
                 .item(ModItems.WIRELESS_TRANSCEIVER)
-                .addStr("frequency")
-                .branch("unset", "频率: 未设置")
-                .buildInto("频率: %s");
+                .addStr("label")
+                .branch("unset", "Link标签: 未设置")
+                .buildInto("Link标签: %s");
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.jadeInfo)
                 .item(ModItems.WIRELESS_TRANSCEIVER)
                 .addStr("mode")
@@ -390,12 +428,12 @@ public class LangZH extends LanguageProvider {
                 .item(ModItems.WIRELESS_TRANSCEIVER)
                 .branch("name", "所有者: %s")
                 .branch("id", "所有者{%2$s}")
-                .buildInto("公共模式");
+                .buildInto("公共频段");
 
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.jadeConfig)
                 .addStr("wireless_transceiver")
                 .branch("channels", "无线收发器: 显示频道数")
-                .branch("frequency", "无线收发器: 显示频率")
+                .branch("label", "无线收发器: 显示Link标签")
                 .branch("master_mode", "无线收发器: 显示模式")
                 .branch("master_location", "无线收发器: 显示主节点位置")
                 .branch("locked", "无线收发器: 显示锁定状态")

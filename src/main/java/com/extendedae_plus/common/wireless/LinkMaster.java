@@ -1,7 +1,8 @@
 package com.extendedae_plus.common.wireless;
 
 import com.extendedae_plus.common.wireless.linkApi.ILinkHost;
-import com.extendedae_plus.common.wireless.linkApi.LinkRegistry;
+import com.extendedae_plus.common.wireless.linkApi.Label;
+import com.extendedae_plus.common.wireless.linkApi.RegistryLink;
 import net.minecraft.server.level.ServerLevel;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,14 +20,16 @@ public class LinkMaster {
         this.host = host;
     }
 
-    public long getFrequency() { return this.host.getFrequency(); }
+    public Label getLabel() {
+        return this.host.getLabel();
+    }
 
-    public void updateInfo(long frequency, @Nullable UUID placer) {
-        if (this.host.getFrequency() == frequency
+    public void updateInfo(Label label, @Nullable UUID placer) {
+        if (this.host.getLabel().equals(label)
                 && this.host.getPlacer() == placer) return;
 
         this.unregister();
-        this.host.setFrequency(frequency);
+        this.host.setLabel(label);
         this.host.setPlacer(placer);
         this.register();
     }
@@ -35,46 +38,31 @@ public class LinkMaster {
         this.host.setPlacer(placer);
     }
 
-    public void setFrequency(long frequency) {
-        // 如果频率发生变化，先撤销旧频率的注册
-        if (this.host.getFrequency() != frequency) {
-            if (this.registered) {
-                unregister();
-            }
-            this.host.setFrequency(frequency);
-        }
+    public void setLabel(Label label) {
+        if (this.host.getLabel().equals(label)) return;
 
-        // 频率未变的情况下也要校正注册状态：
-        // - 当从"从端"切回"主端"时，registered 可能为 false，需要重新注册；
-        // - 当频率为 0 或端点被移除时，确保处于未注册。
-        if (frequency != 0L && !this.host.isEndpointRemoved()) {
-            if (!this.registered) {
-                register();
-            }
-        } else {
-            if (this.registered) {
-                unregister();
-            }
-        }
+        this.unregister();
+        this.host.setLabel(label);
+        this.register();
     }
 
     public boolean register() {
         ServerLevel level = this.host.getServerLevel();
-        if (level == null || this.host.getFrequency() == 0L) return false;
-        boolean succeed = LinkRegistry.registerMaster(this.host);
+        if (level == null || this.host.getLabel().data.isEmpty()) return false;
+        boolean succeed = RegistryLink.registerMaster(this.host);
         this.registered = succeed;
         return succeed;
     }
 
     public void unregister() {
         ServerLevel level = this.host.getServerLevel();
-        if (!this.registered || level == null || this.host.getFrequency() == 0L) return;
-        LinkRegistry.unregisterMaster(this.host);
+        if (!this.registered || level == null || this.host.getLabel().data.isEmpty()) return;
+        RegistryLink.unregisterMaster(this.host);
         this.registered = false;
     }
 
     public boolean connected() {
-        return LinkRegistry.countListener(LinkRegistry.LinkInfo.fromHost(this.host)) > 0;
+        return RegistryLink.countListener(this.host.getLabel()) > 0;
     }
 
     public void onUnloadOrRemove() {

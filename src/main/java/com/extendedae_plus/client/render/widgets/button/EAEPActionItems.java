@@ -5,6 +5,7 @@ import appeng.client.gui.style.Blitter;
 import appeng.core.localization.ButtonToolTips;
 import com.extendedae_plus.util.UtilKeyBuilder;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,6 +44,24 @@ public enum EAEPActionItems {
     PRIORITY_INCREMENT(EAEPIcon.SAVE_UP, "priority_tool", "increment"),
     PRIORITY_DECREMENT(EAEPIcon.SAVE_DOWN, "priority_tool", "decrement"),
 
+    ALIAS_RELOAD(EAEPIcon.SAVE_CENTER, "recipe_alias", "reload"),
+    ALIAS_ADD(EAEPIcon.SAVE_UP, "recipe_alias", "add"),
+    ALIAS_REMOVE(EAEPIcon.SAVE_DOWN, "recipe_alias", "remove"),
+
+    ROW_SLOTS_VISIBLE(EAEPIcon.LIST_WITH_CHILDREN, "row_slots_visible", "visible"),
+    ROW_SLOTS_INVISIBLE(EAEPIcon.LIST_MULTI, "row_slots_visible", "invisible"),
+
+    LABEL_FREQUENCY(EAEPIcon.CHAR_F, "label_type", "frequency"),
+    LABEL_LABEL(EAEPIcon.CHAR_L, "label_type", "label"),
+    LABEL_PUBLIC(EAEPIcon.CONNECTED, "label_mode", "public"),
+    LABEL_PRIVATE(EAEPIcon.DISCONNECTED, "label_mode", "private"),
+    LABEL_ADD(EAEPIcon.fromAEIcon(Icon.ENTER), "label_add", ""),
+    LABEL_LOCKED(EAEPIcon.fromAEIcon(Icon.LOCKED), "label_locked", "locked"),
+    LABEL_UNLOCKED(EAEPIcon.fromAEIcon(Icon.UNLOCKED), "label_locked", "unlocked"),
+
+    TRANSCEIVER_MASTER(EAEPIcon.SIGNAL_SEND, "transceiver_mode", "master"),
+    TRANSCEIVER_SLAVE(EAEPIcon.SIGNAL_RECEIVE, "transceiver_mode", "slave"),
+
     ;
 
     private final IButtonIcon icon;
@@ -56,7 +75,7 @@ public enum EAEPActionItems {
         for (EAEPActionItems action : EAEPActionItems.values()) {
             if (!action.actionGroup.isEmpty())
                 GROUPED_ACTIONS.computeIfAbsent(action.actionGroup,
-                        ignored -> new ArrayList<>()).add(action);
+                        $ -> new ArrayList<>()).add(action);
         }
     }
 
@@ -67,10 +86,12 @@ public enum EAEPActionItems {
     EAEPActionItems(IButtonIcon icon, String actionGroup, String additionalKey) {
         this(
                 icon,
-                UtilKeyBuilder.of(UtilKeyBuilder.screenTooltip)
+                actionGroup.isBlank() ? Component.empty()
+                        : UtilKeyBuilder.of(UtilKeyBuilder.screenTooltip)
                         .addStr(actionGroup)
                         .build(),
-                UtilKeyBuilder.of(UtilKeyBuilder.screenTooltip)
+                additionalKey.isBlank() ? null
+                        : UtilKeyBuilder.of(UtilKeyBuilder.screenTooltip)
                         .addStr(actionGroup)
                         .addStr(additionalKey)
                         .build(),
@@ -97,6 +118,7 @@ public enum EAEPActionItems {
     public IButtonIcon getIcon() {
         return icon;
     }
+
     public Icon getAEIcon() {
         return icon.getAEIcon();
     }
@@ -104,10 +126,12 @@ public enum EAEPActionItems {
     public boolean hasName() {
         return !name.getString().isEmpty();
     }
+
     public Component getName() {
         return name;
     }
-    public Component getTooltip() {
+
+    public @Nullable Component getTooltip() {
         return tooltip;
     }
 }

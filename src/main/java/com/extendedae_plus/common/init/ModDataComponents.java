@@ -1,12 +1,12 @@
 package com.extendedae_plus.common.init;
 
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.common.block.assemblerMatrix.portUpload.BlockEntityUpload;
-import com.extendedae_plus.common.block.wirelessTransceiver.BlockEntityWirelessTransceiver;
-import com.extendedae_plus.common.dataComponent.DataChannelCard;
-import com.extendedae_plus.common.dataComponent.DataEncoderProfile;
-import com.extendedae_plus.common.dataComponent.DataTickingCard;
-import com.extendedae_plus.common.item.priorityTool.DataPriority;
+import com.extendedae_plus.common.registry.block.assemblerMatrix.portUpload.BlockEntityUpload;
+import com.extendedae_plus.common.registry.block.wirelessTransceiver.BlockEntityWirelessTransceiver;
+import com.extendedae_plus.common.registry.dataComponent.DataChannelCard;
+import com.extendedae_plus.common.registry.dataComponent.DataEncoderProfile;
+import com.extendedae_plus.common.registry.dataComponent.DataTickingCard;
+import com.extendedae_plus.common.registry.item.priorityTool.DataPriority;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;

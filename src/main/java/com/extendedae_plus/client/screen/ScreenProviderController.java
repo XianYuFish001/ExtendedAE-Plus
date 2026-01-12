@@ -1,7 +1,7 @@
 package com.extendedae_plus.client.screen;
 
 import com.extendedae_plus.common.init.ModItems;
-import com.extendedae_plus.common.menu.MenuProviderController;
+import com.extendedae_plus.common.registry.menu.MenuProviderController;
 import com.extendedae_plus.network.CPacketProviderControllerOperation;
 import com.extendedae_plus.util.UtilKeyBuilder;
 import net.minecraft.client.gui.components.Button;

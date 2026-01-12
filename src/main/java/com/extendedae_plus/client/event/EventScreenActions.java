@@ -6,7 +6,7 @@ import appeng.core.AEConfig;
 import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.integration.recipeViewer.HelperRecipeViewer;
 import com.extendedae_plus.mixin.core.ae2.accessor.MEStorageScreenAccessor;
-import com.extendedae_plus.mixin.core.extendedae.accessor.GuiExPatternTerminalAccessor;
+import com.extendedae_plus.mixin.core.extendedae.accessor.AccessorExAccessScreen;
 import com.extendedae_plus.network.CPacketPullFromNetwork;
 import com.extendedae_plus.network.CPacketTargetKeyTriggered;
 import com.glodblock.github.extendedae.client.gui.GuiExPatternTerminal;
@@ -90,7 +90,7 @@ public final class EventScreenActions {
                 try {
                     if (AEConfig.instance().isUseExternalSearch()) HelperRecipeViewer.setSearchText(name);
                     else {
-                        GuiExPatternTerminalAccessor acc = (GuiExPatternTerminalAccessor) gpt;
+                        AccessorExAccessScreen acc = (AccessorExAccessScreen) gpt;
                         acc.getSearchField().setValue(name);
                     }
                     event.setCanceled(true);

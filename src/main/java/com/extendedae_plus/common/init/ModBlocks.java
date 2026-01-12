@@ -1,12 +1,12 @@
 package com.extendedae_plus.common.init;
 
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.common.block.EAEPCraftingUnitType;
-import com.extendedae_plus.common.block.assemblerMatrix.coreAdvancedCrafter.BlockAdvancedCrafter;
-import com.extendedae_plus.common.block.assemblerMatrix.coreAdvancedPattern.BlockAdvancedPattern;
-import com.extendedae_plus.common.block.assemblerMatrix.coreAdvancedSpeed.BlockAdvancedSpeed;
-import com.extendedae_plus.common.block.assemblerMatrix.portUpload.BlockUpload;
-import com.extendedae_plus.common.block.wirelessTransceiver.BlockWirelessTransceiver;
+import com.extendedae_plus.common.registry.block.EAEPCraftingUnitType;
+import com.extendedae_plus.common.registry.block.assemblerMatrix.coreAdvancedCrafter.BlockAdvancedCrafter;
+import com.extendedae_plus.common.registry.block.assemblerMatrix.coreAdvancedPattern.BlockAdvancedPattern;
+import com.extendedae_plus.common.registry.block.assemblerMatrix.coreAdvancedSpeed.BlockAdvancedSpeed;
+import com.extendedae_plus.common.registry.block.assemblerMatrix.portUpload.BlockUpload;
+import com.extendedae_plus.common.registry.block.wirelessTransceiver.BlockWirelessTransceiver;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 

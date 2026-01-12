@@ -2,6 +2,7 @@ package com.extendedae_plus.common.wireless.host;
 
 import appeng.api.networking.IGridNode;
 import com.extendedae_plus.common.wireless.linkApi.ILinkHost;
+import com.extendedae_plus.common.wireless.linkApi.Label;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -14,7 +15,7 @@ public final class HostGeneric implements ILinkHost {
     private final Supplier<BlockEntity> getterBlockEntity;
     private final Supplier<IGridNode> getterNode;
 
-    private long frequency = 0;
+    private Label label = Label.EMPTY;
     private @Nullable UUID placer = null;
     private String placerName = "";
 
@@ -46,24 +47,19 @@ public final class HostGeneric implements ILinkHost {
     }
 
     @Override
-    public boolean isEndpointRemoved() {
+    public boolean isRemoved() {
         var blockEntity = this.getterBlockEntity.get();
         return blockEntity == null || blockEntity.isRemoved();
     }
 
     @Override
-    public long getFrequency() {
-        return this.frequency;
+    public Label getLabel() {
+        return this.label;
     }
 
     @Override
     public @Nullable UUID getPlacer() {
         return this.placer;
-    }
-
-    @Override
-    public void setFrequency(long frequency) {
-        this.frequency = frequency;
     }
 
     @Override
@@ -73,6 +69,11 @@ public final class HostGeneric implements ILinkHost {
 
     public String getPlacerName() {
         return this.placerName;
+    }
+
+    @Override
+    public void setLabel(Label label) {
+        this.label = label;
     }
 
     public void setPlacerName(String placerName) {

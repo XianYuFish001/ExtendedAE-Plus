@@ -4,6 +4,7 @@ import appeng.api.parts.IPartHost;
 import appeng.api.parts.SelectedPart;
 import appeng.core.definitions.AEItems;
 import appeng.items.tools.quartz.QuartzCuttingKnifeItem;
+import com.extendedae_plus.integration.ContextModLoaded;
 import com.extendedae_plus.util.UtilKeyBuilder;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.logging.LogUtils;
@@ -20,7 +21,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.fml.ModList;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
@@ -124,7 +124,7 @@ public abstract class QuartzCuttingKnifeItemMixin {
         }
 
         // 3. GregTech CEu 配方翻译
-        if (ModList.get().isLoaded("gtceu")) {
+        if (ContextModLoaded.gtceuModern.isLoaded()) {
             String gtceuName = eap$handleGTCEuBlock(blockEntity);
             if (gtceuName != null && !gtceuName.isBlank()) {
                 return gtceuName;

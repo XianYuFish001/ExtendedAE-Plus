@@ -8,6 +8,7 @@ public class EAEPActionButton extends EAEPButton {
     public EAEPActionButton(EAEPActionItems action, Consumer<EAEPActionItems> onPress) {
         super(button -> onPress.accept(button.getAction()));
         this.action = action;
+        this.updateTooltip();
     }
 
     @Override

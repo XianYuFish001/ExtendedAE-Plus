@@ -4,11 +4,11 @@ import appeng.api.networking.IGrid;
 import appeng.items.tools.powered.WirelessTerminalItem;
 import appeng.menu.locator.ItemMenuHostLocator;
 import appeng.menu.locator.MenuLocators;
+import com.extendedae_plus.integration.ContextModLoaded;
 import de.mari_023.ae2wtlib.api.terminal.ItemWT;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.fml.ModList;
 import top.theillusivec4.curios.api.CuriosApi;
 
 import java.util.Optional;
@@ -18,7 +18,7 @@ public final class WirelessTerminalLocator {
     public static Optional<TerminalInfo> locate(Player player) {
         var inventory = player.getInventory();
 
-        if (ModList.get().isLoaded("curios")) {
+        if (ContextModLoaded.curios.isLoaded()) {
             try {
                 AtomicReference<TerminalInfo> info = new AtomicReference<>();
                 CuriosApi.getCuriosInventory(player).ifPresent(handler -> {
@@ -55,7 +55,7 @@ public final class WirelessTerminalLocator {
     public record TerminalInfo(ItemStack terminalStack, WirelessTerminalItem terminal,
                                LocatedSlotContext context) {
         public boolean isWTLibTerminal() {
-            if (ModList.get().isLoaded("ae2wtlib"))
+            if (ContextModLoaded.ae2wtlib.isLoaded())
                 return terminalStack.getItem() instanceof ItemWT;
             else return false;
         }
