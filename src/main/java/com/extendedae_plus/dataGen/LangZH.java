@@ -46,7 +46,7 @@ public class LangZH extends LanguageProvider {
 
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.tooltip)
                 .item(ModItems.CHANNEL_CARD)
-                .addStr("frequency")
+                .addStr("label")
                 .branch("unset", "频率: 未设置")
                 .branch("set_to", "已设置频率到 %s")
                 .branch("set_to.none", "频率已清空")
@@ -218,24 +218,6 @@ public class LangZH extends LanguageProvider {
                 .buildInto("[EAEP] 正在远程打开 样板供应器{位置[%s], 维度[%s]}");
 
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.actionBar)
-                .item(ModItems.WIRELESS_TRANSCEIVER)
-                .branch("switch_locked", "已锁定")
-                .branch("switch_unlock", "已关闭锁定");
-        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.actionBar)
-                .item(ModItems.WIRELESS_TRANSCEIVER)
-                .addStr("locked")
-                .buildInto("更改被取消: 收发器已锁定");
-        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.actionBar)
-                .item(ModItems.WIRELESS_TRANSCEIVER)
-                .addStr("mode")
-                .branch("master", "已切换到 主模式")
-                .branch("slave", "已切换到 从模式");
-        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.actionBar)
-                .item(ModItems.WIRELESS_TRANSCEIVER)
-                .addStr("frequency")
-                .branch("unset", "频率已清空")
-                .buildInto("频率: %s");
-        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.actionBar)
                 .item(AEItems.CERTUS_QUARTZ_KNIFE.get())
                 .addStr("block_name_coping")
                 .branch("success", "已复制 方块/部件名{%s} 到剪贴板")
@@ -256,13 +238,6 @@ public class LangZH extends LanguageProvider {
                 .branch("energy_cost", "能耗: %s/t")
                 .branch("power_ratio", "耗能减免: %s")
                 .branch("cost_multiplier", "额外消耗倍率: %s");
-        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screen)
-                .item(ModItems.WIRELESS_TRANSCEIVER)
-                .addStr("frequency_input")
-                .branch("input_field", "输入以修改频率...")
-                .branch("confirm", "确认")
-                .branch("cancel", "取消")
-                .buildInto("输入频率");
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screen)
                 .addStr("provider_list")
                 .branch("query", "输入关键词以搜索...")

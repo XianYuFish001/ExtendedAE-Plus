@@ -46,11 +46,9 @@ public class LangEN extends LanguageProvider {
 
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.tooltip)
                 .item(ModItems.CHANNEL_CARD)
-                .addStr("frequency")
-                .branch("unset", "Frequency: Unset")
-                .branch("set_to", "Frequency set to %s")
-                .branch("set_to.none", "Frequency Cleared")
-                .buildInto("Frequency: %s");
+                .addStr("label")
+                .branch("unset", "Link Label: Unset")
+                .buildInto("Link Label: %s");
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.tooltip)
                 .item(ModItems.CHANNEL_CARD)
                 .branch("name", "Bound to: %s")
@@ -219,24 +217,6 @@ public class LangEN extends LanguageProvider {
                 .buildInto("[EAEP] Now opening PatternProvider{Location[%s], Dimension[%s]}");
 
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.actionBar)
-                .item(ModItems.WIRELESS_TRANSCEIVER)
-                .branch("switch_locked", "Locked")
-                .branch("switch_unlock", "Unlocked");
-        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.actionBar)
-                .item(ModItems.WIRELESS_TRANSCEIVER)
-                .addStr("locked")
-                .buildInto("Transceiver is Locked");
-        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.actionBar)
-                .item(ModItems.WIRELESS_TRANSCEIVER)
-                .addStr("mode")
-                .branch("master", "Switched to Master")
-                .branch("slave", "Switched to Slave");
-        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.actionBar)
-                .item(ModItems.WIRELESS_TRANSCEIVER)
-                .addStr("frequency")
-                .branch("unset", "Frequency Cleared")
-                .buildInto("Frequency: %s");
-        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.actionBar)
                 .item(AEItems.CERTUS_QUARTZ_KNIFE.get())
                 .addStr("block_name_coping")
                 .branch("success", "Copied BlockName{%s} to the clipboard")
@@ -257,13 +237,6 @@ public class LangEN extends LanguageProvider {
                 .branch("energy_cost", "Energy Cost: %s/t")
                 .branch("power_ratio", "Power Ratio: %s")
                 .branch("cost_multiplier", "Additional Cost Multiplier: %s");
-        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screen)
-                .item(ModItems.WIRELESS_TRANSCEIVER)
-                .addStr("frequency_input")
-                .branch("input_field", "Input to modify...")
-                .branch("confirm", "confirm")
-                .branch("cancel", "cancel")
-                .buildInto("Input Frequency");
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screen)
                 .addStr("provider_list")
                 .branch("query", "Input to search...")
