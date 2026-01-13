@@ -7,12 +7,14 @@ import appeng.api.stacks.GenericStack;
 import com.extendedae_plus.integration.ContextModLoaded;
 import com.extendedae_plus.integration.recipeViewer.IHelperRecipeViewer;
 import com.mojang.datafixers.util.Pair;
+import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.ingredients.IIngredientType;
 import mezz.jei.api.ingredients.ITypedIngredient;
+import mezz.jei.api.neoforge.NeoForgeTypes;
 import net.minecraft.client.gui.screens.Screen;
 import org.lwjgl.glfw.GLFW;
 import tamaized.ae2jeiintegration.integration.modules.jei.GenericEntryStackHelper;
 
-import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 
@@ -58,17 +60,19 @@ public class JeiHelper implements IHelperRecipeViewer {
     public void addFavorite(GenericStack stack) {
         AEKey key = stack.what();
         if (key instanceof AEItemKey itemKey)
-            ProxyJeiRuntime.addBookmark(itemKey.toStack());
+            ProxyJeiRuntime.addFavorite(itemKey.toStack(), VanillaTypes.ITEM_STACK);
         else if (key instanceof AEFluidKey fluidKey)
-            ProxyJeiRuntime.addBookmark(fluidKey.toStack(1000));
+            ProxyJeiRuntime.addFavorite(fluidKey.toStack(1000), NeoForgeTypes.FLUID_STACK);
         else if (ContextModLoaded.mekanism.isLoaded() && ContextModLoaded.appliedMekanistics.isLoaded()) {
             try {
-                Class<?> keyClass = key.getClass();
-                if (keyClass.getName().contains("MekanismKey")) {
-                    Method getChemicalStackMethod = keyClass.getMethod("getStack");
-                    Object chemicalStack = getChemicalStackMethod.invoke(key);
-                    ProxyJeiRuntime.addBookmark(chemicalStack);
-                }
+                var clazzTypeKey = Class.forName("me.ramidzkh.mekae2.ae2.MekanismKey");
+                if (!clazzTypeKey.isAssignableFrom(key.getClass())) return;
+                var fieldStack = clazzTypeKey.getMethod("getStack").invoke(key);
+
+                @SuppressWarnings("unchecked")
+                var fieldTypeIngredient = (IIngredientType<Object>) Class.forName("mekanism.client.recipe_viewer.jei.MekanismJEI")
+                        .getField("TYPE_CHEMICAL").get(null);
+                ProxyJeiRuntime.addFavorite(fieldStack, fieldTypeIngredient);
             } catch (Exception ignored) {}
         }
     }

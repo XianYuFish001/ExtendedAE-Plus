@@ -1,23 +1,16 @@
 package com.extendedae_plus.integration.recipeViewer.jei;
 
-import com.extendedae_plus.integration.ContextModLoaded;
 import com.extendedae_plus.mixin.core.recipeViewer.jei.accessor.AccessorBookmarkOverlay;
-import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.ingredients.IIngredientType;
 import mezz.jei.api.ingredients.ITypedIngredient;
-import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.runtime.IBookmarkOverlay;
 import mezz.jei.api.runtime.IIngredientListOverlay;
 import mezz.jei.api.runtime.IJeiRuntime;
 import mezz.jei.gui.bookmarks.BookmarkList;
 import mezz.jei.gui.bookmarks.IngredientBookmark;
 import mezz.jei.gui.overlay.elements.IElement;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -91,106 +84,19 @@ public final class ProxyJeiRuntime {
         if (rt == null) return Collections.emptyList();
         IBookmarkOverlay bookmarkOverlay = rt.getBookmarkOverlay();
         if (bookmarkOverlay instanceof AccessorBookmarkOverlay accessor) {
-            BookmarkList bookmarkList = accessor.eap$getBookmarkList();
+            BookmarkList bookmarkList = accessor.getBookmarkList();
             return bookmarkList.getElements().stream().map(IElement::getTypedIngredient).toList();
         }
         return Collections.emptyList();
     }
 
-    // 有点难绷, 但是为了兼容性还是留着吧
+    public static <TStack> void addFavorite(TStack stack, IIngredientType<TStack> type) {
+        var runtime = RUNTIME;
+        if (runtime == null) return;
+        if (!(runtime.getBookmarkOverlay() instanceof AccessorBookmarkOverlay accessor)) return;
 
-    /**
-     * 将物品添加到 JEI 书签
-     */
-    public static void addBookmark(ItemStack stack) {
-        IJeiRuntime rt = RUNTIME;
-        if (rt == null || stack == null || stack.isEmpty()) return;
-
-        IBookmarkOverlay overlay = rt.getBookmarkOverlay();
-        if (overlay instanceof AccessorBookmarkOverlay accessor) {
-            BookmarkList list = accessor.eap$getBookmarkList();
-            try {
-                var typedOpt = rt.getIngredientManager().createTypedIngredient(VanillaTypes.ITEM_STACK, stack);
-                typedOpt.ifPresent(typed -> {
-                    IngredientBookmark<ItemStack> bookmark = IngredientBookmark.create(typed, rt.getIngredientManager());
-                    list.add(bookmark); // add 内部会自动保存到配置
-                });
-            } catch (Throwable ignored) {}
-        }
-    }
-
-    public static void addBookmark(FluidStack fluidStack) {
-        IJeiRuntime rt = RUNTIME;
-        if (rt == null) return;
-
-        IBookmarkOverlay overlay = rt.getBookmarkOverlay();
-        if (overlay instanceof AccessorBookmarkOverlay accessor) {
-            BookmarkList list = accessor.eap$getBookmarkList();
-            Optional<ITypedIngredient<FluidStack>> typedOpt = rt.getIngredientManager()
-                    .createTypedIngredient(NeoForgeTypes.FLUID_STACK, fluidStack);
-            typedOpt.ifPresent(typed -> {
-                IngredientBookmark<FluidStack> bookmark = IngredientBookmark.create(typed, rt.getIngredientManager());
-                list.add(bookmark); // add 内部会自动保存到配置
-            });
-        }
-    }
-
-    /**
-     * 如果存在 Mekanism/appmek，则将 Mekanism 化学堆栈添加到 JEI 书签。
-     */
-    public static void addBookmark(Object chemicalStack) {
-        if (!(ContextModLoaded.mekanism.isLoaded()) || ContextModLoaded.appliedMekanistics.isLoaded()) return;
-
-        IJeiRuntime rt = RUNTIME;
-        if (rt == null) return;
-
-        IBookmarkOverlay overlay = rt.getBookmarkOverlay();
-        if (overlay instanceof AccessorBookmarkOverlay accessor) {
-            BookmarkList list = accessor.eap$getBookmarkList();
-            try {
-                if (chemicalStack == null) return;
-
-                // Determine Mekanism JEI ingredient type constant by runtime class name
-                String clsName = chemicalStack.getClass().getName();
-                String mekanismJeiClass = "mekanism.client.recipe_viewer.jei.MekanismJEI";
-                Class<?> jeiCls = Class.forName(mekanismJeiClass);
-                Field typeField = null;
-                if ("mekanism.api.chemical.ChemicalStack".equals(clsName)) {
-                    typeField = jeiCls.getField("TYPE_CHEMICAL");
-                }
-                if (typeField == null) return;
-                Object typeConst = typeField.get(null);
-
-                // Use ingredient manager reflectively to create a typed ingredient
-                Object ingredientManager = rt.getIngredientManager();
-                Method createTypedIngredient = ingredientManager.getClass().getMethod("createTypedIngredient", IIngredientType.class, Object.class);
-                Object opt = createTypedIngredient.invoke(ingredientManager, typeConst, chemicalStack);
-                if (!(opt instanceof Optional<?> typedOpt)) return;
-                if (typedOpt.isPresent()) {
-                    Object typed = typedOpt.get();
-                    // Find a compatible static create(...) method on IngredientBookmark where
-                    // the second parameter is assignable from the actual ingredientManager instance.
-                    Method createMethod = null;
-                    for (Method m : IngredientBookmark.class.getMethods()) {
-                        if (!m.getName().equals("create")) continue;
-                        Class<?>[] params = m.getParameterTypes();
-                        if (params.length != 2) continue;
-                        // first param should accept the typed ingredient
-                        boolean firstOk = params[0].isAssignableFrom(typed.getClass()) || params[0].isAssignableFrom(ITypedIngredient.class);
-                        boolean secondOk = params[1].isAssignableFrom(ingredientManager.getClass());
-                        if (firstOk && secondOk) {
-                            createMethod = m;
-                            break;
-                        }
-                    }
-                    if (createMethod != null) {
-                        Object bookmark = createMethod.invoke(null, typed, ingredientManager);
-                        if (bookmark != null) {
-                            list.add((IngredientBookmark<?>) bookmark);
-                        }
-                    }
-                }
-            } catch (Throwable ignored) {}
-        }
+        runtime.getIngredientManager().createTypedIngredient(type, stack)
+                .ifPresent(ingredient -> accessor.getBookmarkList().add(
+                        IngredientBookmark.create(ingredient, runtime.getIngredientManager())));
     }
 }

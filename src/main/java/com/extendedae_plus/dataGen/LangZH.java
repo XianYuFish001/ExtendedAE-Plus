@@ -268,7 +268,7 @@ public class LangZH extends LanguageProvider {
                 .addStr("label_link")
                 .branch("register", "注册Link标签")
                 .branch("label_value", "Link标签")
-                .branch("label_description", "Link标签简介")
+                .branch("label_description", "简介")
                 .buildInto("选择Link标签");
 
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.keywordGroup)

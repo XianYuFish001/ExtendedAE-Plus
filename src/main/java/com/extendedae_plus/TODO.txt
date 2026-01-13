@@ -6,6 +6,9 @@ TODO
             智能倍增样板有时出现null:
                 已添加更多log信息, 等待构建下次触发
     <feature>
+        再好好想想没迁移的feature:
+            处理配方合并
+        ScreenLabelLink的键盘操作
         为一些static项添加自动clear(所以这些static项都在哪呢(
         添加一些功能开关
         重构智能倍增:
