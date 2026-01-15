@@ -34,7 +34,7 @@ public class ScreenPriorityTool extends AEBaseScreen<MenuPriorityTool> {
                 .addPart(EAEPActionItems.PRIORITY_KEEP)
                 .addPart(EAEPActionItems.PRIORITY_INCREMENT)
                 .addPart(EAEPActionItems.PRIORITY_DECREMENT)
-                .setSyncedStateGetter(() -> menu.getData().modeTool())
+                .setSyncer(() -> menu.getData().modeTool())
                 .build();
         this.addToLeftToolbar(this.buttonCycleMode);
     }

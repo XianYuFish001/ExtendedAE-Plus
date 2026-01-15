@@ -29,7 +29,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * 通过解析 AE2 样式中 encodePattern 的坐标，将按钮放在其左侧紧挨位置。
  */
 @Mixin(value = AEBaseScreen.class, remap = false)
-public abstract class PatternEncodingTermScreenMixin {
+public abstract class MixinEncodingScreenButtonUpload {
 
     @Unique
     private IconButton eap$uploadBtn;

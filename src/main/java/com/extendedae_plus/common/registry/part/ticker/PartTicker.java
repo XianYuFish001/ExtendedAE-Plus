@@ -26,6 +26,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 public class PartTicker extends UpgradeablePart {
@@ -106,24 +107,36 @@ public class PartTicker extends UpgradeablePart {
     }
 
     @Override
+    public void addToWorld() {
+        var level = this.getLevel();
+        var blockEntity = this.getBlockEntity();
+        var side = this.getSide();
+        if (level.isClientSide() || blockEntity == null || side == null) return;
+
+        this.changeTarget(level.getBlockState(blockEntity.getBlockPos().relative(side)));
+    }
+
+    @Override
     public void onNeighborChanged(BlockGetter level, BlockPos pos, BlockPos neighbor) {
         if (this.getSide() == null) return;
         if (!pos.relative(getSide()).equals(neighbor)) return;
 
-        var targetBlockState = level.getBlockState(neighbor);
+        this.changeTarget(level.getBlockState(neighbor));
+    }
 
-        if (targetBlockState.isAir()) {
+    private void changeTarget(BlockState target) {
+        if (target.isAir()) {
             this.costMultiplier = 1D;
             this.getConfigManager().putSetting(ModSettings.STATE_TICKER, StateTicker.DISABLED);
         } else {
-            this.costMultiplier = ParserTickerConfig.getBlockExternalMultiplier(targetBlockState);
-            if (ParserTickerConfig.isBlockBlacklisted(targetBlockState))
+            this.costMultiplier = ParserTickerConfig.getBlockExternalMultiplier(target);
+            if (ParserTickerConfig.isBlockBlacklisted(target))
                 this.getConfigManager().putSetting(ModSettings.STATE_TICKER, StateTicker.BLACKLISTED);
         }
         this.recalculateEnergyCost();
         if (this.logic != null) {
             this.logic.setCostMultiplier(this.costMultiplier);
-            this.logic.updateTargetBlock(targetBlockState.getBlock());
+            this.logic.updateTargetBlock(target.getBlock());
         }
     }
 

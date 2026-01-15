@@ -7,38 +7,36 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.IntUnaryOperator;
 import java.util.function.Supplier;
 
 public class EAEPServerCycleButton extends EAEPCycleButton {
-    private final Supplier<Integer> getterSyncedStateIndex;
+    private final Supplier<Integer> syncerState;
 
     public EAEPServerCycleButton(List<EAEPActionItems> states,
-                                 Consumer<EAEPActionItems> singleOnPress,
-                                 @Nullable IntUnaryOperator stateIterator,
-                                 Supplier<Integer> getterSyncedStateIndex) {
-        super(states, (index, action) ->
-                        singleOnPress.accept(action), stateIterator);
-        this.getterSyncedStateIndex = getterSyncedStateIndex;
+                                 Consumer<EAEPActionItems> taskSingle,
+                                 @Nullable IteratorState iteratorState,
+                                 Supplier<Integer> syncerState) {
+        super(states, (index, action) -> taskSingle.accept(action), iteratorState);
+        this.syncerState = syncerState;
     }
 
     @Override
-    public int iterateState() {
-        super.iterateState();
-        if (this.stateIndex != this.getterSyncedStateIndex.get())
-            this.setStateIndex(this.getterSyncedStateIndex.get());
+    public int iterateState(boolean reversed) {
+        super.iterateState(reversed);
+        if (this.stateIndex != this.syncerState.get())
+            this.setStateIndex(this.syncerState.get());
         return this.stateIndex;
     }
 
     public void updateState() {
-        this.setStateIndex(this.getterSyncedStateIndex.get());
+        this.setStateIndex(this.syncerState.get());
     }
 
     public static final class Builder {
         private final List<EAEPActionItems> states = new ArrayList<>();
         private Consumer<EAEPActionItems> task = ignored -> {};
-        private IntUnaryOperator stateIterator = null;
-        private Supplier<Integer> getterSyncedStateIndex = () -> 0;
+        private IteratorState iteratorState = null;
+        private Supplier<Integer> syncerState = () -> 0;
 
         public Builder setTask(CustomPacketPayload task) {
             return this.setTask(ignored -> PacketDistributor.sendToServer(task));
@@ -58,34 +56,33 @@ public class EAEPServerCycleButton extends EAEPCycleButton {
             return this;
         }
 
-        public Builder setIterator(IntUnaryOperator stateIterator) {
-            this.stateIterator = stateIterator;
+        public Builder setIterator(IteratorState iteratorState) {
+            this.iteratorState = iteratorState;
             return this;
         }
 
-        public Builder setSyncedStateGetter(Supplier<Integer> getter) {
-            this.getterSyncedStateIndex = getter;
+        public Builder setSyncer(Supplier<Integer> syncer) {
+            this.syncerState = syncer;
             return this;
         }
 
-        public Builder setSyncedStateGetter(SyncerGenericBooleanState getter) {
-            this.getterSyncedStateIndex = getter;
+        public Builder setSyncer(SyncerBooleanGeneric syncer) {
+            this.syncerState = syncer;
             return this;
         }
 
-        public <TEnum extends Enum<TEnum>> Builder
-        setSyncedStateGetter(SyncerGenericEnumState<TEnum> getter) {
-            this.getterSyncedStateIndex = getter;
+        public <TEnum extends Enum<TEnum>> Builder setSyncer(SyncerEnumGeneric<TEnum> syncer) {
+            this.syncerState = syncer;
             return this;
         }
 
         public EAEPServerCycleButton build() {
-            return new EAEPServerCycleButton(this.states, this.task, this.stateIterator, this.getterSyncedStateIndex);
+            return new EAEPServerCycleButton(this.states, this.task, this.iteratorState, this.syncerState);
         }
     }
 
     @FunctionalInterface
-    public interface SyncerGenericBooleanState extends Supplier<Integer> {
+    public interface SyncerBooleanGeneric extends Supplier<Integer> {
         boolean getState();
 
         default Integer get() {
@@ -94,7 +91,7 @@ public class EAEPServerCycleButton extends EAEPCycleButton {
     }
 
     @FunctionalInterface
-    public interface SyncerGenericEnumState<TEnum extends Enum<TEnum>> extends Supplier<Integer> {
+    public interface SyncerEnumGeneric<TEnum extends Enum<TEnum>> extends Supplier<Integer> {
         TEnum getState();
 
         default Integer get() {

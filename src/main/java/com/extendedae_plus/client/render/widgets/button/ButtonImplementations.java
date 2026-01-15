@@ -19,8 +19,8 @@ public class ButtonImplementations {
                 .addPart(EAEPActionItems.BLOCKING_DISABLED)
                 .addPart(EAEPActionItems.BLOCKING_ENABLED)
                 .addPart(EAEPActionItems.BLOCKING_DISABLED_BY_SUPER)
-                .setIterator(index -> (index + 1) % 2)
-                .setSyncedStateGetter(() -> {
+                .setIterator((prev, reversed) -> (prev + (reversed ? -1 : 1)) % 2)
+                .setSyncer(() -> {
                     if (!(menu instanceof SyncerSmartBlocking syncer)) return 0;
                     else return switch (syncer.eaep$getBlockingState()) {
                         case DISABLED -> 0;
@@ -38,7 +38,7 @@ public class ButtonImplementations {
                 .setTask(new ConfigButtonPacket(ModSettings.SMART_DOUBLING, false))
                 .addPart(EAEPActionItems.DOUBLING_DISABLED)
                 .addPart(EAEPActionItems.DOUBLING_ENABLED)
-                .setSyncedStateGetter(() -> menu instanceof SyncerSmartDoubling syncer
+                .setSyncer(() -> menu instanceof SyncerSmartDoubling syncer
                         && YesNo.YES.equals(syncer.eaep$getDoublingState()))
                 .build();
         button.updateState();

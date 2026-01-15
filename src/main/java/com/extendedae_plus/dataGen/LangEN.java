@@ -63,7 +63,7 @@ public class LangEN extends LanguageProvider {
                 .branch("advanced_tip", """
                         Ticking multiplier calculation formula:
                         §2§oBaseTickerEnergyCost * ((2147483647 / BaseTickerEnergyCost) ^ 0.1) ^ (log2(SpeedMultiplier))
-                        §rEnergy card energy consumption reduction calculation formula:
+                        §fEnergy card energy consumption reduction calculation formula:
                         §2§o0.9 * (0.5 / 0.9)^((EnergyCardCount - 1) / 7)""")
                 .buildInto("""
                         Apply the Ticking Card to enable acceleration
@@ -147,7 +147,6 @@ public class LangEN extends LanguageProvider {
                 .addStr("info_label")
                 .branch("public", "Public")
                 .buildInto("Owner: %s{%s}");
-
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screenTooltip)
                 .addStr("label_link")
                 .addStr("label_description")
@@ -176,6 +175,12 @@ public class LangEN extends LanguageProvider {
                 .branch("master", "Master")
                 .branch("slave", "Slave")
                 .buildInto("Device Mode");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screenTooltip)
+                .addStr("transfer_mode")
+                .branch("none", "None")
+                .branch("merge_adjacency", "Merge Adjacent Items")
+                .branch("independence", "Full Independence")
+                .buildInto("Recipe Transfer Merge Mode");
 
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.message)
                 .addStr("provider_list")

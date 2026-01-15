@@ -65,7 +65,7 @@ public class LangZH extends LanguageProvider {
                 .branch("advanced_tip", """
                         Ticking倍增耗能计算公式:
                         §2§oTicker基础耗能 * ((2147483647 / Ticker基础耗能) ^ 0.1) ^ (log2(总加速倍率))
-                        §r能量卡耗能减免计算公式:
+                        §f能量卡耗能减免计算公式:
                         §2§o0.9 * (0.5 / 0.9)^((能量卡数 - 1) / 7)""")
                 .buildInto("""
                         放入Ticking倍增卡以启用加速
@@ -148,7 +148,6 @@ public class LangZH extends LanguageProvider {
                 .addStr("info_label")
                 .branch("public", "公共频段")
                 .buildInto("所有者: %s{%s}");
-        
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screenTooltip)
                 .addStr("label_link")
                 .addStr("label_description")
@@ -177,6 +176,12 @@ public class LangZH extends LanguageProvider {
                 .branch("master", "主端")
                 .branch("slave", "从端")
                 .buildInto("设备模式");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screenTooltip)
+                .addStr("transfer_mode")
+                .branch("none", "不更改")
+                .branch("merge_adjacency", "合并相邻物品")
+                .branch("independence", "不合并")
+                .buildInto("处理配方合并模式");
 
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.message)
                 .addStr("provider_list")

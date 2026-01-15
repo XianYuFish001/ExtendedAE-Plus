@@ -99,7 +99,7 @@
   "message.item.extendedae_plus.provider_controller.global_switch": "[EAEP] 全局设置已生效, 共影响 样板供应器x%s",
   "screen.block.extendedae.ex_pattern_provider.pages": "第 %s/%s 页",
   "screen.extendedae_plus.label_link": "选择Link标签",
-  "screen.extendedae_plus.label_link.label_description": "Link标签简介",
+  "screen.extendedae_plus.label_link.label_description": "简介",
   "screen.extendedae_plus.label_link.label_value": "Link标签",
   "screen.extendedae_plus.label_link.register": "注册Link标签",
   "screen.extendedae_plus.provider_list": "选择样板供应器以上传",
@@ -140,7 +140,7 @@
   "tooltip.item.extendedae_plus.infinity_biginteger_cell.description": "§6九重献祭, 终得虚空回响§r——觐见§8虚空之主Iava§r, 赐汝此物\n§b——§4方§d寸§c之§e间§a, §6自§b有§5千§9寰",
   "tooltip.item.extendedae_plus.priority_tool": "简单的工具, 可以覆写机器的优先级",
   "tooltip.item.extendedae_plus.ticker": "放入Ticking倍增卡以启用加速\n最高可达 1024 倍速\n加速将消耗 ME 网络能量，网络能量不足时无法加速",
-  "tooltip.item.extendedae_plus.ticker.advanced_tip": "Ticking倍增耗能计算公式:\n§2§oTicker基础耗能 * ((2147483647 / Ticker基础耗能) ^ 0.1) ^ (log2(总加速倍率))\n§r能量卡耗能减免计算公式:\n§2§o0.9 * (0.5 / 0.9)^((能量卡数 - 1) / 7)",
+  "tooltip.item.extendedae_plus.ticker.advanced_tip": "Ticking倍增耗能计算公式:\n§2§oTicker基础耗能 * ((2147483647 / Ticker基础耗能) ^ 0.1) ^ (log2(总加速倍率))\n§f能量卡耗能减免计算公式:\n§2§o0.9 * (0.5 / 0.9)^((能量卡数 - 1) / 7)",
   "tooltip.screen.extendedae_plus.label_add": "注册Link标签",
   "tooltip.screen.extendedae_plus.label_link.info_label": "所有者: %s{%s}",
   "tooltip.screen.extendedae_plus.label_link.info_label.public": "公共频段",
@@ -184,6 +184,10 @@
   "tooltip.screen.extendedae_plus.transceiver_mode": "设备模式",
   "tooltip.screen.extendedae_plus.transceiver_mode.master": "主端",
   "tooltip.screen.extendedae_plus.transceiver_mode.slave": "从端",
+  "tooltip.screen.extendedae_plus.transfer_mode": "处理配方合并模式",
+  "tooltip.screen.extendedae_plus.transfer_mode.independence": "不合并",
+  "tooltip.screen.extendedae_plus.transfer_mode.merge_adjacency": "合并相邻物品",
+  "tooltip.screen.extendedae_plus.transfer_mode.none": "不更改",
   "tooltip.screen.extendedae_plus.upload_button": "§7上传样板",
   "tooltip.screen.extendedae_plus.upload_button.auto_upload": "\n§a[Ctrl] §7上传样板"
 }

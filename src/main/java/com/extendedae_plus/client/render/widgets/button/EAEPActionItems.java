@@ -62,6 +62,10 @@ public enum EAEPActionItems {
     TRANSCEIVER_MASTER(EAEPIcon.SIGNAL_SEND, "transceiver_mode", "master"),
     TRANSCEIVER_SLAVE(EAEPIcon.SIGNAL_RECEIVE, "transceiver_mode", "slave"),
 
+    MERGE_NONE(EAEPIcon.MERGE_NONE, "transfer_mode", "none"),
+    MERGE_ADJACENCY(EAEPIcon.MERGE_ADJACENCY, "transfer_mode", "adjacency"),
+    MERGE_INDEPENDENCE(EAEPIcon.fromAEIcon(Icon.INSCRIBER_SEPARATE_SIDES), "transfer_mode", "independence"),
+
     ;
 
     private final IButtonIcon icon;

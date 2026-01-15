@@ -134,7 +134,7 @@
   "tooltip.item.extendedae_plus.infinity_biginteger_cell.description": "§5Per novem sacra, §dad vanum sonus§r\n§8Iava, Lord of the Void§r, grants you this\n§b—§4In§d fi§cnite§e space§a, §6in§bfi§5nite§9 worlds",
   "tooltip.item.extendedae_plus.priority_tool": "Simple Tool for machine priority overriding",
   "tooltip.item.extendedae_plus.ticker": "Apply the Ticking Card to enable acceleration\nUp to 1024x acceleration\nAccelerate will consume energy in ME network",
-  "tooltip.item.extendedae_plus.ticker.advanced_tip": "Ticking multiplier calculation formula:\n§2§oBaseTickerEnergyCost * ((2147483647 / BaseTickerEnergyCost) ^ 0.1) ^ (log2(SpeedMultiplier))\n§rEnergy card energy consumption reduction calculation formula:\n§2§o0.9 * (0.5 / 0.9)^((EnergyCardCount - 1) / 7)",
+  "tooltip.item.extendedae_plus.ticker.advanced_tip": "Ticking multiplier calculation formula:\n§2§oBaseTickerEnergyCost * ((2147483647 / BaseTickerEnergyCost) ^ 0.1) ^ (log2(SpeedMultiplier))\n§fEnergy card energy consumption reduction calculation formula:\n§2§o0.9 * (0.5 / 0.9)^((EnergyCardCount - 1) / 7)",
   "tooltip.screen.extendedae_plus.label_add": "Reg Link Label",
   "tooltip.screen.extendedae_plus.label_link.info_label": "Owner: %s{%s}",
   "tooltip.screen.extendedae_plus.label_link.info_label.public": "Public",
@@ -178,6 +178,10 @@
   "tooltip.screen.extendedae_plus.transceiver_mode": "Device Mode",
   "tooltip.screen.extendedae_plus.transceiver_mode.master": "Master",
   "tooltip.screen.extendedae_plus.transceiver_mode.slave": "Slave",
+  "tooltip.screen.extendedae_plus.transfer_mode": "Recipe Transfer Merge Mode",
+  "tooltip.screen.extendedae_plus.transfer_mode.independence": "Full Independence",
+  "tooltip.screen.extendedae_plus.transfer_mode.merge_adjacency": "Merge Adjacent Items",
+  "tooltip.screen.extendedae_plus.transfer_mode.none": "None",
   "tooltip.screen.extendedae_plus.upload_button": "§7Upload encoded pattern",
   "tooltip.screen.extendedae_plus.upload_button.auto_upload": "\n§a[Ctrl] §7Upload encoded pattern"
 }

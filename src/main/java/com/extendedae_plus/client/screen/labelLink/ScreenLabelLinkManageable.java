@@ -70,13 +70,13 @@ public class ScreenLabelLinkManageable extends ScreenLabelLink {
                 .addPart(EAEPActionItems.LABEL_UNLOCKED)
                 .addPart(EAEPActionItems.LABEL_LOCKED)
                 .setTask(menu::toggleLock)
-                .setSyncedStateGetter(menu::isLocked)
+                .setSyncer(menu::isLocked)
                 .build();
         this.buttonMaster = new EAEPServerCycleButton.Builder()
                 .addPart(EAEPActionItems.TRANSCEIVER_SLAVE)
                 .addPart(EAEPActionItems.TRANSCEIVER_MASTER)
                 .setTask(menu::toggleMaster)
-                .setSyncedStateGetter(menu::isMaster)
+                .setSyncer(menu::isMaster)
                 .build();
         if (menu.isLockable())
             this.widgets.add("button_lock", this.buttonLock);

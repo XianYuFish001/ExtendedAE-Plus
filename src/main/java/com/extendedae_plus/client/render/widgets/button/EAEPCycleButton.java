@@ -1,5 +1,7 @@
 package com.extendedae_plus.client.render.widgets.button;
 
+import appeng.client.gui.AEBaseScreen;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
@@ -8,23 +10,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.function.IntUnaryOperator;
 
 public class EAEPCycleButton extends EAEPButton {
     protected final List<EAEPActionItems> states;
-    protected final IntUnaryOperator stateIterator;
+    protected final IteratorState iteratorState;
     protected int stateIndex = 0;
 
     public EAEPCycleButton(List<EAEPActionItems> states,
                            BiConsumer<Integer, EAEPActionItems> statedOnPress,
-                           @Nullable IntUnaryOperator stateIterator) {
+                           @Nullable IteratorState iteratorState) {
         super(button -> {
             if (!(button instanceof EAEPCycleButton cycleButton)) return;
-            statedOnPress.accept(cycleButton.iterateState(), cycleButton.getAction());
+            var right = false;
+            if (Minecraft.getInstance().screen instanceof AEBaseScreen<?> screen)
+                right = screen.isHandlingRightClick();
+            statedOnPress.accept(cycleButton.iterateState(right), cycleButton.getAction());
         });
 
         this.states = states;
-        this.stateIterator = stateIterator;
+        this.iteratorState = iteratorState;
 
         this.updateTooltip();
     }
@@ -50,20 +54,24 @@ public class EAEPCycleButton extends EAEPButton {
     }
 
     /// @return 被迭代过的stateIndex
-    public int iterateState() {
-        if (this.stateIterator != null)
-            this.stateIndex = this.stateIterator.applyAsInt(this.stateIndex);
-        else this.stateIndex = (this.stateIndex + 1) % this.states.size();
+    public int iterateState(boolean reversed) {
+        if (this.iteratorState != null)
+            this.stateIndex = this.iteratorState.iterate(this.stateIndex, reversed);
+        else {
+            var size = this.states.size();
+            this.stateIndex = (this.stateIndex + (reversed ? -1 : 1) + size) % size;
+        }
         return this.stateIndex;
     }
 
     public static final class Builder {
         private final List<EAEPActionItems> states = new ArrayList<>();
         private final List<Consumer<EAEPActionItems>> tasks = new ArrayList<>();
-        private IntUnaryOperator stateIterator = null;
+        private Consumer<EAEPActionItems> task = $ -> {};
+        private IteratorState iteratorState = null;
 
         public Builder addPart(EAEPActionItems action) {
-            return this.addPart(action, ignored -> {});
+            return this.addPart(action, $ -> {});
         }
 
         public Builder addPart(EAEPActionItems action, CustomPacketPayload packet) {
@@ -75,22 +83,34 @@ public class EAEPCycleButton extends EAEPButton {
         }
 
         public Builder addPart(EAEPActionItems action, @Nullable Consumer<EAEPActionItems> onPress) {
-            if (onPress == null) onPress = ignored -> {};
+            if (onPress == null) onPress = $ -> {};
 
             this.states.add(action);
             this.tasks.add(onPress);
             return this;
         }
 
-        public Builder setIterator(IntUnaryOperator stateIterator) {
-            this.stateIterator = stateIterator;
+        public Builder globalTask(Consumer<EAEPActionItems> task) {
+            this.task = task;
+            return this;
+        }
+
+        public Builder setIterator(IteratorState iteratorState) {
+            this.iteratorState = iteratorState;
             return this;
         }
 
         public EAEPCycleButton build() {
             return new EAEPCycleButton(this.states,
-                    (index, action) -> this.tasks.get(index).accept(action),
-                    this.stateIterator);
+                    (index, action) -> {
+                        this.task.accept(action);
+                        this.tasks.get(index).accept(action);
+                    }, this.iteratorState);
         }
+    }
+
+    @FunctionalInterface
+    public interface IteratorState {
+        int iterate(int prev, boolean reversed);
     }
 }

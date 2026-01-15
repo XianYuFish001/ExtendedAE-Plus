@@ -19,6 +19,8 @@ public enum EAEPIcon implements IButtonIcon {
     DIV5(16, 16),
     PATTERN_SINGLE(32, 16),
     PATTERN_MULTI(48, 16),
+    MERGE_ADJACENCY(64, 16),
+    MERGE_NONE(80, 16),
 
     BLOCKING_TRANSPARENT(0, 32),
     SAVE_CENTER(16, 32),

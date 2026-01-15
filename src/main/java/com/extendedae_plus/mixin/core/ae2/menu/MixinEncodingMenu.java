@@ -11,10 +11,13 @@ import appeng.helpers.patternprovider.PatternContainer;
 import appeng.menu.me.common.MEStorageMenu;
 import appeng.menu.me.items.PatternEncodingTermMenu;
 import appeng.menu.slot.RestrictedInputSlot;
+import appeng.util.ConfigManager;
 import com.extendedae_plus.EAEPConfig;
 import com.extendedae_plus.common.impl.pattern.PatternUploader;
 import com.extendedae_plus.common.init.ModDataComponents;
+import com.extendedae_plus.common.init.ModSettings;
 import com.extendedae_plus.common.registry.dataComponent.DataEncoderProfile;
+import com.extendedae_plus.common.registry.settings.ModeEncodingTransfer;
 import com.extendedae_plus.mixin.impl.bridge.BridgeCtrlPressed;
 import com.extendedae_plus.mixin.impl.bridge.BridgePlanToEncode;
 import com.extendedae_plus.mixin.impl.bridge.BridgeProviderList;
@@ -69,7 +72,11 @@ public abstract class MixinEncodingMenu extends MEStorageMenu
                         IPatternTerminalMenuHost host,
                         boolean bindInventory,
                         CallbackInfo ci) {
-        if (this.isClientSide()) return;
+        if (this.isClientSide()) {
+            if (!(this.getConfigManager() instanceof ConfigManager manager)) return;
+            manager.registerSetting(ModSettings.TRANSFER_MODE, ModeEncodingTransfer.NONE);
+            return;
+        }
         this.eaep$providerList = PatternUploader.collectProvider(this);
     }
 

@@ -5,6 +5,7 @@ import appeng.api.config.Setting;
 import appeng.api.config.YesNo;
 import com.extendedae_plus.client.render.widgets.button.EAEPActionItems;
 import com.extendedae_plus.common.registry.part.ticker.PartTicker;
+import com.extendedae_plus.common.registry.settings.ModeEncodingTransfer;
 import com.extendedae_plus.common.registry.settings.StateSmartBlocking;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.world.item.Item;
@@ -51,6 +52,12 @@ public class ModSettings {
             register("transceiver_mode", YesNo.class)
                     .addPart(YesNo.YES, EAEPActionItems.TRANSCEIVER_MASTER)
                     .addPart(YesNo.NO, EAEPActionItems.TRANSCEIVER_SLAVE)
+                    .build();
+    public static final Setting<ModeEncodingTransfer> TRANSFER_MODE =
+            register("transfer_mode", ModeEncodingTransfer.class)
+                    .bindAll(EAEPActionItems.MERGE_NONE,
+                            EAEPActionItems.MERGE_ADJACENCY,
+                            EAEPActionItems.MERGE_INDEPENDENCE)
                     .build();
 
     private static <TEnum extends Enum<TEnum>> Builder<TEnum> register(String name, Class<TEnum> clazzSetting) {

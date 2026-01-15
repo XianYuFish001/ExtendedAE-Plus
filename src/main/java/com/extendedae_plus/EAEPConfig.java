@@ -41,10 +41,11 @@ public final class EAEPConfig {
         modContainer.registerConfig(ModConfig.Type.CLIENT, EAEPConfig.SPEC_CLIENT, "extendedae_plus/client.toml");
         modContainer.registerConfig(ModConfig.Type.SERVER, EAEPConfig.SPEC_SERVER, "extendedae_plus/server.toml");
 
-        if (modContainer.getEventBus() == null)
+        var eventBus = modContainer.getEventBus();
+        if (eventBus == null)
             throw new IllegalStateException("EventBus is null");
-        modContainer.getEventBus().addListener(ModConfigEvent.Loading.class, event -> reloadSetting(event.getConfig()));
-        modContainer.getEventBus().addListener(ModConfigEvent.Reloading.class, event -> reloadSetting(event.getConfig()));
+        eventBus.addListener(ModConfigEvent.Loading.class, event -> reloadSetting(event.getConfig()));
+        eventBus.addListener(ModConfigEvent.Reloading.class, event -> reloadSetting(event.getConfig()));
     }
 
     private static void reloadSetting(ModConfig config) {
