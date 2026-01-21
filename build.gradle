@@ -14,7 +14,11 @@ tasks.named('wrapper', Wrapper).configure {
     distributionType = Wrapper.DistributionType.BIN
 }
 
-version = mod_version
+String buildNumber = System.getenv("GITHUB_RUN_NUMBER")
+if (buildNumber != null)
+    version = mod_version + "+build." + buildNumber
+else version = mod_version
+
 group = mod_group_id
 
 apply from: "$rootDir/dependencies.gradle"
