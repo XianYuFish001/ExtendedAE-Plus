@@ -28,7 +28,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 public final class ModBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPE =
@@ -59,38 +58,17 @@ public final class ModBlockEntities {
 
     // 提供一个 CraftingBlockEntity 的类型，允许附着在本模组自定义加速器方块上，绕过 AE2 默认类型的“有效方块列表”校验
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CraftingBlockEntity>> EAEP_CRAFTING_UNIT =
-            BLOCK_ENTITY_TYPE.register("eaep_crafting_unit",
-                    () -> {
-                        AtomicReference<BlockEntityType<CraftingBlockEntity>> ref = new AtomicReference<>();
-                        BlockEntityType<CraftingBlockEntity> type = BlockEntityType.Builder.of(
-                                (pos, state) -> new CraftingBlockEntity(ref.get(), pos, state),
-                                Arrays.stream(EAEPCraftingUnitType.values())
-                                        .map(unit -> unit.getBlock().get())
-                                        .toArray(CraftingUnitBlock[]::new)
-                        ).build(null);
-                        ref.set(type);
-                        return type;
-                    });
-
-    public static void onCapabilitiesRegistering(RegisterCapabilitiesEvent event) {
-        List.of(
-                new InfoCapability<>(IInWorldGridNodeHost.class, AECapabilities.IN_WORLD_GRID_NODE_HOST, null)
-        ).forEach(infoCapability ->
-                BLOCK_ENTITIES.forEach(infoBlockEntity ->
-                        infoCapability.register(event, infoBlockEntity)));
-    }
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public static void onBlockEntityBinding() {
-        BLOCK_ENTITIES.forEach(info -> {
-            if (!AEBaseBlockEntity.class.isAssignableFrom(info.clazz)) return;
-            Arrays.stream(info.blocks).forEach(block -> {
-                if (!(block.get() instanceof AEBaseEntityBlock entityBlock)) return;
-                entityBlock.setBlockEntity(info.clazz, info.holder.get(), null, null);
+            BLOCK_ENTITY_TYPE.register("eaep_crafting_unit", () -> {
+                var referenceType = new BlockEntityType[]{null};
+                var type = BlockEntityType.Builder.of(
+                        (pos, state) -> new CraftingBlockEntity(referenceType[0], pos, state),
+                        Arrays.stream(EAEPCraftingUnitType.values())
+                                .map(unit -> unit.getBlock().get())
+                                .toArray(CraftingUnitBlock[]::new)
+                ).build(null);
+                referenceType[0] = type;
+                return type;
             });
-            AEBaseBlockEntity.registerBlockEntityItem(info.holder.get(), info.blocks[0].asItem());
-        });
-    }
 
     public static <T extends BlockEntity> DeferredHolder<BlockEntityType<?>, BlockEntityType<T>>
     regCommonBlockEntity(Class<T> clazzBlockEntity, BlockEntityType.BlockEntitySupplier<T> factory,
@@ -111,6 +89,26 @@ public final class ModBlockEntities {
         return holder;
     }
 
+    public static void onCapabilitiesRegistering(RegisterCapabilitiesEvent event) {
+        List.of(
+                new InfoCapability<>(IInWorldGridNodeHost.class, AECapabilities.IN_WORLD_GRID_NODE_HOST)
+        ).forEach(infoCapability ->
+                BLOCK_ENTITIES.forEach(infoBlockEntity ->
+                        infoCapability.register(event, infoBlockEntity)));
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static void onBlockEntityBinding() {
+        BLOCK_ENTITIES.forEach(info -> {
+            if (!AEBaseBlockEntity.class.isAssignableFrom(info.clazz)) return;
+            Arrays.stream(info.blocks).forEach(block -> {
+                if (!(block.get() instanceof AEBaseEntityBlock entityBlock)) return;
+                entityBlock.setBlockEntity(info.clazz, info.holder.get(), null, null);
+            });
+            AEBaseBlockEntity.registerBlockEntityItem(info.holder.get(), info.blocks[0].asItem());
+        });
+    }
+
     public record InfoBlockEntity<T extends BlockEntity>(
             Class<T> clazz,
             DeferredHolder<BlockEntityType<?>, BlockEntityType<T>> holder,
@@ -123,6 +121,10 @@ public final class ModBlockEntities {
             BlockCapability<TCapability, TContext> capability,
             @Nullable ICapabilityProvider<THost, TContext, TCapability> provider
     ) {
+        public InfoCapability(Class<TCapability> clazzCapability, BlockCapability<TCapability, TContext> capability) {
+            this(clazzCapability, capability, null);
+        }
+
         public void register(RegisterCapabilitiesEvent event, InfoBlockEntity<? extends THost> info) {
             if (!this.clazzCapability.isAssignableFrom(info.clazz)) return;
 

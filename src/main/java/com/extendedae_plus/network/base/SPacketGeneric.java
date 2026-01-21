@@ -7,9 +7,7 @@ public interface SPacketGeneric extends PacketGeneric {
     void handleClient(final LocalPlayer player);
 
     default void handle(final IPayloadContext context) {
-        context.enqueueWork(() -> {
-            if (context.player() instanceof LocalPlayer player)
-                this.handleClient(player);
-        });
+        if (context.player() instanceof LocalPlayer player)
+            this.handleClient(player);
     }
 }

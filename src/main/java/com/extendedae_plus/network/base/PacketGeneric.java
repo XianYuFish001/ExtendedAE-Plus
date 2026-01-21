@@ -7,7 +7,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public interface PacketGeneric extends CustomPacketPayload {
     Type<?> TYPE = createType("empty");
-    StreamCodec<RegistryFriendlyByteBuf, PacketGeneric> STREAM_CODEC = null;
+    StreamCodec<RegistryFriendlyByteBuf, ? extends PacketGeneric> STREAM_CODEC = null;
 
     static <TPacket extends PacketGeneric> Type<TPacket> createType(String path) {
         return new Type<>(ExtendedAEPlus.getLocation(path));

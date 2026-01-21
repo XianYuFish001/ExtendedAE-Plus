@@ -7,9 +7,7 @@ public interface CPacketGeneric extends PacketGeneric {
     void handleServer(final ServerPlayer player);
 
     default void handle(final IPayloadContext context) {
-        context.enqueueWork(() -> {
-            if (context.player() instanceof ServerPlayer player)
-                this.handleServer(player);
-        });
+        if (context.player() instanceof ServerPlayer player)
+            this.handleServer(player);
     }
 }

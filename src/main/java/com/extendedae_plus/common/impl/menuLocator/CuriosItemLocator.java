@@ -14,9 +14,13 @@ public record CuriosItemLocator(String curioType, int curioIndex,
                                 @Nullable BlockHitResult hitResult) implements ItemMenuHostLocator {
     @Override
     public ItemStack locateItem(Player player) {
-        var curiosInv = CuriosApi.getCuriosInventory(player);
-        return curiosInv.map(handler -> handler.getCurios().get(curioType)
-                .getStacks().getStackInSlot(curioIndex)).orElse(ItemStack.EMPTY);
+        return CuriosApi.getCuriosInventory(player)
+                .map(handler ->
+                        handler.getCurios()
+                                .get(curioType)
+                                .getStacks()
+                                .getStackInSlot(curioIndex))
+                .orElse(ItemStack.EMPTY);
     }
 
     public void writeToPacket(FriendlyByteBuf buf) {

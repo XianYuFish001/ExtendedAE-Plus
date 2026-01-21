@@ -85,7 +85,7 @@ public class ScreenTicker extends UpgradeableScreen<MenuTicker> {
 
         var builder = UtilKeyBuilder.of(UtilKeyBuilder.screen)
                 .item(ModItems.PART_TICKER)
-                .newHashMap();
+                .<String>newHashMap();
 
         builder.addStr(switch (this.menu.getTickerState()) {
             case BLACKLISTED -> "blacklisted";

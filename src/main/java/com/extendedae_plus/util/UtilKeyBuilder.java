@@ -102,8 +102,9 @@ public class UtilKeyBuilder {
             return (TBuilder) this;
         }
 
+        @SuppressWarnings("unchecked")
         public BuilderCollection bindCollection(Collection<Component> target) {
-            return new BuilderCollection((BuilderCollection) this, target);
+            return new BuilderCollection((BuilderGeneric<BuilderCollection>) this, target);
         }
 
         public BuilderCollection newArrayList() {
@@ -115,7 +116,7 @@ public class UtilKeyBuilder {
             return new BuilderMap<>((BuilderGeneric<BuilderMap<TKey>>) this, target);
         }
 
-        public BuilderMap<String> newHashMap() {
+        public <TKey> BuilderMap<TKey> newHashMap() {
             return this.bindMap(new HashMap<>());
         }
 
@@ -280,6 +281,13 @@ public class UtilKeyBuilder {
         public BuilderCollection buildInto(String additionalKey) {
             this.target.add(this.addStr(additionalKey).build());
             this.restoreSnapshot();
+            return this;
+        }
+
+        public BuilderCollection buildInto(String... additionalKeys) {
+            for (String additionalKey : additionalKeys) {
+                this.buildInto(additionalKey);
+            }
             return this;
         }
 

@@ -2,6 +2,7 @@ package com.extendedae_plus.integration.jade;
 
 import appeng.core.localization.InGameTooltip;
 import com.extendedae_plus.common.init.ModItems;
+import com.extendedae_plus.integration.jade.helper.TooltipAppender;
 import com.extendedae_plus.util.UtilKeyBuilder;
 import net.minecraft.core.BlockPos;
 

@@ -10,6 +10,7 @@ import net.neoforged.fml.common.Mod;
 @Mod(ExtendedAEPlus.MODID)
 public class ExtendedAEPlus {
     public static final String MODID = "extendedae_plus";
+    public static final String MODNAME = "ExtendedAE Plus";
 
     public ExtendedAEPlus(IEventBus modEventBus, ModContainer modContainer) {
         ModBlocks.BLOCK.register(modEventBus);

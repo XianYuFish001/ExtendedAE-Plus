@@ -1,20 +1,21 @@
 package com.extendedae_plus.integration.jade;
 
+import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.common.registry.block.assemblerMatrix.portUpload.BlockEntityUpload;
 import com.extendedae_plus.common.registry.block.assemblerMatrix.portUpload.BlockUpload;
 import com.extendedae_plus.common.registry.block.wirelessTransceiver.BlockEntityWirelessTransceiver;
 import com.extendedae_plus.common.registry.block.wirelessTransceiver.BlockWirelessTransceiver;
-import com.extendedae_plus.integration.jade.portUpload.ProviderPortUpload;
-import com.extendedae_plus.integration.jade.portUpload.TooltipPortUpload;
-import com.extendedae_plus.integration.jade.wirelessTransceiver.ProviderWirelessTransceiver;
-import com.extendedae_plus.integration.jade.wirelessTransceiver.TooltipWirelessTransceiver;
+import com.extendedae_plus.integration.jade.helper.IObjectedProvider;
+import com.extendedae_plus.integration.jade.helper.WrapperObjectedProvider;
+import com.extendedae_plus.integration.jade.implementation.PortUpload;
+import com.extendedae_plus.integration.jade.implementation.WirelessTransceiver;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import snownee.jade.api.*;
 
 import java.util.List;
 
-@WailaPlugin("extendedae_plus") // 你的 mod ID
+@WailaPlugin(ExtendedAEPlus.MODID)
 public class EAEPJadePlugin implements IWailaPlugin {
     private static final List<InfoBlock<?, ?>> blocks;
 
@@ -34,15 +35,15 @@ public class EAEPJadePlugin implements IWailaPlugin {
         blocks = List.of(
                 new InfoBlock<>(
                         "provider_wireless_transceiver",
-                        ProviderWirelessTransceiver.class,
-                        TooltipWirelessTransceiver.class,
+                        WirelessTransceiver.Provider.class,
+                        WirelessTransceiver.Tooltip.class,
                         BlockEntityWirelessTransceiver.class,
                         BlockWirelessTransceiver.class
                 ),
                 new InfoBlock<>(
                         "provider_port_upload",
-                        ProviderPortUpload.class,
-                        TooltipPortUpload.class,
+                        PortUpload.Provider.class,
+                        PortUpload.Tooltip.class,
                         BlockEntityUpload.class,
                         BlockUpload.class
                 )
@@ -50,8 +51,9 @@ public class EAEPJadePlugin implements IWailaPlugin {
     }
 
     private record InfoBlock<
-            TProvider extends Enum<TProvider> & ObjectedProvider.IObjectedProvider<BlockAccessor>,
-            TConsumer extends Enum<TConsumer> & IBlockComponentProvider>(
+            TProvider extends Enum<TProvider> & IObjectedProvider<BlockAccessor>,
+            TConsumer extends Enum<TConsumer> & IBlockComponentProvider
+            >(
             String uid,
             Class<TProvider> clazzProvider,
             Class<TConsumer> clazzConsumer,
@@ -60,8 +62,7 @@ public class EAEPJadePlugin implements IWailaPlugin {
     ) {
         public void registerProvider(IWailaCommonRegistration registration) {
             registration.registerBlockDataProvider(
-                    ObjectedProvider.create(this.uid,
-                            ObjectedProvider.IObjectedProvider.getProviders(this.clazzProvider)),
+                    WrapperObjectedProvider.create(this.uid, this.clazzProvider),
                     this.clazzBlockEntity
             );
         }

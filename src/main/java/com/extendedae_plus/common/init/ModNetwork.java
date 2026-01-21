@@ -39,11 +39,10 @@ public class ModNetwork {
                 .map(annotationData -> {
                     try {
                         return Class.forName(annotationData.memberName());
-                    } catch (ClassNotFoundException e) {
-                        throw new RuntimeException("Failed to find a PacketGeneric class: ", e);
+                    } catch (ClassNotFoundException exception) {
+                        throw new IllegalStateException("Failed to find Packet: " + annotationData.memberName() + ", ", exception);
                     }
                 })
-                .filter(clazz -> clazz.getPackageName().startsWith("com.extendedae_plus.network"))
                 .collect(Collectors.toSet());
     }
 
@@ -72,7 +71,10 @@ public class ModNetwork {
         try {
             registeringAction.accept((CustomPacketPayload.Type<TPacket>) clazzPacket.getField("TYPE").get(null),
                     (StreamCodec<RegistryFriendlyByteBuf, TPacket>) clazzPacket.getField("STREAM_CODEC").get(null));
-        } catch (NoSuchFieldException | ClassCastException | IllegalAccessException ignored) {
+        } catch (ClassCastException | IllegalAccessException exception) {
+            throw new IllegalStateException("Failed to register Packet: " + clazzPacket.getSimpleName() + ", ", exception);
+        } catch (NoSuchFieldException exception) {
+            throw new IllegalStateException("Failed to find TYPE or STREAM_CODEC in " + clazzPacket.getSimpleName(), exception);
         }
     }
 }

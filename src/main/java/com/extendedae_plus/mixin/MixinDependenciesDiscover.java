@@ -134,12 +134,12 @@ public class MixinDependenciesDiscover {
 
         @Override
         public void visit(String name, Object value) {
-            if (!(value instanceof String)) return;
+            if (!(value instanceof String nameMod)) return;
 
             if ("value".equals(arrayName))
-                dependencies.requiredMods.add((String) value);
+                dependencies.requiredMods.add(nameMod);
             else if ("conflict".equals(arrayName))
-                dependencies.conflictMods.add((String) value);
+                dependencies.conflictMods.add(nameMod);
         }
     }
 }

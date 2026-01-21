@@ -24,7 +24,7 @@ public class Label {
     WeakReference<@Nullable ILinkHost> master = new WeakReference<>(null);
     final Set<WeakReference<@Nullable ILinkListener>> listeners = new HashSet<>();
 
-    public Label(Data data) {
+    Label(Data data) {
         this.data = data;
     }
 
@@ -102,6 +102,10 @@ public class Label {
         public Either<@Nullable Long, String> toEither() {
             if (this.label.isBlank()) return Either.left(this.frequency);
             else return Either.right(this.label);
+        }
+
+        static {
+            PacketStreamable.register(Label.Data.class, STREAM_CODEC);
         }
 
         @Override

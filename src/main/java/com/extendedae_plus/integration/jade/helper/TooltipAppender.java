@@ -1,4 +1,4 @@
-package com.extendedae_plus.integration.jade;
+package com.extendedae_plus.integration.jade.helper;
 
 import net.minecraft.nbt.CompoundTag;
 import snownee.jade.api.BlockAccessor;
@@ -11,7 +11,7 @@ public interface TooltipAppender {
 
     default void add(String name, BlockAccessor accessor, ITooltip tooltip, IPluginConfig config) {
         if (!(accessor.getServerData().get(name.toLowerCase()) instanceof CompoundTag data))
-            return;
+            throw new IllegalArgumentException("Unknown provider object " + name + " in " + accessor.getBlock().getName().getString());
         this.add(accessor, tooltip, config, data);
     }
 }

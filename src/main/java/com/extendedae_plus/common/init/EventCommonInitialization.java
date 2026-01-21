@@ -68,6 +68,5 @@ public class EventCommonInitialization {
                         CraftingBlockEntity.class,
                         ModBlockEntities.EAEP_CRAFTING_UNIT.get(),
                         null, null));
-
     }
 }

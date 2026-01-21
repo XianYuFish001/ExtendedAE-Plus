@@ -32,10 +32,7 @@ public record SPacketHighlightPatternSlot(AEKey key, boolean highlight) implemen
 
     @Override
     public void handleClient(LocalPlayer player) {
-        try {
-            ClientPatternHighlightStore.setHighlight(this.key, this.highlight);
-        } catch (Throwable ignored) {
-        }
+        ClientPatternHighlightStore.setHighlight(this.key, this.highlight);
     }
 }
 
