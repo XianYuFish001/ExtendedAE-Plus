@@ -22,9 +22,11 @@ public class MixinItemStack {
                            Player player,
                            TooltipFlag tooltipFlag,
                            CallbackInfoReturnable<List<Component>> cir) {
-        var text = cir.getReturnValue();
-        if (!ExtendedAEPlus.MODNAME.equals(text.getLast().getString())) return;
-        text.removeLast();
-        text.add(UtilTextComponent.ModNameColorful.get().copy().withStyle(ChatFormatting.ITALIC));
+        var texts = cir.getReturnValue();
+        if (texts.isEmpty()) return;
+
+        if (!ExtendedAEPlus.MODNAME.equals(texts.getLast().getString())) return;
+        texts.removeLast();
+        texts.add(UtilTextComponent.modNameColorful.copy().withStyle(ChatFormatting.ITALIC));
     }
 }

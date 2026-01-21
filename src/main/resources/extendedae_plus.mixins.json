@@ -65,6 +65,7 @@
     "extendedae.common.TileExPatternProviderMixin",
     "extendedae.menu.ContainerExPatternProviderMixin",
     "extendedae.menu.MixinMenuAssemblerMatrixSlot",
+    "minecraft.MixinComponent",
     "minecraft.MixinItemStack",
     "minecraft.MixinMenuLimitFix",
     "recipeViewer.emi.MixinEncodePatternTransfer",

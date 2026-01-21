@@ -22,7 +22,7 @@ public class LangEN extends LanguageProvider {
         UtilKeyBuilder.BuilderDataGen.bindTranslator("en_us", this::add);
 
         this.addItem(ModItems.PART_TICKER, "Ticker");
-        this.addItem(ModItems.INFINITY_BIGINTEGER_CELL_ITEM, "§4De§cvou§6rer §eof §aCo§bsmic §dSilence");
+        this.addItem(ModItems.INFINITY_BIGINTEGER_CELL_ITEM, "Devourer of Cosmic Silence");
         this.addItem(ModItems.PROVIDER_CONTROLLER, "Provider Controller");
         this.addItem(ModItems.CHANNEL_CARD, "Channel Card");
         this.addItem(ModItems.CARD_AUTO_COMPLETION, "Auto Completion Card");
@@ -72,10 +72,11 @@ public class LangEN extends LanguageProvider {
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.tooltip)
                 .item(ModItems.INFINITY_BIGINTEGER_CELL_ITEM)
                 .addStr("description")
+                .branch("colored", "——Infinite space, infinite worlds")
                 .buildInto("""
                         §5Per novem sacra, §dad vanum sonus§r
                         §8Iava, Lord of the Void§r, grants you this
-                        §b—§4In§d fi§cnite§e space§a, §6in§bfi§5nite§9 worlds""");
+                        """);
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.tooltip)
                 .item(AEItems.PROCESSING_PATTERN.get())
                 .addStr("encoder")

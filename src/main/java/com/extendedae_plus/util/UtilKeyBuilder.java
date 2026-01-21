@@ -14,6 +14,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * <h2> 工具类KeyBuilder: 再次提供更便捷的翻译键生成与使用功能
@@ -98,8 +99,18 @@ public class UtilKeyBuilder {
         }
 
         @SuppressWarnings("unchecked")
-        private TBuilder self() {
+        private TBuilder cast() {
             return (TBuilder) this;
+        }
+
+        @SuppressWarnings("unchecked")
+        public BuilderAdderSimple bindAdder(Consumer<Component> adder) {
+            return new BuilderAdderSimple((BuilderGeneric<BuilderAdderSimple>) this, adder);
+        }
+
+        @SuppressWarnings("unchecked")
+        public <TKey> BuilderBiAdderSimple<TKey> bindBiAdder(BiConsumer<TKey, Component> adder) {
+            return new BuilderBiAdderSimple<>((BuilderGeneric<BuilderBiAdderSimple<TKey>>) this, adder);
         }
 
         @SuppressWarnings("unchecked")
@@ -129,12 +140,12 @@ public class UtilKeyBuilder {
 
         public TBuilder type(String keyTemplate) {
             this.keyTemplate = keyTemplate;
-            return this.self();
+            return this.cast();
         }
 
         public TBuilder item(ItemLike item) {
             this.mainDescription = item.asItem().getDescriptionId().toLowerCase();
-            return this.self();
+            return this.cast();
         }
 
         public TBuilder item(ItemStack itemStack) {
@@ -145,12 +156,12 @@ public class UtilKeyBuilder {
             if (!this.additionalKey.endsWith("."))
                 this.additionalKey += ".";
             this.additionalKey += additionalKey;
-            return this.self();
+            return this.cast();
         }
 
         public TBuilder addStr(boolean condition, String additionalKey) {
             if (condition) this.addStr(additionalKey);
-            return this.self();
+            return this.cast();
         }
 
         public TBuilder addStr(boolean condition, String keyA, String keyB) {
@@ -165,12 +176,12 @@ public class UtilKeyBuilder {
                             return object.toString();
                         else return object;
                     }).toArray();
-            return this.self();
+            return this.cast();
         }
 
         public TBuilder args(boolean condition, Object... args) {
             if (condition) this.args(args);
-            return this.self();
+            return this.cast();
         }
 
         public String buildRaw() {
@@ -252,7 +263,107 @@ public class UtilKeyBuilder {
         }
     }
 
-    public static class BuilderCollection extends BuilderSnapshotable<BuilderCollection> {
+    public static class BuilderAdder<TBuilder extends BuilderAdder<TBuilder>> extends BuilderSnapshotable<TBuilder> {
+        private final Consumer<Component> target;
+
+        protected BuilderAdder(BuilderGeneric<TBuilder> original, Consumer<Component> target) {
+            this(original, target, true);
+        }
+
+        protected BuilderAdder(BuilderGeneric<TBuilder> original, Consumer<Component> target, boolean saveSnapshot) {
+            super(original, saveSnapshot);
+            this.target = target;
+        }
+
+        @SuppressWarnings("unchecked")
+        private TBuilder cast() {
+            return (TBuilder) this;
+        }
+
+        @Override
+        public TBuilder saveSnapshot() {
+            this.snapshot = new BuilderAdder<>(this, this.target, false).cast();
+            return this.cast();
+        }
+
+        public TBuilder buildInto() {
+            this.target.accept(this.build());
+            this.restoreSnapshot();
+            return this.cast();
+        }
+
+        public TBuilder buildInto(String additionalKey) {
+            this.target.accept(this.addStr(additionalKey).build());
+            this.restoreSnapshot();
+            return this.cast();
+        }
+
+        public TBuilder buildInto(String... additionalKeys) {
+            for (String additionalKey : additionalKeys) {
+                this.buildInto(additionalKey);
+            }
+            return this.cast();
+        }
+    }
+
+    public static class BuilderAdderSimple extends BuilderAdder<BuilderAdderSimple> {
+        protected BuilderAdderSimple(BuilderGeneric<BuilderAdderSimple> original, Consumer<Component> target) {
+            super(original, target);
+        }
+
+        protected BuilderAdderSimple(BuilderGeneric<BuilderAdderSimple> original, Consumer<Component> target, boolean saveSnapshot) {
+            super(original, target, saveSnapshot);
+        }
+    }
+
+    public static class BuilderBiAdder<TBuilder extends BuilderBiAdder<TBuilder, TKey>, TKey>
+            extends BuilderSnapshotable<TBuilder> {
+        private final BiConsumer<TKey, Component> target;
+
+        protected BuilderBiAdder(BuilderGeneric<TBuilder> original, BiConsumer<TKey, Component> target) {
+            this(original, target, true);
+        }
+
+        protected BuilderBiAdder(BuilderGeneric<TBuilder> original, BiConsumer<TKey, Component> target, boolean saveSnapshot) {
+            super(original, saveSnapshot);
+            this.target = target;
+        }
+
+        @SuppressWarnings("unchecked")
+        private TBuilder cast() {
+            return (TBuilder) this;
+        }
+
+        @Override
+        public TBuilder saveSnapshot() {
+            this.snapshot = new BuilderBiAdder<>(this, this.target, false).cast();
+            return this.cast();
+        }
+
+        public TBuilder buildInto(TKey key) {
+            this.target.accept(key, this.addStr(key.toString()).build());
+            this.restoreSnapshot();
+            return this.cast();
+        }
+
+        public TBuilder buildIntoPlain(TKey key) {
+            this.target.accept(key, this.build());
+            this.restoreSnapshot();
+            return this.cast();
+        }
+    }
+
+    public static class BuilderBiAdderSimple<TKey> extends BuilderBiAdder<BuilderBiAdderSimple<TKey>, TKey> {
+        protected BuilderBiAdderSimple(BuilderGeneric<BuilderBiAdderSimple<TKey>> original, BiConsumer<TKey, Component> target) {
+            super(original, target);
+        }
+
+        protected BuilderBiAdderSimple(BuilderGeneric<BuilderBiAdderSimple<TKey>> original, BiConsumer<TKey, Component> target, boolean saveSnapshot) {
+            super(original, target, saveSnapshot);
+        }
+    }
+
+    public static class BuilderCollection extends BuilderAdder<BuilderCollection> {
         private final Collection<Component> target;
 
         protected BuilderCollection(BuilderGeneric<BuilderCollection> original, Collection<Component> target) {
@@ -262,7 +373,7 @@ public class UtilKeyBuilder {
         protected BuilderCollection(BuilderGeneric<BuilderCollection> original,
                                     Collection<Component> target,
                                     boolean saveSnapshot) {
-            super(original, saveSnapshot);
+            super(original, target::add, saveSnapshot);
             this.target = target;
         }
 
@@ -272,31 +383,12 @@ public class UtilKeyBuilder {
             return this;
         }
 
-        public BuilderCollection buildInto() {
-            this.target.add(this.build());
-            this.restoreSnapshot();
-            return this;
-        }
-
-        public BuilderCollection buildInto(String additionalKey) {
-            this.target.add(this.addStr(additionalKey).build());
-            this.restoreSnapshot();
-            return this;
-        }
-
-        public BuilderCollection buildInto(String... additionalKeys) {
-            for (String additionalKey : additionalKeys) {
-                this.buildInto(additionalKey);
-            }
-            return this;
-        }
-
         public Collection<Component> getCollection() {
             return this.target;
         }
     }
 
-    public static class BuilderMap<TKey> extends BuilderSnapshotable<BuilderMap<TKey>> {
+    public static class BuilderMap<TKey> extends BuilderBiAdder<BuilderMap<TKey>, TKey> {
         private final Map<TKey, Component> target;
 
         protected BuilderMap(BuilderGeneric<BuilderMap<TKey>> original, Map<TKey, Component> target) {
@@ -306,26 +398,13 @@ public class UtilKeyBuilder {
         protected BuilderMap(BuilderGeneric<BuilderMap<TKey>> original,
                              Map<TKey, Component> target,
                              boolean saveSnapshot) {
-            super(original, saveSnapshot);
+            super(original, target::put, saveSnapshot);
             this.target = target;
         }
 
         @Override
         public BuilderMap<TKey> saveSnapshot() {
             this.snapshot = new BuilderMap<>(this, this.target, false);
-            return this;
-        }
-
-        /// 不建议真的在非string的情况下调用🤓
-        public BuilderMap<TKey> buildInto(TKey key) {
-            this.target.put(key, this.addStr(key.toString()).build());
-            this.restoreSnapshot();
-            return this;
-        }
-
-        public BuilderMap<TKey> buildIntoPlain(TKey key) {
-            this.target.put(key, this.build());
-            this.restoreSnapshot();
             return this;
         }
 

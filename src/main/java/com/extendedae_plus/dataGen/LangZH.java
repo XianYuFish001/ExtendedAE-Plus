@@ -22,7 +22,7 @@ public class LangZH extends LanguageProvider {
         UtilKeyBuilder.BuilderDataGen.bindTranslator("zh_cn", this::add);
 
         this.addItem(ModItems.PART_TICKER, "Ticker");
-        this.addItem(ModItems.INFINITY_BIGINTEGER_CELL_ITEM, "§4吞§c噬§6万§e籁§a的§b寂§d静");
+        this.addItem(ModItems.INFINITY_BIGINTEGER_CELL_ITEM, "吞噬万籁的寂静");
         this.addItem(ModItems.PROVIDER_CONTROLLER, "样板供应器管理工具");
         this.addItem(ModItems.CHANNEL_CARD, "频道卡");
         this.addItem(ModItems.CARD_AUTO_COMPLETION, "自动完成卡");
@@ -74,9 +74,8 @@ public class LangZH extends LanguageProvider {
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.tooltip)
                 .item(ModItems.INFINITY_BIGINTEGER_CELL_ITEM)
                 .addStr("description")
-                .buildInto("""
-                        §6九重献祭, 终得虚空回响§r——觐见§8虚空之主Iava§r, 赐汝此物
-                        §b——§4方§d寸§c之§e间§a, §6自§b有§5千§9寰""");
+                .branch("colored", "——方寸之间, 自有千寰")
+                .buildInto("§6九重献祭, 终得虚空回响§r——觐见§8虚空之主Iava§r, 赐汝此物\n");
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.tooltip)
                 .item(AEItems.PROCESSING_PATTERN.get())
                 .addStr("encoder")

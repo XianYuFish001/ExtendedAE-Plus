@@ -19,17 +19,18 @@ import java.math.BigInteger;
 import java.util.List;
 
 public class InfinityBigIntegerCellItem extends Item implements ICellWorkbenchItem {
-
     public InfinityBigIntegerCellItem() {
         super(new Properties().stacksTo(1).fireResistant());
     }
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag tooltipFlag) {
-        tooltip.add(UtilKeyBuilder.of(UtilKeyBuilder.tooltip)
+        UtilKeyBuilder.of(UtilKeyBuilder.tooltip)
                 .item(ModItems.INFINITY_BIGINTEGER_CELL_ITEM)
                 .addStr("description")
-                .build());
+                .bindAdder(tooltip::add)
+                .buildInto()
+                .buildInto("colored");
 
         Preconditions.checkArgument(stack.getItem() == this);
         // 仅在 ItemStack 自身存在 UUID 时显示 UUID，避免触发持久化或加载逻辑
@@ -53,7 +54,8 @@ public class InfinityBigIntegerCellItem extends Item implements ICellWorkbenchIt
                             Component.literal("Types: ").withStyle(ChatFormatting.GRAY)
                                     .append(Component.literal(String.valueOf(types)).withStyle(ChatFormatting.GREEN))
                     );
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
             }
 
             if (tag.contains(InfinityConstants.INFINITY_ITEM_TOTAL)) {
@@ -65,7 +67,8 @@ public class InfinityBigIntegerCellItem extends Item implements ICellWorkbenchIt
                             Component.literal("Total: ").withStyle(ChatFormatting.GRAY)
                                     .append(Component.literal(formatted).withStyle(ChatFormatting.AQUA))
                     );
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
             } else if (tag.contains(InfinityConstants.INFINITY_CELL_ITEM_COUNT)) {
                 try {
                     byte[] bytes = tag.getByteArray(InfinityConstants.INFINITY_CELL_ITEM_COUNT);
@@ -75,7 +78,8 @@ public class InfinityBigIntegerCellItem extends Item implements ICellWorkbenchIt
                             Component.literal("Total: ").withStyle(ChatFormatting.GRAY)
                                     .append(Component.literal(formatted).withStyle(ChatFormatting.AQUA))
                     );
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
             }
         }
     }

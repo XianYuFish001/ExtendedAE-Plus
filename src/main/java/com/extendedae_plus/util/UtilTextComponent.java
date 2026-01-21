@@ -1,43 +1,111 @@
 package com.extendedae_plus.util;
 
 import com.extendedae_plus.ExtendedAEPlus;
+import com.extendedae_plus.common.init.ModItems;
 import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentContents;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class UtilTextComponent {
-    public static class ModNameColorful {
-        private static int frames;
-        public static List<Component> text;
+    public static final ComponentColorful modNameColorful = new ComponentColorful(ExtendedAEPlus.MODNAME);
 
-        static {
-            regenerate(80);
+    @EventBusSubscriber(modid = ExtendedAEPlus.MODID)
+    public static class RegistryColored {
+        private static final Map<String, ComponentColorful> colored = new HashMap<>();
+
+        @SubscribeEvent
+        private static void onRegister(FMLLoadCompleteEvent event) {
+            List.of(
+                    ModItems.INFINITY_BIGINTEGER_CELL_ITEM.asItem().getDescriptionId(),
+                    UtilKeyBuilder.of(UtilKeyBuilder.tooltip).item(ModItems.INFINITY_BIGINTEGER_CELL_ITEM).addStr("description").addStr("colored").buildRaw()
+            ).forEach(RegistryColored::register);
         }
 
-        public static Component get() {
-            var state = Util.getMillis() / 70 % frames;
+        public static void register(String key) {
+            if (colored.containsKey(key)) return;
+            register(key, new ComponentColorful(Component.translatable(key)));
+        }
+
+        public static void register(String key, ComponentColorful text) {
+            if (colored.containsKey(key)) return;
+            colored.put(key, text);
+        }
+
+        public static Optional<ComponentColorful> find(String key) {
+            return Optional.ofNullable(colored.get(key));
+        }
+    }
+
+    public static class ComponentColorful implements Component {
+        private final Component componentOriginal;
+        private String original;
+
+        public List<Component> text = new ArrayList<>();
+        private int frames;
+        private boolean initialized;
+
+        public ComponentColorful(Component original) {
+            this(original, 80);
+        }
+
+        public ComponentColorful(String original) {
+            this(Component.literal(original));
+        }
+
+        public ComponentColorful(Component original, int frames) {
+            this.componentOriginal = original;
+            this.frames = frames;
+            this.update(true);
+        }
+
+        public void update(boolean refreshString) {
+            if (refreshString) {
+                this.original = this.componentOriginal.getString().replaceAll("§[0-9a-zA-Z]", "");
+                if (this.componentOriginal.getContents() instanceof TranslatableContents contents) {
+                    if (!this.original.equals(contents.getKey()))
+                        this.initialized = true;
+                } else this.initialized = true;
+            }
+            this.text = IntStream.range(0, this.frames)
+                    .mapToObj(this::generatePart)
+                    .toList();
+        }
+
+        public Component get() {
+            if (!this.initialized)
+                this.update(true);
+            var state = Util.getMillis() / 70 % this.frames;
             return text.get((int) state);
         }
 
-        public static void regenerate(int frames) {
-            ModNameColorful.frames = frames;
-            text = IntStream.range(0, frames)
-                    .mapToObj(ModNameColorful::generatePart)
-                    .toList();
+        public int getFrames() {
+            return this.frames;
+        }
+
+        public void setFrames(int frames) {
+            this.frames = frames;
+            this.update(!this.initialized);
         }
 
         // ai
         // 反正我写不出来
-        private static Component generatePart(int frame) {
+        private Component generatePart(int frame) {
             var builder = Component.empty();
-            var chars = ExtendedAEPlus.MODNAME.toCharArray();
+            var chars = this.original.toCharArray();
             float colorStretch = 0.03f;
 
             // 动画偏移量：随着帧数增加，色相值增加，产生滚动感
-            float animationOffset = (float) frame / frames;
+            float animationOffset = (float) frame / this.frames;
 
             for (int i = 0; i < chars.length; i++) {
                 char c = chars[i];
@@ -57,6 +125,26 @@ public class UtilTextComponent {
                 builder.append(Component.literal(String.valueOf(c)).withColor(color));
             }
             return builder;
+        }
+
+        @Override
+        public Style getStyle() {
+            return this.get().getStyle();
+        }
+
+        @Override
+        public ComponentContents getContents() {
+            return this.get().getContents();
+        }
+
+        @Override
+        public List<Component> getSiblings() {
+            return this.get().getSiblings();
+        }
+
+        @Override
+        public FormattedCharSequence getVisualOrderText() {
+            return this.get().getVisualOrderText();
         }
     }
 }

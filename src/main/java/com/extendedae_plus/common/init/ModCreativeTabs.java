@@ -29,7 +29,7 @@ public final class ModCreativeTabs {
                     }).withTabFactory(builder -> new CreativeModeTab(builder) {
                         @Override
                         public Component getDisplayName() {
-                            return UtilTextComponent.ModNameColorful.get();
+                            return UtilTextComponent.modNameColorful;
                         }
                     }).build());
 }
