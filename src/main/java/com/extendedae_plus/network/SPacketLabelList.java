@@ -5,24 +5,20 @@ import com.extendedae_plus.common.registry.menu.labelLink.MenuLabelLink;
 import com.extendedae_plus.common.wireless.linkApi.RegistryLink;
 import com.extendedae_plus.integration.IntegrationFTBTeams;
 import com.extendedae_plus.network.base.EAEPNetworkPacket;
-import com.extendedae_plus.network.base.PacketGeneric;
 import com.extendedae_plus.network.base.SPacketGeneric;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.List;
 import java.util.Objects;
 
-@EAEPNetworkPacket
+@EAEPNetworkPacket("label_list")
 public record SPacketLabelList(List<MenuLabelLink.LabelMapped> labels) implements SPacketGeneric {
-    public static final Type<SPacketLabelList> TYPE = PacketGeneric.createType("label_list");
-
     public static final StreamCodec<RegistryFriendlyByteBuf, SPacketLabelList> STREAM_CODEC = StreamCodec.composite(
             MenuLabelLink.LabelMapped.STREAM_CODEC.apply(ByteBufCodecs.list()), SPacketLabelList::labels,
             SPacketLabelList::new
@@ -38,11 +34,6 @@ public record SPacketLabelList(List<MenuLabelLink.LabelMapped> labels) implement
                 .toList();
         menu.setLabels(labels);
         PacketDistributor.sendToPlayer((ServerPlayer) menu.getPlayer(), new SPacketLabelList(labels));
-    }
-
-    @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return TYPE;
     }
 
     @Override

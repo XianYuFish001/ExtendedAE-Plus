@@ -14,13 +14,11 @@ import com.extendedae_plus.common.init.ModSettings;
 import com.extendedae_plus.common.registry.settings.StateSmartBlocking;
 import com.extendedae_plus.network.base.CPacketGeneric;
 import com.extendedae_plus.network.base.EAEPNetworkPacket;
-import com.extendedae_plus.network.base.PacketGeneric;
 import com.extendedae_plus.util.UtilKeyBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 
@@ -28,7 +26,7 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
-@EAEPNetworkPacket
+@EAEPNetworkPacket("provider_controller_operation")
 public record CPacketProviderControllerOperation(
         Operation operationNormalBlocking,
         Operation operationSmartBlocking,
@@ -36,8 +34,6 @@ public record CPacketProviderControllerOperation(
         BlockPos gridPos,
         Direction clickedFace
 ) implements CPacketGeneric {
-    public static final Type<CPacketProviderControllerOperation> TYPE = PacketGeneric.createType("provider_controller_operation");
-
     public static final StreamCodec<RegistryFriendlyByteBuf, CPacketProviderControllerOperation> STREAM_CODEC = StreamCodec.composite(
             Operation.STREAM_CODEC, CPacketProviderControllerOperation::operationNormalBlocking,
             Operation.STREAM_CODEC, CPacketProviderControllerOperation::operationSmartBlocking,
@@ -52,11 +48,6 @@ public record CPacketProviderControllerOperation(
 
         public static final StreamCodec<RegistryFriendlyByteBuf, Operation> STREAM_CODEC =
                 NeoForgeStreamCodecs.enumCodec(Operation.class);
-    }
-
-    @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return TYPE;
     }
 
     @Override

@@ -3,7 +3,6 @@ package com.extendedae_plus.mixin.core.ae2.menu;
 import appeng.menu.AEBaseMenu;
 import com.extendedae_plus.util.UtilGson;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,7 +23,7 @@ public class MixinBaseMenu {
 
         @Inject(method = "<init>", at = @At("TAIL"))
         private void onInit(CallbackInfo ci) {
-            this.gson = new GsonBuilder()
+            this.gson = this.gson.newBuilder()
                     .registerTypeAdapter(Component.class, UtilGson.adapterComponent)
                     .create();
         }

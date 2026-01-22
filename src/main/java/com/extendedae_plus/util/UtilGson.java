@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.logging.LogUtils;
@@ -38,7 +39,11 @@ public class UtilGson {
         }
 
         @Override
-        public Component read(JsonReader in) {
+        public Component read(JsonReader in) throws IOException {
+            if (in.peek() == JsonToken.NULL) {
+                in.nextNull();
+                return null;
+            }
             return ComponentSerialization.CODEC.decode(JsonOps.INSTANCE, JsonParser.parseReader(in))
                     .resultOrPartial(error -> LOGGER.error("Failed to decode Components: {}", error))
                     .map(Pair::getFirst)

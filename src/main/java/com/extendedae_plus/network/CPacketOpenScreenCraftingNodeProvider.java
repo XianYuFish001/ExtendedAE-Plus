@@ -14,7 +14,6 @@ import com.extendedae_plus.common.impl.pattern.PatternProviderData;
 import com.extendedae_plus.mixin.core.ae2.accessor.PatternProviderLogicAccessor;
 import com.extendedae_plus.network.base.CPacketGeneric;
 import com.extendedae_plus.network.base.EAEPNetworkPacket;
-import com.extendedae_plus.network.base.PacketGeneric;
 import com.extendedae_plus.util.UtilKeyBuilder;
 import com.glodblock.github.extendedae.util.FCClientUtil;
 import com.glodblock.github.glodium.util.GlodUtil;
@@ -22,7 +21,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -39,20 +37,12 @@ import static com.glodblock.github.extendedae.client.render.EAEHighlightHandler.
  * 服务端在当前打开的 CraftingCPUMenu 所属网络中，定位匹配该 AEKey 的样板供应器，
  * 打开该供应器自身的 UI（不是目标机器的 UI）。
  */
-@EAEPNetworkPacket
+@EAEPNetworkPacket("open_screen_crafting_node_provider")
 public record CPacketOpenScreenCraftingNodeProvider(AEKey what) implements CPacketGeneric {
-    public static final Type<CPacketOpenScreenCraftingNodeProvider> TYPE =
-            PacketGeneric.createType("open_screen_crafting_node_provider");
-
     public static final StreamCodec<RegistryFriendlyByteBuf, CPacketOpenScreenCraftingNodeProvider> STREAM_CODEC = StreamCodec.composite(
             AEKey.STREAM_CODEC, CPacketOpenScreenCraftingNodeProvider::what,
             CPacketOpenScreenCraftingNodeProvider::new
     );
-
-    @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return TYPE;
-    }
 
     @Override
     public void handleServer(ServerPlayer player) {

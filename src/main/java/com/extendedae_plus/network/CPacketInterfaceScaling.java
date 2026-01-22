@@ -5,12 +5,10 @@ import appeng.menu.implementations.InterfaceMenu;
 import com.extendedae_plus.client.render.widgets.button.EAEPActionItems;
 import com.extendedae_plus.network.base.CPacketGeneric;
 import com.extendedae_plus.network.base.EAEPNetworkPacket;
-import com.extendedae_plus.network.base.PacketGeneric;
 import com.glodblock.github.extendedae.container.ContainerExInterface;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -18,20 +16,13 @@ import net.neoforged.neoforge.network.PacketDistributor;
  * C2S：调整 ME 接口配置槽位(标记物品)的数量。
  * 支持按因子倍增或整除，且保持最小值为 1。
  */
-@EAEPNetworkPacket
+@EAEPNetworkPacket("interface_scaling")
 public record CPacketInterfaceScaling(int scale, boolean divide) implements CPacketGeneric {
-    public static final Type<CPacketInterfaceScaling> TYPE = PacketGeneric.createType("interface_scaling");
-
     public static final StreamCodec<FriendlyByteBuf, CPacketInterfaceScaling> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT, CPacketInterfaceScaling::scale,
             ByteBufCodecs.BOOL, CPacketInterfaceScaling::divide,
             CPacketInterfaceScaling::new
     );
-
-    @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return TYPE;
-    }
 
     public static void send(EAEPActionItems action) {
         int scale = 0;

@@ -13,30 +13,21 @@ import com.extendedae_plus.common.impl.menuLocator.WirelessTerminalLocator;
 import com.extendedae_plus.common.impl.menuLocator.WirelessTerminalLocator.TerminalInfo;
 import com.extendedae_plus.network.base.CPacketGeneric;
 import com.extendedae_plus.network.base.EAEPNetworkPacket;
-import com.extendedae_plus.network.base.PacketGeneric;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
-@EAEPNetworkPacket
+@EAEPNetworkPacket("pull_from_network")
 public record CPacketPullFromNetwork(GenericStack stack, boolean doPull, boolean toInventory) implements CPacketGeneric {
-    public static final Type<CPacketPullFromNetwork> TYPE = PacketGeneric.createType("pull_from_network");
-
     public static final StreamCodec<RegistryFriendlyByteBuf, CPacketPullFromNetwork> STREAM_CODEC = StreamCodec.composite(
             GenericStack.STREAM_CODEC, CPacketPullFromNetwork::stack,
             ByteBufCodecs.BOOL, CPacketPullFromNetwork::doPull,
             ByteBufCodecs.BOOL, CPacketPullFromNetwork::toInventory,
             CPacketPullFromNetwork::new
     );
-
-    @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return TYPE;
-    }
 
     @Override
     public void handleServer(ServerPlayer player) {

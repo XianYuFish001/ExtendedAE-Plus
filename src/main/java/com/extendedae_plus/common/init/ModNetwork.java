@@ -12,38 +12,45 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import org.objectweb.asm.Type;
 
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 @EventBusSubscriber(modid = ExtendedAEPlus.MODID)
 public class ModNetwork {
+    private static final Map<String, CustomPacketPayload.Type<? extends PacketGeneric>> types = new HashMap<>();
+
     @SubscribeEvent
     public static void registerPayloadHandlers(final RegisterPayloadHandlersEvent event) {
         var registrar = event.registrar(ExtendedAEPlus.MODID);
 
-        findAnnotatedClasses().forEach(packetClass -> {
-            if (BPacketGeneric.class.isAssignableFrom(packetClass))
-                registerBiDirectional(registrar, packetClass.asSubclass(BPacketGeneric.class));
-            else if (CPacketGeneric.class.isAssignableFrom(packetClass))
-                registerClient(registrar, packetClass.asSubclass(CPacketGeneric.class));
-            else if (SPacketGeneric.class.isAssignableFrom(packetClass))
-                registerServer(registrar, packetClass.asSubclass(SPacketGeneric.class));
+        findAnnotatedClasses().forEach((typePacket, clazzPacket) -> {
+            types.putIfAbsent(clazzPacket.getSimpleName(), new CustomPacketPayload.Type<>(ExtendedAEPlus.getLocation(typePacket)));
+            if (BPacketGeneric.class.isAssignableFrom(clazzPacket))
+                registerBiDirectional(registrar, clazzPacket.asSubclass(BPacketGeneric.class));
+            else if (CPacketGeneric.class.isAssignableFrom(clazzPacket))
+                registerClient(registrar, clazzPacket.asSubclass(CPacketGeneric.class));
+            else if (SPacketGeneric.class.isAssignableFrom(clazzPacket))
+                registerServer(registrar, clazzPacket.asSubclass(SPacketGeneric.class));
         });
     }
 
-    private static Set<Class<?>> findAnnotatedClasses() {
+    public static CustomPacketPayload.Type<? extends PacketGeneric> getType(String name) {
+        return types.get(name);
+    }
+
+    private static Map<String, Class<?>> findAnnotatedClasses() {
         return ModList.get().getAllScanData().stream()
                 .flatMap(scanData -> scanData.getAnnotations().stream())
-                .filter(annotationData -> annotationData.annotationType().equals(Type.getType(EAEPNetworkPacket.class)))
-                .map(annotationData -> {
+                .filter(data -> data.annotationType().equals(Type.getType(EAEPNetworkPacket.class)))
+                .collect(Collectors.toMap(data -> (String) data.annotationData().get("value"), data -> {
                     try {
-                        return Class.forName(annotationData.memberName());
+                        return Class.forName(data.memberName());
                     } catch (ClassNotFoundException exception) {
-                        throw new IllegalStateException("Failed to find Packet: " + annotationData.memberName() + ", ", exception);
+                        throw new IllegalStateException("Failed to find Packet: " + data.memberName() + ", ", exception);
                     }
-                })
-                .collect(Collectors.toSet());
+                }));
     }
 
     private static <TPacket extends CPacketGeneric> void
@@ -69,12 +76,12 @@ public class ModNetwork {
     register(Class<TPacket> clazzPacket,
              BiConsumer<CustomPacketPayload.Type<TPacket>, StreamCodec<RegistryFriendlyByteBuf, TPacket>> registeringAction) {
         try {
-            registeringAction.accept((CustomPacketPayload.Type<TPacket>) clazzPacket.getField("TYPE").get(null),
+            registeringAction.accept((CustomPacketPayload.Type<TPacket>) types.get(clazzPacket.getSimpleName()),
                     (StreamCodec<RegistryFriendlyByteBuf, TPacket>) clazzPacket.getField("STREAM_CODEC").get(null));
         } catch (ClassCastException | IllegalAccessException exception) {
             throw new IllegalStateException("Failed to register Packet: " + clazzPacket.getSimpleName() + ", ", exception);
         } catch (NoSuchFieldException exception) {
-            throw new IllegalStateException("Failed to find TYPE or STREAM_CODEC in " + clazzPacket.getSimpleName(), exception);
+            throw new IllegalStateException("Failed to find STREAM_CODEC in " + clazzPacket.getSimpleName(), exception);
         }
     }
 }

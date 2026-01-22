@@ -1,15 +1,18 @@
 package com.extendedae_plus.network.base;
 
-import com.extendedae_plus.ExtendedAEPlus;
+import com.extendedae_plus.common.init.ModNetwork;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public interface PacketGeneric extends CustomPacketPayload {
-    Type<?> TYPE = createType("empty");
     StreamCodec<RegistryFriendlyByteBuf, ? extends PacketGeneric> STREAM_CODEC = null;
 
-    static <TPacket extends PacketGeneric> Type<TPacket> createType(String path) {
-        return new Type<>(ExtendedAEPlus.getLocation(path));
+    @Override
+    default Type<? extends PacketGeneric> type() {
+        var typeRegistered = ModNetwork.getType(this.getClass().getSimpleName());
+        if (typeRegistered == null)
+            throw new IllegalStateException("Unknown NetworkPacket:" + this.getClass().getSimpleName());
+        return typeRegistered;
     }
 }

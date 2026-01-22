@@ -9,34 +9,25 @@ import appeng.me.helpers.PlayerSource;
 import com.extendedae_plus.common.impl.menuLocator.WirelessTerminalLocator;
 import com.extendedae_plus.network.base.CPacketGeneric;
 import com.extendedae_plus.network.base.EAEPNetworkPacket;
-import com.extendedae_plus.network.base.PacketGeneric;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-@EAEPNetworkPacket
+@EAEPNetworkPacket("pick_from_network")
 public record CPacketPickFromNetwork(BlockPos pos, Direction face, Vec3 hitLoc) implements CPacketGeneric {
-    public static final Type<CPacketPickFromNetwork> TYPE = PacketGeneric.createType("pick_from_network");
-
     public static final StreamCodec<RegistryFriendlyByteBuf, CPacketPickFromNetwork> STREAM_CODEC = StreamCodec.composite(
             BlockPos.STREAM_CODEC, CPacketPickFromNetwork::pos,
             Direction.STREAM_CODEC, CPacketPickFromNetwork::face,
             ByteBufCodecs.fromCodec(Vec3.CODEC), CPacketPickFromNetwork::hitLoc,
             CPacketPickFromNetwork::new
     );
-
-    @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return TYPE;
-    }
 
     @Override
     public void handleServer(ServerPlayer player) {

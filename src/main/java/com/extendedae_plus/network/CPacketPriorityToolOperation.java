@@ -5,21 +5,16 @@ import com.extendedae_plus.common.registry.item.priorityTool.DataPriority;
 import com.extendedae_plus.common.registry.menu.MenuPriorityTool;
 import com.extendedae_plus.network.base.CPacketGeneric;
 import com.extendedae_plus.network.base.EAEPNetworkPacket;
-import com.extendedae_plus.network.base.PacketGeneric;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-@EAEPNetworkPacket
+@EAEPNetworkPacket("priority_tool_operation")
 public record CPacketPriorityToolOperation(@Nullable Integer priority, boolean rotateMode) implements CPacketGeneric {
-    public static final Type<CPacketPriorityToolOperation> TYPE =
-            PacketGeneric.createType("priority_tool_operation");
-
     public static final StreamCodec<RegistryFriendlyByteBuf, CPacketPriorityToolOperation> STREAM_CODEC =
             StreamCodec.composite(
                     ByteBufCodecs.optional(ByteBufCodecs.INT), data ->
@@ -27,11 +22,6 @@ public record CPacketPriorityToolOperation(@Nullable Integer priority, boolean r
                     ByteBufCodecs.BOOL, CPacketPriorityToolOperation::rotateMode,
                     (priority, rotateMode) ->
                             new CPacketPriorityToolOperation(priority.orElse(null), rotateMode));
-
-    @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return TYPE;
-    }
 
     @Override
     public void handleServer(ServerPlayer player) {

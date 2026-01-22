@@ -16,12 +16,10 @@ import appeng.menu.me.crafting.CraftingCPUMenu;
 import com.extendedae_plus.mixin.core.ae2.accessor.PatternProviderLogicAccessor;
 import com.extendedae_plus.network.base.CPacketGeneric;
 import com.extendedae_plus.network.base.EAEPNetworkPacket;
-import com.extendedae_plus.network.base.PacketGeneric;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
@@ -39,16 +37,8 @@ import java.util.List;
  * 服务端在当前打开的 CraftingCPUMenu 所属网络中，定位匹配该 AEKey 的样板供应器，
  * 尝试打开其目标机器的 GUI。
  */
-@EAEPNetworkPacket
+@EAEPNetworkPacket("open_screen_crafting_node_machine")
 public record CPacketOpenScreenCraftingNodeMachine(AEKey what) implements CPacketGeneric {
-    public static final Type<CPacketOpenScreenCraftingNodeMachine> TYPE =
-            PacketGeneric.createType("open_screen_crafting_node_machine");
-
-    @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return TYPE;
-    }
-
     public static final StreamCodec<RegistryFriendlyByteBuf, CPacketOpenScreenCraftingNodeMachine> STREAM_CODEC = StreamCodec.composite(
             AEKey.STREAM_CODEC, CPacketOpenScreenCraftingNodeMachine::what,
             CPacketOpenScreenCraftingNodeMachine::new
