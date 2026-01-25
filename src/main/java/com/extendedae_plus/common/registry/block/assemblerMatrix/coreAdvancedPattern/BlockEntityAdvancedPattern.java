@@ -108,6 +108,6 @@ public class BlockEntityAdvancedPattern extends TileAssemblerMatrixPattern {
     }
 
     public static int getInvSize() {
-        return INV_SIZE * EAEPConfig.CORE_PATTERN_SLOT_MULTIPLIER.getAsInt();
+        return INV_SIZE * EAEPConfig.corePatternSlotMultiplier.getAsInt();
     }
 }

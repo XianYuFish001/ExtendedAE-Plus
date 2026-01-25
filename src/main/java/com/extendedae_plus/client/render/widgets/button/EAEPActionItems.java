@@ -44,7 +44,6 @@ public enum EAEPActionItems {
     PRIORITY_INCREMENT(EAEPIcon.SAVE_UP, "priority_tool", "increment"),
     PRIORITY_DECREMENT(EAEPIcon.SAVE_DOWN, "priority_tool", "decrement"),
 
-    ALIAS_RELOAD(EAEPIcon.SAVE_CENTER, "recipe_alias", "reload"),
     ALIAS_ADD(EAEPIcon.SAVE_UP, "recipe_alias", "add"),
     ALIAS_REMOVE(EAEPIcon.SAVE_DOWN, "recipe_alias", "remove"),
 
@@ -63,8 +62,10 @@ public enum EAEPActionItems {
     TRANSCEIVER_SLAVE(EAEPIcon.SIGNAL_RECEIVE, "transceiver_mode", "slave"),
 
     MERGE_NONE(EAEPIcon.MERGE_NONE, "transfer_mode", "none"),
-    MERGE_ADJACENCY(EAEPIcon.MERGE_ADJACENCY, "transfer_mode", "adjacency"),
+    MERGE_ADJACENCY(EAEPIcon.MERGE_ADJACENCY, "transfer_mode", "merge_adjacency"),
     MERGE_INDEPENDENCE(EAEPIcon.fromAEIcon(Icon.INSCRIBER_SEPARATE_SIDES), "transfer_mode", "independence"),
+    
+    PATTERN_UPLOAD(EAEPIcon.fromAEIcon(Icon.ARROW_UP), "pattern_upload", ""),
 
     ;
 

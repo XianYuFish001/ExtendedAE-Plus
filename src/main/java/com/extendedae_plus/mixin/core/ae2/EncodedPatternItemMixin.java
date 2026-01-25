@@ -26,7 +26,7 @@ public class EncodedPatternItemMixin {
                                             List<Component> lines,
                                             TooltipFlag advancedTooltips,
                                             CallbackInfo ci) {
-        if (!EAEPConfig.SHOW_ENCODER_PATTERN_PLAYER.getAsBoolean()) return;
+        if (!EAEPConfig.showPatternEncoder.getAsBoolean()) return;
         if (!stack.has(ModDataComponents.DATA_ENCODER_PROFILE)) return;
 
         var data = stack.get(ModDataComponents.DATA_ENCODER_PROFILE);

@@ -59,15 +59,15 @@ public class ParserTickerConfig {
     public static void parseSettings() {
         lock.writeLock().lock();
         try {
-            if (isEqual(cachedSettings.getFirst(), EAEPConfig.TICKER_BLACKLIST.get())
-                    && isEqual(cachedSettings.getSecond(), EAEPConfig.TICKER_EXTERNAL_MULTIPLIER.get())) return;
-            cachedSettings = new Pair<>(EAEPConfig.TICKER_BLACKLIST.get(), EAEPConfig.TICKER_EXTERNAL_MULTIPLIER.get());
+            if (isEqual(cachedSettings.getFirst(), EAEPConfig.tickerBlacklist.get())
+                    && isEqual(cachedSettings.getSecond(), EAEPConfig.tickerExternalMultiplier.get())) return;
+            cachedSettings = new Pair<>(EAEPConfig.tickerBlacklist.get(), EAEPConfig.tickerExternalMultiplier.get());
 
             blacklistedBlocks.clear();
             multipliedBlocks.clear();
 
-            normalizeList(EAEPConfig.TICKER_BLACKLIST.get()).forEach(ParserTickerConfig::parseBlacklistEntry);
-            normalizeList(EAEPConfig.TICKER_EXTERNAL_MULTIPLIER.get()).forEach(ParserTickerConfig::parseMultiplierEntry);
+            normalizeList(EAEPConfig.tickerBlacklist.get()).forEach(ParserTickerConfig::parseBlacklistEntry);
+            normalizeList(EAEPConfig.tickerExternalMultiplier.get()).forEach(ParserTickerConfig::parseMultiplierEntry);
         } finally {
             lock.writeLock().unlock();
         }

@@ -36,8 +36,8 @@ public class MixinComponent implements HelperComponentColorful {
         if (!(sibling instanceof HelperComponentColorful helper)) return;
         var colored = helper.eaep$getColored();
         if (colored == null) return;
+        this.eaep$colored = UtilTextComponent.RegistryColored.getOrCreate((Component) this);
         helper.eaep$clearColored();
-        this.eaep$colored = new UtilTextComponent.ComponentColorful((MutableComponent)(Object) this);
     }
 
     @Inject(method = "getContents", at = @At("HEAD"), cancellable = true)

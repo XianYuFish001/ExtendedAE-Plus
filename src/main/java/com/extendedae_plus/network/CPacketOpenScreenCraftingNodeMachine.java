@@ -128,5 +128,4 @@ public record CPacketOpenScreenCraftingNodeMachine(AEKey what) implements CPacke
             }
         });
     }
-
 }

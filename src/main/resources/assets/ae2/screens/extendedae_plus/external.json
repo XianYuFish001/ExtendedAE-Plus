@@ -1,0 +1,10 @@
+{
+  "$schema": "../schema.json",
+  "includes": ["../common/common.json"],
+  "widgets": {
+    "screen_encode.button_upload": {
+      "left": 134,
+      "bottom": 145
+    }
+  }
+}

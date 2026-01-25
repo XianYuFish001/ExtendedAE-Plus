@@ -16,7 +16,7 @@ public class MixinActionButton {
     private void eaep$modifyButtonTooltips(ButtonToolTips displayName,
                                            ButtonToolTips displayValue,
                                            CallbackInfoReturnable<Component> cir) {
-        if (displayValue == ButtonToolTips.EncodeDescription && !EAEPConfig.INDEPENDENT_UPLOADING_BUTTON.getAsBoolean())
+        if (displayValue == ButtonToolTips.EncodeDescription && !EAEPConfig.independentUploadButton.getAsBoolean())
             cir.setReturnValue(cir.getReturnValue().copy().append(
                     UtilKeyBuilder.of(UtilKeyBuilder.screenTooltip)
                             .addStr("upload_button")

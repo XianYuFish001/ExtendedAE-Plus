@@ -22,8 +22,7 @@ public class MixinRecipeFillButton extends RecipeButtonWidget {
     }
 
     @Inject(method = "mouseClicked", at = @At("RETURN"))
-    private void eaep$onMouseClicked(int mouseX, int mouseY, int button,
-                                            CallbackInfoReturnable<Boolean> cir) {
+    private void eaep$onMouseClicked(int mouseX, int mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
         if (!cir.getReturnValue()) return;
         Player player = Minecraft.getInstance().player;
         if (player == null) return;

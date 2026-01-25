@@ -134,7 +134,6 @@ public class LangEN extends LanguageProvider {
                 .buildInto("Tool Mode");
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screenTooltip)
                 .addStr("recipe_alias")
-                .branch("reload", "Reload Mappings")
                 .branch("add", "Add a Mapping")
                 .branch("remove", "Remove Mappings")
                 .buildInto("Alias Actions");
@@ -247,7 +246,6 @@ public class LangEN extends LanguageProvider {
                 .addStr("provider_list")
                 .branch("query", "Input to search...")
                 .branch("alias", "Input aliasToMap...")
-                .branch("remap_aliases", "Remap")
                 .branch("add_alias", "Add a map")
                 .branch("delete_alias", "Delete a map")
                 .buildInto("Select a Provider to Upload");

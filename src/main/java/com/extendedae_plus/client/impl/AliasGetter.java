@@ -1,10 +1,13 @@
 package com.extendedae_plus.client.impl;
 
+import com.electronwill.nightconfig.core.Config;
+import com.electronwill.nightconfig.core.file.FileConfig;
+import com.electronwill.nightconfig.toml.TomlFormat;
 import com.extendedae_plus.integration.ContextModLoaded;
 import com.extendedae_plus.util.UtilKeyBuilder;
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.mojang.logging.LogUtils;
 import dev.emi.emi.api.EmiApi;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.stack.EmiIngredient;
@@ -14,85 +17,66 @@ import net.minecraft.network.chat.contents.PlainTextContents;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.fml.loading.FMLPaths;
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
 public class AliasGetter {
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
-    private static final String CONFIG_RELATIVE = "extendedae_plus/stored_alias.json";
-    private static final Map<String, String> ALIASES = new ConcurrentHashMap<>();
+    private static final Logger LOGGER = LogUtils.getLogger();
+    private static final Path pathConfig = FMLPaths.CONFIGDIR.get().resolve("extendedae_plus/stored_alias.toml");
+    private static final Path pathConfigOld = pathConfig.getParent().resolve("stored_alias.json");
+    private static final FileConfig config = FileConfig.builder(pathConfig, TomlFormat.instance()).autosave().autoreload().build();
 
     static {
-        tryLoadAliases();
+        config.load();
+
+        try {
+            if (Files.exists(pathConfigOld))
+                convertConfig();
+        } catch (IOException exception) {
+            LOGGER.error("Failed to convert config, ", exception);
+        }
     }
 
-    public static synchronized void tryLoadAliases() {
-        try {
-            var pathFile = FMLPaths.CONFIGDIR.get().resolve(CONFIG_RELATIVE);
-            if (!Files.exists(pathFile)) Files.createFile(pathFile);
+    public static void closeConfig() {
+        config.close();
+    }
 
-            var json = Files.readString(pathFile);
-            var obj = GSON.fromJson(json, JsonObject.class);
-            if (obj == null) {
-                ALIASES.clear();
-                return;
-            }
+    private static void convertConfig() throws IOException {
+        var gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+        final var obj = gson.fromJson(Files.readString(pathConfigOld), JsonObject.class);
+        if (obj == null) return;
 
-            var resolvedAlias = new HashMap<String, String>();
-
-            obj.entrySet().forEach(entry -> {
-                var typeKey = entry.getKey();
-                var aliasValve = entry.getValue();
-                if (aliasValve == null || !aliasValve.isJsonPrimitive()) return;
-
-                var aliasName = aliasValve.getAsString();
-                if (aliasName == null || aliasName.isBlank()) return;
-
-                resolvedAlias.put(typeKey.toLowerCase(), aliasName);
-            });
-
-            ALIASES.clear();
-            ALIASES.putAll(resolvedAlias);
-        } catch (Throwable ignored) {
-        }
+        obj.entrySet().stream()
+                .filter(entry -> {
+                    var value = entry.getValue();
+                    if (value == null || !value.isJsonPrimitive()) return false;
+                    var valueString = value.getAsString();
+                    return valueString != null && !valueString.isBlank();
+                })
+                .forEach(entry -> config.set(List.of(entry.getKey()), entry.getValue().getAsString()));
+        config.save();
+        Files.deleteIfExists(pathConfigOld);
     }
 
     /**
      * 向配置中新增或更新别名映射，并刷新内存映射。
      *
      * @param typeKey 最终搜索关键字（不含冒号），大小写不敏感
-     * @param alias  别名
+     * @param alias   别名
      * @return 是否写入成功
      */
     public static synchronized boolean addOrUpdateAlias(String typeKey, String alias) {
         if (typeKey == null || typeKey.isBlank() || alias == null || alias.isBlank())
             return false;
 
-        try {
-            var pathFile = FMLPaths.CONFIGDIR.get().resolve(CONFIG_RELATIVE);
-            if (!Files.exists(pathFile)) Files.createFile(pathFile);
-
-            JsonObject obj;
-            if (Files.exists(pathFile)) {
-                String json = Files.readString(pathFile);
-                obj = GSON.fromJson(json, JsonObject.class);
-                if (obj == null) obj = new JsonObject();
-            } else return false;
-
-            var key = typeKey.trim();
-
-            obj.addProperty(key, alias);
-            Files.writeString(pathFile, GSON.toJson(obj));
-
-            ALIASES.put(key.toLowerCase(), alias);
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
+        config.set(List.of(typeKey.toLowerCase()), alias);
+        return true;
     }
 
     public static synchronized int removeAliases(String alias) {
@@ -101,44 +85,18 @@ public class AliasGetter {
         var target = alias.trim();
         if (target.isBlank()) return 0;
 
-        try {
-            var pathFile = FMLPaths.CONFIGDIR.get().resolve(CONFIG_RELATIVE);
-            if (!Files.exists(pathFile)) {
-                Files.createFile(pathFile);
-                return 0;
-            }
-
-            var json = Files.readString(pathFile);
-            var obj = GSON.fromJson(json, JsonObject.class);
-            if (obj == null) return 0;
-
-            var toRemove = new ArrayList<String>();
-            obj.entrySet().forEach(entry -> {
-                var aliasValue = entry.getValue();
-                if (aliasValue == null || !aliasValue.isJsonPrimitive()) return;
-
-                var aliasName = aliasValue.getAsString();
-                if (target.equalsIgnoreCase(aliasName))
-                    toRemove.add(entry.getKey().toLowerCase());
-            });
-            if (toRemove.isEmpty()) return 0;
-
-            toRemove.forEach(ALIASES::remove);
-            toRemove.forEach(obj::remove);
-            Files.writeString(pathFile, GSON.toJson(obj));
-            return toRemove.size();
-        } catch (IOException e) {
-            return 0;
-        }
+        var toRemove = config.entrySet().stream()
+                .filter(entry -> entry.getValue().toString().equalsIgnoreCase(target))
+                .map(Config.Entry::getKey)
+                .toList();
+        toRemove.forEach(config::remove);
+        return toRemove.size();
     }
 
-    public static String findMapping(String key) {
+    public static @Nullable String findMapping(String key) {
         if (key == null || key.isBlank()) return null;
 
-        if (ALIASES.containsKey(key.toLowerCase()))
-            return ALIASES.get(key.toLowerCase());
-
-        return null;
+        return config.get(List.of(key.toLowerCase()));
     }
 
     /// 收集到处理配方的关键词（按优先级排序）
@@ -226,7 +184,7 @@ public class AliasGetter {
             }
         }
 
-        if (recipe instanceof RecipeHolder<?> recipeHolder){
+        if (recipe instanceof RecipeHolder<?> recipeHolder) {
             keys.put(recipeHolder.id().toString().split("/")[0], 2);
             keys.put(recipeHolder.id().getPath().split("/")[0], 1);
         }
@@ -263,8 +221,8 @@ public class AliasGetter {
 
             return nameMatches(this.description.getString(), nameKey)
                     || this.keywords.stream().anyMatch(
-                            key -> nameMatches(key, nameKey)
-                                    || i18nKeyMatches(key, i18nKey));
+                    key -> nameMatches(key, nameKey)
+                            || i18nKeyMatches(key, i18nKey));
         }
 
         private static boolean nameMatches(String matchKey, String searchKey) {

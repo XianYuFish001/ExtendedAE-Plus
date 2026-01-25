@@ -6,6 +6,7 @@ import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.contents.PlainTextContents;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
@@ -14,6 +15,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 
 import java.util.*;
+import java.util.random.RandomGenerator;
 import java.util.stream.IntStream;
 
 public class UtilTextComponent {
@@ -21,32 +23,51 @@ public class UtilTextComponent {
 
     @EventBusSubscriber(modid = ExtendedAEPlus.MODID)
     public static class RegistryColored {
-        private static final Map<String, ComponentColorful> colored = new HashMap<>();
+        private static final Map<String, ComponentColorful> byKey = new HashMap<>();
+        private static final Map<String, ComponentColorful> literal = new HashMap<>();
 
         @SubscribeEvent
         private static void onRegister(FMLLoadCompleteEvent event) {
             List.of(
                     ModItems.INFINITY_BIGINTEGER_CELL_ITEM.asItem().getDescriptionId(),
                     UtilKeyBuilder.of(UtilKeyBuilder.tooltip).item(ModItems.INFINITY_BIGINTEGER_CELL_ITEM).addStr("description").addStr("colored").buildRaw()
-            ).forEach(RegistryColored::register);
+            ).forEach(RegistryColored::registerKey);
         }
 
-        public static void register(String key) {
-            if (colored.containsKey(key)) return;
-            register(key, new ComponentColorful(Component.translatable(key)));
+        public static void registerKey(String key) {
+            if (byKey.containsKey(key)) return;
+            registerKey(key, new ComponentColorful(Component.translatable(key)));
         }
 
-        public static void register(String key, ComponentColorful text) {
-            if (colored.containsKey(key)) return;
-            colored.put(key, text);
+        public static void registerKey(String key, ComponentColorful text) {
+            if (byKey.containsKey(key)) return;
+            byKey.put(key, text);
+        }
+
+        public static ComponentColorful getOrCreate(Component original) {
+            var key = switch (original.getContents()) {
+                case PlainTextContents contents -> contents.text();
+                case TranslatableContents contents -> contents.getKey();
+                default -> original.getString();
+            };
+
+            var value = byKey.get(key);
+            if (value == null) value = literal.get(key);
+            if (value == null) {
+                value = new ComponentColorful(original);
+                literal.put(key, value);
+            }
+            return value;
         }
 
         public static Optional<ComponentColorful> find(String key) {
-            return Optional.ofNullable(colored.get(key));
+            return Optional.ofNullable(byKey.get(key)).or(() -> Optional.ofNullable(literal.get(key)));
         }
     }
 
     public static class ComponentColorful implements Component {
+        private static final RandomGenerator random = RandomGenerator.getDefault();
+
         private final Component componentOriginal;
         private String original;
 

@@ -58,7 +58,7 @@ public final class PatternScaler {
         }
         // 应用配置的最大倍数上限（0 表示不限制）
         try {
-            int maxMul = EAEPConfig.SMART_SCALING_MAX_MULTIPLIER.get();
+            int maxMul = EAEPConfig.smartDoublingMaxMultiplier.get();
             if (maxMul > 0 && multiplier > maxMul) {
                 multiplier = maxMul;
             }

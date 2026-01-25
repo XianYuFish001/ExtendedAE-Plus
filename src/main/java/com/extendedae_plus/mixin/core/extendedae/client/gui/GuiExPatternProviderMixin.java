@@ -67,7 +67,7 @@ public abstract class GuiExPatternProviderMixin extends PatternProviderScreen<Co
     private int getMaxPage() {
         // 优先使用配置倍数
         try {
-            int cfg = EAEPConfig.PAGE_MULTIPLIER.get();
+            int cfg = EAEPConfig.exProviderPageMultiplier.get();
             if (cfg > 1) return cfg;
         } catch (Throwable ignored) {}
         try {
@@ -116,7 +116,7 @@ public abstract class GuiExPatternProviderMixin extends PatternProviderScreen<Co
         // 计算并下发 maxPage（配置优先，其次按槽位总数计算）
         int totalSlots = this.getMenu().getSlots(SlotSemantics.ENCODED_PATTERN).size();
         int cfgPages = 1;
-        try { cfgPages = Math.max(1, EAEPConfig.PAGE_MULTIPLIER.get()); } catch (Throwable ignored) {}
+        try { cfgPages = Math.max(1, EAEPConfig.exProviderPageMultiplier.get()); } catch (Throwable ignored) {}
         int calcPages = Math.max(1, (int) Math.ceil(totalSlots / (double) SLOTS_PER_PAGE));
         int desiredMaxPage = Math.max(cfgPages, calcPages);
         eaep$LOGGER.info("[EAEP] GuiExPatternProvider init: totalSlots={}, cfgPages={}, calcPages={}, desiredMaxPage={}", totalSlots, cfgPages, calcPages, desiredMaxPage);

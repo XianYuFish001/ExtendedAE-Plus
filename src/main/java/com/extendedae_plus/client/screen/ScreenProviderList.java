@@ -96,8 +96,6 @@ public class ScreenProviderList<TMenu extends PatternEncodingTermMenu,
                         btn -> this.returnToParent())
         );
 
-        this.addToLeftToolbar(new EAEPActionButton(EAEPActionItems.ALIAS_RELOAD,
-                $ -> this.reloadMappings()));
         this.addToLeftToolbar(new EAEPActionButton(EAEPActionItems.ALIAS_ADD,
                 $ -> this.addMapping()));
         this.addToLeftToolbar(new EAEPActionButton(EAEPActionItems.ALIAS_REMOVE,
@@ -384,19 +382,6 @@ public class ScreenProviderList<TMenu extends PatternEncodingTermMenu,
                             .build(),
                     false);
         }
-    }
-
-    private void reloadMappings() {
-        AliasGetter.tryLoadAliases();
-        var player = Minecraft.getInstance().player;
-        if (player != null) {
-            player.displayClientMessage(UtilKeyBuilder.of(UtilKeyBuilder.message)
-                            .addStr("provider_list")
-                            .addStr("remap_success")
-                            .build(),
-                    false);
-        }
-        this.queries.clear();
     }
 
     @Override

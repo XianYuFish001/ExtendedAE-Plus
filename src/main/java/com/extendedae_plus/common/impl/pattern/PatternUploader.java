@@ -107,7 +107,7 @@ public final class PatternUploader {
         cores.addAll(grid.getActiveMachines(BlockEntityAdvancedPattern.class));
         if (cores.isEmpty()) return false;
 
-        if (EAEPConfig.NEEDS_UPLOADING_PORT.get()
+        if (EAEPConfig.needsUploadingPort.get()
                 && !(cores.getFirst() instanceof HelperAssemblerMatrixModifier cluster
                 && cluster.eaep$hasUploadCore())) return false;
 

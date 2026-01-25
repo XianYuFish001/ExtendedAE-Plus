@@ -33,7 +33,7 @@ public class BlockEntityAdvancedCrafter extends TileAssemblerMatrixCrafter {
     private final CraftingThread[] threads;
     private final InternalInventory internalInv;
     private short states = 0;
-    private int currentThread = EAEPConfig.BASE_CORE_CRAFTER_THREADS.getAsInt();
+    private int currentThread = EAEPConfig.baseCoreCrafterThreads.getAsInt();
 
     public BlockEntityAdvancedCrafter(BlockPos pos, BlockState blockState) {
         super(pos, blockState);
@@ -195,8 +195,8 @@ public class BlockEntityAdvancedCrafter extends TileAssemblerMatrixCrafter {
 
     private void calculateCurrentThread() {
         var multiplier = Math.floorDiv(cluster.getSpeedCore(), 5);
-        var amplification = EAEPConfig.CORE_CRAFTER_THREAD_AMPLIFICATION.getAsInt();
-        var baseThreads = EAEPConfig.BASE_CORE_CRAFTER_THREADS.getAsInt();
+        var amplification = EAEPConfig.coreCrafterThreadAmplification.getAsInt();
+        var baseThreads = EAEPConfig.baseCoreCrafterThreads.getAsInt();
         this.currentThread = Math.min(multiplier * amplification + baseThreads, getMaxThread());
     }
 
@@ -206,6 +206,6 @@ public class BlockEntityAdvancedCrafter extends TileAssemblerMatrixCrafter {
     }
 
     public static int getMaxThread() {
-        return EAEPConfig.MAXIMUM_CORE_CRAFTER_THREADS.getAsInt();
+        return EAEPConfig.maximumCoreCrafterThreads.getAsInt();
     }
 }

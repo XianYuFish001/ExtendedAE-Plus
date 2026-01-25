@@ -63,7 +63,7 @@ public abstract class CraftingTreeProcessMixin {
 
             // 根据配置决定是否在 provider 间轮询分配请求量（默认开启）
             long perProvider = 1L;
-            if (!EAEPConfig.PROVIDER_ROUND_ROBIN_ENABLE.get()) {
+            if (!EAEPConfig.providerRoundRobin.get()) {
                 // 关闭轮询：直接使用完整请求量，不需要查询 provider 列表
                 perProvider = requested;
                 if (perProvider <= 0) perProvider = 1L;

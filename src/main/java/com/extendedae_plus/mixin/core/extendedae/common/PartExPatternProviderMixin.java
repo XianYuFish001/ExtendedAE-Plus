@@ -19,7 +19,7 @@ public abstract class PartExPatternProviderMixin {
             index = 2
     )
     private int eap$multiplyCapacity(int original) {
-        int mult = EAEPConfig.PAGE_MULTIPLIER.get();
+        int mult = EAEPConfig.exProviderPageMultiplier.get();
         if (mult < 1) mult = 1;
         if (mult > 64) mult = 64;
         return Math.max(1, original) * mult;

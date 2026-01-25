@@ -69,7 +69,7 @@ public abstract class MixinExAccessTerminal extends AEBaseScreen<AEBaseMenu>
                 .addPart(EAEPActionItems.ROW_SLOTS_INVISIBLE, this::eaep$toggleRowSlotsVisible)
                 .build();
         buttonRowSlotVisible.setStateIndex(
-                EAEPConfig.PATTERN_TERMINAL_SHOW_SLOTS_DEFAULT.getAsBoolean() ? 0 : 1);
+                EAEPConfig.accessTerminalSlotsVisibleDefault.getAsBoolean() ? 0 : 1);
         this.addToLeftToolbar(buttonRowSlotVisible);
     }
 

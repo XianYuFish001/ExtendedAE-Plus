@@ -36,22 +36,11 @@ public class ModSettings {
                     .bindAll(EAEPActionItems.BLOCKING_ENABLED,
                             EAEPActionItems.BLOCKING_DISABLED,
                             EAEPActionItems.BLOCKING_DISABLED_BY_SUPER)
-                    .setInvalidValue(StateSmartBlocking.DISABLED_BY_SUPER)
                     .build();
     public static final Setting<YesNo> SMART_DOUBLING =
             register("smart_doubling", YesNo.class)
                     .addPart(YesNo.YES, EAEPActionItems.DOUBLING_ENABLED)
                     .addPart(YesNo.NO, EAEPActionItems.DOUBLING_DISABLED)
-                    .build();
-    public static final Setting<YesNo> LABEL_LOCKED =
-            register("label_locked", YesNo.class)
-                    .addPart(YesNo.YES, EAEPActionItems.LABEL_LOCKED)
-                    .addPart(YesNo.NO, EAEPActionItems.LABEL_UNLOCKED)
-                    .build();
-    public static final Setting<YesNo> TRANSCEIVER_MODE =
-            register("transceiver_mode", YesNo.class)
-                    .addPart(YesNo.YES, EAEPActionItems.TRANSCEIVER_MASTER)
-                    .addPart(YesNo.NO, EAEPActionItems.TRANSCEIVER_SLAVE)
                     .build();
     public static final Setting<ModeEncodingTransfer> TRANSFER_MODE =
             register("transfer_mode", ModeEncodingTransfer.class)

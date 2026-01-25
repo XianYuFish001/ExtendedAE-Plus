@@ -28,7 +28,7 @@ public class EnergyExtractor {
     // 数学不好, 还是ai助我吧
     public static double calculateEnergyCost(IUpgradeInventory upgradeInventory, long speedMultiplier, double costMultiplier) {
         var energyCardCount = upgradeInventory.getInstalledUpgrades(AEItems.ENERGY_CARD);
-        var baseCost = EAEPConfig.TICKER_BASE_COST.getAsInt();
+        var baseCost = EAEPConfig.baseTickerEnergyCost.getAsInt();
 
         // 当multiplier为1时，能量消耗为baseCost
         // 当multiplier达到1024时，能量消耗达到2147483647
@@ -60,7 +60,7 @@ public class EnergyExtractor {
 
         MEStorage storage = host.getMainNode().getGrid().getStorageService().getInventory();
         IActionSource source = IActionSource.ofMachine(host);
-        if (EAEPConfig.ALLOW_DISK_ENERGY.getAsBoolean()
+        if (EAEPConfig.allowDiskEnergy.getAsBoolean()
                 && ContextModLoaded.appliedFlux.isLoaded()
                 && tryExtractFE(source, energyService, storage, energyCost)) {
             return true;

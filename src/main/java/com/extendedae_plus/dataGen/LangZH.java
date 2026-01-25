@@ -133,7 +133,6 @@ public class LangZH extends LanguageProvider {
                 .buildInto("覆写模式");
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.screenTooltip)
                 .addStr("recipe_alias")
-                .branch("reload", "重载映射")
                 .branch("add", "添加映射")
                 .branch("remove", "移除映射")
                 .buildInto("别名操作");
@@ -246,7 +245,6 @@ public class LangZH extends LanguageProvider {
                 .addStr("provider_list")
                 .branch("query", "输入关键词以搜索...")
                 .branch("alias", "输入待映射别名...")
-                .branch("remap_aliases", "重载映射表")
                 .branch("add_alias", "添加映射")
                 .branch("delete_alias", "删除映射")
                 .buildInto("选择样板供应器以上传");

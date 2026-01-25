@@ -25,7 +25,6 @@ import com.extendedae_plus.network.SPacketEncodeFinished;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.spongepowered.asm.mixin.Final;
@@ -97,9 +96,16 @@ public abstract class MixinEncodingMenu extends MEStorageMenu
         this.eaep$encodeActionDelayed = true;
     }
 
+    @Override
+    public boolean eaep$planned() {
+        var planned = this.eaep$encodeActionDelayed;
+        this.eaep$encodeActionDelayed = false;
+        return planned;
+    }
+
     @Inject(method = "encode", at = @At("TAIL"))
     private void eaep$onEncode(CallbackInfo ci) {
-        if (EAEPConfig.INDEPENDENT_UPLOADING_BUTTON.getAsBoolean()) return;
+        if (EAEPConfig.independentUploadButton.getAsBoolean()) return;
         if (this.isClientSide()) return;
 
         if (!this.eaep$ctrlPressed) return;
@@ -124,12 +130,12 @@ public abstract class MixinEncodingMenu extends MEStorageMenu
         }
     }
 
-    @Inject(method = "onSlotChange", at = @At("TAIL"))
-    private void executeDelay(Slot s, CallbackInfo ci) {
-        if (!this.eaep$encodeActionDelayed) return;
-        this.eaep$encodeActionDelayed = false;
-        this.encode();
-    }
+//    @Inject(method = "onSlotChange", at = @At("TAIL"))
+//    private void executeDelay(Slot s, CallbackInfo ci) {
+//        if (!this.eaep$encodeActionDelayed) return;
+//        this.eaep$encodeActionDelayed = false;
+//        this.encode();
+//    }
 
     @Inject(method = "encodePattern", at = @At("TAIL"), cancellable = true)
     private void onPatternEncode(CallbackInfoReturnable<ItemStack> cir) {
