@@ -55,10 +55,10 @@ public final class PatternUploader {
         return containers;
     }
 
-    public static void uploadToProvider(AEBaseMenu menu, int id) {
+    public static void uploadFromMenuEncoding(AEBaseMenu menu, int hashGroup) {
         if (!(menu instanceof BridgeProviderList bridge)) return;
         var providers = bridge.eaep$getProviderList().entrySet().stream()
-                .filter(entry -> entry.getKey().hashCode() == id)
+                .filter(entry -> entry.getKey().hashCode() == hashGroup)
                 .findAny();
         if (providers.isEmpty()) return;
 
@@ -76,10 +76,10 @@ public final class PatternUploader {
         }
     }
 
-    public static void uploadToProvider(ServerPlayer player, int indexSlot, long id) {
+    public static void uploadFromInventory(ServerPlayer player, int indexSlot, long serial) {
         if (!(player.containerMenu instanceof AccessorAccessMenu accessor)) return;
 
-        var provider = accessor.getIDMap().get(id);
+        var provider = accessor.getIDMap().get(serial);
         if (provider == null) return;
 
         var slot = player.containerMenu.getSlot(indexSlot);

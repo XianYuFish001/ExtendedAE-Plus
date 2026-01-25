@@ -1,5 +1,6 @@
 package com.extendedae_plus.integration;
 
+import com.extendedae_plus.common.init.InitObject;
 import net.neoforged.fml.ModList;
 
 public enum ContextModLoaded {
@@ -17,8 +18,6 @@ public enum ContextModLoaded {
 
     ;
 
-    private static boolean initialized;
-
     private final String modID;
     private boolean loaded;
 
@@ -31,11 +30,8 @@ public enum ContextModLoaded {
         return this.loaded;
     }
 
-    public static void init() {
-        if (initialized)
-            throw new IllegalStateException("Contexts has already been initialized");
-        initialized = true;
-
+    @InitObject(priority = 0)
+    private static void init() {
         for (ContextModLoaded context : ContextModLoaded.values()) {
             context.loaded = ModList.get().isLoaded(context.modID);
         }

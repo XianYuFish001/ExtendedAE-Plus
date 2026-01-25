@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+/// @see com.extendedae_plus.mixin.core.ae2.MixinSyncedField.MixinFieldCustom
 public interface PacketStreamable extends PacketWritable {
     Map<Class<? extends PacketStreamable>, StreamCodec<RegistryFriendlyByteBuf, ? extends PacketStreamable>> registry = new HashMap<>();
 

@@ -23,6 +23,6 @@ public record CPacketUploadInventoryPattern(int playerSlotIndex,
 
     @Override
     public void handleServer(ServerPlayer player) {
-        PatternUploader.uploadToProvider(player, this.playerSlotIndex, this.providerId);
+        PatternUploader.uploadFromInventory(player, this.playerSlotIndex, this.providerId);
     }
 }

@@ -16,26 +16,22 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class ModDataComponents {
+    @InitObject
     public static final DeferredRegister.DataComponents COMPONENT =
             DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, ExtendedAEPlus.MODID);
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<DataChannelCard>> DATA_CHANNEL_CARD =
             register("data_channel_card", DataChannelCard.CODEC, DataChannelCard.STREAM_CODEC);
-
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<DataTickingCard>> DATA_TICKING_CARD =
             register("data_ticking_card", DataTickingCard.CODEC, DataTickingCard.STREAM_CODEC);
-
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<BlockEntityWirelessTransceiver.DataSettings>>
             DATA_TRANSCEIVER_SETTINGS = register("data_transceiver_settings",
             BlockEntityWirelessTransceiver.DataSettings.CODEC, BlockEntityWirelessTransceiver.DataSettings.STREAM_CODEC);
-
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<BlockEntityUpload.DataSettings>>
             DATA_PORT_UPLOAD_SETTINGS = register("data_port_upload_settings",
             BlockEntityUpload.DataSettings.CODEC, BlockEntityUpload.DataSettings.STREAM_CODEC);
-
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<DataPriority>> DATA_PRIORITY =
             register("data_priority", DataPriority.CODEC, DataPriority.STREAM_CODEC);
-
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<DataEncoderProfile>> DATA_ENCODER_PROFILE =
             register("data_encoder_profile", DataEncoderProfile.CODEC, DataEncoderProfile.STREAM_CODEC);
 

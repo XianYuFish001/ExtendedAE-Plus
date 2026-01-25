@@ -1,7 +1,6 @@
 package com.extendedae_plus;
 
-import com.extendedae_plus.common.init.*;
-import com.extendedae_plus.integration.ContextModLoaded;
+import com.extendedae_plus.common.init.InitObject;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -13,15 +12,7 @@ public class ExtendedAEPlus {
     public static final String MODNAME = "ExtendedAE Plus";
 
     public ExtendedAEPlus(IEventBus modEventBus, ModContainer modContainer) {
-        ModBlocks.BLOCK.register(modEventBus);
-        ModItems.ITEM.register(modEventBus);
-        ModBlockEntities.BLOCK_ENTITY_TYPE.register(modEventBus);
-        ModCreativeTabs.TABS.register(modEventBus);
-        ModMenuTypes.MENU.register(modEventBus);
-        ModDataComponents.COMPONENT.register(modEventBus);
-
-        EAEPConfig.init(modContainer);
-        ContextModLoaded.init();
+        InitObject.Initializer.init(modEventBus, modContainer);
     }
 
     public static ResourceLocation getLocation(String path) {

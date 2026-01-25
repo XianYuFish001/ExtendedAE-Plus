@@ -19,6 +19,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.function.Consumer;
 
 public final class ModMenuTypes {
+    @InitObject
     public static final DeferredRegister<MenuType<?>> MENU =
             DeferredRegister.create(Registries.MENU, ExtendedAEPlus.MODID);
 

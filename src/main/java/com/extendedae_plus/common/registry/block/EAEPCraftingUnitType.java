@@ -2,6 +2,7 @@ package com.extendedae_plus.common.registry.block;
 
 import appeng.block.crafting.CraftingUnitBlock;
 import appeng.block.crafting.ICraftingUnitType;
+import com.extendedae_plus.common.init.InitObject;
 import com.extendedae_plus.common.init.ModBlocks;
 import com.extendedae_plus.common.init.ModItems;
 import net.minecraft.util.StringRepresentable;
@@ -26,7 +27,8 @@ public enum EAEPCraftingUnitType implements ICraftingUnitType, StringRepresentab
     private static final List<DeferredBlock<CraftingUnitBlock>> UNIT_BLOCKS = new ArrayList<>();
     private static final List<DeferredItem<BlockItem>> UNIT_ITEMS = new ArrayList<>();
 
-    public static void init() {
+    @InitObject(priority = 90)
+    private static void init() {
         for (var type : values()) {
             registerUnitType(type);
         }

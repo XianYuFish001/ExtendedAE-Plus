@@ -10,7 +10,9 @@ import com.extendedae_plus.common.registry.block.wirelessTransceiver.BlockWirele
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+/// CraftingUnit Blocks are now in {@link EAEPCraftingUnitType#UNIT_BLOCKS}
 public final class ModBlocks {
+    @InitObject
     public static final DeferredRegister.Blocks BLOCK =
             DeferredRegister.createBlocks(ExtendedAEPlus.MODID);
 
@@ -24,9 +26,4 @@ public final class ModBlocks {
             BLOCK.register("assembler_matrix_advanced_pattern", BlockAdvancedPattern::new);
     public static final DeferredBlock<BlockAdvancedSpeed> CORE_ADVANCED_SPEED =
             BLOCK.register("assembler_matrix_advanced_speed", BlockAdvancedSpeed::new);
-
-    /// CraftingUnit Blocks are now in {@link EAEPCraftingUnitType#UNIT_BLOCKS}
-    static {
-        EAEPCraftingUnitType.init();
-    }
 }

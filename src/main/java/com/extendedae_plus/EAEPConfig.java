@@ -1,6 +1,8 @@
 package com.extendedae_plus;
 
+import com.extendedae_plus.common.init.InitObject;
 import com.extendedae_plus.common.registry.part.ticker.ParserTickerConfig;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.config.ModConfigEvent;
@@ -9,7 +11,7 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public final class EAEPConfig {
+public class EAEPConfig {
     static final ModConfigSpec specCommon;
     public static final ModConfigSpec.IntValue exProviderPageMultiplier;
     public static final ModConfigSpec.BooleanValue independentUploadButton;
@@ -36,14 +38,12 @@ public final class EAEPConfig {
     public static final ModConfigSpec.IntValue corePatternSlotMultiplier;
     public static final ModConfigSpec.BooleanValue needsUploadingPort;
 
-    static void init(ModContainer modContainer) {
+    @InitObject
+    private static void init(IEventBus eventBus, ModContainer modContainer) {
         modContainer.registerConfig(ModConfig.Type.COMMON, EAEPConfig.specCommon, "extendedae_plus/common.toml");
         modContainer.registerConfig(ModConfig.Type.CLIENT, EAEPConfig.specClient, "extendedae_plus/client.toml");
         modContainer.registerConfig(ModConfig.Type.SERVER, EAEPConfig.specServer, "extendedae_plus/server.toml");
 
-        var eventBus = modContainer.getEventBus();
-        if (eventBus == null)
-            throw new IllegalStateException("EventBus is null");
         eventBus.addListener(ModConfigEvent.Loading.class, event -> reloadSetting(event.getConfig()));
         eventBus.addListener(ModConfigEvent.Reloading.class, event -> reloadSetting(event.getConfig()));
     }

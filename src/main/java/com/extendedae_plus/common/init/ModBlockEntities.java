@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class ModBlockEntities {
+    @InitObject
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPE =
             DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, ExtendedAEPlus.MODID);
 

@@ -20,6 +20,6 @@ public record CPacketUploadTerminalPattern(int serverID) implements CPacketGener
     public void handleServer(ServerPlayer player) {
         if (!(player.containerMenu instanceof PatternEncodingTermMenu menu)) return;
 
-        PatternUploader.uploadToProvider(menu, this.serverID);
+        PatternUploader.uploadFromMenuEncoding(menu, this.serverID);
     }
 }

@@ -23,6 +23,7 @@ import java.util.function.Supplier;
 import java.util.random.RandomGenerator;
 
 public final class ModItems {
+    @InitObject
     public static final DeferredRegister.Items ITEM =
             DeferredRegister.createItems(ExtendedAEPlus.MODID);
 

@@ -12,6 +12,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.stream.Stream;
 
 public final class ModCreativeTabs {
+    @InitObject
     public static final DeferredRegister<CreativeModeTab> TABS =
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, ExtendedAEPlus.MODID);
 
