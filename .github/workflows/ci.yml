@@ -16,6 +16,15 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v5
 
+      - name: Set Build Type
+        id: set_env
+        run: |
+          if [[ "${{ github.event.head_commit.message }}" == *"build-release"* ]]; then
+            echo "BUILD_TYPE=release" >> $GITHUB_ENV
+          else
+            echo "BUILD_TYPE=snapshot" >> $GITHUB_ENV
+          fi
+
       - name: Read Properties
         id: 'properties'
         uses: christian-draeger/read-properties@1.1.1

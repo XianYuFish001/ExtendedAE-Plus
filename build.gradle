@@ -15,11 +15,10 @@ tasks.named('wrapper', Wrapper).configure {
 }
 
 var final buildNumber = System.getenv("GITHUB_RUN_NUMBER")
-if (buildNumber != null)
+if (buildNumber != null && System.getenv("BUILD_TYPE") == "snapshot")
     mod_version = mod_version + "+build." + buildNumber
 
 version = mod_version
-
 group = mod_group_id
 
 apply from: "$rootDir/dependencies.gradle"
