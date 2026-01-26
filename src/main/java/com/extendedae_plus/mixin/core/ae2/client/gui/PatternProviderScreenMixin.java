@@ -5,6 +5,7 @@ import appeng.client.gui.implementations.PatternProviderScreen;
 import appeng.client.gui.style.ScreenStyle;
 import appeng.menu.implementations.PatternProviderMenu;
 import com.extendedae_plus.client.render.widgets.button.*;
+import com.extendedae_plus.mixin.MixinDependencies;
 import com.extendedae_plus.mixin.impl.bridge.HelperProviderButtons;
 import com.extendedae_plus.network.CPacketScalePatterns;
 import com.mojang.datafixers.util.Pair;
@@ -24,6 +25,7 @@ import java.util.List;
  * - 位于左侧工具栏
  * - 点击仅发送 C2S 切换请求；状态由 AE2 @GuiSync 回传决定
  */
+@MixinDependencies(conflict = "expandedae")
 @Mixin(value = PatternProviderScreen.class, remap = false)
 public abstract class PatternProviderScreenMixin<C extends PatternProviderMenu>
         extends AEBaseScreen<C>

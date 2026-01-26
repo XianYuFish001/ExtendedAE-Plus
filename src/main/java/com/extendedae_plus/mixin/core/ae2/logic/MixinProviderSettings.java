@@ -13,6 +13,7 @@ import appeng.helpers.patternprovider.PatternProviderTarget;
 import appeng.util.ConfigManager;
 import com.extendedae_plus.common.init.ModSettings;
 import com.extendedae_plus.common.registry.settings.StateSmartBlocking;
+import com.extendedae_plus.mixin.MixinDependencies;
 import com.extendedae_plus.mixin.impl.ProviderSettingsImplementations;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -25,6 +26,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 import java.util.Set;
 
+@MixinDependencies(conflict = "expandedae")
 @Mixin(value = PatternProviderLogic.class, priority = 1100)
 public abstract class MixinProviderSettings {
     @Shadow

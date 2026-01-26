@@ -2,6 +2,7 @@ package com.extendedae_plus.integration;
 
 import com.extendedae_plus.common.init.InitObject;
 import net.neoforged.fml.ModList;
+import org.jetbrains.annotations.Nullable;
 
 public enum ContextModLoaded {
     emi("emi"),
@@ -15,19 +16,30 @@ public enum ContextModLoaded {
     mekanism("mekanism"),
     appliedMekanistics("appmek"),
     gtceuModern("gtceu"),
+    expandedAE("expandedae", false),
 
     ;
 
     private final String modID;
     private boolean loaded;
+    final @Nullable Boolean required;
 
     ContextModLoaded(String modID) {
+        this(modID, null);
+    }
+
+    ContextModLoaded(String modID, @Nullable Boolean required) {
         this.modID = modID;
         this.loaded = false;
+        this.required = required;
     }
 
     public boolean isLoaded() {
         return this.loaded;
+    }
+
+    boolean shouldTip() {
+        return this.required != null && this.required != this.loaded;
     }
 
     @InitObject(priority = 0)

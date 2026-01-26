@@ -2,12 +2,14 @@ package com.extendedae_plus.mixin.core.ae2;
 
 import appeng.blockentity.crafting.CraftingBlockEntity;
 import appeng.me.cluster.implementations.CraftingCPUCluster;
+import com.extendedae_plus.mixin.MixinDependencies;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
+@MixinDependencies(conflict = "expandedae")
 @Mixin(value = CraftingCPUCluster.class, remap = false, priority = 1100)
 public abstract class CraftingCPUClusterMixin {
     // 1) 提升“单方块线程上限”的常量，避免抛出 IAE 的 IllegalArgumentException

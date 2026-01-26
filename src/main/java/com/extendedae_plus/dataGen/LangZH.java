@@ -219,6 +219,20 @@ public class LangZH extends LanguageProvider {
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.message)
                 .addStr("opened_provider_info")
                 .buildInto("[EAEP] 正在远程打开 样板供应器{位置[%s], 维度[%s]}");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.message)
+                .addStr("tips_mod_load")
+                .addStr("confirm")
+                .branch("hover", "点击将设置 \"DependencyTip\" 关闭")
+                .branch("callback", "§a设置成功")
+                .buildInto("\n§e[知道了, 不再提示我]");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.message)
+                .addStr("tips_mod_load")
+                .branch("expandedae", """
+                        §6[EAEP/DependencyTip]
+                        §f将EAEP与ExpandedAE同时安装时, 可能导致以下及更多功能无法使用:§7
+                          - 智能阻挡&倍增
+                          - 单个超过16线程的并行处理器
+                          - 样板数量快速修改""");
 
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.actionBar)
                 .item(AEItems.CERTUS_QUARTZ_KNIFE.get())
@@ -376,6 +390,9 @@ public class LangZH extends LanguageProvider {
                 .addStr("needsUploadingPort")
                 .branch("tooltip", "启用后, 样板只能被上传到装有上传接口的装配矩阵")
                 .buildInto("需要装配矩阵上传接口");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.config)
+                .addStr("dependencyTips")
+                .buildInto("控制EAEP是否在发现特殊Mod关系时进行提示");
 
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.jadeInfo)
                 .item(ModItems.WIRELESS_TRANSCEIVER)

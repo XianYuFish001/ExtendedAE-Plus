@@ -15,6 +15,7 @@ public class EAEPConfig {
     static final ModConfigSpec specCommon;
     public static final ModConfigSpec.IntValue exProviderPageMultiplier;
     public static final ModConfigSpec.BooleanValue independentUploadButton;
+    public static final ModConfigSpec.BooleanValue modDependencyTips;
 
     static final ModConfigSpec specClient;
     public static final ModConfigSpec.BooleanValue showPatternEncoder;
@@ -61,6 +62,8 @@ public class EAEPConfig {
                 .defineInRange("pageMultiplier", 1, 1, 64);
         independentUploadButton = builderCommon
                 .define("independentUploadingButton", false);
+        modDependencyTips = builderCommon
+                .define("dependencyTips", true);
         specCommon = builderCommon.build();
 
         // Client

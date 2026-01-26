@@ -53,7 +53,7 @@ public class PortUpload {
         private final TooltipAppender appender;
 
         Tooltip(String path, TooltipAppender appender) {
-            this.uid = ExtendedAEPlus.getLocation("port_upload." + path);
+            this.uid = ExtendedAEPlus.getLocation("wireless_transceiver." + path);
             this.appender = appender;
         }
 

@@ -220,6 +220,20 @@ public class LangEN extends LanguageProvider {
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.message)
                 .addStr("opened_provider_info")
                 .buildInto("[EAEP] Now opening PatternProvider{Location[%s], Dimension[%s]}");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.message)
+                .addStr("tips_mod_load")
+                .addStr("confirm")
+                .branch("hover", "Click to toggle config \"DependencyTip\" off")
+                .branch("callback", "§aSucceed to config")
+                .buildInto("\n§e[Don't Show me Again]");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.message)
+                .addStr("tips_mod_load")
+                .branch("expandedae", """
+                        §6[EAEP/DependencyTip]
+                        §fWhen EAEP and ExpandedAE are installed at the same time, the following and more functions may become unavailable:§7
+                          - Smart Doubling/Blocking
+                          - Over-16-thread Accelerator
+                          - Pattern Modify""");
 
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.actionBar)
                 .item(AEItems.CERTUS_QUARTZ_KNIFE.get())
@@ -363,6 +377,9 @@ public class LangEN extends LanguageProvider {
                 .addStr("needsUploadingPort")
                 .branch("tooltip", "If true, patterns can only be uploaded to assembly matrix with upload port")
                 .buildInto("Needs Uploading Port");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.config)
+                .addStr("dependencyTips")
+                .buildInto("Controls whether EAEP prompts when special Mod relationships are found");
 
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.jadeInfo)
                 .item(ModItems.WIRELESS_TRANSCEIVER)

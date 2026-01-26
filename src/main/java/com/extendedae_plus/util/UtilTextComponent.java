@@ -3,6 +3,8 @@ package com.extendedae_plus.util;
 import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.common.init.ModItems;
 import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.network.chat.Style;
@@ -13,6 +15,7 @@ import net.minecraft.util.Mth;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.random.RandomGenerator;
@@ -166,6 +169,41 @@ public class UtilTextComponent {
         @Override
         public FormattedCharSequence getVisualOrderText() {
             return this.get().getVisualOrderText();
+        }
+    }
+
+    public static class ClickEventCustomizable extends ClickEvent {
+        private final Runnable onClick;
+        private final @Nullable Component callback;
+
+        public ClickEventCustomizable(Runnable onClick) {
+            this(onClick, null);
+        }
+
+        public ClickEventCustomizable(Runnable onClick, @Nullable Component callback) {
+            super(Action.COPY_TO_CLIPBOARD, "");
+            this.onClick = onClick;
+            this.callback = callback;
+        }
+
+        public void trigger() {
+            this.onClick.run();
+
+            var player = Minecraft.getInstance().player;
+            if (player == null || this.callback == null) return;
+            player.displayClientMessage(this.callback, false);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(this.onClick);
+        }
+
+        @Override
+        public String toString() {
+            return "ClickEventCustomizable{" +
+                    "onClick=" + onClick +
+                    '}';
         }
     }
 }

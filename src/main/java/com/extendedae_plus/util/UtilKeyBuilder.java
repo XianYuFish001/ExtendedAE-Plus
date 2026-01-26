@@ -15,6 +15,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
 
 /**
  * <h2> 工具类KeyBuilder: 再次提供更便捷的翻译键生成与使用功能
@@ -104,13 +105,23 @@ public class UtilKeyBuilder {
         }
 
         @SuppressWarnings("unchecked")
-        public BuilderAdderSimple bindAdder(Consumer<Component> adder) {
-            return new BuilderAdderSimple((BuilderGeneric<BuilderAdderSimple>) this, adder);
+        public BuilderAdder<?> bindAdder(Consumer<Component> adder) {
+            class Simple<T extends BuilderAdder<T>> extends BuilderAdder<T> {
+                private Simple() {
+                    super((BuilderGeneric<T>) BuilderGeneric.this, adder);
+                }
+            }
+            return new Simple<>();
         }
 
         @SuppressWarnings("unchecked")
-        public <TKey> BuilderBiAdderSimple<TKey> bindBiAdder(BiConsumer<TKey, Component> adder) {
-            return new BuilderBiAdderSimple<>((BuilderGeneric<BuilderBiAdderSimple<TKey>>) this, adder);
+        public <TKey> BuilderBiAdder<?, TKey> bindBiAdder(BiConsumer<TKey, Component> adder) {
+            class Simple<T extends BuilderBiAdder<T, TKey>> extends BuilderBiAdder<T, TKey> {
+                private Simple() {
+                    super((BuilderGeneric<T>) BuilderGeneric.this, adder);
+                }
+            }
+            return new Simple<>();
         }
 
         @SuppressWarnings("unchecked")
@@ -221,7 +232,8 @@ public class UtilKeyBuilder {
         }
 
         public void buildInto(String value, String locale) {
-            translators.getOrDefault(locale, (k, v) -> {}).accept(this.buildRaw(), value);
+            translators.getOrDefault(locale, (k, v) -> {
+            }).accept(this.buildRaw(), value);
         }
 
         public void buildInto(String value) {
@@ -293,7 +305,11 @@ public class UtilKeyBuilder {
         }
 
         public TBuilder buildInto(String additionalKey) {
-            this.target.accept(this.addStr(additionalKey).build());
+            return this.buildInto(additionalKey, UnaryOperator.identity());
+        }
+
+        public TBuilder buildInto(String additionalKey, UnaryOperator<MutableComponent> customizer) {
+            this.target.accept(customizer.apply(this.addStr(additionalKey).build()));
             this.restoreSnapshot();
             return this.cast();
         }
@@ -303,16 +319,6 @@ public class UtilKeyBuilder {
                 this.buildInto(additionalKey);
             }
             return this.cast();
-        }
-    }
-
-    public static class BuilderAdderSimple extends BuilderAdder<BuilderAdderSimple> {
-        protected BuilderAdderSimple(BuilderGeneric<BuilderAdderSimple> original, Consumer<Component> target) {
-            super(original, target);
-        }
-
-        protected BuilderAdderSimple(BuilderGeneric<BuilderAdderSimple> original, Consumer<Component> target, boolean saveSnapshot) {
-            super(original, target, saveSnapshot);
         }
     }
 
@@ -341,25 +347,23 @@ public class UtilKeyBuilder {
         }
 
         public TBuilder buildInto(TKey key) {
-            this.target.accept(key, this.addStr(key.toString()).build());
+            return this.buildInto(key, UnaryOperator.identity());
+        }
+
+        public TBuilder buildInto(TKey key, UnaryOperator<MutableComponent> customizer) {
+            this.target.accept(key, customizer.apply(this.addStr(key.toString()).build()));
             this.restoreSnapshot();
             return this.cast();
         }
 
         public TBuilder buildIntoPlain(TKey key) {
-            this.target.accept(key, this.build());
+            return this.buildIntoPlain(key, UnaryOperator.identity());
+        }
+
+        public TBuilder buildIntoPlain(TKey key, UnaryOperator<MutableComponent> customizer) {
+            this.target.accept(key, customizer.apply(this.build()));
             this.restoreSnapshot();
             return this.cast();
-        }
-    }
-
-    public static class BuilderBiAdderSimple<TKey> extends BuilderBiAdder<BuilderBiAdderSimple<TKey>, TKey> {
-        protected BuilderBiAdderSimple(BuilderGeneric<BuilderBiAdderSimple<TKey>> original, BiConsumer<TKey, Component> target) {
-            super(original, target);
-        }
-
-        protected BuilderBiAdderSimple(BuilderGeneric<BuilderBiAdderSimple<TKey>> original, BiConsumer<TKey, Component> target, boolean saveSnapshot) {
-            super(original, target, saveSnapshot);
         }
     }
 
