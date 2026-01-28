@@ -379,7 +379,11 @@ public class LangEN extends LanguageProvider {
                 .buildInto("Needs Uploading Port");
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.config)
                 .addStr("dependencyTips")
-                .buildInto("Controls whether EAEP prompts when special Mod relationships are found");
+                .branch("tooltip", "Controls whether EAEP prompts when special Mod relationships are found")
+                .buildInto("Dependency Tips");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.config)
+                .addStr("smartDoublingAdapt")
+                .buildInto("Smart Doubled Pattern Push Adapt (WIP)");
 
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.jadeInfo)
                 .item(ModItems.WIRELESS_TRANSCEIVER)

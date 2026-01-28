@@ -392,7 +392,11 @@ public class LangZH extends LanguageProvider {
                 .buildInto("需要装配矩阵上传接口");
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.config)
                 .addStr("dependencyTips")
-                .buildInto("控制EAEP是否在发现特殊Mod关系时进行提示");
+                .branch("tooltip", "控制EAEP是否在发现特殊Mod关系时进行提示")
+                .buildInto("特殊Mod关系提示");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.config)
+                .addStr("smartDoublingAdapt")
+                .buildInto("倍增样板发配大小自适应 (WIP)");
 
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.jadeInfo)
                 .item(ModItems.WIRELESS_TRANSCEIVER)

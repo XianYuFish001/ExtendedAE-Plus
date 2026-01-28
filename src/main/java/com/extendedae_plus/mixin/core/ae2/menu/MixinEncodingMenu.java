@@ -140,7 +140,7 @@ public abstract class MixinEncodingMenu extends MEStorageMenu
     @Inject(method = "encodePattern", at = @At("TAIL"), cancellable = true)
     private void onPatternEncode(CallbackInfoReturnable<ItemStack> cir) {
         var pattern = cir.getReturnValue();
-        if (pattern.isEmpty()) return;
+        if (pattern == null || pattern.isEmpty()) return;
 
         pattern.set(ModDataComponents.DATA_ENCODER_PROFILE,
                 new DataEncoderProfile(this.getPlayer().getGameProfile()));

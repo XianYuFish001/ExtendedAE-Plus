@@ -27,6 +27,7 @@ public class EAEPConfig {
     // AE
     public static final ModConfigSpec.BooleanValue providerRoundRobin;
     public static final ModConfigSpec.IntValue smartDoublingMaxMultiplier;
+    public static final ModConfigSpec.BooleanValue smartDoublingAdapt;
     public static final ModConfigSpec.IntValue craftingPauseThreshold;
     // Ticker
     public static final ModConfigSpec.IntValue baseTickerEnergyCost;
@@ -83,8 +84,10 @@ public class EAEPConfig {
                 .define("providerRoundRobinEnable", true);
         smartDoublingMaxMultiplier = builderServer
                 .defineInRange("smartScalingMaxMultiplier", 0, 0, 1048576);
+        smartDoublingAdapt = builderServer
+                .define("smartDoublingAdapt", false);
         craftingPauseThreshold = builderServer
-                .defineInRange("craftingPauseThreshold", 100000, 100, Integer.MAX_VALUE);
+                .defineInRange("craftingPauseThreshold", 100, 100, Integer.MAX_VALUE);
         builderServer.pop();
 
         builderServer.push("ticker");

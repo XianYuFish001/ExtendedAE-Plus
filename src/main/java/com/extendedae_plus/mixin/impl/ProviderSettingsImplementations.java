@@ -7,9 +7,9 @@ import appeng.api.crafting.IPatternDetails;
 import appeng.api.stacks.AEKey;
 import appeng.api.util.IConfigManager;
 import appeng.helpers.patternprovider.PatternProviderTarget;
-import com.extendedae_plus.common.impl.pattern.smartDoubling.SmartDoublingAwarePattern;
 import com.extendedae_plus.common.init.ModSettings;
 import com.extendedae_plus.common.registry.settings.StateSmartBlocking;
+import com.extendedae_plus.mixin.impl.extension.ExtensionScaledPattern;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,11 +58,7 @@ public final class ProviderSettingsImplementations {
     }
 
     public static void updateDoublingState(IConfigManager configManager, List<IPatternDetails> patterns) {
-        patterns.forEach(pattern -> {
-            if (!(pattern instanceof SmartDoublingAwarePattern doublingPattern)) return;
-            doublingPattern.eap$setAllowScaling(
-                    YesNo.YES.equals(configManager.getSetting(ModSettings.SMART_DOUBLING)));
-        });
+        patterns.forEach(ExtensionScaledPattern.setState(configManager.getSetting(ModSettings.SMART_DOUBLING)));
     }
 
     private static boolean matchBlockingInputs(PatternProviderTarget target, IPatternDetails patternDetails) {

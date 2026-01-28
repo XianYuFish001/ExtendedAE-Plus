@@ -2,9 +2,6 @@ TODO
     <bug>
         网络工具gui与倍增按钮冲突
         样板自动填充功能失效(真的有, 记得恢复)
-        <fixing/testing>
-            智能倍增样板有时出现null:
-                已添加更多log信息, 等待构建下次触发
     <feature>
         再好好想想没迁移的feature
         ScreenLabelLink的键盘操作
