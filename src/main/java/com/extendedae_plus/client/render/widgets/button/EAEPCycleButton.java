@@ -35,7 +35,7 @@ public class EAEPCycleButton extends EAEPButton {
 
     @Override
     public EAEPActionItems getAction() {
-        if (this.states == null) return EAEPActionItems.BACKING_OUT;
+        if (this.states == null) return EAEPActionItems.backingOut;
         return this.states.get(this.stateIndex);
     }
 

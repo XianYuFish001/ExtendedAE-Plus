@@ -5,110 +5,93 @@ import appeng.client.gui.style.Blitter;
 import appeng.core.localization.ButtonToolTips;
 import com.extendedae_plus.util.UtilKeyBuilder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.UnaryOperator;
 
 public enum EAEPActionItems {
-    BACKING_OUT(EAEPIcon.fromAEIcon(Icon.INVALID), Component.empty(), Component.empty(), ""),
+    backingOut(builder -> builder.icon(Icon.TOOLBAR_BUTTON_BACKGROUND)),
 
-    MUL2(EAEPIcon.MUL2, "scaling"),
-    DIV2(EAEPIcon.DIV2, "scaling"),
-    MUL3(EAEPIcon.MUL3, "scaling"),
-    DIV3(EAEPIcon.DIV3, "scaling"),
-    MUL5(EAEPIcon.MUL5, "scaling"),
-    DIV5(EAEPIcon.DIV5, "scaling"),
+    mul2(builder -> builder.icon(EAEPIcon.mul2).group("scaling").toggleName()),
+    div2(builder -> builder.icon(EAEPIcon.div2).group("scaling").toggleName()),
+    mul3(builder -> builder.icon(EAEPIcon.mul3).group("scaling").toggleName()),
+    div3(builder -> builder.icon(EAEPIcon.div3).group("scaling").toggleName()),
+    mul5(builder -> builder.icon(EAEPIcon.mul5).group("scaling").toggleName()),
+    div5(builder -> builder.icon(EAEPIcon.div5).group("scaling").toggleName()),
 
-    BLOCKING_DISABLED(EAEPIcon.fromAEIcon(Icon.BLOCKING_MODE_NO), "smart_blocking", "disabled"),
-    BLOCKING_ENABLED(EAEPIcon.BLOCKING_TRANSPARENT, "smart_blocking", "enabled"),
-    BLOCKING_DISABLED_BY_SUPER(EAEPIcon.fromAEIcon(Icon.ARROW_RIGHT), "smart_blocking", "disabled_by_super"),
+    blockingDisabled(builder -> builder.icon(Icon.BLOCKING_MODE_NO).group("smart_blocking").tooltip("disabled")),
+    blockingEnabled(builder -> builder.icon(EAEPIcon.blockingTransparent).group("smart_blocking").tooltip("enabled")),
+    blockingUnable(builder -> builder.icon(Icon.ARROW_RIGHT).group("smart_blocking").tooltip("disabled_by_super")),
 
-    DOUBLING_DISABLED(EAEPIcon.PATTERN_SINGLE, "smart_doubling", "disabled"),
-    DOUBLING_ENABLED(EAEPIcon.PATTERN_MULTI, "smart_doubling", "enabled"),
+    doublingDisabled(builder -> builder.icon(EAEPIcon.patternSingle).group("smart_doubling").tooltip("disabled")),
+    doublingEnabled(builder -> builder.icon(EAEPIcon.patternMulti).group("smart_doubling").tooltip("enabled")),
 
-    TICKER_ENABLED(EAEPIcon.fromAEIcon(Icon.AUTO_EXPORT_ON), "state_ticker", "enabled"),
-    TICKER_DISABLED(EAEPIcon.fromAEIcon(Icon.AUTO_EXPORT_OFF), "state_ticker", "disabled"),
-    TICKER_BLACKLISTED(EAEPIcon.fromAEIcon(Icon.INVALID), "state_ticker", "blacklisted"),
+    tickerEnabled(builder -> builder.icon(Icon.AUTO_EXPORT_ON).group("state_ticker").tooltip("enabled")),
+    tickerDisabled(builder -> builder.icon(Icon.AUTO_EXPORT_OFF).group("state_ticker").tooltip("disabled")),
+    tickerBlacklisted(builder -> builder.icon(Icon.INVALID).group("state_ticker").tooltip("blacklisted")),
 
-    REDSTONE_IGNORE(EAEPIcon.fromAEIcon(Icon.REDSTONE_IGNORE),
-            ButtonToolTips.RedstoneMode.text(), ButtonToolTips.AlwaysActive.text(), "redstone_mode"),
-    REDSTONE_LOW(EAEPIcon.fromAEIcon(Icon.REDSTONE_LOW),
-            ButtonToolTips.RedstoneMode.text(), ButtonToolTips.ActiveWithoutSignal.text(), "redstone_mode"),
-    REDSTONE_HIGH(EAEPIcon.fromAEIcon(Icon.REDSTONE_HIGH),
-            ButtonToolTips.RedstoneMode.text(), ButtonToolTips.ActiveWithSignal.text(), "redstone_mode"),
+    redstoneIgnore(builder -> builder.icon(Icon.REDSTONE_IGNORE).group("redstone_mode")
+            .name(ButtonToolTips.RedstoneMode.text()).tooltip(ButtonToolTips.AlwaysActive.text())),
+    redstoneLow(builder -> builder.icon(Icon.REDSTONE_LOW).group("redstone_mode")
+            .name(ButtonToolTips.RedstoneMode.text()).tooltip(ButtonToolTips.ActiveWithoutSignal.text())),
+    redstoneHigh(builder -> builder.icon(Icon.REDSTONE_HIGH).group("redstone_mode")
+            .name(ButtonToolTips.RedstoneMode.text()).tooltip(ButtonToolTips.ActiveWithSignal.text())),
 
-    PRIORITY_KEEP(EAEPIcon.SAVE_CENTER, "priority_tool", "keep"),
-    PRIORITY_INCREMENT(EAEPIcon.SAVE_UP, "priority_tool", "increment"),
-    PRIORITY_DECREMENT(EAEPIcon.SAVE_DOWN, "priority_tool", "decrement"),
+    priorityKeep(builder -> builder.icon(EAEPIcon.saveCenter).group("priority_tool").tooltip("keep")),
+    priorityIncrement(builder -> builder.icon(EAEPIcon.saveUp).group("priority_tool").tooltip("increment")),
+    priorityDecrement(builder -> builder.icon(EAEPIcon.saveDown).group("priority_tool").tooltip("decrement")),
 
-    ALIAS_ADD(EAEPIcon.SAVE_UP, "recipe_alias", "add"),
-    ALIAS_REMOVE(EAEPIcon.SAVE_DOWN, "recipe_alias", "remove"),
+    aliasAdd(builder -> builder.icon(EAEPIcon.saveUp).group("recipe_alias").tooltip("add")),
+    aliasRemove(builder -> builder.icon(EAEPIcon.saveDown).group("recipe_alias").tooltip("remove")),
 
-    ROW_SLOTS_VISIBLE(EAEPIcon.LIST_WITH_CHILDREN, "row_slots_visible", "visible"),
-    ROW_SLOTS_INVISIBLE(EAEPIcon.LIST_MULTI, "row_slots_visible", "invisible"),
+    rowSlotsVisible(builder -> builder.icon(EAEPIcon.listWithChildren).group("row_slots_visible").tooltip("visible")),
+    rowSlotsInvisible(builder -> builder.icon(EAEPIcon.listMulti).group("row_slots_visible").tooltip("invisible")),
 
-    LABEL_FREQUENCY(EAEPIcon.CHAR_F, "label_type", "frequency"),
-    LABEL_LABEL(EAEPIcon.CHAR_L, "label_type", "label"),
-    LABEL_PUBLIC(EAEPIcon.CONNECTED, "label_mode", "public"),
-    LABEL_PRIVATE(EAEPIcon.DISCONNECTED, "label_mode", "private"),
-    LABEL_ADD(EAEPIcon.fromAEIcon(Icon.ENTER), "label_add", ""),
-    LABEL_LOCKED(EAEPIcon.fromAEIcon(Icon.LOCKED), "label_locked", "locked"),
-    LABEL_UNLOCKED(EAEPIcon.fromAEIcon(Icon.UNLOCKED), "label_locked", "unlocked"),
+    labelFrequency(builder -> builder.icon(EAEPIcon.charF).group("label_type").tooltip("frequency")),
+    labelLabel(builder -> builder.icon(EAEPIcon.charL).group("label_type").tooltip("label")),
+    labelPublic(builder -> builder.icon(EAEPIcon.connected).group("label_mode").tooltip("public")),
+    labelPrivate(builder -> builder.icon(EAEPIcon.disconnected).group("label_mode").tooltip("private")),
+    labelAdd(builder -> builder.icon(Icon.ENTER).group("label_add").name()),
+    labelLocked(builder -> builder.icon(Icon.LOCKED).group("label_locked").tooltip("locked")),
+    labelUnlocked(builder -> builder.icon(Icon.UNLOCKED).group("label_locked").tooltip("unlocked")),
 
-    TRANSCEIVER_MASTER(EAEPIcon.SIGNAL_SEND, "transceiver_mode", "master"),
-    TRANSCEIVER_SLAVE(EAEPIcon.SIGNAL_RECEIVE, "transceiver_mode", "slave"),
+    transceiverMaster(builder -> builder.icon(EAEPIcon.signalSend).group("transceiver_mode").tooltip("master")),
+    transceiverSlave(builder -> builder.icon(EAEPIcon.signalReceive).group("transceiver_mode").tooltip("slave")),
 
-    MERGE_NONE(EAEPIcon.MERGE_NONE, "transfer_mode", "none"),
-    MERGE_ADJACENCY(EAEPIcon.MERGE_ADJACENCY, "transfer_mode", "merge_adjacency"),
-    MERGE_INDEPENDENCE(EAEPIcon.fromAEIcon(Icon.INSCRIBER_SEPARATE_SIDES), "transfer_mode", "independence"),
+    mergeNone(builder -> builder.icon(EAEPIcon.mergeNone).group("transfer_mode").tooltip("none")),
+    mergeAdjacency(builder -> builder.icon(EAEPIcon.mergeAdjacency).group("transfer_mode").tooltip("merge_adjacency")),
+    mergeIndependence(builder -> builder.icon(Icon.INSCRIBER_SEPARATE_SIDES).group("transfer_mode").tooltip("independence")),
     
-    PATTERN_UPLOAD(EAEPIcon.fromAEIcon(Icon.ARROW_UP), "pattern_upload", ""),
+    patternUpload(builder -> builder.icon(Icon.ARROW_UP).group("pattern_upload").name()),
 
     ;
 
     private final IButtonIcon icon;
     private final Component name;
-    private final Component tooltip;
+    private final @Nullable Component tooltip;
     private final String actionGroup;
 
-    public static final Map<String, List<EAEPActionItems>> GROUPED_ACTIONS = new HashMap<>();
+    public static final Map<String, List<EAEPActionItems>> actions = new HashMap<>();
 
     static {
-        for (EAEPActionItems action : EAEPActionItems.values()) {
+        for (var action : EAEPActionItems.values()) {
             if (!action.actionGroup.isEmpty())
-                GROUPED_ACTIONS.computeIfAbsent(action.actionGroup,
+                actions.computeIfAbsent(action.actionGroup,
                         $ -> new ArrayList<>()).add(action);
         }
     }
 
-    EAEPActionItems(IButtonIcon icon, String actionGroup) {
-        this(icon, Component.empty(), Component.empty(), actionGroup);
-    }
-
-    EAEPActionItems(IButtonIcon icon, String actionGroup, String additionalKey) {
-        this(
-                icon,
-                actionGroup.isBlank() ? Component.empty()
-                        : UtilKeyBuilder.of(UtilKeyBuilder.screenTooltip)
-                        .addStr(actionGroup)
-                        .build(),
-                additionalKey.isBlank() ? null
-                        : UtilKeyBuilder.of(UtilKeyBuilder.screenTooltip)
-                        .addStr(actionGroup)
-                        .addStr(additionalKey)
-                        .build(),
-                actionGroup
-        );
-    }
-
-    EAEPActionItems(IButtonIcon icon, Component name, Component tooltip, String actionGroup) {
-        this.icon = icon;
-        this.name = name;
-        this.tooltip = tooltip;
-        this.actionGroup = actionGroup;
+    EAEPActionItems(UnaryOperator<Builder> builder) {
+        var info = builder.apply(new Builder());
+        this.icon = info.icon;
+        this.actionGroup = info.actionGroup;
+        this.name = info.nameVisible ? info.name : Component.empty();
+        this.tooltip = info.tooltipVisible ? info.tooltip : null;
     }
 
     public Blitter getIconBlitter() {
@@ -128,15 +111,74 @@ public enum EAEPActionItems {
         return icon.getAEIcon();
     }
 
-    public boolean hasName() {
-        return !name.getString().isEmpty();
-    }
-
     public Component getName() {
         return name;
     }
 
     public @Nullable Component getTooltip() {
         return tooltip;
+    }
+
+    private static class Builder {
+        private IButtonIcon icon = EAEPIcon.fromAEIcon(Icon.TOOLBAR_BUTTON_BACKGROUND);
+        private String actionGroup = "";
+        private Component name = Component.empty();
+        private boolean nameVisible = true;
+        private Component tooltip;
+        private boolean tooltipVisible = true;
+
+        private Builder icon(IButtonIcon icon) {
+            this.icon = icon;
+            return this;
+        }
+
+        private Builder icon(Icon icon) {
+            return this.icon(EAEPIcon.fromAEIcon(icon));
+        }
+
+        private Builder group(String group) {
+            this.actionGroup = group;
+            return this;
+        }
+
+        private Builder name(Component name) {
+            this.name = name;
+            return this;
+        }
+
+        private Builder name(String... name) {
+            var builder = UtilKeyBuilder.of(UtilKeyBuilder.screenTooltip);
+            if (name.length > 0) for (var key : name) builder.addStr(key);
+            else builder.addStr(this.actionGroup);
+            this.name = builder.build();
+            return this;
+        }
+
+        private Builder tooltip(Component tooltip) {
+            if (this.name.getString().isEmpty()) this.name();
+            this.tooltip = tooltip;
+            return this;
+        }
+
+        private Builder tooltip(String... tooltip) {
+            if (this.name.getString().isEmpty()) this.name();
+            var builder = UtilKeyBuilder.of(UtilKeyBuilder.screenTooltip)
+                    .addStr(this.actionGroup);
+            for (var key : tooltip) builder.addStr(key);
+            if (this.tooltip != null) ((MutableComponent) this.tooltip).append(builder.build());
+            else this.tooltip = builder.build();
+            return this;
+        }
+
+        private Builder toggleName() {
+            this.nameVisible = !this.nameVisible;
+            if (!this.nameVisible) this.tooltipVisible = false;
+            return this;
+        }
+
+        private Builder toggleTooltip() {
+            this.tooltipVisible = this.nameVisible && !this.tooltipVisible;
+            return this;
+        }
     }
 }

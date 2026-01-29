@@ -41,11 +41,11 @@ public abstract class MixinAdvProviderSettings {
     @Inject(method = "<init>(Lappeng/api/networking/IManagedGridNode;Lnet/pedroksl/advanced_ae/common/logic/AdvPatternProviderLogicHost;I)V", at = @At("TAIL"))
     private void onInit(IManagedGridNode mainNode, AdvPatternProviderLogicHost host, int patternInventorySize, CallbackInfo ci) {
         var configBuilder = (ConfigManager) this.getConfigManager();
-        configBuilder.registerSetting(ModSettings.SMART_BLOCKING, StateSmartBlocking.DISABLED);
-        configBuilder.registerSetting(ModSettings.SMART_DOUBLING, YesNo.NO);
+        configBuilder.registerSetting(ModSettings.smartBlocking, StateSmartBlocking.DISABLED);
+        configBuilder.registerSetting(ModSettings.smartDoubling, YesNo.NO);
 
         if (YesNo.NO.equals(this.getConfigManager().getSetting(Settings.BLOCKING_MODE)))
-            configBuilder.putSetting(ModSettings.SMART_BLOCKING, StateSmartBlocking.DISABLED_BY_SUPER);
+            configBuilder.putSetting(ModSettings.smartBlocking, StateSmartBlocking.DISABLED_BY_SUPER);
     }
 
     @Inject(method = "configChanged", at = @At("HEAD"))

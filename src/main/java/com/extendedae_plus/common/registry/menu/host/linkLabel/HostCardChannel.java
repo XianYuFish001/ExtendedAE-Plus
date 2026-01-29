@@ -19,7 +19,7 @@ public class HostCardChannel extends ItemMenuHost<CardChannel> implements HostLa
 
     @Override
     public boolean setLabelData(Label.Data label, boolean force) {
-        DataChannelCard.setLabel(this.getItemStack(), label);
+        DataChannelCard.setLabel(this.getItemStack(), label, true);
         return true;
     }
 }

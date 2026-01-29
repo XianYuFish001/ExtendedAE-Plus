@@ -30,19 +30,19 @@ public class MixinEncodingScreenTransfer<TMenu extends PatternEncodingTermMenu> 
                         CallbackInfo ci) {
         var buttonTransferMode = new EAEPCycleButton.Builder()
                 .globalTask(this::eaep$switchTransferMode)
-                .addPart(EAEPActionItems.MERGE_NONE)
-                .addPart(EAEPActionItems.MERGE_ADJACENCY)
-                .addPart(EAEPActionItems.MERGE_INDEPENDENCE)
+                .addPart(EAEPActionItems.mergeNone)
+                .addPart(EAEPActionItems.mergeAdjacency)
+                .addPart(EAEPActionItems.mergeIndependence)
                 .build();
         this.addToLeftToolbar(buttonTransferMode);
     }
     
     @Unique
     private void eaep$switchTransferMode(EAEPActionItems action) {
-        this.menu.getConfigManager().putSetting(ModSettings.TRANSFER_MODE, switch (action) {
-            case MERGE_NONE -> ModeEncodingTransfer.NONE;
-            case MERGE_ADJACENCY -> ModeEncodingTransfer.MERGE_ADJACENCY;
-            case MERGE_INDEPENDENCE -> ModeEncodingTransfer.INDEPENDENCE;
+        this.menu.getConfigManager().putSetting(ModSettings.modeTransfer, switch (action) {
+            case mergeNone -> ModeEncodingTransfer.NONE;
+            case mergeAdjacency -> ModeEncodingTransfer.MERGE_ADJACENCY;
+            case mergeIndependence -> ModeEncodingTransfer.INDEPENDENCE;
             case null, default -> null;
         });
     }

@@ -33,15 +33,15 @@ public final class ProviderSettingsImplementations {
             };
             if (stateBlocking != null) {
                 flagChanging.add(manager);
-                manager.putSetting(ModSettings.SMART_BLOCKING, stateBlocking);
+                manager.putSetting(ModSettings.smartBlocking, stateBlocking);
                 flagChanging.remove(manager);
             }
-        } else if (ModSettings.SMART_BLOCKING.equals(setting)
+        } else if (ModSettings.smartBlocking.equals(setting)
                 && StateSmartBlocking.ENABLED.equals(manager.getSetting(setting))) {
             flagChanging.add(manager);
             manager.putSetting(Settings.BLOCKING_MODE, YesNo.YES);
             flagChanging.remove(manager);
-        } else if (ModSettings.SMART_DOUBLING.equals(setting)) {
+        } else if (ModSettings.smartDoubling.equals(setting)) {
             doublingUpdater.run();
         }
     }
@@ -53,12 +53,12 @@ public final class ProviderSettingsImplementations {
                                         IPatternDetails patternDetails) {
         return target.containsPatternInput(inputs)
                 && (!isBlocking
-                || (!StateSmartBlocking.ENABLED.equals(configManager.getSetting(ModSettings.SMART_BLOCKING))
+                || (!StateSmartBlocking.ENABLED.equals(configManager.getSetting(ModSettings.smartBlocking))
                 || !matchBlockingInputs(target, patternDetails)));
     }
 
     public static void updateDoublingState(IConfigManager configManager, List<IPatternDetails> patterns) {
-        patterns.forEach(ExtensionScaledPattern.setState(configManager.getSetting(ModSettings.SMART_DOUBLING)));
+        patterns.forEach(ExtensionScaledPattern.setState(configManager.getSetting(ModSettings.smartDoubling)));
     }
 
     private static boolean matchBlockingInputs(PatternProviderTarget target, IPatternDetails patternDetails) {

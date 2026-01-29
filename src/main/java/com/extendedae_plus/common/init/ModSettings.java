@@ -15,38 +15,38 @@ import java.util.*;
 
 /// 使用EAEPCycleButton喵, 使用EAEPCycleButton谢谢喵
 public class ModSettings {
-    public static final Map<String, Setting<?>> EAEP_SETTINGS = new HashMap<>();
+    public static final Map<String, Setting<?>> settings = new HashMap<>();
     private static final Map<ValueEntry, ButtonAppearance> appearances = new HashMap<>();
 
-    public static final Setting<PartTicker.StateTicker> STATE_TICKER =
+    public static final Setting<PartTicker.StateTicker> stateTicker =
             register("state_ticker", PartTicker.StateTicker.class)
-                    .bindAll(EAEPActionItems.TICKER_ENABLED,
-                            EAEPActionItems.TICKER_DISABLED,
-                            EAEPActionItems.TICKER_BLACKLISTED)
+                    .bindAll(EAEPActionItems.tickerEnabled,
+                            EAEPActionItems.tickerDisabled,
+                            EAEPActionItems.tickerBlacklisted)
                     .setInvalidValue(PartTicker.StateTicker.BLACKLISTED)
                     .build();
-    public static final Setting<RedstoneMode> OPTIONAL_REDSTONE_MODE =
+    public static final Setting<RedstoneMode> modeRedstoneOptional =
             register("optional_redstone_mode", RedstoneMode.class)
-                    .addPart(RedstoneMode.IGNORE, EAEPActionItems.REDSTONE_IGNORE)
-                    .addPart(RedstoneMode.LOW_SIGNAL, EAEPActionItems.REDSTONE_LOW)
-                    .addPart(RedstoneMode.HIGH_SIGNAL, EAEPActionItems.REDSTONE_HIGH)
+                    .addPart(RedstoneMode.IGNORE, EAEPActionItems.redstoneIgnore)
+                    .addPart(RedstoneMode.LOW_SIGNAL, EAEPActionItems.redstoneLow)
+                    .addPart(RedstoneMode.HIGH_SIGNAL, EAEPActionItems.redstoneHigh)
                     .build();
-    public static final Setting<StateSmartBlocking> SMART_BLOCKING =
+    public static final Setting<StateSmartBlocking> smartBlocking =
             register("smart_blocking", StateSmartBlocking.class)
-                    .bindAll(EAEPActionItems.BLOCKING_ENABLED,
-                            EAEPActionItems.BLOCKING_DISABLED,
-                            EAEPActionItems.BLOCKING_DISABLED_BY_SUPER)
+                    .bindAll(EAEPActionItems.blockingEnabled,
+                            EAEPActionItems.blockingDisabled,
+                            EAEPActionItems.blockingUnable)
                     .build();
-    public static final Setting<YesNo> SMART_DOUBLING =
+    public static final Setting<YesNo> smartDoubling =
             register("smart_doubling", YesNo.class)
-                    .addPart(YesNo.YES, EAEPActionItems.DOUBLING_ENABLED)
-                    .addPart(YesNo.NO, EAEPActionItems.DOUBLING_DISABLED)
+                    .addPart(YesNo.YES, EAEPActionItems.doublingEnabled)
+                    .addPart(YesNo.NO, EAEPActionItems.doublingDisabled)
                     .build();
-    public static final Setting<ModeEncodingTransfer> TRANSFER_MODE =
+    public static final Setting<ModeEncodingTransfer> modeTransfer =
             register("transfer_mode", ModeEncodingTransfer.class)
-                    .bindAll(EAEPActionItems.MERGE_NONE,
-                            EAEPActionItems.MERGE_ADJACENCY,
-                            EAEPActionItems.MERGE_INDEPENDENCE)
+                    .bindAll(EAEPActionItems.mergeNone,
+                            EAEPActionItems.mergeAdjacency,
+                            EAEPActionItems.mergeIndependence)
                     .build();
 
     private static <TEnum extends Enum<TEnum>> Builder<TEnum> register(String name, Class<TEnum> clazzSetting) {
@@ -60,18 +60,14 @@ public class ModSettings {
     public record ValueEntry(String setting, Enum<?> value) {
         @Override
         public int hashCode() {
-            return this.setting.hashCode() ^ this.value.hashCode();
+            return Objects.hash(this.setting, this.value);
         }
 
         @Override
         public boolean equals(Object obj) {
-            if (obj == null) {
-                return false;
-            }
-            if (this.getClass() != obj.getClass()) {
-                return false;
-            }
-            final ValueEntry other = (ValueEntry) obj;
+            if (obj == null) return false;
+            if (this.getClass() != obj.getClass()) return false;
+            final var other = (ValueEntry) obj;
             return Objects.equals(other.setting, this.setting) && other.value == this.value;
         }
     }
@@ -129,7 +125,7 @@ public class ModSettings {
                 boundValues.removeAll(this.invalidValues);
 
             var setting = new Setting<>(this.name, this.clazzSetting, boundValues);
-            EAEP_SETTINGS.put(this.name, setting);
+            settings.put(this.name, setting);
 
             return setting;
         }

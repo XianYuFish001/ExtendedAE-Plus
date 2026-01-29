@@ -11,6 +11,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.pedroksl.advanced_ae.common.logic.AdvPatternProviderLogic;
 import net.pedroksl.advanced_ae.common.logic.AdvPatternProviderLogicHost;
 import org.slf4j.Logger;
+import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -29,9 +30,11 @@ public class MixinAdvProviderCardSlotAppFlux implements HelperProviderUpgradesIn
     @Unique
     private final Set<Runnable> eaep$onUpgradesChanged = new HashSet<>();
 
+    @Dynamic("advancedae_appflux")
     @Shadow
     private IUpgradeInventory af_upgrades;
 
+    @Dynamic("advancedae_appflux")
     @Shadow
     private void af_onUpgradesChanged() {}
 
@@ -44,6 +47,7 @@ public class MixinAdvProviderCardSlotAppFlux implements HelperProviderUpgradesIn
         }
     }
 
+    @Dynamic("advancedae_appflux")
     @Inject(method = "af_onUpgradesChanged", at = @At("HEAD"))
     private void eaep$onUpgradesChanged(CallbackInfo ci) {
         try {

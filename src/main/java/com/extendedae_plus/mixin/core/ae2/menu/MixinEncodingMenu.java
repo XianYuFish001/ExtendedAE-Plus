@@ -73,7 +73,7 @@ public abstract class MixinEncodingMenu extends MEStorageMenu
                         CallbackInfo ci) {
         if (this.isClientSide()) {
             if (!(this.getConfigManager() instanceof ConfigManager manager)) return;
-            manager.registerSetting(ModSettings.TRANSFER_MODE, ModeEncodingTransfer.NONE);
+            manager.registerSetting(ModSettings.modeTransfer, ModeEncodingTransfer.NONE);
             return;
         }
         this.eaep$providerList = PatternUploader.collectProvider(this);
@@ -129,13 +129,6 @@ public abstract class MixinEncodingMenu extends MEStorageMenu
             PacketDistributor.sendToPlayer(player, SPacketEncodeFinished.INSTANCE);
         }
     }
-
-//    @Inject(method = "onSlotChange", at = @At("TAIL"))
-//    private void executeDelay(Slot s, CallbackInfo ci) {
-//        if (!this.eaep$encodeActionDelayed) return;
-//        this.eaep$encodeActionDelayed = false;
-//        this.encode();
-//    }
 
     @Inject(method = "encodePattern", at = @At("TAIL"), cancellable = true)
     private void onPatternEncode(CallbackInfoReturnable<ItemStack> cir) {

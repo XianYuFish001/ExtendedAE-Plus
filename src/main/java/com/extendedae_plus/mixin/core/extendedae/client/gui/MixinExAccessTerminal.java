@@ -65,8 +65,8 @@ public abstract class MixinExAccessTerminal extends AEBaseScreen<AEBaseMenu>
                         ScreenStyle style,
                         CallbackInfo ci) {
         var buttonRowSlotVisible = new EAEPCycleButton.Builder()
-                .addPart(EAEPActionItems.ROW_SLOTS_VISIBLE, this::eaep$toggleRowSlotsVisible)
-                .addPart(EAEPActionItems.ROW_SLOTS_INVISIBLE, this::eaep$toggleRowSlotsVisible)
+                .addPart(EAEPActionItems.rowSlotsVisible, this::eaep$toggleRowSlotsVisible)
+                .addPart(EAEPActionItems.rowSlotsInvisible, this::eaep$toggleRowSlotsVisible)
                 .build();
         buttonRowSlotVisible.setStateIndex(
                 EAEPConfig.accessTerminalSlotsVisibleDefault.getAsBoolean() ? 0 : 1);
@@ -123,7 +123,7 @@ public abstract class MixinExAccessTerminal extends AEBaseScreen<AEBaseMenu>
 
     @Unique
     private void eaep$toggleRowSlotsVisible(EAEPActionItems action) {
-        this.eaep$rowSlotsVisible = action.equals(EAEPActionItems.ROW_SLOTS_VISIBLE);
+        this.eaep$rowSlotsVisible = action.equals(EAEPActionItems.rowSlotsVisible);
         this.refreshList();
     }
 

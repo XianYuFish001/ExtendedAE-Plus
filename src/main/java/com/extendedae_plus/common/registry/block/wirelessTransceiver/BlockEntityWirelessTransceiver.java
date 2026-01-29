@@ -131,15 +131,6 @@ public class BlockEntityWirelessTransceiver extends AENetworkedBlockEntity
                     this.host.setPlacer(settings.placer);
                     this.host.setPlacerName(settings.placerName);
                 });
-//        if (data.hasUUID("placer"))
-//            this.host.setPlacer(data.getUUID("placer"));
-//        if (data.contains("placer_name"))
-//            this.host.setPlacerName(data.getString("placer_name"));
-//
-//        if (!data.contains("data_label")) return;
-//        Label.CODEC.parse(NbtOps.INSTANCE, data.get("data_label"))
-//                .resultOrPartial(LOGGER::error)
-//                .ifPresent(dataLabel -> this.setLabel(dataLabel, true));
     }
 
     @Override
@@ -152,14 +143,6 @@ public class BlockEntityWirelessTransceiver extends AENetworkedBlockEntity
                 this.getPlacerName()
         )).resultOrPartial(LOGGER::error)
                 .ifPresent(dataSettings -> data.put("data_settings", dataSettings));
-//        if (this.host.getPlacer() != null)
-//            data.putUUID("placer", this.host.getPlacer());
-//        if (!this.host.getPlacerName().isEmpty())
-//            data.putString("placer_name", this.host.getPlacerName());
-//
-//        Label.CODEC.encodeStart(NbtOps.INSTANCE, this.getLabel())
-//                .resultOrPartial(LOGGER::error)
-//                .ifPresent(dataLabel -> data.put("data_label", dataLabel));
     }
 
     @Override
@@ -178,6 +161,8 @@ public class BlockEntityWirelessTransceiver extends AENetworkedBlockEntity
         if (this.getBlockState().getValue(BlockWirelessTransceiver.MASTER_MODE))
             this.linkMaster.setLabel(label);
         else this.linkSlave.setLabel(label);
+        this.host.setPlacer(label.data.placer());
+        this.host.setPlacerName(label.data.placerName());
     }
 
     public Label getLabel() {

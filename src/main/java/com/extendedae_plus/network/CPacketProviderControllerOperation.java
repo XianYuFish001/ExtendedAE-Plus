@@ -167,21 +167,21 @@ public record CPacketProviderControllerOperation(
 
         // 2. 高级阻挡模式
         if (this.operationSmartBlocking != Operation.NOOP) {
-            var prev = configManager.getSetting(ModSettings.SMART_BLOCKING);
+            var prev = configManager.getSetting(ModSettings.smartBlocking);
             var target = calculateTargetState(prev,
                     StateSmartBlocking.ENABLED,
                     StateSmartBlocking.DISABLED,
                     EnumSet.of(StateSmartBlocking.ENABLED, StateSmartBlocking.DISABLED),
                     this.operationSmartBlocking);
-            configManager.putSetting(ModSettings.SMART_BLOCKING, target);
+            configManager.putSetting(ModSettings.smartBlocking, target);
             anyChanged |= (prev != target);
         }
 
         // 3. 智能翻倍模式
         if (this.operationSmartDoubling != Operation.NOOP) {
-            var prev = configManager.getSetting(ModSettings.SMART_DOUBLING);
+            var prev = configManager.getSetting(ModSettings.smartDoubling);
             var target = calculateYesNoState(prev, this.operationSmartDoubling);
-            configManager.putSetting(ModSettings.SMART_DOUBLING, target);
+            configManager.putSetting(ModSettings.smartDoubling, target);
             anyChanged |= (prev != target);
         }
 

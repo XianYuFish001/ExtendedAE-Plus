@@ -59,16 +59,16 @@ public class PartTicker extends UpgradeablePart {
     @Override
     protected void registerSettings(IConfigManagerBuilder builder) {
         super.registerSettings(builder);
-        builder.registerSetting(ModSettings.STATE_TICKER, StateTicker.ENABLED);
-        builder.registerSetting(ModSettings.OPTIONAL_REDSTONE_MODE, RedstoneMode.IGNORE);
+        builder.registerSetting(ModSettings.stateTicker, StateTicker.ENABLED);
+        builder.registerSetting(ModSettings.modeRedstoneOptional, RedstoneMode.IGNORE);
     }
 
     private void prepareTick(BlockEntity blockEntity) {
         if (this.speedMultiplier <= 1) return;
-        if (!this.getConfigManager().getSetting(ModSettings.STATE_TICKER).equals(StateTicker.ENABLED)) return;
+        if (!this.getConfigManager().getSetting(ModSettings.stateTicker).equals(StateTicker.ENABLED)) return;
         if (this.getGridNode() == null) return;
 
-        if (switch (this.getConfigManager().getSetting(ModSettings.OPTIONAL_REDSTONE_MODE)) {
+        if (switch (this.getConfigManager().getSetting(ModSettings.modeRedstoneOptional)) {
             case LOW_SIGNAL -> this.getHost().hasRedstone();
             case HIGH_SIGNAL -> !this.getHost().hasRedstone();
             default -> false;
@@ -127,11 +127,11 @@ public class PartTicker extends UpgradeablePart {
     private void changeTarget(BlockState target) {
         if (target.isAir()) {
             this.costMultiplier = 1D;
-            this.getConfigManager().putSetting(ModSettings.STATE_TICKER, StateTicker.DISABLED);
+            this.getConfigManager().putSetting(ModSettings.stateTicker, StateTicker.DISABLED);
         } else {
             this.costMultiplier = ParserTickerConfig.getBlockExternalMultiplier(target);
             if (ParserTickerConfig.isBlockBlacklisted(target))
-                this.getConfigManager().putSetting(ModSettings.STATE_TICKER, StateTicker.BLACKLISTED);
+                this.getConfigManager().putSetting(ModSettings.stateTicker, StateTicker.BLACKLISTED);
         }
         this.recalculateEnergyCost();
         if (this.logic != null) {
@@ -142,7 +142,7 @@ public class PartTicker extends UpgradeablePart {
 
     @Override
     public RedstoneMode getRSMode() {
-        return this.getConfigManager().getSetting(ModSettings.OPTIONAL_REDSTONE_MODE);
+        return this.getConfigManager().getSetting(ModSettings.modeRedstoneOptional);
     }
 
     private void recalculateAll() {
@@ -205,7 +205,7 @@ public class PartTicker extends UpgradeablePart {
         public TickRateModulation tickingRequest(IGridNode node, int ticksSinceLastCall) {
             if (getSide() == null)
                 return TickRateModulation.SLEEP;
-            if (!getConfigManager().getSetting(ModSettings.STATE_TICKER).equals(StateTicker.ENABLED))
+            if (!getConfigManager().getSetting(ModSettings.stateTicker).equals(StateTicker.ENABLED))
                 return TickRateModulation.SLEEP;
 
             var targetBlockEntity = getLevel().getBlockEntity(getBlockEntity().getBlockPos().relative(getSide()));

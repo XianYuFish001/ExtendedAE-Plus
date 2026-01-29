@@ -20,7 +20,7 @@ public class MixinEncodingTransfer {
     private static void onTransferAdding(List<GenericStack> stacks, GenericStack newStack, CallbackInfo ci) {
         var player = Minecraft.getInstance().player;
         if (player == null || !(player.containerMenu instanceof PatternEncodingTermMenu menu)) return;
-        switch (menu.getConfigManager().getSetting(ModSettings.TRANSFER_MODE)) {
+        switch (menu.getConfigManager().getSetting(ModSettings.modeTransfer)) {
             case INDEPENDENCE -> {
                 stacks.add(newStack);
                 ci.cancel();

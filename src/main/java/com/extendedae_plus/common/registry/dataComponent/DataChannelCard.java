@@ -42,12 +42,15 @@ public record DataChannelCard(Label.Data label, @Nullable UUID owner, String own
                 new DataChannelCard(label, owner, ownerName));
     }
 
-    public static void setLabel(ItemStack stack, Label.Data label) {
+    public static void setLabel(ItemStack stack, Label.Data label, boolean changeOwner) {
         var data = stack.get(ModDataComponents.DATA_CHANNEL_CARD);
 
         DataChannelCard newData;
-        if (data != null) newData = new DataChannelCard(label, data.owner(), data.ownerName());
-        else newData = new DataChannelCard(label, null, "");
+        if (data != null)
+            newData = new DataChannelCard(label,
+                changeOwner ? label.placer() : data.owner(),
+                changeOwner ? label.placerName() : data.ownerName());
+        else newData = new DataChannelCard(label, label.placer(), label.placerName());
 
         stack.set(ModDataComponents.DATA_CHANNEL_CARD, newData);
     }

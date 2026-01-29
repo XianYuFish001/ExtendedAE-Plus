@@ -45,8 +45,8 @@ public class MenuTicker extends UpgradeableMenu<PartTicker> {
 
     @Override
     protected void loadSettingsFromHost(IConfigManager configManager) {
-        this.setRedStoneMode(configManager.getSetting(ModSettings.OPTIONAL_REDSTONE_MODE));
-        this.stateTicker = this.getHost().getConfigManager().getSetting(ModSettings.STATE_TICKER);
+        this.setRedStoneMode(configManager.getSetting(ModSettings.modeRedstoneOptional));
+        this.stateTicker = this.getHost().getConfigManager().getSetting(ModSettings.stateTicker);
     }
 
     @Override

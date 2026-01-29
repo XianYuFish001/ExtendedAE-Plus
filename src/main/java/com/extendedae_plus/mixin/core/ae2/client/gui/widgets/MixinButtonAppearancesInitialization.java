@@ -48,6 +48,7 @@ public class MixinButtonAppearancesInitialization<TEnum extends Enum<TEnum>> {
             return;
         var appearance = ModSettings.findAppearance(this.buttonSetting, this.currentValue);
         if (appearance == null) return;
+        if (appearance.action().getName().getString().isEmpty()) return;
         cir.setReturnValue(List.of(appearance.action().getName(), appearance.action().getTooltip()));
     }
 }

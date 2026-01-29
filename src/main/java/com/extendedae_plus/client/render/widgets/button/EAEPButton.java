@@ -37,10 +37,9 @@ public abstract class EAEPButton extends IconButton {
     }
 
     protected void updateTooltip() {
-        if (this.getNonnullAction().hasName())
-            this.setMessage(this.buildMessage(
-                    this.getNonnullAction().getName(),
-                    this.getNonnullAction().getTooltip()));
+        var action = this.getNonnullAction();
+        if (action.getName().getString().isEmpty()) return;
+        this.setMessage(this.buildMessage(action.getName(), action.getTooltip()));
     }
 
     public void setScale(float scale) {
@@ -62,7 +61,7 @@ public abstract class EAEPButton extends IconButton {
 
     private EAEPActionItems getNonnullAction() {
         var action = this.getAction();
-        if (action == null) return EAEPActionItems.BACKING_OUT;
+        if (action == null) return EAEPActionItems.backingOut;
         else return action;
     }
 

@@ -28,18 +28,18 @@ public record CPacketInterfaceScaling(int scale, boolean divide) implements CPac
         int scale = 0;
         boolean divide = false;
         switch (action) {
-            case MUL2 -> scale = 2;
-            case MUL3 -> scale = 3;
-            case MUL5 -> scale = 5;
-            case DIV2 -> {
+            case mul2 -> scale = 2;
+            case mul3 -> scale = 3;
+            case mul5 -> scale = 5;
+            case div2 -> {
                 scale = 2;
                 divide = true;
             }
-            case DIV3 -> {
+            case div3 -> {
                 scale = 3;
                 divide = true;
             }
-            case DIV5 -> {
+            case div5 -> {
                 scale = 5;
                 divide = true;
             }

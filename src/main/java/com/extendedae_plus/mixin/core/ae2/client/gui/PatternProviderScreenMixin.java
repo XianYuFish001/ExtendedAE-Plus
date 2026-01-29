@@ -56,7 +56,7 @@ public abstract class PatternProviderScreenMixin<C extends PatternProviderMenu>
         this.addToLeftToolbar(this.eaep$buttonSmartBlocking);
         this.addToLeftToolbar(this.eaep$buttonSmartDoubling);
 
-        EAEPActionItems.GROUPED_ACTIONS.get("scaling").forEach(action ->
+        EAEPActionItems.actions.get("scaling").forEach(action ->
                 this.eaep$scalingButtons.add(new EAEPActionButton(action, CPacketScalePatterns::send)));
 
         this.eaep$scalingButtons.forEach(button -> {

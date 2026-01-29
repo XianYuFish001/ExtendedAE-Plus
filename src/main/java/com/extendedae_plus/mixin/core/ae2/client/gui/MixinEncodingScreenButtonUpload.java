@@ -29,7 +29,7 @@ public abstract class MixinEncodingScreenButtonUpload<TMenu extends PatternEncod
                         ScreenStyle style,
                         CallbackInfo ci) {
         if (!EAEPConfig.independentUploadButton.get()) return;
-        var buttonUpload = new EAEPActionButton(EAEPActionItems.PATTERN_UPLOAD,
+        var buttonUpload = new EAEPActionButton(EAEPActionItems.patternUpload,
                 $ -> PacketDistributor.sendToServer(CPacketRequestUploading.INSTANCE));
         buttonUpload.setScale(0.75F);
         this.widgets.add("external.screen_encode.button_upload", buttonUpload);

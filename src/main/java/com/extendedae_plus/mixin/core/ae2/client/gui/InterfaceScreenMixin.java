@@ -46,7 +46,7 @@ public abstract class InterfaceScreenMixin<TMenu extends InterfaceMenu>
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void addScaleButtons(CallbackInfo ci) {
-        EAEPActionItems.GROUPED_ACTIONS.get("scaling").forEach(action ->
+        EAEPActionItems.actions.get("scaling").forEach(action ->
                 this.eaep$scalingButtons.add(new EAEPActionButton(action, CPacketInterfaceScaling::send)));
 
         this.eaep$scalingButtons.forEach(button -> {

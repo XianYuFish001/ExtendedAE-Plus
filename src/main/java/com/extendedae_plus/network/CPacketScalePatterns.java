@@ -34,21 +34,21 @@ public record CPacketScalePatterns(int scale, boolean mul) implements CPacketGen
         boolean mul = false;
 
         switch (action) {
-            case MUL2 -> {
+            case mul2 -> {
                 scale = 2;
                 mul = true;
             }
-            case MUL3 -> {
+            case mul3 -> {
                 scale = 3;
                 mul = true;
             }
-            case MUL5 -> {
+            case mul5 -> {
                 scale = 5;
                 mul = true;
             }
-            case DIV2 -> scale = 2;
-            case DIV3 -> scale = 3;
-            case DIV5 -> scale = 5;
+            case div2 -> scale = 2;
+            case div3 -> scale = 3;
+            case div5 -> scale = 5;
         }
 
         if (scale > 0)

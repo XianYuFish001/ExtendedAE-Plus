@@ -36,8 +36,8 @@ public class MixinProviderSettingsSyncing implements SyncerSmartBlocking, Syncer
         if (((PatternProviderMenu)(Object) this).isClientSide()) return;
 
         var configManager = this.logic.getConfigManager();
-        this.eaep$stateBlocking = configManager.getSetting(ModSettings.SMART_BLOCKING);
-        this.eaep$stateDoubling = configManager.getSetting(ModSettings.SMART_DOUBLING);
+        this.eaep$stateBlocking = configManager.getSetting(ModSettings.smartBlocking);
+        this.eaep$stateDoubling = configManager.getSetting(ModSettings.smartDoubling);
     }
 
     @Override

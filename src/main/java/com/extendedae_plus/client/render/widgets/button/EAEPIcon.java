@@ -4,33 +4,35 @@ import appeng.client.gui.Icon;
 import appeng.client.gui.style.Blitter;
 import com.extendedae_plus.ExtendedAEPlus;
 import net.minecraft.resources.ResourceLocation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public enum EAEPIcon implements IButtonIcon {
-    MUL2(0, 0),
-    DIV2(16, 0),
-    MUL3(32, 0),
-    DIV3(48, 0),
-    DISCONNECTED(64, 0),
-    CONNECTED(80, 0),
-    SIGNAL_SEND(96, 0),
-    SIGNAL_RECEIVE(112, 0),
+    mul2(0, 0),
+    div2(16, 0),
+    mul3(32, 0),
+    div3(48, 0),
+    disconnected(64, 0),
+    connected(80, 0),
+    signalSend(96, 0),
+    signalReceive(112, 0),
 
-    MUL5(0, 16),
-    DIV5(16, 16),
-    PATTERN_SINGLE(32, 16),
-    PATTERN_MULTI(48, 16),
-    MERGE_ADJACENCY(64, 16),
-    MERGE_NONE(80, 16),
+    mul5(0, 16),
+    div5(16, 16),
+    patternSingle(32, 16),
+    patternMulti(48, 16),
+    mergeAdjacency(64, 16),
+    mergeNone(80, 16),
 
-    BLOCKING_TRANSPARENT(0, 32),
-    SAVE_CENTER(16, 32),
-    SAVE_UP(32, 32),
-    SAVE_DOWN(48, 32),
+    blockingTransparent(0, 32),
+    saveCenter(16, 32),
+    saveUp(32, 32),
+    saveDown(48, 32),
 
-    LIST_WITH_CHILDREN(0, 48),
-    LIST_MULTI(16, 48),
-    CHAR_F(32, 48),
-    CHAR_L(48, 48),
+    listWithChildren(0, 48),
+    listMulti(16, 48),
+    charF(32, 48),
+    charL(48, 48),
 
     ;
 
@@ -38,6 +40,8 @@ public enum EAEPIcon implements IButtonIcon {
     public final int y;
     public final int width;
     public final int height;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger("[EAEP/Icon]");
 
     public static final ResourceLocation TEXTURE =
             ExtendedAEPlus.getLocation("textures/gui/icons.png");
@@ -63,7 +67,8 @@ public enum EAEPIcon implements IButtonIcon {
 
     @Override
     public Icon getAEIcon() {
-        return Icon.INVALID;
+        LOGGER.warn("Unsupported AEIcon call");
+        return Icon.TOOLBAR_BUTTON_BACKGROUND;
     }
 
     public static IButtonIcon fromAEIcon(Icon aeIcon) {

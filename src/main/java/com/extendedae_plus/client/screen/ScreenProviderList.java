@@ -96,9 +96,9 @@ public class ScreenProviderList<TMenu extends PatternEncodingTermMenu,
                         btn -> this.returnToParent())
         );
 
-        this.addToLeftToolbar(new EAEPActionButton(EAEPActionItems.ALIAS_ADD,
+        this.addToLeftToolbar(new EAEPActionButton(EAEPActionItems.aliasAdd,
                 $ -> this.addMapping()));
-        this.addToLeftToolbar(new EAEPActionButton(EAEPActionItems.ALIAS_REMOVE,
+        this.addToLeftToolbar(new EAEPActionButton(EAEPActionItems.aliasRemove,
                 $ -> this.removeMappings()));
 
         this.scrollbar = this.widgets.addScrollBar("scrollbar", Scrollbar.BIG);

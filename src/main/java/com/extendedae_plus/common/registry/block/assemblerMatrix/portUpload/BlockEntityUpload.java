@@ -138,6 +138,8 @@ public class BlockEntityUpload extends TileAssemblerMatrixWall
     public void setLabel(Label label, boolean force) {
         if (!force && this.getBlockState().getValue(BlockUpload.LOCKED)) return;
         this.linkSlave.setLabel(label);
+        this.host.setPlacer(label.data.placer());
+        this.host.setPlacerName(label.data.placerName());
     }
 
     public Label getLabel() {

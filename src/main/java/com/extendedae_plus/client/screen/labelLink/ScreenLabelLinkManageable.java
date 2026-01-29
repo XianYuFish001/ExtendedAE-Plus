@@ -51,30 +51,30 @@ public class ScreenLabelLinkManageable extends ScreenLabelLink {
                 .build());
 
         this.buttonLabelType = new EAEPCycleButton.Builder()
-                .addPart(EAEPActionItems.LABEL_LABEL)
-                .addPart(EAEPActionItems.LABEL_FREQUENCY)
+                .addPart(EAEPActionItems.labelLabel)
+                .addPart(EAEPActionItems.labelFrequency)
                 .build();
         this.widgets.add("button_label_type", this.buttonLabelType);
 
         this.buttonLabelMode = new EAEPCycleButton.Builder()
-                .addPart(EAEPActionItems.LABEL_PRIVATE)
-                .addPart(EAEPActionItems.LABEL_PUBLIC)
+                .addPart(EAEPActionItems.labelPrivate)
+                .addPart(EAEPActionItems.labelPublic)
                 .build();
         this.widgets.add("button_label_mode", this.buttonLabelMode);
 
         this.widgets.add("button_label_add",
-                new EAEPActionButton(EAEPActionItems.LABEL_ADD,
+                new EAEPActionButton(EAEPActionItems.labelAdd,
                         $ -> this.onLabelRegister()));
 
         this.buttonLock = new EAEPServerCycleButton.Builder()
-                .addPart(EAEPActionItems.LABEL_UNLOCKED)
-                .addPart(EAEPActionItems.LABEL_LOCKED)
+                .addPart(EAEPActionItems.labelUnlocked)
+                .addPart(EAEPActionItems.labelLocked)
                 .setTask(menu::toggleLock)
                 .setSyncer(menu::isLocked)
                 .build();
         this.buttonMaster = new EAEPServerCycleButton.Builder()
-                .addPart(EAEPActionItems.TRANSCEIVER_SLAVE)
-                .addPart(EAEPActionItems.TRANSCEIVER_MASTER)
+                .addPart(EAEPActionItems.transceiverSlave)
+                .addPart(EAEPActionItems.transceiverMaster)
                 .setTask(menu::toggleMaster)
                 .setSyncer(menu::isMaster)
                 .build();
@@ -131,12 +131,12 @@ public class ScreenLabelLinkManageable extends ScreenLabelLink {
         var description = this.fieldLabelDescription.getValue();
 
         UUID placer = null;
-        if (this.buttonLabelMode.getAction() == EAEPActionItems.LABEL_PRIVATE)
+        if (this.buttonLabelMode.getAction() == EAEPActionItems.labelPrivate)
             placer = IntegrationFTBTeams.instance.getTeamUUID(this.getPlayer().getUUID())
                     .orElse(this.getPlayer().getUUID());
 
         Label.Data data;
-        if (this.buttonLabelType.getAction() == EAEPActionItems.LABEL_LABEL) {
+        if (this.buttonLabelType.getAction() == EAEPActionItems.labelLabel) {
             data = Label.Data.of(value, placer, Component.literal(description));
         } else {
             try {

@@ -33,6 +33,7 @@ import java.util.function.UnaryOperator;
  * <p> 借助状态回溯机制实现了与以前(和现在)dataGen方法的便利添加逻辑, 甚至更加好用
  * <p> 灵感来源于{@link ModConfigSpec}, 虽然实际上很不同
  */
+// TODO 有点乱了, 还是换咳特灵吧
 public class UtilKeyBuilder {
     public static final String creativeTab = "creative_tab.%s%s";
     public static final String tooltip = "tooltip.%s%s";
@@ -283,8 +284,9 @@ public class UtilKeyBuilder {
         }
 
         protected BuilderAdder(BuilderGeneric<TBuilder> original, Consumer<Component> target, boolean saveSnapshot) {
-            super(original, saveSnapshot);
+            super(original, false);
             this.target = target;
+            if (saveSnapshot) this.saveSnapshot();
         }
 
         @SuppressWarnings("unchecked")
@@ -331,8 +333,9 @@ public class UtilKeyBuilder {
         }
 
         protected BuilderBiAdder(BuilderGeneric<TBuilder> original, BiConsumer<TKey, Component> target, boolean saveSnapshot) {
-            super(original, saveSnapshot);
+            super(original, false);
             this.target = target;
+            if (saveSnapshot) this.saveSnapshot();
         }
 
         @SuppressWarnings("unchecked")
@@ -377,8 +380,9 @@ public class UtilKeyBuilder {
         protected BuilderCollection(BuilderGeneric<BuilderCollection> original,
                                     Collection<Component> target,
                                     boolean saveSnapshot) {
-            super(original, target::add, saveSnapshot);
+            super(original, target::add, false);
             this.target = target;
+            if (saveSnapshot) this.saveSnapshot();
         }
 
         @Override
@@ -402,8 +406,9 @@ public class UtilKeyBuilder {
         protected BuilderMap(BuilderGeneric<BuilderMap<TKey>> original,
                              Map<TKey, Component> target,
                              boolean saveSnapshot) {
-            super(original, target::put, saveSnapshot);
+            super(original, target::put, false);
             this.target = target;
+            if (saveSnapshot) this.saveSnapshot();
         }
 
         @Override

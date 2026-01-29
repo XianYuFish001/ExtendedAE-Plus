@@ -38,7 +38,7 @@ public class MixinExInterfaceScaling extends UpgradeableScreen<ContainerExInterf
                         Component title,
                         ScreenStyle style,
                         CallbackInfo ci) {
-        EAEPActionItems.GROUPED_ACTIONS.get("scaling").forEach(action ->
+        EAEPActionItems.actions.get("scaling").forEach(action ->
                 this.eaep$scalingButtons.add(new EAEPActionButton(action, CPacketInterfaceScaling::send)));
 
         this.eaep$scalingButtons.forEach(button -> {

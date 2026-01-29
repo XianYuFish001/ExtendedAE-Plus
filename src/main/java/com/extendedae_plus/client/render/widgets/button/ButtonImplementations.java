@@ -15,10 +15,10 @@ import org.jetbrains.annotations.Nullable;
 public class ButtonImplementations {
     public static EAEPServerCycleButton buttonBlocking(AbstractContainerMenu menu) {
         EAEPServerCycleButton button = new EAEPServerCycleButton.Builder()
-                .setTask(new ConfigButtonPacket(ModSettings.SMART_BLOCKING, false))
-                .addPart(EAEPActionItems.BLOCKING_DISABLED)
-                .addPart(EAEPActionItems.BLOCKING_ENABLED)
-                .addPart(EAEPActionItems.BLOCKING_DISABLED_BY_SUPER)
+                .setTask(new ConfigButtonPacket(ModSettings.smartBlocking, false))
+                .addPart(EAEPActionItems.blockingDisabled)
+                .addPart(EAEPActionItems.blockingEnabled)
+                .addPart(EAEPActionItems.blockingUnable)
                 .setIterator((prev, reversed) -> (prev + (reversed ? -1 : 1)) % 2)
                 .setSyncer(() -> {
                     if (!(menu instanceof SyncerSmartBlocking syncer)) return 0;
@@ -35,9 +35,9 @@ public class ButtonImplementations {
 
     public static EAEPServerCycleButton buttonDoubling(AbstractContainerMenu menu) {
         EAEPServerCycleButton button = new EAEPServerCycleButton.Builder()
-                .setTask(new ConfigButtonPacket(ModSettings.SMART_DOUBLING, false))
-                .addPart(EAEPActionItems.DOUBLING_DISABLED)
-                .addPart(EAEPActionItems.DOUBLING_ENABLED)
+                .setTask(new ConfigButtonPacket(ModSettings.smartDoubling, false))
+                .addPart(EAEPActionItems.doublingDisabled)
+                .addPart(EAEPActionItems.doublingEnabled)
                 .setSyncer(() -> menu instanceof SyncerSmartDoubling syncer
                         && YesNo.YES.equals(syncer.eaep$getDoublingState()))
                 .build();
