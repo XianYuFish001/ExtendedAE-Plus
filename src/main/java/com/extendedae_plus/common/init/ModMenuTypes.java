@@ -37,15 +37,7 @@ public final class ModMenuTypes {
     public static final DeferredHolder<MenuType<?>, MenuType<MenuLabelLink>> labelLinkManageable =
             regAEMenu("label_link_manageable", (id, playerInventory, host) ->
                     new MenuLabelLink(id, playerInventory, host, true), HostLabelLink.class,
-                    builder -> builder.withInitialData(
-                            (host, buffer) -> {
-                                buffer.writeBoolean(host.isLockable());
-                                buffer.writeBoolean(host.isMasterable());
-                            }, (host, menu, buffer) -> {
-                                menu.setLockable(host.isLockable());
-                                menu.setMasterable(host.isMasterable());
-                            }
-                    ));
+                    MenuLabelLink.dataManagementSerializer);
 
     private static <TMenuType extends AEBaseMenu, THost> DeferredHolder<MenuType<?>, MenuType<TMenuType>>
     regAEMenu(String name,

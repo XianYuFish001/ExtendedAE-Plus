@@ -18,6 +18,7 @@ import com.extendedae_plus.common.init.ModDataComponents;
 import com.extendedae_plus.common.init.ModSettings;
 import com.extendedae_plus.common.registry.dataComponent.DataEncoderProfile;
 import com.extendedae_plus.common.registry.settings.ModeEncodingTransfer;
+import com.extendedae_plus.mixin.impl.IOerMEStorage;
 import com.extendedae_plus.mixin.impl.bridge.BridgeCtrlPressed;
 import com.extendedae_plus.mixin.impl.bridge.BridgePlanToEncode;
 import com.extendedae_plus.mixin.impl.bridge.BridgeProviderList;
@@ -49,6 +50,7 @@ public abstract class MixinEncodingMenu extends MEStorageMenu
     @Shadow
     @Final
     private RestrictedInputSlot blankPatternSlot;
+
     @Shadow
     public abstract void encode();
 
@@ -98,15 +100,19 @@ public abstract class MixinEncodingMenu extends MEStorageMenu
 
     @Override
     public boolean eaep$planned() {
-        var planned = this.eaep$encodeActionDelayed;
-        this.eaep$encodeActionDelayed = false;
-        return planned;
+        try {
+            return this.eaep$encodeActionDelayed;
+        } finally {
+            this.eaep$encodeActionDelayed = false;
+        }
     }
 
     @Inject(method = "encode", at = @At("TAIL"))
-    private void eaep$onEncode(CallbackInfo ci) {
-        if (EAEPConfig.independentUploadButton.getAsBoolean()) return;
+    private void onEncode(CallbackInfo ci) {
         if (this.isClientSide()) return;
+        this.eaep$fillBlankPattern(0);
+
+        if (EAEPConfig.independentUploadButton.getAsBoolean()) return;
 
         if (!this.eaep$ctrlPressed) return;
         this.eaep$ctrlPressed = false;
@@ -119,12 +125,7 @@ public abstract class MixinEncodingMenu extends MEStorageMenu
         var flagMatrixUpload = PatternUploader.uploadToMatrix(player, this);
         if (flagMatrixUpload == null) {
             this.encodedPatternSlot.clearStack();
-            var patternBlank = this.blankPatternSlot.getItem();
-            if (patternBlank.isEmpty())
-                this.blankPatternSlot.set(AEItems.BLANK_PATTERN.stack());
-            else if (patternBlank.getCount() == patternBlank.getMaxStackSize())
-                this.eaep$insertBlankPattern();
-            else patternBlank.grow(1);
+            this.eaep$fillBlankPattern(1);
         } else if (!flagMatrixUpload) {
             PacketDistributor.sendToPlayer(player, SPacketEncodeFinished.INSTANCE);
         }
@@ -141,26 +142,45 @@ public abstract class MixinEncodingMenu extends MEStorageMenu
     }
 
     @Unique
-    private void eaep$insertBlankPattern() {
-        var node = this.getGridNode();
-        if (node != null) {
-            var inv = node.getGrid().getStorageService().getInventory();
+    private void eaep$fillBlankPattern(int countExternal) {
+        ItemStack patternBlank;
+        int countExisting;
+        int countKeep;
+        if (this.blankPatternSlot.getItem().isEmpty()) {
+            patternBlank = AEItems.BLANK_PATTERN.stack();
+            this.blankPatternSlot.set(patternBlank);
+            countExisting = 0;
+        } else {
+            patternBlank = this.blankPatternSlot.getItem();
+            countExisting = patternBlank.getCount();
+        }
+        countKeep = patternBlank.getMaxStackSize() / 2;
 
-            if (inv.insert(AEItemKey.of(AEItems.BLANK_PATTERN),
-                    1,
-                    Actionable.SIMULATE,
-                    this.getActionSource()) > 0) {
-                inv.insert(AEItemKey.of(AEItems.BLANK_PATTERN),
-                        1,
-                        Actionable.MODULATE,
-                        this.getActionSource());
-                return;
-            }
+        var countExtract = countKeep - countExisting - countExternal;
+        if (countExtract == 0) return;
+
+        if (patternBlank.isEmpty())
+            this.blankPatternSlot.set(AEItems.BLANK_PATTERN.stack(countKeep));
+        else patternBlank.setCount(countKeep);
+
+        var node = this.getGridNode();
+        if (node == null) return;
+        var inv = node.getGrid().getStorageService().getInventory();
+
+        IOerMEStorage ioer = countExtract > 0 ? inv::extract : inv::insert;
+        // 再溢出就消失算了(
+        var simulated = ioer.apply(AEItemKey.of(AEItems.BLANK_PATTERN),
+                Math.abs(countExtract),
+                Actionable.SIMULATE,
+                this.getActionSource());
+        if (simulated <= 0) {
+            this.blankPatternSlot.getItem().grow(countExtract);
+            return;
         }
 
-        if (this.getPlayer().getInventory().add(AEItems.BLANK_PATTERN.stack()))
-            return;
-
-        this.getPlayer().drop(AEItems.BLANK_PATTERN.stack(), false);
+        ioer.apply(AEItemKey.of(AEItems.BLANK_PATTERN),
+                Math.abs(countExtract),
+                Actionable.MODULATE,
+                this.getActionSource());
     }
 }

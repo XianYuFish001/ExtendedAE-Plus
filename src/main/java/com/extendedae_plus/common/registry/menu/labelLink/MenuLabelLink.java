@@ -2,6 +2,7 @@ package com.extendedae_plus.common.registry.menu.labelLink;
 
 import appeng.menu.AEBaseMenu;
 import appeng.menu.guisync.GuiSync;
+import appeng.menu.implementations.MenuTypeBuilder;
 import com.extendedae_plus.common.init.ModMenuTypes;
 import com.extendedae_plus.common.registry.menu.host.linkLabel.HostLabelLink;
 import com.extendedae_plus.common.wireless.linkApi.Label;
@@ -14,8 +15,20 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public class MenuLabelLink extends AEBaseMenu {
+    public static final Consumer<MenuTypeBuilder<MenuLabelLink, HostLabelLink>> dataManagementSerializer =
+            builder -> builder.withInitialData(
+                    (host, buffer) -> {
+                        buffer.writeBoolean(host.isLockable());
+                        buffer.writeBoolean(host.isMasterable());
+                    }, (host, menu, buffer) -> {
+                        menu.setLockable(host.isLockable());
+                        menu.setMasterable(host.isMasterable());
+                    }
+            );
+
     private static final String ACTION_SELECT = "select";
     private static final String ACTION_ADD = "add";
     private static final String ACTION_REMOVE = "remove";

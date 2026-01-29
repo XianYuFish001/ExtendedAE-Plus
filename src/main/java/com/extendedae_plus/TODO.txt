@@ -1,7 +1,6 @@
 TODO
     <bug>
         网络工具gui与倍增按钮冲突
-        样板自动填充功能失效(真的有, 记得恢复)
     <feature>
         再好好想想没迁移的feature
         ScreenLabelLink的键盘操作
