@@ -1,6 +1,9 @@
 TODO
     <bug>
     <feature>
+        改键说明:
+            planCrafting shift -> ctrl
+            statusCPU shift -> ctrl
         同步client的keyBuilder逻辑:
             允许外部操作snapshot
             支持实例化snapshotable

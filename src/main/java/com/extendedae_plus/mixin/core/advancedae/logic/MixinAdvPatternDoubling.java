@@ -1,30 +1,35 @@
-package com.extendedae_plus.mixin.core.ae2.logic;
+package com.extendedae_plus.mixin.core.advancedae.logic;
 
 import appeng.api.crafting.IPatternDetails;
-import appeng.api.ids.AEComponents;
 import appeng.api.stacks.AEItemKey;
+import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
-import appeng.crafting.pattern.AEProcessingPattern;
-import appeng.crafting.pattern.EncodedProcessingPattern;
-import com.extendedae_plus.mixin.extension.ExtensionAEItemKey;
+import com.extendedae_plus.mixin.core.ae2.accessor.AccessorItemKey;
 import com.extendedae_plus.mixin.extension.ExtensionScaledPattern;
-import org.spongepowered.asm.mixin.*;
+import net.minecraft.core.Direction;
+import net.pedroksl.advanced_ae.common.patterns.AdvProcessingPattern;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
-@Mixin(AEProcessingPattern.class)
-public class MixinPatternDoubling implements ExtensionScaledPattern {
+@Mixin(AdvProcessingPattern.class)
+public class MixinAdvPatternDoubling implements ExtensionScaledPattern {
     @Shadow
     @Final
-    @Mutable
     private List<GenericStack> sparseInputs;
     @Shadow
     @Final
-    @Mutable
     private List<GenericStack> sparseOutputs;
     @Shadow
     @Final
     private AEItemKey definition;
+    @Shadow
+    @Final
+    private LinkedHashMap<AEKey, Direction> dirMap;
 
     @Unique
     private boolean eaep$enabled;
@@ -56,22 +61,15 @@ public class MixinPatternDoubling implements ExtensionScaledPattern {
         return this.sparseOutputs;
     }
 
-    /**
-     * 我傻了 原来不用操作condensed(
-     * @param multiplier Negative: Divide.
-     *                   Ignore config "smartDoublingMaxMultiplier"
-     * @param saveInfo   Save the multiplied info {@linkplain #eaep$multiplier }, {@linkplain #eaep$enabled}
-     */
-    @Unique
     @Override
     public IPatternDetails eaep$create(long multiplier, boolean saveInfo) {
         var inputs = ExtensionScaledPattern.process(this.sparseInputs, multiplier);
         var outputs = ExtensionScaledPattern.process(this.sparseOutputs, multiplier);
 
-        var multiplied = this.getClass().cast(new AEProcessingPattern(
-                ExtensionAEItemKey.set(AEComponents.ENCODED_PROCESSING_PATTERN,
-                                new EncodedProcessingPattern(inputs, outputs))
-                        .apply(this.definition)));
+        var stackPattern = this.definition.toStack();
+        AdvProcessingPattern.encode(stackPattern, inputs, outputs, this.dirMap);
+        var multiplied = this.getClass().cast(new AdvProcessingPattern(
+                AccessorItemKey.eaep$newInstance(stackPattern)));
         if (saveInfo) {
             multiplied.eaep$setEnabled(true);
             multiplied.eaep$multiplier = multiplier;

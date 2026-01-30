@@ -2,7 +2,7 @@ package com.extendedae_plus.network;
 
 import appeng.api.crafting.PatternDetailsHelper;
 import com.extendedae_plus.client.render.widgets.button.EAEPActionItems;
-import com.extendedae_plus.mixin.core.ae2.accessor.AccessorProviderMenu;
+import com.extendedae_plus.mixin.bridge.HelperProviderMenu;
 import com.extendedae_plus.mixin.extension.ExtensionScaledPattern;
 import com.extendedae_plus.network.base.CPacketGeneric;
 import com.extendedae_plus.network.base.EAEPNetworkPacket;
@@ -39,10 +39,8 @@ public record CPacketScalePatterns(int scale) implements CPacketGeneric {
 
     @Override
     public void handleServer(ServerPlayer player) {
-        if (!(player.containerMenu instanceof AccessorProviderMenu helper)) return;
-
-        var logic = helper.getProviderLogic();
-        var invPattern = logic.getPatternInv();
+        if (!(player.containerMenu instanceof HelperProviderMenu helper)) return;
+        var invPattern = helper.getInvPattern();
 
         invPattern.forEach(stack -> {
             var pattern = PatternDetailsHelper.decodePattern(stack, player.serverLevel());

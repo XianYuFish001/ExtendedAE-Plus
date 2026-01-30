@@ -2,8 +2,10 @@ package com.extendedae_plus.mixin.core.advancedae.client.gui;
 
 import appeng.client.gui.AEBaseScreen;
 import appeng.client.gui.style.ScreenStyle;
-import com.extendedae_plus.client.render.widgets.button.ButtonImplementations;
-import com.extendedae_plus.client.render.widgets.button.EAEPServerCycleButton;
+import com.extendedae_plus.client.render.widgets.button.*;
+import com.extendedae_plus.mixin.bridge.HelperProviderButtons;
+import com.extendedae_plus.network.CPacketScalePatterns;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.pedroksl.advanced_ae.client.gui.AdvPatternProviderScreen;
@@ -14,19 +16,21 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/**
- * 为高级ae样板供应器界面添加“高级阻挡模式”按钮。
- * - 位于左侧工具栏
- * - 点击仅发送 C2S 切换请求；状态由 AE2 @GuiSync 回传决定
- */
+import java.util.ArrayList;
+import java.util.List;
+
 @Mixin(AdvPatternProviderScreen.class)
-public abstract class AdvPatternProviderScreenMixin extends AEBaseScreen<AdvPatternProviderMenu> {
+public abstract class MixinScreenAdvProvider extends AEBaseScreen<AdvPatternProviderMenu> implements HelperProviderButtons {
     @Unique
     private EAEPServerCycleButton eaep$buttonSmartBlocking;
     @Unique
     private EAEPServerCycleButton eaep$buttonSmartDoubling;
+    @Unique
+    private final List<EAEPActionButton> eaep$scalingButtons = new ArrayList<>();
+    @Unique
+    private Pair<Integer, Integer> eaep$lastScreenInfo;
 
-    public AdvPatternProviderScreenMixin(AdvPatternProviderMenu menu, Inventory playerInventory, Component title, ScreenStyle style) {
+    public MixinScreenAdvProvider(AdvPatternProviderMenu menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
     }
 
@@ -36,12 +40,36 @@ public abstract class AdvPatternProviderScreenMixin extends AEBaseScreen<AdvPatt
         this.eaep$buttonSmartDoubling = ButtonImplementations.buttonDoubling(menu);
         this.addToLeftToolbar(this.eaep$buttonSmartBlocking);
         this.addToLeftToolbar(this.eaep$buttonSmartDoubling);
+
+        EAEPActionItems.actions.get("scaling").forEach(action ->
+                this.eaep$scalingButtons.add(new EAEPActionButton(action, CPacketScalePatterns::send)));
+        this.eaep$scalingButtons.forEach(button -> {
+            this.addRenderableWidget(button);
+            button.setVisibility(true);
+        });
     }
 
-    // 每帧刷新：仅从菜单(@GuiSync)同步布尔值，保持按钮状态一致
     @Inject(method = "updateBeforeRender", at = @At("HEAD"), remap = false)
-    private void updateButtonsStates(CallbackInfo ci) {
+    private void update(CallbackInfo ci) {
+        this.eaep$updateButtonsStates();
+    }
+
+    @Override
+    public void eaep$updateButtonsStates() {
         this.eaep$buttonSmartBlocking.updateState();
         this.eaep$buttonSmartDoubling.updateState();
+
+        this.eaep$lastScreenInfo = ButtonImplementations.updateScalingButtonsLayout(
+                this,
+                this.leftPos + this.imageWidth + 3,
+                this.topPos + 68,
+                false,
+                this.eaep$lastScreenInfo
+        );
+    }
+
+    @Override
+    public List<? extends EAEPButton> eaep$getButtons() {
+        return this.eaep$scalingButtons;
     }
 }

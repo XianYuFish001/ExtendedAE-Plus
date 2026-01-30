@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 
 @Mixin(EncodedPatternItem.class)
-public class EncodedPatternItemMixin {
+public class MixinPatternEncodedProfile {
     // 客户端：在 HoverText 显示样板的编码玩家
     @Inject(method = "appendHoverText", at = @At("TAIL"))
     public void appendEncoderProfileTooltip(ItemStack stack,

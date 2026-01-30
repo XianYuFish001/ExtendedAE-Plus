@@ -65,7 +65,6 @@ public abstract class MixinScreenProvider<C extends PatternProviderMenu>
         });
     }
 
-    // 每帧刷新：仅从菜单(@GuiSync)同步布尔值，保持按钮状态一致
     @Inject(method = "updateBeforeRender", at = @At("HEAD"))
     private void updateBeforeRender(CallbackInfo ci) {
         this.eaep$updateButtonsStates();
