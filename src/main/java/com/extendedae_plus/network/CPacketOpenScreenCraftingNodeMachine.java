@@ -13,7 +13,7 @@ import appeng.helpers.patternprovider.PatternProviderLogic;
 import appeng.helpers.patternprovider.PatternProviderLogicHost;
 import appeng.me.service.CraftingService;
 import appeng.menu.me.crafting.CraftingCPUMenu;
-import com.extendedae_plus.mixin.core.ae2.accessor.PatternProviderLogicAccessor;
+import com.extendedae_plus.mixin.core.ae2.accessor.AccessorProviderLogic;
 import com.extendedae_plus.network.base.CPacketGeneric;
 import com.extendedae_plus.network.base.EAEPNetworkPacket;
 import net.minecraft.core.BlockPos;
@@ -70,7 +70,7 @@ public record CPacketOpenScreenCraftingNodeMachine(AEKey what) implements CPacke
             if (!(provider instanceof PatternProviderLogic ppl)) return;
 
             // 使用 accessor 获取 host（受保护字段通过 accessor 访问）
-            PatternProviderLogicHost host = ((PatternProviderLogicAccessor) ppl).eap$host();
+            PatternProviderLogicHost host = ((AccessorProviderLogic) ppl).getHost();
             if (host == null) return;
             var pbe = host.getBlockEntity();
 

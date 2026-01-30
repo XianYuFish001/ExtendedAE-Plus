@@ -26,8 +26,8 @@ import java.util.List;
  * - 点击仅发送 C2S 切换请求；状态由 AE2 @GuiSync 回传决定
  */
 @MixinDependencies(conflict = "expandedae")
-@Mixin(value = PatternProviderScreen.class, remap = false)
-public abstract class PatternProviderScreenMixin<C extends PatternProviderMenu>
+@Mixin(PatternProviderScreen.class)
+public abstract class MixinScreenProvider<C extends PatternProviderMenu>
         extends AEBaseScreen<C>
         implements HelperProviderButtons {
     @Unique
@@ -42,11 +42,11 @@ public abstract class PatternProviderScreenMixin<C extends PatternProviderMenu>
     @Unique
     private Pair<Integer, Integer> eaep$lastScreenInfo;
 
-    public PatternProviderScreenMixin(C menu, Inventory playerInventory, Component title, ScreenStyle style) {
+    public MixinScreenProvider(C menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
     }
 
-    @Inject(method = "<init>", at = @At("RETURN"), remap = false)
+    @Inject(method = "<init>", at = @At("RETURN"))
     private void onInit(C menu, Inventory playerInventory, Component title, ScreenStyle style, CallbackInfo ci) {
         // 初始化后立刻对齐当前@GuiSync状态，避免首帧显示不一致
 
@@ -66,12 +66,9 @@ public abstract class PatternProviderScreenMixin<C extends PatternProviderMenu>
     }
 
     // 每帧刷新：仅从菜单(@GuiSync)同步布尔值，保持按钮状态一致
-    @Inject(method = "updateBeforeRender", at = @At("HEAD"), remap = false)
+    @Inject(method = "updateBeforeRender", at = @At("HEAD"))
     private void updateBeforeRender(CallbackInfo ci) {
-        try {
-            this.eaep$updateButtonsStates();
-        } catch (Throwable ignore) {
-        }
+        this.eaep$updateButtonsStates();
     }
 
     @Override

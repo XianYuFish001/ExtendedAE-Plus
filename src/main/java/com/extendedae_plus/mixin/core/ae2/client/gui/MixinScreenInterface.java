@@ -29,7 +29,7 @@ import java.util.List;
  * 点击时通过 NeoForge 自定义负载发送到服务端调整配置数量。
  */
 @Mixin(value = InterfaceScreen.class, remap = false)
-public abstract class InterfaceScreenMixin<TMenu extends InterfaceMenu>
+public abstract class MixinScreenInterface<TMenu extends InterfaceMenu>
         extends AEBaseScreen<TMenu>
         implements HelperProviderButtons {
     @Unique
@@ -40,7 +40,7 @@ public abstract class InterfaceScreenMixin<TMenu extends InterfaceMenu>
     @Unique
     private int eap$lastConfigIndex = -1;
 
-    public InterfaceScreenMixin(TMenu menu, Inventory playerInventory, Component title, ScreenStyle style) {
+    public MixinScreenInterface(TMenu menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
     }
 

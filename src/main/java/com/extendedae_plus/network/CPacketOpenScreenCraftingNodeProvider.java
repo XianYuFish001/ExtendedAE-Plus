@@ -10,8 +10,7 @@ import appeng.me.service.CraftingService;
 import appeng.menu.locator.MenuLocators;
 import appeng.menu.me.crafting.CraftingCPUMenu;
 import appeng.parts.AEBasePart;
-import com.extendedae_plus.common.impl.pattern.PatternProviderData;
-import com.extendedae_plus.mixin.core.ae2.accessor.PatternProviderLogicAccessor;
+import com.extendedae_plus.mixin.core.ae2.accessor.AccessorProviderLogic;
 import com.extendedae_plus.network.base.CPacketGeneric;
 import com.extendedae_plus.network.base.EAEPNetworkPacket;
 import com.extendedae_plus.util.UtilKeyBuilder;
@@ -37,6 +36,7 @@ import static com.glodblock.github.extendedae.client.render.EAEHighlightHandler.
  * 服务端在当前打开的 CraftingCPUMenu 所属网络中，定位匹配该 AEKey 的样板供应器，
  * 打开该供应器自身的 UI（不是目标机器的 UI）。
  */
+// TODO Refactor 没眼看
 @EAEPNetworkPacket("open_screen_crafting_node_provider")
 public record CPacketOpenScreenCraftingNodeProvider(AEKey what) implements CPacketGeneric {
     public static final StreamCodec<RegistryFriendlyByteBuf, CPacketOpenScreenCraftingNodeProvider> STREAM_CODEC = StreamCodec.composite(
@@ -78,13 +78,10 @@ public record CPacketOpenScreenCraftingNodeProvider(AEKey what) implements CPack
             for (var provider : providers) {
                 if (provider instanceof PatternProviderLogic ppl) {
                     // accessor 获取 host
-                    PatternProviderLogicHost host = ((PatternProviderLogicAccessor) ppl).eap$host();
+                    PatternProviderLogicHost host = ((AccessorProviderLogic) ppl).getHost();
                     if (host == null) continue;
                     var pbe = host.getBlockEntity();
                     if (pbe == null) continue;
-
-                    // 跳过未连接到网格或不活跃的 provider（使用 util 判断并传入当前 grid）
-                    if (!PatternProviderData.isProviderAvailable(ppl, grid)) continue;
 
                     // 直接打开供应器自身的 UI（调用 Host 默认方法）
                     try {
@@ -100,8 +97,9 @@ public record CPacketOpenScreenCraftingNodeProvider(AEKey what) implements CPack
                         // 高亮打开的供应器位置并发送聊天提示
 
 
+                        // TODO Refactor
                         // 先在该 provider 中定位 pattern 的槽位索引，以便计算页码（尽量早退出，按槽位逐个解码）
-                        int foundSlot = PatternProviderData.findSlotForPattern(ppl, pattern.getDefinition());
+                        int foundSlot = 0;
                         if (foundSlot >= 0) {
                             int pageId = foundSlot / 36;
                             if (pageId > 0) {

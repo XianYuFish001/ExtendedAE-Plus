@@ -214,10 +214,6 @@ public class LangEN extends LanguageProvider {
                 .addStr("global_switch")
                 .buildInto("[EAEP] The global setting is now in effect, affecting PatternProvider x%s");
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.message)
-                .addStr("pattern_scaling")
-                .branch("mul", "[EAEP] Multiplied to %s: T/S/F[%s/%s/%s]")
-                .branch("div", "[EAEP] Divided to 1/%s: T/S/F[%s/%s/%s]");
-        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.message)
                 .addStr("opened_provider_info")
                 .buildInto("[EAEP] Now opening PatternProvider{Location[%s], Dimension[%s]}");
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.message)

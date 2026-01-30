@@ -3,12 +3,16 @@ package com.extendedae_plus.mixin.impl.extension;
 import appeng.api.config.YesNo;
 import appeng.api.crafting.IPatternDetails;
 import appeng.api.networking.crafting.ICraftingService;
+import appeng.api.stacks.GenericStack;
+import appeng.crafting.pattern.AEProcessingPattern;
 import appeng.me.service.CraftingService;
 import com.extendedae_plus.EAEPConfig;
 import com.extendedae_plus.common.impl.pattern.smartDoubling.RequestedAmountHolder;
 import com.extendedae_plus.mixin.core.ae2.accessor.AccessorNetworkProviders;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -23,7 +27,16 @@ public interface ExtensionScaledPattern {
 
     void eaep$setEnabled(boolean value);
 
-    IPatternDetails eaep$create(long multiplier);
+    List<GenericStack> eaep$getInputs();
+
+    List<GenericStack> eaep$getOutputs();
+
+    /// @param multiplier Negative: Divide
+    IPatternDetails eaep$create(long multiplier, boolean saveInfo);
+
+    default IPatternDetails eaep$create(long multiplier) {
+        return eaep$create(multiplier, true);
+    }
 
     default @Nullable IPatternDetails eaep$create(ICraftingService iServiceCrafting) {
         var amountRequested = RequestedAmountHolder.get();
@@ -52,8 +65,13 @@ public interface ExtensionScaledPattern {
         return this.eaep$create(amountRequested);
     }
 
-    static Optional<ExtensionScaledPattern> of(@Nullable Object original) {
-        if (!(original instanceof ExtensionScaledPattern extension) || !extension.eaep$enabled())
+    static void writeToStack(ItemStack stack, IPatternDetails pattern) {
+        of(pattern, true).ifPresent(extension ->
+                AEProcessingPattern.encode(stack, extension.eaep$getInputs(), extension.eaep$getOutputs()));
+    }
+
+    static Optional<ExtensionScaledPattern> of(@Nullable Object original, boolean containsUnavailable) {
+        if (!(original instanceof ExtensionScaledPattern extension) || !(containsUnavailable || extension.eaep$enabled()))
             return Optional.empty();
         return Optional.of(extension);
     }

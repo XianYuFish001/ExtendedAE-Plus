@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.lang.reflect.Field;
 
 @Mixin(SlotGridLayout.class)
-public abstract class SlotGridLayoutMixin {
+public abstract class MixinSlotLayout {
 
     @Unique
     private static final int SLOTS_PER_PAGE = 36;

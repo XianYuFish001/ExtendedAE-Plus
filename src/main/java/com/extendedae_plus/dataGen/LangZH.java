@@ -213,10 +213,6 @@ public class LangZH extends LanguageProvider {
                 .addStr("global_switch")
                 .buildInto("[EAEP] 全局设置已生效, 共影响 样板供应器x%s");
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.message)
-                .addStr("pattern_scaling")
-                .branch("mul", "[EAEP] 已放大样板至%s倍: [共%s, 成功%s, 失败%s]")
-                .branch("div", "[EAEP] 已缩小样板到1/%s: [共%s, 成功%s, 失败%s]");
-        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.message)
                 .addStr("opened_provider_info")
                 .buildInto("[EAEP] 正在远程打开 样板供应器{位置[%s], 维度[%s]}");
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.message)

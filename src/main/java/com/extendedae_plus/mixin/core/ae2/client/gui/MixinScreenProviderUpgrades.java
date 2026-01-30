@@ -25,7 +25,7 @@ import java.util.List;
 
 @MixinDependencies(conflict = "appflux")
 @Mixin(value = PatternProviderScreen.class, priority = 1100, remap = false)
-public abstract class PatternProviderScreenUpgradesMixin<C extends PatternProviderMenu> extends AEBaseScreen<C> {
+public abstract class MixinScreenProviderUpgrades<C extends PatternProviderMenu> extends AEBaseScreen<C> {
     @Unique
     private static final Logger eaep$LOGGER = LogUtils.getLogger();
 
@@ -50,7 +50,7 @@ public abstract class PatternProviderScreenUpgradesMixin<C extends PatternProvid
         return list;
     }
 
-    public PatternProviderScreenUpgradesMixin(C menu, Inventory playerInventory, Component title, ScreenStyle style) {
+    public MixinScreenProviderUpgrades(C menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
     }
 }

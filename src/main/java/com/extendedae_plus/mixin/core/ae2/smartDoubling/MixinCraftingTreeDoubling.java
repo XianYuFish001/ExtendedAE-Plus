@@ -18,7 +18,7 @@ public abstract class MixinCraftingTreeDoubling {
                                          CraftingCalculation job,
                                          IPatternDetails details,
                                          CraftingTreeNode craftingTreeNode) {
-        return ExtensionScaledPattern.of(original)
+        return ExtensionScaledPattern.of(original, false)
                 .map(pattern -> pattern.eaep$create(serviceCrafting))
                 .orElse(original);
     }

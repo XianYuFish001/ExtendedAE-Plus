@@ -1,7 +1,6 @@
 package com.extendedae_plus.network;
 
 import appeng.api.stacks.AEKey;
-import com.extendedae_plus.client.ClientPatternHighlightStore;
 import com.extendedae_plus.network.base.EAEPNetworkPacket;
 import com.extendedae_plus.network.base.SPacketGeneric;
 import net.minecraft.client.player.LocalPlayer;
@@ -23,7 +22,8 @@ public record SPacketHighlightPatternSlot(AEKey key, boolean highlight) implemen
 
     @Override
     public void handleClient(LocalPlayer player) {
-        ClientPatternHighlightStore.setHighlight(this.key, this.highlight);
+//        ClientPatternHighlightStore.setHighlight(this.key, this.highlight);
+        // TODO Refactor
     }
 }
 

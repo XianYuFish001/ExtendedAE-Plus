@@ -17,8 +17,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PatternEncodingTermScreen.class)
-public class MixinEncodingScreenTransfer<TMenu extends PatternEncodingTermMenu> extends MEStorageScreen<TMenu> {
-    public MixinEncodingScreenTransfer(TMenu menu, Inventory playerInventory, Component title, ScreenStyle style) {
+public class MixinScreenEncodingTransfer<TMenu extends PatternEncodingTermMenu> extends MEStorageScreen<TMenu> {
+    public MixinScreenEncodingTransfer(TMenu menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
     }
     
