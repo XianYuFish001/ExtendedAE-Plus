@@ -1,6 +1,6 @@
 package com.extendedae_plus.mixin.core.minecraft;
 
-import com.extendedae_plus.mixin.impl.bridge.HelperComponentColorful;
+import com.extendedae_plus.mixin.bridge.HelperComponentColorful;
 import com.extendedae_plus.util.UtilTextComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentContents;

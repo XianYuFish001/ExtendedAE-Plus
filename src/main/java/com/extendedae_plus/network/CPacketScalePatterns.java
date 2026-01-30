@@ -3,7 +3,7 @@ package com.extendedae_plus.network;
 import appeng.api.crafting.PatternDetailsHelper;
 import com.extendedae_plus.client.render.widgets.button.EAEPActionItems;
 import com.extendedae_plus.mixin.core.ae2.accessor.AccessorProviderMenu;
-import com.extendedae_plus.mixin.impl.extension.ExtensionScaledPattern;
+import com.extendedae_plus.mixin.extension.ExtensionScaledPattern;
 import com.extendedae_plus.network.base.CPacketGeneric;
 import com.extendedae_plus.network.base.EAEPNetworkPacket;
 import net.minecraft.network.FriendlyByteBuf;

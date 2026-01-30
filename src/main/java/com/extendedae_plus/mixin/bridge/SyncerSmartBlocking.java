@@ -1,4 +1,4 @@
-package com.extendedae_plus.mixin.impl.bridge;
+package com.extendedae_plus.mixin.bridge;
 
 import com.extendedae_plus.common.registry.settings.StateSmartBlocking;
 

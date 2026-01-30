@@ -1,4 +1,4 @@
-package com.extendedae_plus.mixin.impl.widget;
+package com.extendedae_plus.mixin.impl;
 
 import com.extendedae_plus.mixin.core.minecraft.accessor.AccessorScreen;
 import net.minecraft.client.gui.components.Renderable;

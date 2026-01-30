@@ -6,7 +6,7 @@ import appeng.api.upgrades.UpgradeInventories;
 import appeng.helpers.patternprovider.PatternProviderLogic;
 import appeng.helpers.patternprovider.PatternProviderLogicHost;
 import com.extendedae_plus.mixin.MixinDependencies;
-import com.extendedae_plus.mixin.impl.bridge.HelperProviderUpgradesInv;
+import com.extendedae_plus.mixin.bridge.HelperProviderUpgradesInv;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;

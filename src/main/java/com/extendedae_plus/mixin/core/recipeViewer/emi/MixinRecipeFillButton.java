@@ -1,7 +1,7 @@
 package com.extendedae_plus.mixin.core.recipeViewer.emi;
 
 import com.extendedae_plus.mixin.MixinDependencies;
-import com.extendedae_plus.mixin.impl.bridge.BridgePlanToEncode;
+import com.extendedae_plus.mixin.bridge.BridgePlanToEncode;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.VanillaEmiRecipeCategories;
 import dev.emi.emi.api.widget.RecipeFillButtonWidget;

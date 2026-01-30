@@ -10,22 +10,16 @@ public class UtilCodec {
     public static <TBuffer extends ByteBuf, TValve> StreamCodec<TBuffer, TValve> streamCodecPredicated(
             Predicate<TValve> predicate, Supplier<TValve> unit, StreamCodec<TBuffer, TValve> codec
     ) {
-        return new StreamCodec<>() {
-            @Override
-            public TValve decode(TBuffer buffer) {
-                if (buffer.readBoolean())
-                    return unit.get();
-                else return codec.decode(buffer);
-            }
+        return StreamCodec.of((buffer, value) -> {
+            var tested = predicate.test(value);
+            buffer.writeBoolean(tested);
 
-            @Override
-            public void encode(TBuffer buffer, TValve value) {
-                var tested = predicate.test(value);
-                buffer.writeBoolean(tested);
-
-                if (tested) return;
-                codec.encode(buffer, value);
-            }
-        };
+            if (tested) return;
+            codec.encode(buffer, value);
+        }, buffer -> {
+            if (buffer.readBoolean())
+                return unit.get();
+            else return codec.decode(buffer);
+        });
     }
 }

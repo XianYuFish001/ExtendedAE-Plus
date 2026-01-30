@@ -1,6 +1,6 @@
 package com.extendedae_plus.mixin.impl;
 
-import com.extendedae_plus.mixin.impl.bridge.HelperProviderButtons;
+import com.extendedae_plus.mixin.bridge.HelperProviderButtons;
 import dev.emi.emi.api.EmiExclusionArea;
 import dev.emi.emi.api.widget.Bounds;
 import net.minecraft.client.gui.screens.Screen;

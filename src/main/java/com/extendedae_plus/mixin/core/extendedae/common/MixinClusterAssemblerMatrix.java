@@ -1,7 +1,7 @@
 package com.extendedae_plus.mixin.core.extendedae.common;
 
 import com.extendedae_plus.common.registry.block.assemblerMatrix.coreAdvancedCrafter.BlockEntityAdvancedCrafter;
-import com.extendedae_plus.mixin.impl.bridge.HelperAssemblerMatrixModifier;
+import com.extendedae_plus.mixin.bridge.HelperAssemblerMatrixModifier;
 import com.glodblock.github.extendedae.common.me.matrix.ClusterAssemblerMatrix;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixCrafter;
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;

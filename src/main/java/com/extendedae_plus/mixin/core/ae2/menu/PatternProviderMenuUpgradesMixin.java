@@ -5,7 +5,7 @@ import appeng.helpers.patternprovider.PatternProviderLogicHost;
 import appeng.menu.AEBaseMenu;
 import appeng.menu.implementations.PatternProviderMenu;
 import com.extendedae_plus.mixin.MixinDependencies;
-import com.extendedae_plus.mixin.impl.bridge.HelperProviderUpgradesInv;
+import com.extendedae_plus.mixin.bridge.HelperProviderUpgradesInv;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import org.spongepowered.asm.mixin.Final;

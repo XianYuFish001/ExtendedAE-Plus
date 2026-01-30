@@ -1,4 +1,4 @@
-package com.extendedae_plus.mixin.impl.bridge;
+package com.extendedae_plus.mixin.bridge;
 
 import appeng.api.crafting.IPatternDetails;
 

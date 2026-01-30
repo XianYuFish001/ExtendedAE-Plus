@@ -1,9 +1,9 @@
 package com.extendedae_plus.mixin.core.extendedae.client;
 
 import appeng.core.definitions.AEBlocks;
+import com.extendedae_plus.mixin.bridge.HelperProviderSelectionApplier;
 import com.extendedae_plus.mixin.core.extendedae.accessor.AccessorExAccessScreen;
 import com.extendedae_plus.mixin.core.extendedae.accessor.AccessorHighlightButton;
-import com.extendedae_plus.mixin.impl.bridge.HelperProviderSelectionApplier;
 import com.extendedae_plus.util.UtilKeyBuilder;
 import com.glodblock.github.extendedae.client.button.HighlightButton;
 import com.glodblock.github.extendedae.common.EAESingletons;

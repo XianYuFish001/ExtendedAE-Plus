@@ -12,7 +12,7 @@ import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.CombinedInternalInventory;
 import com.extendedae_plus.EAEPConfig;
 import com.extendedae_plus.common.init.ModBlockEntities;
-import com.extendedae_plus.mixin.impl.bridge.HelperAssemblerMatrixModifier;
+import com.extendedae_plus.mixin.bridge.HelperAssemblerMatrixModifier;
 import com.glodblock.github.extendedae.common.me.CraftingMatrixThread;
 import com.glodblock.github.extendedae.common.me.CraftingThread;
 import com.glodblock.github.extendedae.common.me.matrix.ClusterAssemblerMatrix;

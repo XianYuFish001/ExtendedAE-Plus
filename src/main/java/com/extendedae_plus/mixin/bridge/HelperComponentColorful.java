@@ -1,4 +1,4 @@
-package com.extendedae_plus.mixin.impl.bridge;
+package com.extendedae_plus.mixin.bridge;
 
 import com.extendedae_plus.util.UtilTextComponent;
 import org.jetbrains.annotations.Nullable;

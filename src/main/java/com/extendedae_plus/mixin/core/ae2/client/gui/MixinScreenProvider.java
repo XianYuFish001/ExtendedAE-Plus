@@ -6,7 +6,7 @@ import appeng.client.gui.style.ScreenStyle;
 import appeng.menu.implementations.PatternProviderMenu;
 import com.extendedae_plus.client.render.widgets.button.*;
 import com.extendedae_plus.mixin.MixinDependencies;
-import com.extendedae_plus.mixin.impl.bridge.HelperProviderButtons;
+import com.extendedae_plus.mixin.bridge.HelperProviderButtons;
 import com.extendedae_plus.network.CPacketScalePatterns;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.network.chat.Component;

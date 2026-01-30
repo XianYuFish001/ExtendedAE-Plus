@@ -6,8 +6,8 @@ import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.GenericStack;
 import appeng.crafting.pattern.AEProcessingPattern;
 import appeng.crafting.pattern.EncodedProcessingPattern;
-import com.extendedae_plus.mixin.impl.extension.ExtensionAEItemKey;
-import com.extendedae_plus.mixin.impl.extension.ExtensionScaledPattern;
+import com.extendedae_plus.mixin.extension.ExtensionAEItemKey;
+import com.extendedae_plus.mixin.extension.ExtensionScaledPattern;
 import com.google.common.math.LongMath;
 import org.spongepowered.asm.mixin.*;
 

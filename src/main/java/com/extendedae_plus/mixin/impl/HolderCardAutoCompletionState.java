@@ -6,11 +6,11 @@ import appeng.api.networking.crafting.ICraftingService;
 import appeng.api.upgrades.IUpgradeInventory;
 import appeng.me.cluster.implementations.CraftingCPUCluster;
 import com.extendedae_plus.common.init.ModItems;
+import com.extendedae_plus.mixin.bridge.HelperCraftingJob;
 import com.extendedae_plus.mixin.core.advancedae.accessor.AccessorAdvCraftingCPULogic;
 import com.extendedae_plus.mixin.core.advancedae.accessor.AccessorAdvExecutingCraftingJob;
 import com.extendedae_plus.mixin.core.ae2.accessor.AccessorCraftingCPULogic;
 import com.extendedae_plus.mixin.core.ae2.accessor.AccessorExecutingCraftingJob;
-import com.extendedae_plus.mixin.impl.bridge.HelperCraftingJob;
 import net.minecraft.util.Tuple;
 import net.pedroksl.advanced_ae.common.cluster.AdvCraftingCPU;
 

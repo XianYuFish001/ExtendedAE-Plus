@@ -2,7 +2,7 @@ package com.extendedae_plus.mixin.core.ae2.client.gui;
 
 import appeng.client.Point;
 import appeng.client.gui.layout.SlotGridLayout;
-import com.extendedae_plus.mixin.impl.bridge.ExPatternPageAccessor;
+import com.extendedae_plus.mixin.bridge.ExPatternPageAccessor;
 import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;

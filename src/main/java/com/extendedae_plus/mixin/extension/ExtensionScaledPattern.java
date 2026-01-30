@@ -1,4 +1,4 @@
-package com.extendedae_plus.mixin.impl.extension;
+package com.extendedae_plus.mixin.extension;
 
 import appeng.api.config.YesNo;
 import appeng.api.crafting.IPatternDetails;

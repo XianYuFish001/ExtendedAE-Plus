@@ -1,7 +1,7 @@
 package com.extendedae_plus.common.registry.block.assemblerMatrix.coreAdvancedSpeed;
 
 import com.extendedae_plus.common.init.ModBlockEntities;
-import com.extendedae_plus.mixin.impl.bridge.HelperAssemblerMatrixModifier;
+import com.extendedae_plus.mixin.bridge.HelperAssemblerMatrixModifier;
 import com.glodblock.github.extendedae.common.me.matrix.ClusterAssemblerMatrix;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixSpeed;
 import net.minecraft.core.BlockPos;

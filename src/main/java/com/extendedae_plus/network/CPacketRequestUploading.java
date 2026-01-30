@@ -1,7 +1,7 @@
 package com.extendedae_plus.network;
 
 import com.extendedae_plus.common.impl.pattern.InfoProvider;
-import com.extendedae_plus.mixin.impl.bridge.BridgeProviderList;
+import com.extendedae_plus.mixin.bridge.BridgeProviderList;
 import com.extendedae_plus.network.base.CPacketGeneric;
 import com.extendedae_plus.network.base.EAEPNetworkPacket;
 import net.minecraft.network.FriendlyByteBuf;

@@ -6,7 +6,7 @@ import appeng.api.networking.ticking.TickRateModulation;
 import appeng.helpers.patternprovider.PatternProviderLogic;
 import appeng.helpers.patternprovider.PatternProviderLogicHost;
 import com.extendedae_plus.common.wireless.HolderLinkChannelCard;
-import com.extendedae_plus.mixin.impl.bridge.HelperProviderUpgradesInv;
+import com.extendedae_plus.mixin.bridge.HelperProviderUpgradesInv;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

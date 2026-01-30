@@ -18,7 +18,6 @@ import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.random.RandomGenerator;
 import java.util.stream.IntStream;
 
 public class UtilTextComponent {
@@ -69,8 +68,6 @@ public class UtilTextComponent {
     }
 
     public static class ComponentColorful implements Component {
-        private static final RandomGenerator random = RandomGenerator.getDefault();
-
         private final Component componentOriginal;
         private String original;
 

@@ -1,4 +1,4 @@
-package com.extendedae_plus.mixin.impl.bridge;
+package com.extendedae_plus.mixin.bridge;
 
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixCrafter;
 

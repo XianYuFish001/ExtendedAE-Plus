@@ -2,7 +2,7 @@ package com.extendedae_plus.mixin.core.ae2.accessor;
 
 import appeng.api.crafting.IPatternDetails;
 import appeng.crafting.execution.ExecutingCraftingJob;
-import com.extendedae_plus.mixin.impl.bridge.HelperCraftingJob;
+import com.extendedae_plus.mixin.bridge.HelperCraftingJob;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 

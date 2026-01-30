@@ -5,7 +5,7 @@ import appeng.client.gui.style.ScreenStyle;
 import com.extendedae_plus.client.render.widgets.button.ButtonImplementations;
 import com.extendedae_plus.client.render.widgets.button.EAEPActionButton;
 import com.extendedae_plus.client.render.widgets.button.EAEPActionItems;
-import com.extendedae_plus.mixin.impl.bridge.HelperProviderButtons;
+import com.extendedae_plus.mixin.bridge.HelperProviderButtons;
 import com.extendedae_plus.network.CPacketInterfaceScaling;
 import com.glodblock.github.extendedae.client.gui.GuiExInterface;
 import com.glodblock.github.extendedae.container.ContainerExInterface;

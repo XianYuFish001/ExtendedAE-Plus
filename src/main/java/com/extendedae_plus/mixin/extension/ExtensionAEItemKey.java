@@ -1,4 +1,4 @@
-package com.extendedae_plus.mixin.impl.extension;
+package com.extendedae_plus.mixin.extension;
 
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;

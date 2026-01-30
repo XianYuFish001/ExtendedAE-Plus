@@ -4,7 +4,7 @@ import appeng.api.networking.IManagedGridNode;
 import appeng.api.upgrades.IUpgradeInventory;
 import appeng.api.upgrades.UpgradeInventories;
 import com.extendedae_plus.mixin.MixinDependencies;
-import com.extendedae_plus.mixin.impl.bridge.HelperProviderUpgradesInv;
+import com.extendedae_plus.mixin.bridge.HelperProviderUpgradesInv;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;

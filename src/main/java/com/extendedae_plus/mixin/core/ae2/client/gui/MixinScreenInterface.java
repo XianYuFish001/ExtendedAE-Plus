@@ -7,7 +7,7 @@ import appeng.menu.implementations.InterfaceMenu;
 import com.extendedae_plus.client.render.widgets.button.ButtonImplementations;
 import com.extendedae_plus.client.render.widgets.button.EAEPActionButton;
 import com.extendedae_plus.client.render.widgets.button.EAEPActionItems;
-import com.extendedae_plus.mixin.impl.bridge.HelperProviderButtons;
+import com.extendedae_plus.mixin.bridge.HelperProviderButtons;
 import com.extendedae_plus.network.CPacketInterfaceScaling;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.network.chat.Component;

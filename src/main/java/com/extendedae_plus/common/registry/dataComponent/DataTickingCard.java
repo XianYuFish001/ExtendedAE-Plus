@@ -47,7 +47,6 @@ public record DataTickingCard(int multiplier, int maxMultiplier) {
 
     public static DataTickingCard fromStack(ItemStack stack) {
         if (!stack.has(ModDataComponents.DATA_TICKING_CARD)) return new DataTickingCard(1, 1);
-        var data = stack.get(ModDataComponents.DATA_TICKING_CARD);
-        return data;
+        return stack.get(ModDataComponents.DATA_TICKING_CARD);
     }
 }

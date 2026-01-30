@@ -1,7 +1,7 @@
 package com.extendedae_plus.network;
 
 import appeng.menu.me.items.PatternEncodingTermMenu;
-import com.extendedae_plus.mixin.impl.bridge.BridgeCtrlPressed;
+import com.extendedae_plus.mixin.bridge.BridgeCtrlPressed;
 import com.extendedae_plus.network.base.CPacketGeneric;
 import com.extendedae_plus.network.base.EAEPNetworkPacket;
 import net.minecraft.network.RegistryFriendlyByteBuf;

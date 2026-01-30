@@ -7,7 +7,7 @@ import appeng.api.upgrades.Upgrades;
 import appeng.parts.automation.UpgradeablePart;
 import com.extendedae_plus.common.init.ModItems;
 import com.extendedae_plus.common.wireless.HolderLinkChannelCard;
-import com.extendedae_plus.mixin.impl.bridge.HelperPartLinkLogic;
+import com.extendedae_plus.mixin.bridge.HelperPartLinkLogic;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import org.spongepowered.asm.mixin.*;

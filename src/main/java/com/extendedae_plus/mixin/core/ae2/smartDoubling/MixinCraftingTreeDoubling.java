@@ -5,7 +5,7 @@ import appeng.api.networking.crafting.ICraftingService;
 import appeng.crafting.CraftingCalculation;
 import appeng.crafting.CraftingTreeNode;
 import appeng.crafting.CraftingTreeProcess;
-import com.extendedae_plus.mixin.impl.extension.ExtensionScaledPattern;
+import com.extendedae_plus.mixin.extension.ExtensionScaledPattern;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;

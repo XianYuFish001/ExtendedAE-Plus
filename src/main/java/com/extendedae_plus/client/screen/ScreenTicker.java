@@ -12,7 +12,7 @@ import com.extendedae_plus.common.init.ModItems;
 import com.extendedae_plus.common.init.ModSettings;
 import com.extendedae_plus.common.registry.menu.MenuTicker;
 import com.extendedae_plus.common.registry.part.ticker.PartTicker;
-import com.extendedae_plus.util.GuiUtil;
+import com.extendedae_plus.util.UtilGui;
 import com.extendedae_plus.util.UtilKeyBuilder;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -46,7 +46,7 @@ public class ScreenTicker extends UpgradeableScreen<MenuTicker> {
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         super.render(guiGraphics, mouseX, mouseY, partialTicks);
 
-        GuiUtil.renderScalableFakeItem(
+        UtilGui.renderScalableFakeItem(
                 guiGraphics,
                 new ItemStack(this.menu.targetBlock),
                 this.leftPos + 92,

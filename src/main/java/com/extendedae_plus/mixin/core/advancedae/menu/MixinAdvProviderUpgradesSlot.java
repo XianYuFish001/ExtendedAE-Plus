@@ -2,7 +2,7 @@ package com.extendedae_plus.mixin.core.advancedae.menu;
 
 import appeng.menu.AEBaseMenu;
 import com.extendedae_plus.mixin.MixinDependencies;
-import com.extendedae_plus.mixin.impl.bridge.HelperProviderUpgradesInv;
+import com.extendedae_plus.mixin.bridge.HelperProviderUpgradesInv;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import net.pedroksl.advanced_ae.common.logic.AdvPatternProviderLogic;

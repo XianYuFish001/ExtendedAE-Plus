@@ -10,7 +10,7 @@ import com.extendedae_plus.common.wireless.LinkSlave;
 import com.extendedae_plus.common.wireless.host.HostGeneric;
 import com.extendedae_plus.common.wireless.linkApi.IBlockEntityLabel;
 import com.extendedae_plus.common.wireless.linkApi.Label;
-import com.extendedae_plus.mixin.impl.bridge.HelperAssemblerMatrixModifier;
+import com.extendedae_plus.mixin.bridge.HelperAssemblerMatrixModifier;
 import com.glodblock.github.extendedae.common.me.matrix.ClusterAssemblerMatrix;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixWall;
 import com.mojang.logging.LogUtils;

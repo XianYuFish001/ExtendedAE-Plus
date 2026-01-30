@@ -9,8 +9,8 @@ import appeng.client.gui.style.Text;
 import appeng.client.gui.style.TextAlignment;
 import appeng.menu.AEBaseMenu;
 import appeng.menu.slot.AppEngSlot;
-import com.extendedae_plus.mixin.impl.bridge.ExPatternPageAccessor;
-import com.extendedae_plus.util.GuiUtil;
+import com.extendedae_plus.mixin.bridge.ExPatternPageAccessor;
+import com.extendedae_plus.util.UtilGui;
 import com.extendedae_plus.util.UtilKeyBuilder;
 import com.glodblock.github.extendedae.client.gui.GuiExPatternProvider;
 import com.glodblock.github.extendedae.common.EAESingletons;
@@ -51,9 +51,9 @@ public abstract class MixinScreenBase<TMenu extends AEBaseMenu> extends Abstract
         var itemStack = appEngSlot.getItem();
         if (itemStack.isEmpty()) return;
 
-        var amountText = GuiUtil.getPatternOutputText(itemStack);
+        var amountText = UtilGui.getPatternOutputText(itemStack);
         if (amountText.isEmpty()) return;
-        GuiUtil.drawAmountText(guiGraphics, this.font, amountText, appEngSlot.x, appEngSlot.y, 0.6f);
+        UtilGui.drawAmountText(guiGraphics, this.font, amountText, appEngSlot.x, appEngSlot.y, 0.6f);
     }
 
     // 在 AEBaseScreen.drawText 完成某个文本绘制后，若该文本为“样板”标签，则紧接着绘制页码。
