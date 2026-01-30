@@ -1,9 +1,9 @@
 package com.extendedae_plus.client.event;
 
 import appeng.client.render.crafting.CraftingCubeModel;
+import appeng.hooks.BuiltInModelHooks;
 import appeng.init.client.InitScreens;
 import com.extendedae_plus.ExtendedAEPlus;
-import com.extendedae_plus.client.RegistriesBuiltInModel;
 import com.extendedae_plus.client.render.crafting.EAEPCraftingCubeModelProvider;
 import com.extendedae_plus.client.screen.ScreenPriorityTool;
 import com.extendedae_plus.client.screen.ScreenProviderController;
@@ -27,8 +27,6 @@ import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
  */
 @EventBusSubscriber(modid = ExtendedAEPlus.MODID, value = Dist.CLIENT)
 public final class EventClientInitialization {
-    private static boolean MODEL_REGISTERED = false;
-
     @SubscribeEvent
     public static void regScreens(RegisterMenuScreensEvent event) {
         event.register(
@@ -56,9 +54,6 @@ public final class EventClientInitialization {
     }
 
     public static void initModels() {
-        if (MODEL_REGISTERED) return;
-        MODEL_REGISTERED = true;
-
         ItemProperties.register(ModItems.TICKING_CARD.get(), ExtendedAEPlus.getLocation("multiplier"),
                 (stack, world, entity, seed) -> DataTickingCard.fromStack(stack).multiplier());
 
@@ -74,7 +69,7 @@ public final class EventClientInitialization {
     }
 
     private static void addCrafterModel(String location, EAEPCraftingUnitType type) {
-        RegistriesBuiltInModel.addBuiltInModel(
+        BuiltInModelHooks.addBuiltInModel(
                 ExtendedAEPlus.getLocation("block/crafting/" + location),
                 new CraftingCubeModel(new EAEPCraftingCubeModelProvider(type)));
     }

@@ -5,7 +5,7 @@ import com.mojang.datafixers.util.Pair;
 
 import java.util.List;
 
-public class EmptyHelper implements IHelperRecipeViewer {
+public class ViewerEmpty implements IRecipeViewer {
     @Override
     public List<GenericStack> getHoveredStacks(double mouseX, double mouseY) {
         return List.of();

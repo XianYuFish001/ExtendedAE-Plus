@@ -6,50 +6,30 @@ import com.extendedae_plus.util.UtilKeyBuilder;
 import com.extendedae_plus.util.UtilTextComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLDedicatedServerSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
-import java.util.function.UnaryOperator;
 
 @EventBusSubscriber(modid = ExtendedAEPlus.MODID)
 public enum TipsModLoad {
-    expandedAE(builder -> {
-        UtilKeyBuilder.of(UtilKeyBuilder.message)
-                .addStr("tips_mod_load")
-                .bindAdder(builder::append)
-                .addStr("expandedae")
-                .buildInto()
-                .buildInto("confirm", button -> button.withStyle(style -> style
-                        .withClickEvent(new UtilTextComponent.ClickEventCustomizable(
-                                () -> EAEPConfig.modDependencyTips.set(false),
-                                UtilKeyBuilder.of(UtilKeyBuilder.message)
-                                        .addStr("tips_mod_load")
-                                        .addStr("confirm")
-                                        .addStr("callback")
-                                        .build()))
-                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                                UtilKeyBuilder.of(UtilKeyBuilder.message)
-                                        .addStr("tips_mod_load")
-                                        .addStr("confirm")
-                                        .addStr("hover")
-                                        .build()))));
-        return builder;
-    }, """
-            Using this mod with ExpandedAE may cause the following and more functions to become unavailable:
-              - Smart Doubling/Blocking
-              - Over-16-thread Accelerator
-              - Pattern Modify
-            (Toggle Config `DependencyTips` off to disable this tip)""")
+    expandedAE(info -> info
+            .client(builder -> builder
+                    .addStr("expandedae")
+                    .buildInto())
+            .server("""
+                    Using this mod with ExpandedAE may cause the following and more functions to become unavailable:
+                      - Smart Doubling/Blocking
+                      - Over-16-thread Accelerator
+                      - Pattern Modify
+                    (Toggle Config `DependencyTips` off to disable this tip)"""))
 
     ;
 
@@ -74,24 +54,52 @@ public enum TipsModLoad {
     private Consumer<Player> tipClient;
     private Consumer<Logger> tipServer;
 
-    TipsModLoad(Consumer<Player> tipClient, Consumer<Logger> tipServer) {
-        this.tipClient = tipClient;
-        this.tipServer = tipServer;
+    TipsModLoad(Consumer<BuilderInfo> builderInfo) {
+        var info = new BuilderInfo();
+        builderInfo.accept(info);
+        this.tipClient = info.tipClient;
+        this.tipServer = info.tipServer;
     }
 
-    TipsModLoad(@Nullable UnaryOperator<MutableComponent> tipClient, String tipServer) {
-        this(player -> {
-            if (tipClient != null) player.displayClientMessage(tipClient.apply(Component.empty()), false);
-        }, logger -> {
-            if (!tipServer.isEmpty()) logger.warn(tipServer);
-        });
-    }
+    private static class BuilderInfo {
+        private Consumer<Player> tipClient = $ -> {};
+        private Consumer<Logger> tipServer = $ -> {};
 
-    TipsModLoad(UnaryOperator<MutableComponent> tipClient) {
-        this(tipClient, "");
-    }
+        private BuilderInfo clientOriginal(Consumer<Player> tipClient) {
+            this.tipClient = tipClient;
+            return this;
+        }
 
-    TipsModLoad(String tipServer) {
-        this(null, tipServer);
+        private BuilderInfo client(Consumer<UtilKeyBuilder.BuilderAdder<?>> tipClient) {
+            var value = Component.empty();
+            var builder = UtilKeyBuilder.of(UtilKeyBuilder.message)
+                    .addStr("tips_mod_load")
+                    .bindAdder(value::append);
+            tipClient.accept(builder);
+            builder.buildInto("confirm", button -> button.withStyle(style -> style
+                    .withClickEvent(new UtilTextComponent.ClickEventCustomizable(
+                            () -> EAEPConfig.modDependencyTips.set(false),
+                            UtilKeyBuilder.of(UtilKeyBuilder.message)
+                                    .addStr("tips_mod_load")
+                                    .addStr("confirm")
+                                    .addStr("callback")
+                                    .build()))
+                    .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                            UtilKeyBuilder.of(UtilKeyBuilder.message)
+                                    .addStr("tips_mod_load")
+                                    .addStr("confirm")
+                                    .addStr("hover")
+                                    .build()))));
+            return this.clientOriginal(player -> player.displayClientMessage(value, false));
+        }
+
+        private BuilderInfo serverOriginal(Consumer<Logger> tipServer) {
+            this.tipServer = tipServer;
+            return this;
+        }
+
+        private BuilderInfo server(String tipServer) {
+            return this.serverOriginal(logger -> logger.warn(tipServer));
+        }
     }
 }

@@ -107,7 +107,6 @@
     "extendedae.client.gui.MixinExInterfaceScaling",
     "extendedae.client.gui.MixinScreenAssemblerMatrixSlot",
     "minecraft.MixinComponentsClick",
-    "minecraft.ModelBakeryMixin",
     "minecraft.PickFromWirelessMixin",
     "minecraft.accessor.AbstractContainerScreenAccessor",
     "minecraft.accessor.AccessorScreen",

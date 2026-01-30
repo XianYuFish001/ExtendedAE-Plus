@@ -5,7 +5,7 @@ import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
 import com.extendedae_plus.integration.ContextModLoaded;
-import com.extendedae_plus.integration.recipeViewer.IHelperRecipeViewer;
+import com.extendedae_plus.integration.recipeViewer.IRecipeViewer;
 import com.mojang.datafixers.util.Pair;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.ingredients.IIngredientType;
@@ -18,7 +18,7 @@ import tamaized.ae2jeiintegration.integration.modules.jei.GenericEntryStackHelpe
 import java.util.Collections;
 import java.util.List;
 
-public class JeiHelper implements IHelperRecipeViewer {
+public class ViewerJei implements IRecipeViewer {
     @Override
     public List<GenericStack> getHoveredStacks(double mouseX, double mouseY) {
         return getHoveredStacks();

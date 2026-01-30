@@ -19,14 +19,14 @@ public interface IntegrationFTBTeams {
 
             @Override
             public Component getTeamName(@Nullable UUID uuid) {
-                return null;
+                return Component.empty();
             }
         };
 
         if (!ContextModLoaded.ftbTeams.isLoaded())
             return empty;
         try {
-            return (IntegrationFTBTeams) Class.forName("com.extendedae_plus.integration.separatedImpl.FTBTeams")
+            return (IntegrationFTBTeams) Class.forName("com.extendedae_plus.integration.impl.FTBTeams")
                     .getConstructor()
                     .newInstance();
         } catch (ClassNotFoundException

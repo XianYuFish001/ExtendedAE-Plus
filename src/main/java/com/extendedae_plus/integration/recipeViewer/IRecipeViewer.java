@@ -5,7 +5,7 @@ import com.mojang.datafixers.util.Pair;
 
 import java.util.List;
 
-public interface IHelperRecipeViewer {
+public interface IRecipeViewer {
     List<GenericStack> getHoveredStacks(double mouseX, double mouseY);
 
     List<GenericStack> getHoveredStacks();

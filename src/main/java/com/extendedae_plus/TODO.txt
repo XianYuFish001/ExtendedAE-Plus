@@ -1,6 +1,9 @@
 TODO
     <bug>
     <feature>
+        同步client的keyBuilder逻辑:
+            允许外部操作snapshot
+            支持实例化snapshotable
         再好好想想没迁移的feature
         ScreenLabelLink的键盘操作
         为一些static项添加自动clear(所以这些static项都在哪呢(

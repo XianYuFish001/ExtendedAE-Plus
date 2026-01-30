@@ -2,48 +2,47 @@ package com.extendedae_plus.integration.recipeViewer;
 
 import appeng.api.stacks.GenericStack;
 import com.extendedae_plus.integration.ContextModLoaded;
-import com.extendedae_plus.integration.recipeViewer.emi.EmiHelper;
-import com.extendedae_plus.integration.recipeViewer.jei.JeiHelper;
+import com.extendedae_plus.integration.recipeViewer.emi.ViewerEmi;
+import com.extendedae_plus.integration.recipeViewer.jei.ViewerJei;
 import com.mojang.datafixers.util.Pair;
 
 import java.util.List;
-import java.util.Optional;
 
 public class HelperRecipeViewer {
-    private static IHelperRecipeViewer activeViewer;
+    private static IRecipeViewer viewer;
 
     public static void init() {
-        if (ContextModLoaded.emi.isLoaded()) activeViewer = new EmiHelper();
-        else if (ContextModLoaded.jei.isLoaded()) activeViewer = new JeiHelper();
-        else activeViewer = new EmptyHelper();
+        if (ContextModLoaded.emi.isLoaded()) viewer = new ViewerEmi();
+        else if (ContextModLoaded.jei.isLoaded()) viewer = new ViewerJei();
+        else viewer = new ViewerEmpty();
     }
 
-    public static Optional<IHelperRecipeViewer> getViewer() {
-        if (activeViewer == null) init();
-        return Optional.ofNullable(activeViewer);
+    public static IRecipeViewer getViewer() {
+        if (viewer == null) init();
+        return viewer;
     }
 
     public static List<GenericStack> getHoveredStacks() {
-        return getViewer().map(IHelperRecipeViewer::getHoveredStacks).orElse(List.of());
+        return getViewer().getHoveredStacks();
     }
 
     public static List<GenericStack> getFavorites() {
-        return getViewer().map(IHelperRecipeViewer::getFavorites).orElse(List.of());
+        return getViewer().getFavorites();
     }
 
     public static Pair<Integer, Boolean> getPulled(int mouseKey) {
-        return getViewer().map(viewer -> viewer.getPulled(mouseKey)).orElse(new Pair<>(0, false));
+        return getViewer().getPulled(mouseKey);
     }
 
     public static boolean isCheatMode() {
-        return getViewer().map(IHelperRecipeViewer::isCheatMode).orElse(false);
+        return getViewer().isCheatMode();
     }
 
     public static void addFavorite(GenericStack stack) {
-        getViewer().ifPresent(viewer -> viewer.addFavorite(stack));
+        getViewer().addFavorite(stack);
     }
 
     public static void setSearchText(String text) {
-        getViewer().ifPresent(viewer -> viewer.setSearch(text));
+        getViewer().setSearch(text);
     }
 }
