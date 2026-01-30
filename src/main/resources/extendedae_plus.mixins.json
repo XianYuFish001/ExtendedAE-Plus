@@ -64,6 +64,7 @@
     "ae2.parts.upgradeCard.MixinUpgradeablePartsCardSlot",
     "ae2.smartDoubling.CraftingTreeNodeMixin",
     "ae2.smartDoubling.MixinCraftingTreeDoubling",
+    "extendedae.accessor.AccessorBuilderCrystalAssembler",
     "extendedae.common.MixinClusterAssemblerMatrix",
     "extendedae.common.PartExPatternProviderMixin",
     "extendedae.common.TileExPatternProviderMixin",

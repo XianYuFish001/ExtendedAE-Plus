@@ -6,14 +6,16 @@ import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.GenericStack;
 import appeng.crafting.pattern.AEProcessingPattern;
 import appeng.crafting.pattern.EncodedProcessingPattern;
-import com.extendedae_plus.mixin.extension.ExtensionAEItemKey;
-import com.extendedae_plus.mixin.extension.ExtensionScaledPattern;
+import com.extendedae_plus.mixin.extension.IScaledPattern;
+import com.extendedae_plus.util.extension.ExtensionAEItemKey;
+import lombok.experimental.ExtensionMethod;
 import org.spongepowered.asm.mixin.*;
 
 import java.util.List;
 
 @Mixin(AEProcessingPattern.class)
-public class MixinPatternDoubling implements ExtensionScaledPattern {
+@ExtensionMethod(ExtensionAEItemKey.class)
+public abstract class MixinPatternDoubling implements IScaledPattern {
     @Shadow
     @Final
     @Mutable
@@ -65,17 +67,23 @@ public class MixinPatternDoubling implements ExtensionScaledPattern {
     @Unique
     @Override
     public IPatternDetails eaep$create(long multiplier, boolean saveInfo) {
-        var inputs = ExtensionScaledPattern.process(this.sparseInputs, multiplier);
-        var outputs = ExtensionScaledPattern.process(this.sparseOutputs, multiplier);
+        List<GenericStack> inputs;
+        List<GenericStack> outputs;
+        try {
+            inputs = IScaledPattern.process(this.sparseInputs, multiplier);
+            outputs = IScaledPattern.process(this.sparseOutputs, multiplier);
+        } catch (ArithmeticException exception) {
+            inputs = this.sparseInputs;
+            outputs = this.sparseOutputs;
+        }
 
         var multiplied = this.getClass().cast(new AEProcessingPattern(
-                ExtensionAEItemKey.set(AEComponents.ENCODED_PROCESSING_PATTERN,
-                                new EncodedProcessingPattern(inputs, outputs))
-                        .apply(this.definition)));
+                this.definition.set(AEComponents.ENCODED_PROCESSING_PATTERN,
+                                new EncodedProcessingPattern(inputs, outputs))));
         if (saveInfo) {
             multiplied.eaep$setEnabled(true);
             multiplied.eaep$multiplier = multiplier;
         }
-        return multiplied.eaep$instance();
+        return multiplied;
     }
 }

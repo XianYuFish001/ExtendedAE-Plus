@@ -9,7 +9,7 @@ import appeng.api.util.IConfigManager;
 import appeng.helpers.patternprovider.PatternProviderTarget;
 import com.extendedae_plus.common.init.ModSettings;
 import com.extendedae_plus.common.registry.settings.StateSmartBlocking;
-import com.extendedae_plus.mixin.extension.ExtensionScaledPattern;
+import com.extendedae_plus.util.extension.ExtensionScaledPattern;
 
 import java.util.ArrayList;
 import java.util.Arrays;

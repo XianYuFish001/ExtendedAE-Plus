@@ -3,9 +3,11 @@ package com.extendedae_plus.network;
 import appeng.api.crafting.PatternDetailsHelper;
 import com.extendedae_plus.client.render.widgets.button.EAEPActionItems;
 import com.extendedae_plus.mixin.bridge.HelperProviderMenu;
-import com.extendedae_plus.mixin.extension.ExtensionScaledPattern;
+import com.extendedae_plus.mixin.extension.IScaledPattern;
 import com.extendedae_plus.network.base.CPacketGeneric;
 import com.extendedae_plus.network.base.EAEPNetworkPacket;
+import com.extendedae_plus.util.extension.ExtensionScaledPattern;
+import lombok.experimental.ExtensionMethod;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -16,6 +18,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
  * C2S：请求对当前打开的样板供应器执行样板数量缩放（倍增或除法）。
  */
 @EAEPNetworkPacket("scale_patterns")
+@ExtensionMethod(ExtensionScaledPattern.class)
 public record CPacketScalePatterns(int scale) implements CPacketGeneric {
     public static final StreamCodec<FriendlyByteBuf, CPacketScalePatterns> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT, CPacketScalePatterns::scale,
@@ -43,13 +46,9 @@ public record CPacketScalePatterns(int scale) implements CPacketGeneric {
         var invPattern = helper.getInvPattern();
 
         invPattern.forEach(stack -> {
-            var pattern = PatternDetailsHelper.decodePattern(stack, player.serverLevel());
-            if (pattern == null) return;
-
-            ExtensionScaledPattern.of(pattern, true)
-                    .map(extension ->
-                            extension.eaep$create(this.scale, false))
-                    .ifPresent(scaled -> ExtensionScaledPattern.writeToStack(stack, scaled));
+            if (!(PatternDetailsHelper.decodePattern(stack, player.serverLevel())
+                    instanceof IScaledPattern extension)) return;
+            extension.create(this.scale, false).writeToStack(stack);
         });
     }
 }

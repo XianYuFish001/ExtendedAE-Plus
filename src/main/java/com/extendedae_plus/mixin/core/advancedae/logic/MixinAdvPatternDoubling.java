@@ -5,7 +5,7 @@ import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
 import com.extendedae_plus.mixin.core.ae2.accessor.AccessorItemKey;
-import com.extendedae_plus.mixin.extension.ExtensionScaledPattern;
+import com.extendedae_plus.mixin.extension.IScaledPattern;
 import net.minecraft.core.Direction;
 import net.pedroksl.advanced_ae.common.patterns.AdvProcessingPattern;
 import org.spongepowered.asm.mixin.Final;
@@ -17,7 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 @Mixin(AdvProcessingPattern.class)
-public class MixinAdvPatternDoubling implements ExtensionScaledPattern {
+public abstract class MixinAdvPatternDoubling implements IScaledPattern {
     @Shadow
     @Final
     private List<GenericStack> sparseInputs;
@@ -63,8 +63,15 @@ public class MixinAdvPatternDoubling implements ExtensionScaledPattern {
 
     @Override
     public IPatternDetails eaep$create(long multiplier, boolean saveInfo) {
-        var inputs = ExtensionScaledPattern.process(this.sparseInputs, multiplier);
-        var outputs = ExtensionScaledPattern.process(this.sparseOutputs, multiplier);
+        List<GenericStack> inputs;
+        List<GenericStack> outputs;
+        try {
+            inputs = IScaledPattern.process(this.sparseInputs, multiplier);
+            outputs = IScaledPattern.process(this.sparseOutputs, multiplier);
+        } catch (ArithmeticException exception) {
+            inputs = this.sparseInputs;
+            outputs = this.sparseOutputs;
+        }
 
         var stackPattern = this.definition.toStack();
         AdvProcessingPattern.encode(stackPattern, inputs, outputs, this.dirMap);
@@ -74,6 +81,6 @@ public class MixinAdvPatternDoubling implements ExtensionScaledPattern {
             multiplied.eaep$setEnabled(true);
             multiplied.eaep$multiplier = multiplier;
         }
-        return multiplied.eaep$instance();
+        return multiplied;
     }
 }

@@ -7,10 +7,11 @@ import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.common.init.ModItems;
 import com.extendedae_plus.common.registry.block.EAEPCraftingUnitType;
 import com.extendedae_plus.common.registry.dataComponent.DataTickingCard;
-import com.extendedae_plus.dataGen.recipeBuilder.BuilderCrystalAssembler;
+import com.extendedae_plus.util.extension.ExtensionBuilderRecipe;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipeBuilder;
 import com.glodblock.github.extendedae.util.EAETags;
+import lombok.experimental.ExtensionMethod;
 import me.ramidzkh.mekae2.data.RecipeProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -23,6 +24,7 @@ import net.minecraft.world.level.material.Fluids;
 
 import java.util.concurrent.CompletableFuture;
 
+@ExtensionMethod(value = ExtensionBuilderRecipe.class, suppressBaseMethods = false)
 public class Recipe extends RecipeProvider {
     public Recipe(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
         super(output, lookupProvider);
@@ -165,9 +167,8 @@ public class Recipe extends RecipeProvider {
                 .input(AEItems.SINGULARITY, 6)
                 .input(Items.BLUE_DYE, 4)
                 .save(recipeOutput, ExtendedAEPlus.getLocation("assembler/core_advanced_pattern"));
-
-        BuilderCrystalAssembler.of(ModItems.CORE_ADVANCED_SPEED, builder -> builder
-                .input(EAESingletons.ASSEMBLER_MATRIX_SPEED, 6))
+        CrystalAssemblerRecipeBuilder.assemble(ModItems.CORE_ADVANCED_SPEED)
+                .input(EAESingletons.ASSEMBLER_MATRIX_SPEED, 6)
                 .input(DataTickingCard.toIngredient(2, 16), 8)
                 .input(EAESingletons.CONCURRENT_PROCESSOR, 6)
                 .input(AEItems.SINGULARITY, 6)
