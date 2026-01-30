@@ -227,6 +227,7 @@ public abstract class GuiExPatternProviderMixin extends PatternProviderScreen<Co
                 this,
                 this.leftPos + this.imageWidth + 3,
                 this.topPos + 68,
+                false,
                 this.eaep$lastScreenInfo
         );
 

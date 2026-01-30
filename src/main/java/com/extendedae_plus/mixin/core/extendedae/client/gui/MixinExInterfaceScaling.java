@@ -27,6 +27,8 @@ public class MixinExInterfaceScaling extends UpgradeableScreen<ContainerExInterf
     public final List<EAEPActionButton> eaep$scalingButtons = new ArrayList<>();
     @Unique
     private Pair<Integer, Integer> eaep$lastScreenInfo;
+    @Unique
+    private boolean eaep$toolboxAvailable;
 
     public MixinExInterfaceScaling(ContainerExInterface menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
@@ -40,6 +42,8 @@ public class MixinExInterfaceScaling extends UpgradeableScreen<ContainerExInterf
                         CallbackInfo ci) {
         EAEPActionItems.actions.get("scaling").forEach(action ->
                 this.eaep$scalingButtons.add(new EAEPActionButton(action, CPacketInterfaceScaling::send)));
+
+        this.eaep$toolboxAvailable = this.menu.getToolbox().isPresent();
 
         this.eaep$scalingButtons.forEach(button -> {
             this.addRenderableWidget(button);
@@ -58,6 +62,7 @@ public class MixinExInterfaceScaling extends UpgradeableScreen<ContainerExInterf
                 this,
                 this.leftPos + this.imageWidth + 3,
                 this.topPos + 50,
+                this.eaep$toolboxAvailable,
                 this.eaep$lastScreenInfo
         );
     }

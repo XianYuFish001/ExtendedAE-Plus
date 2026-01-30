@@ -46,7 +46,8 @@ public class ButtonImplementations {
     }
 
     public static <T extends AEBaseScreen<?>> Pair<Integer, Integer>
-    updateScalingButtonsLayout(T screen, int bx, int by, @Nullable Pair<Integer, Integer> lastScreenInfo) {
+    updateScalingButtonsLayout(T screen, int bx, int by, boolean avoidToolbox,
+                               @Nullable Pair<Integer, Integer> lastScreenInfo) {
         if (!(screen instanceof HelperProviderButtons helper)) return lastScreenInfo;
 
         boolean flagReplaceButton = lastScreenInfo == null
@@ -54,8 +55,9 @@ public class ButtonImplementations {
                 || screen.height != lastScreenInfo.getSecond();
         if (flagReplaceButton) lastScreenInfo = new Pair<>(screen.width, screen.height);
 
-        int spacing = helper.eaep$getButtons().getFirst().getHeight() + 6;
-        helper.eaep$getButtons().forEach(button -> {
+        var buttons = helper.eaep$getButtons();
+        int spacing = buttons.getFirst().getHeight() + 6;
+        buttons.forEach(button -> {
             if (button == null) return;
             button.setVisibility(true);
             if (!screen.renderables.contains(button))
@@ -66,8 +68,9 @@ public class ButtonImplementations {
                 HelperRenderablesModifier.addRenderableWidget(screen, button);
             }
 
-            button.setX(bx);
-            button.setY(by + spacing * helper.eaep$getButtons().indexOf(button));
+            var indexButton = buttons.indexOf(button);
+            button.setX(bx + (avoidToolbox && indexButton >= 3 ? spacing : 0));
+            button.setY(by + spacing * (avoidToolbox ? indexButton % 3 : indexButton));
         });
 
         return lastScreenInfo;

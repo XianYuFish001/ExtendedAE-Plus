@@ -90,6 +90,7 @@ public abstract class MixinScreenProvider<C extends PatternProviderMenu>
                 this,
                 this.leftPos + this.imageWidth + 3,
                 this.topPos + 68,
+                false,
                 this.eaep$lastScreenInfo
         );
     }
