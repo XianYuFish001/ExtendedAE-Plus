@@ -1,6 +1,5 @@
 TODO
     <bug>
-        网络工具gui与倍增按钮冲突
     <feature>
         再好好想想没迁移的feature
         ScreenLabelLink的键盘操作

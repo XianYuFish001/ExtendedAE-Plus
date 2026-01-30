@@ -14,6 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Consumer;
 
@@ -24,7 +25,7 @@ public class ScreenStacksRename<TMenu extends PatternEncodingTermMenu>
     private final ItemStack stack;
     private final Consumer<ItemStack> confirmer;
 
-    private final ConfirmableTextField textField;
+    private final ConfirmableTextField fieldRename;
 
     public ScreenStacksRename(PatternEncodingTermScreen<TMenu> parent,
                               ItemStack stack,
@@ -37,30 +38,28 @@ public class ScreenStacksRename<TMenu extends PatternEncodingTermMenu>
         this.widgets.addButton("save", GuiText.Set.text(), this::confirm);
         this.widgets.add("back",
                 new TabButton(Icon.BACK,
-                        getMenu().getHost().getMainMenuIcon().getHoverName(),
-                        btn -> returnToParent()
+                        this.getMenu().getHost().getMainMenuIcon().getHoverName(),
+                        $ -> returnToParent()
                 )
         );
 
         var font = Minecraft.getInstance().font;
         var fieldStyle = this.getStyle().getWidget("field_stacks_rename");
-        this.textField = new ConfirmableTextField(this.getStyle(),
+        this.fieldRename = new ConfirmableTextField(this.getStyle(),
                 font,
                 fieldStyle.getLeft() == null ? 0 : fieldStyle.getLeft(),
                 fieldStyle.getTop() == null ? 0 : fieldStyle.getTop(),
                 fieldStyle.getWidth(),
                 fieldStyle.getHeight());
-        this.textField.setBordered(false);
-        this.textField.setMaxLength(50);
-        this.textField.setTextColor(0xFFFFFF);
-        this.textField.setSelectionColor(0xFF000080);
-        this.textField.setVisible(true);
-        this.textField.setOnConfirm(this::confirm);
-
-        var bracketedName = stack.getDisplayName().getString();
-        this.textField.setValue(bracketedName.substring(1, bracketedName.length() - 1));
-
-        this.widgets.add("field_stacks_rename", this.textField);
+        this.fieldRename.setBordered(false);
+        this.fieldRename.setMaxLength(50);
+        this.fieldRename.setTextColor(0xFFFFFF);
+        this.fieldRename.setSelectionColor(0xFF000080);
+        this.fieldRename.setVisible(true);
+        this.fieldRename.setOnConfirm(this::confirm);
+        this.fieldRename.setValue(stack.getHoverName().getString());
+        this.fieldRename.setPlaceholder(stack.getItem().getName(stack));
+        this.widgets.add("field_stacks_rename", this.fieldRename);
 
         this.addClientSideSlot(new ClientDisplaySlot(GenericStack.fromItemStack(stack)),
                 SlotSemantics.MACHINE_OUTPUT);
@@ -69,16 +68,29 @@ public class ScreenStacksRename<TMenu extends PatternEncodingTermMenu>
     @Override
     protected void init() {
         super.init();
-
+        this.setInitialFocus(this.fieldRename);
         this.setSlotsHidden(SlotSemantics.TOOLBOX, true);
     }
 
-    private void confirm() {
-        var value = this.textField.getValue();
-        if (value.isBlank()) return;
+    @Override
+    public boolean mouseClicked(double xCoord, double yCoord, int button) {
+        if (button != GLFW.GLFW_MOUSE_BUTTON_RIGHT
+                || !this.fieldRename.isMouseOver(xCoord, yCoord))
+            return super.mouseClicked(xCoord, yCoord, button);
+        this.fieldRename.setValue("");
+        this.setFocused(this.fieldRename);
+        return true;
+    }
 
+    private void confirm() {
         var newStack = this.stack.copy();
-        newStack.set(DataComponents.CUSTOM_NAME, Component.literal(value));
+
+        var name = this.fieldRename.getValue();
+        if (!(name.isBlank()
+                || name.equals(newStack.getOrDefault(DataComponents.ITEM_NAME, Component.empty()).getString())
+                || name.equals(newStack.getItem().getName(newStack).getString()))) {
+            newStack.set(DataComponents.CUSTOM_NAME, Component.literal(name));
+        } else newStack.remove(DataComponents.CUSTOM_NAME);
 
         this.confirmer.accept(newStack);
         this.returnToParent();
