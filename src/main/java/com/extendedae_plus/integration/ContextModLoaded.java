@@ -1,6 +1,7 @@
 package com.extendedae_plus.integration;
 
 import com.extendedae_plus.common.init.InitObject;
+import lombok.Getter;
 import net.neoforged.fml.ModList;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,8 +22,9 @@ public enum ContextModLoaded {
     ;
 
     private final String modID;
+    @Getter
     private boolean loaded;
-    final @Nullable Boolean required;
+    private final @Nullable Boolean required;
 
     ContextModLoaded(String modID) {
         this(modID, null);
@@ -32,10 +34,6 @@ public enum ContextModLoaded {
         this.modID = modID;
         this.loaded = false;
         this.required = required;
-    }
-
-    public boolean isLoaded() {
-        return this.loaded;
     }
 
     boolean shouldTip() {

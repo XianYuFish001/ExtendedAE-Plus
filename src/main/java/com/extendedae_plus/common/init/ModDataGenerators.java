@@ -4,25 +4,27 @@ import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.dataGen.LangEN;
 import com.extendedae_plus.dataGen.LangZH;
 import com.extendedae_plus.dataGen.Recipe;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.PackOutput;
+import com.extendedae_plus.dataGen.Tag;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
-
-import java.util.concurrent.CompletableFuture;
 
 @EventBusSubscriber(modid = ExtendedAEPlus.MODID)
 public class ModDataGenerators {
     @SubscribeEvent
     public static void register(GatherDataEvent event) {
-        DataGenerator generator = event.getGenerator();
-        PackOutput output = generator.getPackOutput();
-        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+        var generator = event.getGenerator();
+        var output = generator.getPackOutput();
+        var providerLookup = event.getLookupProvider();
+        var helperFile = event.getExistingFileHelper();
 
         generator.addProvider(event.includeClient(), new LangEN(output));
         generator.addProvider(event.includeClient(), new LangZH(output));
-        generator.addProvider(event.includeServer(), new Recipe(output, lookupProvider));
+        generator.addProvider(event.includeServer(), new Recipe(output, providerLookup));
+
+        var providerBlock = new Tag.Block(output, providerLookup, helperFile);
+        var providerItem = new Tag.Item(output, providerLookup, helperFile, providerBlock);
+        generator.addProvider(event.includeServer(), providerBlock);
+        generator.addProvider(event.includeServer(), providerItem);
     }
 }

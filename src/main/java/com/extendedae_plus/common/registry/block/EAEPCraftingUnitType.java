@@ -35,7 +35,7 @@ public enum EAEPCraftingUnitType implements ICraftingUnitType, StringRepresentab
     }
 
     private static void registerUnitType(EAEPCraftingUnitType type) {
-        var holderBlock = ModBlocks.BLOCK.register(type.getSerializedName(), () -> new CraftingUnitBlock(type));
+        var holderBlock = ModBlocks.register(type.getSerializedName(), () -> new CraftingUnitBlock(type));
         var holderItem = ModItems.regCommonBlockItem(type.getSerializedName(), holderBlock);
         UNIT_BLOCKS.add(holderBlock);
         UNIT_ITEMS.add(holderItem);
