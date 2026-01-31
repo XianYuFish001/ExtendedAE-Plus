@@ -2,6 +2,7 @@ package com.extendedae_plus.util;
 
 import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.common.init.ModItems;
+import lombok.Getter;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.ClickEvent;
@@ -72,6 +73,7 @@ public class UtilTextComponent {
         private String original;
 
         public List<Component> text = new ArrayList<>();
+        @Getter
         private int frames;
         private boolean initialized;
 
@@ -107,10 +109,6 @@ public class UtilTextComponent {
                 this.update(true);
             var state = Util.getMillis() / 70 % this.frames;
             return text.get((int) state);
-        }
-
-        public int getFrames() {
-            return this.frames;
         }
 
         public void setFrames(int frames) {

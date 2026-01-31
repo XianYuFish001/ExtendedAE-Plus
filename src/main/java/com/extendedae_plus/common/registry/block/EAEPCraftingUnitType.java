@@ -5,6 +5,7 @@ import appeng.block.crafting.ICraftingUnitType;
 import com.extendedae_plus.common.init.InitObject;
 import com.extendedae_plus.common.init.ModBlocks;
 import com.extendedae_plus.common.init.ModItems;
+import com.extendedae_plus.mixin.core.ae2.MixinClusterCPU;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -51,10 +52,9 @@ public enum EAEPCraftingUnitType implements ICraftingUnitType, StringRepresentab
         return this.storage;
     }
 
+    /// @see MixinClusterCPU#unlimit(int limitOriginal)
     @Override
     public int getAcceleratorThreads() {
-        // 返回定义的真实线程数。AE2 原版在 CraftingCPUCluster.addBlockEntity 中对单块线程数
-        // 有 16 的硬限制，但本模组已通过 Mixin 取消该限制，因此这里不再进行夹取。
         return this.threads;
     }
 

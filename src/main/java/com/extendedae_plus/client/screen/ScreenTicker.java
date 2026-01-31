@@ -91,7 +91,7 @@ public class ScreenTicker extends UpgradeableScreen<MenuTicker> {
             case BLACKLISTED -> "blacklisted";
             case DISABLED -> "disabled";
             case ENABLED -> {
-                if (this.menu.energySufficient) yield "enabled";
+                if (this.menu.stateEnergy) yield "enabled";
                 else yield "needs_energy";
             }
         }).buildIntoPlain("state");

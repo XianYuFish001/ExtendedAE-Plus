@@ -9,6 +9,7 @@ import com.extendedae_plus.common.init.ModSettings;
 import com.extendedae_plus.common.registry.part.ticker.EnergyExtractor;
 import com.extendedae_plus.common.registry.part.ticker.PartTicker;
 import it.unimi.dsi.fastutil.shorts.ShortSet;
+import lombok.Setter;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.level.ItemLike;
@@ -16,16 +17,20 @@ import net.minecraft.world.level.ItemLike;
 public class MenuTicker extends UpgradeableMenu<PartTicker> {
     @GuiSync(701)
     public PartTicker.StateTicker stateTicker = PartTicker.StateTicker.ENABLED;
+    @Setter
     @GuiSync(702)
-    public boolean energySufficient = true;
+    public boolean stateEnergy = true;
+    @Setter
     @GuiSync(703)
     public double costMultiplier = 1D;
+    @Setter
     @GuiSync(704)
     public double energyCost = 1D;
     public long speedMultiplier = 1L;
     public double remainingRatio = 1D;
     public ItemLike targetBlock = null;
 
+    @Setter
     private Runnable refreshAction = () -> {};
 
     public MenuTicker(int containerID, Inventory invPlayer, PartTicker host) {
@@ -65,21 +70,5 @@ public class MenuTicker extends UpgradeableMenu<PartTicker> {
 
     public void updateTargetBlock(ItemLike targetBlock) {
         this.targetBlock = targetBlock;
-    }
-
-    public void setRefreshAction(Runnable refreshAction) {
-        this.refreshAction = refreshAction;
-    }
-
-    public void setEnergyState(boolean energySufficient) {
-        this.energySufficient = energySufficient;
-    }
-
-    public void setCostMultiplier(double costMultiplier) {
-        this.costMultiplier = costMultiplier;
-    }
-
-    public void setEnergyCost(double energyCost) {
-        this.energyCost = energyCost;
     }
 }

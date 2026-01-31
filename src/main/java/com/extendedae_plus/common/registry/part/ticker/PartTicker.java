@@ -79,7 +79,7 @@ public class PartTicker extends UpgradeablePart {
 
         boolean extracted = EnergyExtractor.calculateAndExtractEnergy(this, this.speedMultiplier, this.costMultiplier);
         if (this.logic != null)
-            this.logic.setEnergyState(extracted);
+            this.logic.setStateEnergy(extracted);
         if (!extracted) return;
 
         this.applyTick(blockEntity, ticker);

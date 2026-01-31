@@ -36,6 +36,10 @@ public final class ModBlockEntities {
 
     public static final List<InfoBlockEntity<? extends BlockEntity>> BLOCK_ENTITIES = new ArrayList<>();
 
+    private static final List<InfoCapability<? super BlockEntity, ?, ?>> CAPABILITIES = List.of(
+            new InfoCapability<>(IInWorldGridNodeHost.class, AECapabilities.IN_WORLD_GRID_NODE_HOST)
+    );
+
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockEntityWirelessTransceiver>> WIRELESS_TRANSCEIVER =
             regCommonBlockEntity(BlockEntityWirelessTransceiver.class,
                     BlockEntityWirelessTransceiver::new,
@@ -71,6 +75,8 @@ public final class ModBlockEntities {
                 return type;
             });
 
+    // Register
+
     public static <T extends BlockEntity> DeferredHolder<BlockEntityType<?>, BlockEntityType<T>>
     regCommonBlockEntity(Class<T> clazzBlockEntity, BlockEntityType.BlockEntitySupplier<T> factory,
                          DeferredBlock<?> firstBlock, DeferredBlock<?>... otherBlocks) {
@@ -90,16 +96,14 @@ public final class ModBlockEntities {
         return holder;
     }
 
-    public static void onCapabilitiesRegistering(RegisterCapabilitiesEvent event) {
-        List.of(
-                new InfoCapability<>(IInWorldGridNodeHost.class, AECapabilities.IN_WORLD_GRID_NODE_HOST)
-        ).forEach(infoCapability ->
+    public static void registerBlockEntityCapability(RegisterCapabilitiesEvent event) {
+        CAPABILITIES.forEach(infoCapability ->
                 BLOCK_ENTITIES.forEach(infoBlockEntity ->
                         infoCapability.register(event, infoBlockEntity)));
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public static void onBlockEntityBinding() {
+    public static void bindAEBlockEntity() {
         BLOCK_ENTITIES.forEach(info -> {
             if (!AEBaseBlockEntity.class.isAssignableFrom(info.clazz)) return;
             Arrays.stream(info.blocks).forEach(block -> {
@@ -130,8 +134,8 @@ public final class ModBlockEntities {
             if (!this.clazzCapability.isAssignableFrom(info.clazz)) return;
 
             var provider = this.provider;
-            if (provider == null) provider =
-                    (blockEntity, context) -> this.clazzCapability.cast(blockEntity);
+            if (provider == null)
+                provider = (blockEntity, context) -> this.clazzCapability.cast(blockEntity);
 
             event.registerBlockEntity(this.capability, info.holder.get(), provider);
         }

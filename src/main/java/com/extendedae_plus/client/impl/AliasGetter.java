@@ -12,6 +12,8 @@ import dev.emi.emi.api.EmiApi;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.jemi.JemiRecipe;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.PlainTextContents;
 import net.minecraft.network.chat.contents.TranslatableContents;
@@ -196,11 +198,14 @@ public class AliasGetter {
     }
 
     public static class KeywordGroup {
-        private static HashMap<String, KeywordGroup> literalGroups;
+        private static final HashMap<String, KeywordGroup> literalGroups = new HashMap<>();
 
         private final List<String> keywords = new ArrayList<>();
         private Component description;
+        @Getter
         private boolean mapped = false;
+        @Setter
+        @Getter
         private int priority = 0;
 
         public KeywordGroup(Collection<String> keywords, Component groupDescription) {
@@ -209,7 +214,6 @@ public class AliasGetter {
         }
 
         public static KeywordGroup literal(String value) {
-            if (literalGroups == null) literalGroups = new HashMap<>();
             return literalGroups.computeIfAbsent(value, $ ->
                     new KeywordGroup(List.of(value), Component.empty()));
         }
@@ -279,18 +283,6 @@ public class AliasGetter {
 
             this.keywords.clear();
             this.keywords.addAll(mappedList);
-        }
-
-        public boolean isMapped() {
-            return mapped;
-        }
-
-        public int getPriority() {
-            return priority;
-        }
-
-        public void setPriority(int priority) {
-            this.priority = priority;
         }
 
         public boolean isEmpty() {

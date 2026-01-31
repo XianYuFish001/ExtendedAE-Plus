@@ -1,6 +1,5 @@
 package com.extendedae_plus.common.init;
 
-import appeng.api.parts.IPart;
 import appeng.api.parts.PartModels;
 import appeng.api.storage.StorageCells;
 import appeng.blockentity.crafting.CraftingBlockEntity;
@@ -10,6 +9,8 @@ import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.common.impl.menuLocator.CuriosItemLocator;
 import com.extendedae_plus.common.registry.block.EAEPCraftingUnitType;
 import com.extendedae_plus.common.registry.item.infinityBigIntegerCell.InfinityBigIntegerCellHandler;
+import com.extendedae_plus.common.registry.part.ticker.PartTicker;
+import com.extendedae_plus.util.UtilCodec;
 import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -25,7 +26,7 @@ public class EventCommonInitialization {
 
     @SubscribeEvent
     public static void onCapabilitiesRegistering(RegisterCapabilitiesEvent event) {
-        ModBlockEntities.onCapabilitiesRegistering(event);
+        ModBlockEntities.registerBlockEntityCapability(event);
     }
 
     @SubscribeEvent
@@ -38,8 +39,8 @@ public class EventCommonInitialization {
             cellHandler();
             locator();
             blockEntity();
-        }).whenComplete((v, err) -> {
-            if (err != null) LOGGER.warn("Common Initialize failed ", err);
+        }).whenComplete((unit, exception) -> {
+            if (exception != null) LOGGER.error("Common Initialize failed ", exception);
         });
     }
 
@@ -50,18 +51,17 @@ public class EventCommonInitialization {
     private static void locator() {
         MenuLocators.register(
                 CuriosItemLocator.class,
-                CuriosItemLocator::writeToPacket,
-                CuriosItemLocator::readFromPacket
+                UtilCodec.encodeReversed(CuriosItemLocator.STREAM_CODEC),
+                CuriosItemLocator.STREAM_CODEC::decode
         );
     }
 
     private static void partModel() {
-        PartModels.registerModels(PartModelsHelper.createModels(
-                ModItems.PART_TICKER.get().getPartClass().asSubclass(IPart.class)));
+        PartModels.registerModels(PartModelsHelper.createModels(PartTicker.class));
     }
 
     private static void blockEntity() {
-        ModBlockEntities.onBlockEntityBinding();
+        ModBlockEntities.bindAEBlockEntity();
 
         Arrays.stream(EAEPCraftingUnitType.values()).forEach(unit ->
                 unit.getBlock().get().setBlockEntity(

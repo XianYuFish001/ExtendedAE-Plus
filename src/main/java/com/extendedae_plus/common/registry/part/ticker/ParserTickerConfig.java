@@ -9,8 +9,12 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -18,8 +22,7 @@ public class ParserTickerConfig {
     private static final Set<SettingEntry> blacklistedBlocks = new HashSet<>();
     private static final Set<Tuple<SettingEntry, Double>> multipliedBlocks = new HashSet<>();
 
-    private static Pair<List<? extends String>, List<? extends String>> cachedSettings =
-            new Pair<>(List.of(), List.of());
+    private static @Nullable Pair<List<? extends String>, List<? extends String>> cachedSettings = null;
 
     private static final ReadWriteLock lock = new ReentrantReadWriteLock();
 
@@ -50,7 +53,7 @@ public class ParserTickerConfig {
         try {
             blacklistedBlocks.clear();
             multipliedBlocks.clear();
-            cachedSettings = new Pair<>(List.of(), List.of());
+            cachedSettings = null;
         } finally {
             lock.writeLock().unlock();
         }
@@ -59,8 +62,9 @@ public class ParserTickerConfig {
     public static void parseSettings() {
         lock.writeLock().lock();
         try {
-            if (isEqual(cachedSettings.getFirst(), EAEPConfig.tickerBlacklist.get())
-                    && isEqual(cachedSettings.getSecond(), EAEPConfig.tickerExternalMultiplier.get())) return;
+            if (cachedSettings != null
+                    && cachedSettings.getFirst().equals(EAEPConfig.tickerBlacklist.get())
+                    && cachedSettings.getSecond().equals(EAEPConfig.tickerExternalMultiplier.get())) return;
             cachedSettings = new Pair<>(EAEPConfig.tickerBlacklist.get(), EAEPConfig.tickerExternalMultiplier.get());
 
             blacklistedBlocks.clear();
@@ -130,10 +134,6 @@ public class ParserTickerConfig {
                 .filter(string -> !string.isBlank())
                 .map(String::trim)
                 .toList();
-    }
-
-    private static boolean isEqual(List<?> listA, List<?> listB) {
-        return Arrays.equals(listA.toArray(), listB.toArray());
     }
 
     private record SettingEntry(ResourceLocation location, TagKey<Block> tagKey) {

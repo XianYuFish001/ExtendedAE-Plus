@@ -40,21 +40,19 @@ public class Label {
             String placerName,
             Component description
     ) implements PacketStreamable {
-        public static final Codec<Data> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-                Codec.either(Codec.LONG, Codec.STRING).lenientOptionalFieldOf("value").forGetter(data -> {
-                    if (data.isEmpty()) return Optional.empty();
-                    else return Optional.of(data.toEither());
-                }),
+        public static final Codec<Data> CODEC = UtilCodec.codecPredicated(
+                Data::isEmpty, () -> Data.EMPTY, RecordCodecBuilder.create(inst -> inst.group(
+                Codec.either(Codec.LONG, Codec.STRING).fieldOf("value").forGetter(Data::toEither),
                 UUIDUtil.CODEC.lenientOptionalFieldOf("placer").forGetter(data -> Optional.ofNullable(data.placer)),
                 Codec.STRING.fieldOf("placer_name").forGetter(Data::placerName),
                 ComponentSerialization.CODEC.lenientOptionalFieldOf("description")
                         .forGetter(data -> Optional.ofNullable(data.description))
         ).apply(inst, (value, placer, placerName, description) ->
-                new Data(value.orElse(Either.left(null)).left().orElse(null),
-                        value.orElse(Either.left(null)).right().orElse(""),
+                new Data(value.left().orElse(null),
+                        value.right().orElse(""),
                         placer.orElse(null),
                         placerName,
-                        description.orElse(Component.empty()))));
+                        description.orElse(Component.empty())))));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, Data> STREAM_CODEC = UtilCodec.streamCodecPredicated(
                 Data::isEmpty, () -> Data.EMPTY, StreamCodec.composite(
@@ -112,10 +110,10 @@ public class Label {
         public boolean equals(Object o) {
             return switch (o) {
                 case Data data -> {
-                    if (!Objects.equals(data.placer, placer)) yield false;
+                    if (!Objects.equals(this.placer, data.placer)) yield false;
                     if (data.frequency == null)
-                        yield Objects.equals(label, data.label);
-                    else yield Objects.equals(frequency, data.frequency);
+                        yield Objects.equals(this.label, data.label);
+                    else yield Objects.equals(this.frequency, data.frequency);
                 }
                 case Label label -> this.equals(label.data);
                 case Long frequency -> Objects.equals(this.frequency, frequency);
@@ -146,7 +144,7 @@ public class Label {
                 value += this.label;
             }
 
-            return "LabelLink$Data{" + value + description + '}';
+            return "LabelLink.Data{" + value + description + '}';
         }
     }
 }

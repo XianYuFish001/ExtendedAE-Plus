@@ -20,7 +20,7 @@
     "advancedae.menu.MixinAdvProviderSettingsSyncing",
     "advancedae.menu.MixinAdvProviderUpgradesSlot",
     "ae2.CraftingCalculationMixin",
-    "ae2.CraftingCPUClusterMixin",
+    "ae2.MixinClusterCPU",
     "ae2.MixinItemKey",
     "ae2.MixinMemoryCard",
     "ae2.MixinPatternEncodedProfile",

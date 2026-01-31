@@ -1,7 +1,10 @@
 package com.extendedae_plus.common.impl.menuLocator;
 
 import appeng.menu.locator.ItemMenuHostLocator;
+import com.extendedae_plus.util.UtilCodec;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
@@ -10,34 +13,29 @@ import top.theillusivec4.curios.api.CuriosApi;
 
 import java.util.Optional;
 
-public record CuriosItemLocator(String curioType, int curioIndex,
-                                @Nullable BlockHitResult hitResult) implements ItemMenuHostLocator {
+public record CuriosItemLocator(String type, int index, @Nullable BlockHitResult hitResult) implements ItemMenuHostLocator {
+    public static final StreamCodec<FriendlyByteBuf, CuriosItemLocator> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.STRING_UTF8, CuriosItemLocator::type,
+            ByteBufCodecs.INT, CuriosItemLocator::index,
+            ByteBufCodecs.optional(UtilCodec.StreamCodecs.blockHitResult),
+            data -> Optional.ofNullable(data.hitResult),
+            (type, index, resultHit) ->
+                    new CuriosItemLocator(type, index, resultHit.orElse(null))
+    );
+
     @Override
     public ItemStack locateItem(Player player) {
         return CuriosApi.getCuriosInventory(player)
                 .map(handler ->
                         handler.getCurios()
-                                .get(curioType)
+                                .get(type)
                                 .getStacks()
-                                .getStackInSlot(curioIndex))
+                                .getStackInSlot(index))
                 .orElse(ItemStack.EMPTY);
-    }
-
-    public void writeToPacket(FriendlyByteBuf buf) {
-        buf.writeUtf(curioType);
-        buf.writeInt(curioIndex);
-        buf.writeOptional(Optional.ofNullable(hitResult), FriendlyByteBuf::writeBlockHitResult);
-    }
-
-    public static CuriosItemLocator readFromPacket(FriendlyByteBuf buf) {
-        return new CuriosItemLocator(
-                buf.readUtf(),
-                buf.readInt(),
-                buf.readOptional(FriendlyByteBuf::readBlockHitResult).orElse(null));
     }
 
     @Override
     public String toString() {
-        return "curiosSlot{" + curioType + "," + curioIndex + "}";
+        return "curiosSlot{" + type + "," + index + "}";
     }
 }
