@@ -4,6 +4,7 @@ import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import com.electronwill.nightconfig.toml.TomlFormat;
 import com.extendedae_plus.integration.ContextModLoaded;
+import com.extendedae_plus.integration.recipeViewer.emi.EmiRecipeAdaptable;
 import com.extendedae_plus.util.UtilKeyBuilder;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -11,7 +12,6 @@ import com.mojang.logging.LogUtils;
 import dev.emi.emi.api.EmiApi;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.stack.EmiIngredient;
-import dev.emi.emi.jemi.JemiRecipe;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.network.chat.Component;
@@ -137,23 +137,24 @@ public class AliasGetter {
             List<EmiIngredient> workstations = new ArrayList<>();
             Component categoryName = Component.empty();
 
-            if (recipe instanceof JemiRecipe<?> jemiRecipe) {
-                workstations = EmiApi.getRecipeManager().getWorkstations(jemiRecipe.recipeCategory);
-                categoryName = jemiRecipe.category.getTitle();
+            var recipeJemi = EmiRecipeAdaptable.unboxJemi(recipe);
+            if (recipeJemi != null) {
+                workstations = EmiApi.getRecipeManager().getWorkstations(recipeJemi.recipeCategory);
+                categoryName = recipeJemi.category.getTitle();
 
-                keys.put(jemiRecipe.category.getTitle().getString(), 3);
-                if (jemiRecipe.originalId != null) {
-                    keys.put(jemiRecipe.originalId.toString().split("/")[0], 2);
-                    keys.put(jemiRecipe.originalId.getPath().split("/")[0], 1);
+                keys.put(recipeJemi.category.getTitle().getString(), 3);
+                if (recipeJemi.originalId != null) {
+                    keys.put(recipeJemi.originalId.toString().split("/")[0], 2);
+                    keys.put(recipeJemi.originalId.getPath().split("/")[0], 1);
                 }
-            } else if (recipe instanceof EmiRecipe emiRecipe) {
-                workstations = EmiApi.getRecipeManager().getWorkstations(emiRecipe.getCategory());
-                categoryName = emiRecipe.getCategory().getName();
+            } else if (recipe instanceof EmiRecipe recipeEmi) {
+                workstations = EmiApi.getRecipeManager().getWorkstations(recipeEmi.getCategory());
+                categoryName = recipeEmi.getCategory().getName();
 
-                keys.put(emiRecipe.getCategory().getName().getString(), 3);
-                if (emiRecipe.getId() != null) {
-                    keys.put(emiRecipe.getId().toString().split("/")[0], 2);
-                    keys.put(emiRecipe.getId().getPath().split("/")[0], 1);
+                keys.put(recipeEmi.getCategory().getName().getString(), 3);
+                if (recipeEmi.getId() != null) {
+                    keys.put(recipeEmi.getId().toString().split("/")[0], 2);
+                    keys.put(recipeEmi.getId().getPath().split("/")[0], 1);
                 }
             }
 

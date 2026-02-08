@@ -2,9 +2,9 @@ package com.extendedae_plus.client.screen;
 
 import appeng.api.config.Settings;
 import appeng.api.config.TerminalStyle;
+import appeng.client.gui.AEBaseScreen;
 import appeng.client.gui.AESubScreen;
 import appeng.client.gui.Icon;
-import appeng.client.gui.me.items.PatternEncodingTermScreen;
 import appeng.client.gui.style.PaletteColor;
 import appeng.client.gui.widgets.AETextField;
 import appeng.client.gui.widgets.Scrollbar;
@@ -39,7 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ScreenProviderList<TMenu extends PatternEncodingTermMenu,
-        TScreen extends PatternEncodingTermScreen<TMenu>> extends AESubScreen<TMenu, TScreen> {
+        TScreen extends AEBaseScreen<TMenu>> extends AESubScreen<TMenu, TScreen> {
     public static final String PATH_STYLE = "/screens/extendedae_plus/provider_list.json";
 
     private static final int GUI_WIDTH = 195;

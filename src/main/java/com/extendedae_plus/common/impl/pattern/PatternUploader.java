@@ -90,6 +90,11 @@ public final class PatternUploader {
             slot.set(ItemStack.EMPTY);
     }
 
+    /**
+     * @return - True:  succeed
+     *         - False: failed
+     *         - Null:  duplicate
+     */
     public static @Nullable Boolean uploadToMatrix(ServerPlayer player, AEBaseMenu menu) {
         if (!(menu instanceof AccessorEncodingMenu accessor)) return false;
         var patternStack = accessor.getSlotEncoded().getItem();
@@ -129,7 +134,10 @@ public final class PatternUploader {
         }
 
         for (var core : cores) {
-            if (patternStack.isEmpty()) break;
+            if (patternStack.isEmpty()) {
+                accessor.getSlotEncoded().clearStack();
+                break;
+            }
             patternStack = core.getPatternInventory().addItems(patternStack);
         }
         return patternStack.isEmpty();

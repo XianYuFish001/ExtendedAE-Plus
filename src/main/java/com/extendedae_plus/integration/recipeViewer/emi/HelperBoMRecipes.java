@@ -1,8 +1,8 @@
 package com.extendedae_plus.integration.recipeViewer.emi;
 
-import appeng.api.stacks.GenericStack;
-import appeng.integration.modules.emi.EmiStackHelper;
 import dev.emi.emi.api.recipe.EmiRecipe;
+import dev.emi.emi.api.recipe.EmiResolutionRecipe;
+import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.bom.FoldState;
 import dev.emi.emi.bom.MaterialNode;
@@ -10,50 +10,44 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class HelperBoMRecipes {
-    public static HashMap<ResourceLocation, GenericStack> collectInputs(MaterialNode parentNode, long batches) {
-        var recipe = parentNode.recipe;
+    public static HashMap<ResourceLocation, EmiStack> mapChildren(MaterialNode nodeParent, long batches) {
+        var recipe = nodeParent.recipe;
         if (recipe == null) return new HashMap<>();
-        if (parentNode.state != FoldState.EXPANDED) return new HashMap<>();
-        if (parentNode.children == null) return new HashMap<>();
+        if (nodeParent.state != FoldState.EXPANDED) return new HashMap<>();
+        if (nodeParent.children == null) return new HashMap<>();
 
-        var mappedResult = new HashMap<ResourceLocation, GenericStack>();
+        var resultMapped = new HashMap<ResourceLocation, EmiStack>();
 
-        parentNode.children.forEach(child -> {
-            var stack = batchAmount(child.ingredient.getEmiStacks().getFirst(), batches);
+        nodeParent.children.forEach(child -> {
+            var stack = batchAmount(child, batches);
             recipe.getInputs().forEach(input -> {
                 if (!input.getEmiStacks().contains(stack)) return;
-
-                var genericStack = EmiStackHelper.toGenericStack(stack);
-                if (genericStack == null) return;
-
-                mappedResult.put(input.getEmiStacks().getFirst().getId(), genericStack);
+                resultMapped.put(input.getEmiStacks().getFirst().getId(), stack);
             });
         });
 
-        return mappedResult;
+        return resultMapped;
     }
 
-    public static List<List<GenericStack>> updateRecipe(EmiRecipe original,
-                                                        HashMap<ResourceLocation, GenericStack> selectedInputs) {
-        List<List<GenericStack>> modifiedInputs = new ArrayList<>();
-
-        EmiStackHelper.ofInputs(original).forEach(stacks -> {
-            if (!stacks.isEmpty()) {
-                GenericStack originStack = stacks.getFirst();
-                ResourceLocation stackId = originStack.what().getId();
-
-                if (selectedInputs.containsKey(stackId))
-                    modifiedInputs.add(List.of(
-                            selectedInputs.getOrDefault(stackId, originStack)));
-            } else modifiedInputs.add(List.of());
+    public static void applyMappings(EmiRecipeAdaptable adaptable,
+                                     EmiRecipe original,
+                                     HashMap<ResourceLocation, EmiStack> mapper) {
+        var mapped = new ArrayList<EmiIngredient>();
+        original.getInputs().forEach(input -> {
+            var key = input.getEmiStacks().getFirst().getId();
+            var stack = mapper.get(key);
+            mapped.add(stack == null ? input : stack);
         });
-        return modifiedInputs;
+        adaptable.setInputs(mapped);
     }
 
-    public static EmiStack batchAmount(EmiStack original, long batches) {
-        return original.copy().setAmount(original.getAmount() * batches);
+    public static EmiStack batchAmount(MaterialNode node, long batches) {
+        EmiStack original;
+        if (node.recipe instanceof EmiResolutionRecipe recipeResolution)
+            original = recipeResolution.stack;
+        else original = node.ingredient.getEmiStacks().getFirst();
+        return original.copy().setAmount(node.amount * batches);
     }
 }

@@ -14,10 +14,10 @@ import java.util.regex.Pattern;
 public class EAEPConfig {
     static final ModConfigSpec specCommon;
     public static final ModConfigSpec.IntValue exProviderPageMultiplier;
-    public static final ModConfigSpec.BooleanValue independentUploadButton;
     public static final ModConfigSpec.BooleanValue modDependencyTips;
 
     static final ModConfigSpec specClient;
+    public static final ModConfigSpec.BooleanValue independentUploadButton;
     public static final ModConfigSpec.BooleanValue showPatternEncoder;
     public static final ModConfigSpec.BooleanValue accessTerminalSlotsVisibleDefault;
     public static final ModConfigSpec.BooleanValue allowDiskEnergy;
@@ -61,14 +61,15 @@ public class EAEPConfig {
         var builderCommon = new ModConfigSpec.Builder();
         exProviderPageMultiplier = builderCommon
                 .defineInRange("pageMultiplier", 1, 1, 64);
-        independentUploadButton = builderCommon
-                .define("independentUploadingButton", false);
         modDependencyTips = builderCommon
                 .define("dependencyTips", true);
         specCommon = builderCommon.build();
 
         // Client
         var builderClient = new ModConfigSpec.Builder();
+        // TODO 记录到commit
+        independentUploadButton = builderClient
+                .define("independentUploadingButton", false);
         showPatternEncoder = builderClient
                 .define("showEncoderPatternPlayer", true);
         accessTerminalSlotsVisibleDefault = builderClient

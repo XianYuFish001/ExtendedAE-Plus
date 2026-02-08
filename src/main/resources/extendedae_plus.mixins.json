@@ -74,6 +74,7 @@
     "minecraft.MixinItemStack",
     "minecraft.MixinMenuLimitFix",
     "recipeViewer.emi.MixinEncodePatternTransfer",
+    "recipeViewer.emi.MixinHandlerRecipe",
     "recipeViewer.emi.MixinRecipeFillButton",
     "recipeViewer.emi.MixinRecipeFiller",
     "recipeViewer.jei.MixinEncodePatternTransfer",

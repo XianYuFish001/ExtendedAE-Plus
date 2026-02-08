@@ -8,7 +8,6 @@ import com.extendedae_plus.integration.recipeViewer.HelperRecipeViewer;
 import com.extendedae_plus.mixin.core.ae2.accessor.MEStorageScreenAccessor;
 import com.extendedae_plus.mixin.core.extendedae.accessor.AccessorExAccessScreen;
 import com.extendedae_plus.network.CPacketPullFromNetwork;
-import com.extendedae_plus.network.CPacketTargetKeyTriggered;
 import com.glodblock.github.extendedae.client.gui.GuiExPatternTerminal;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
@@ -57,7 +56,7 @@ public final class EventScreenActions {
             GenericStack stack = stacks.isEmpty() ? null : stacks.getFirst();
             if (stack == null) return;
 
-			PacketDistributor.sendToServer(new CPacketPullFromNetwork(stack, false, false));
+            PacketDistributor.sendToServer(new CPacketPullFromNetwork(stack, false, false));
             event.setCanceled(true);
         }
     }
@@ -68,43 +67,28 @@ public final class EventScreenActions {
         if (event.getKeyCode() == GLFW.GLFW_KEY_F) {
             // 仅当鼠标确实悬停在 JEI 配料上时触发
             // 大概会在一格有多个(?)stack的时候出bug, 但是真的会有那种时候吗?
-            GenericStack stack = HelperRecipeViewer.getHoveredStacks().getFirst();
+            var stack = HelperRecipeViewer.getHoveredStacks().getFirst();
             if (stack == null) return;
-            String name = stack.what().getDisplayName().getString();
+            var name = stack.what().getDisplayName().getString();
 
-            // 写入 AE2 终端的搜索框
+
+            if (AEConfig.instance().isUseExternalSearch()) {
+                HelperRecipeViewer.setSearchText(name);
+                event.setCanceled(true);
+                return;
+            }
+
             var screen = Minecraft.getInstance().screen;
             if (screen instanceof MEStorageScreen<?> me) {
-                try {
-                    // 如果用EMI搜索框
-                    if (AEConfig.instance().isUseExternalSearch()) HelperRecipeViewer.setSearchText(name);
-                    else {
-                        MEStorageScreenAccessor acc = (MEStorageScreenAccessor) me;
-                        acc.eap$getSearchField().setValue(name);
-                        acc.eap$setSearchText(name); // 同步到 Repo 并刷新
-                    }
-                    event.setCanceled(true);
-                } catch (Throwable ignored) {
-                }
+                MEStorageScreenAccessor acc = (MEStorageScreenAccessor) me;
+                acc.eap$getSearchField().setValue(name);
+                acc.eap$setSearchText(name);
+                event.setCanceled(true);
             } else if (screen instanceof GuiExPatternTerminal<?> gpt) {
-                try {
-                    if (AEConfig.instance().isUseExternalSearch()) HelperRecipeViewer.setSearchText(name);
-                    else {
-                        AccessorExAccessScreen acc = (AccessorExAccessScreen) gpt;
-                        acc.getSearchField().setValue(name);
-                    }
-                    event.setCanceled(true);
-                } catch (Throwable ignored) {
-                }
+                AccessorExAccessScreen acc = (AccessorExAccessScreen) gpt;
+                acc.getSearchField().setValue(name);
             }
-        } else if (event.getKeyCode() == GLFW.GLFW_KEY_LEFT_CONTROL)
-            PacketDistributor.sendToServer(new CPacketTargetKeyTriggered(CPacketTargetKeyTriggered.KeyType.CTRL_DOWN));
-    }
-
-    @SubscribeEvent
-    public static void onKeyReleasePre(ScreenEvent.KeyReleased.Pre event) {
-        if (Minecraft.getInstance().player == null) return;
-        if (event.getKeyCode() == GLFW.GLFW_KEY_LEFT_CONTROL)
-            PacketDistributor.sendToServer(new CPacketTargetKeyTriggered(CPacketTargetKeyTriggered.KeyType.CTRL_UP));
+            event.setCanceled(true);
+        }
     }
 }

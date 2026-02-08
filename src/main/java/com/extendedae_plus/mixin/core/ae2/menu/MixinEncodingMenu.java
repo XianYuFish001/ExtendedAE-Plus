@@ -18,11 +18,12 @@ import com.extendedae_plus.common.init.ModDataComponents;
 import com.extendedae_plus.common.init.ModSettings;
 import com.extendedae_plus.common.registry.dataComponent.DataEncoderProfile;
 import com.extendedae_plus.common.registry.settings.ModeEncodingTransfer;
-import com.extendedae_plus.mixin.bridge.BridgeCtrlPressed;
 import com.extendedae_plus.mixin.bridge.BridgePlanToEncode;
 import com.extendedae_plus.mixin.bridge.BridgeProviderList;
 import com.extendedae_plus.mixin.impl.IOerMEStorage;
 import com.extendedae_plus.network.SPacketEncodeFinished;
+import com.extendedae_plus.network.SPacketProvidersInfo;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
@@ -42,8 +43,10 @@ import java.util.List;
 import java.util.Map;
 
 @Mixin(PatternEncodingTermMenu.class)
-public abstract class MixinEncodingMenu extends MEStorageMenu
-        implements BridgeProviderList, BridgePlanToEncode, BridgeCtrlPressed {
+public abstract class MixinEncodingMenu extends MEStorageMenu implements BridgeProviderList, BridgePlanToEncode {
+    @Unique
+    private static final String eaep$actionUpload = "action_pattern_upload";
+
     @Shadow
     @Final
     private RestrictedInputSlot encodedPatternSlot;
@@ -57,9 +60,9 @@ public abstract class MixinEncodingMenu extends MEStorageMenu
     @Unique
     private Map<PatternContainerGroup, List<PatternContainer>> eaep$providerList;
     @Unique
-    private boolean eaep$ctrlPressed = false;
+    private boolean eaep$encodeActionDelayed;
     @Unique
-    private boolean eaep$encodeActionDelayed = false;
+    private boolean eaep$uploadDelayed;
 
     public MixinEncodingMenu(MenuType<?> menuType, int id, Inventory ip, ITerminalHost host) {
         super(menuType, id, ip, host);
@@ -73,6 +76,8 @@ public abstract class MixinEncodingMenu extends MEStorageMenu
                         IPatternTerminalMenuHost host,
                         boolean bindInventory,
                         CallbackInfo ci) {
+        this.registerClientAction(eaep$actionUpload, this::eaep$upload);
+
         if (this.isClientSide()) {
             if (!(this.getConfigManager() instanceof ConfigManager manager)) return;
             manager.registerSetting(ModSettings.modeTransfer, ModeEncodingTransfer.NONE);
@@ -89,11 +94,6 @@ public abstract class MixinEncodingMenu extends MEStorageMenu
     }
 
     @Override
-    public void eaep$setCtrlPressed(boolean pressed) {
-        this.eaep$ctrlPressed = pressed;
-    }
-
-    @Override
     public void eaep$plan() {
         this.eaep$encodeActionDelayed = true;
     }
@@ -107,28 +107,33 @@ public abstract class MixinEncodingMenu extends MEStorageMenu
         }
     }
 
-    @Inject(method = "encode", at = @At("TAIL"))
+    @Inject(method = "encode", at = @At("RETURN"))
     private void onEncode(CallbackInfo ci) {
-        if (this.isClientSide()) return;
-        this.eaep$fillBlankPattern(0);
+        if (this.isServerSide()) {
+            this.eaep$fillBlankPattern(0);
+            PacketDistributor.sendToPlayer((ServerPlayer) this.getPlayer(), SPacketEncodeFinished.INSTANCE);
+            return;
+        }
 
         if (EAEPConfig.independentUploadButton.getAsBoolean()) return;
+        if (!Screen.hasControlDown()) return;
 
-        if (!this.eaep$ctrlPressed) return;
-        this.eaep$ctrlPressed = false;
+        this.eaep$uploadDelayed = true;
+    }
+
+    @Override
+    public void eaep$execute() {
+        if (this.isServerSide()) return;
 
         var pattern = this.encodedPatternSlot.getItem();
+        if (pattern.isEmpty()) return;
+
+        if (!this.eaep$uploadDelayed) return;
+        this.eaep$uploadDelayed = false;
+
         if (!PatternDetailsHelper.isEncodedPattern(pattern)) return;
 
-        if (!(this.getPlayer() instanceof ServerPlayer player)) return;
-
-        var flagMatrixUpload = PatternUploader.uploadToMatrix(player, this);
-        if (flagMatrixUpload == null) {
-            this.encodedPatternSlot.clearStack();
-            this.eaep$fillBlankPattern(1);
-        } else if (!flagMatrixUpload) {
-            PacketDistributor.sendToPlayer(player, SPacketEncodeFinished.INSTANCE);
-        }
+        this.sendClientAction(eaep$actionUpload);
     }
 
     @Inject(method = "encodePattern", at = @At("TAIL"), cancellable = true)
@@ -139,6 +144,22 @@ public abstract class MixinEncodingMenu extends MEStorageMenu
         pattern.set(ModDataComponents.DATA_ENCODER_PROFILE,
                 new DataEncoderProfile(this.getPlayer().getGameProfile()));
         cir.setReturnValue(pattern);
+    }
+
+    @Unique
+    private void eaep$upload() {
+        var pattern = this.encodedPatternSlot.getItem();
+        if (!PatternDetailsHelper.isEncodedPattern(pattern)) return;
+
+        if (!(this.getPlayer() instanceof ServerPlayer player)) return;
+
+        var flagMatrixUpload = PatternUploader.uploadToMatrix(player, this);
+        if (flagMatrixUpload == null) {
+            this.encodedPatternSlot.clearStack();
+            this.eaep$fillBlankPattern(1);
+        } else if (!flagMatrixUpload) {
+            SPacketProvidersInfo.send(((ServerPlayer) this.getPlayer()), this);
+        }
     }
 
     @Unique
