@@ -5,9 +5,9 @@ import appeng.client.gui.me.crafting.CraftingCPUScreen;
 import appeng.client.gui.style.ScreenStyle;
 import appeng.menu.me.crafting.CraftingCPUMenu;
 import com.extendedae_plus.mixin.core.overrider.OverriderScreenCraftingCPU;
+import com.extendedae_plus.mixin.impl.HelperClientOnly;
 import com.extendedae_plus.network.CPacketOpenScreenCraftingNodeMachine;
 import com.extendedae_plus.network.CPacketOpenScreenCraftingNodeProvider;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -27,7 +27,7 @@ public class MixinScreenStatusCrafting<TMenu extends CraftingCPUMenu> extends AE
     @Dynamic(mixin = OverriderScreenCraftingCPU.class)
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     private void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-        if (!Screen.hasControlDown()) return;
+        if (!HelperClientOnly.instance.hasControlDown()) return;
         if (button != GLFW.GLFW_MOUSE_BUTTON_LEFT && button != GLFW.GLFW_MOUSE_BUTTON_RIGHT) return;
 
         var hovered = this.getStackUnderMouse(mouseX, mouseY);

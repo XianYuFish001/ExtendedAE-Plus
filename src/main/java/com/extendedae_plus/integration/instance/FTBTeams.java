@@ -1,4 +1,4 @@
-package com.extendedae_plus.integration.impl;
+package com.extendedae_plus.integration.instance;
 
 import com.extendedae_plus.integration.ContextModLoaded;
 import com.extendedae_plus.integration.IntegrationFTBTeams;

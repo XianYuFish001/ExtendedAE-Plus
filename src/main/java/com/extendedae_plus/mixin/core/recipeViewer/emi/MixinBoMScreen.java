@@ -5,6 +5,7 @@ import com.extendedae_plus.integration.recipeViewer.emi.EmiRecipeAdaptable;
 import com.extendedae_plus.mixin.MixinDependencies;
 import com.extendedae_plus.mixin.bridge.BridgePlanToEncode;
 import com.extendedae_plus.mixin.core.recipeViewer.emi.accessor.AccessorBoMScreenHover;
+import com.extendedae_plus.mixin.impl.HelperClientOnly;
 import com.extendedae_plus.util.UtilObject;
 import com.extendedae_plus.util.extension.ExtensionEmi;
 import dev.emi.emi.api.recipe.VanillaEmiRecipeCategories;
@@ -14,7 +15,6 @@ import dev.emi.emi.registry.EmiRecipeFiller;
 import dev.emi.emi.screen.BoMScreen;
 import lombok.experimental.ExtensionMethod;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
@@ -34,7 +34,7 @@ public abstract class MixinBoMScreen {
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     private void onMouseClick(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
         if (button != GLFW.GLFW_MOUSE_BUTTON_MIDDLE) return;
-        if (!Screen.hasControlDown()) return;
+        if (!HelperClientOnly.instance.hasControlDown()) return;
 
         var player = Minecraft.getInstance().player;
         if (player == null) return;

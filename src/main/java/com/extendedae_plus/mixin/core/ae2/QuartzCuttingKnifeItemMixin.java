@@ -5,11 +5,11 @@ import appeng.api.parts.SelectedPart;
 import appeng.core.definitions.AEItems;
 import appeng.items.tools.quartz.QuartzCuttingKnifeItem;
 import com.extendedae_plus.integration.ContextModLoaded;
+import com.extendedae_plus.mixin.impl.HelperClientOnly;
 import com.extendedae_plus.util.UtilKeyBuilder;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
@@ -75,7 +75,7 @@ public abstract class QuartzCuttingKnifeItemMixin {
                                                     CallbackInfoReturnable<InteractionResult> cir) {
         Level level = context.getLevel();
         Player player = context.getPlayer();
-        if (!level.isClientSide() || player == null || !Screen.hasShiftDown()) {
+        if (!level.isClientSide() || player == null || !HelperClientOnly.instance.hasShiftDown()) {
             cir.cancel();
             return;
         }

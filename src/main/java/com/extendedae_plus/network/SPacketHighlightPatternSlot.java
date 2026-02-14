@@ -3,6 +3,7 @@ package com.extendedae_plus.network;
 import appeng.api.stacks.AEKey;
 import com.extendedae_plus.network.base.EAEPNetworkPacket;
 import com.extendedae_plus.network.base.SPacketGeneric;
+import com.extendedae_plus.network.helper.HelperHandlerClient;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -22,8 +23,7 @@ public record SPacketHighlightPatternSlot(AEKey key, boolean highlight) implemen
 
     @Override
     public void handleClient(LocalPlayer player) {
-//        ClientPatternHighlightStore.setHighlight(this.key, this.highlight);
-        // TODO Refactor
+        HelperHandlerClient.instance.highlightSlotPattern(this, player);
     }
 }
 

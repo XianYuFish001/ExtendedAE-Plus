@@ -1,12 +1,11 @@
 package com.extendedae_plus.network;
 
-import com.extendedae_plus.client.screen.labelLink.ScreenLabelLink;
 import com.extendedae_plus.common.registry.menu.labelLink.MenuLabelLink;
 import com.extendedae_plus.common.wireless.linkApi.RegistryLink;
 import com.extendedae_plus.integration.IntegrationFTBTeams;
 import com.extendedae_plus.network.base.EAEPNetworkPacket;
 import com.extendedae_plus.network.base.SPacketGeneric;
-import net.minecraft.client.Minecraft;
+import com.extendedae_plus.network.helper.HelperHandlerClient;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -38,7 +37,6 @@ public record SPacketLabelList(List<MenuLabelLink.LabelMapped> labels) implement
 
     @Override
     public void handleClient(LocalPlayer player) {
-        if (!(Minecraft.getInstance().screen instanceof ScreenLabelLink screen)) return;
-        screen.setLabelsMapped(labels);
+        HelperHandlerClient.instance.labelList(this, player);
     }
 }

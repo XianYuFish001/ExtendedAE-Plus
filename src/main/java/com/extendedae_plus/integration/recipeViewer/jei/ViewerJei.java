@@ -6,12 +6,12 @@ import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
 import com.extendedae_plus.integration.ContextModLoaded;
 import com.extendedae_plus.integration.recipeViewer.IRecipeViewer;
+import com.extendedae_plus.mixin.impl.HelperClientOnly;
 import com.mojang.datafixers.util.Pair;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.ingredients.IIngredientType;
 import mezz.jei.api.ingredients.ITypedIngredient;
 import mezz.jei.api.neoforge.NeoForgeTypes;
-import net.minecraft.client.gui.screens.Screen;
 import org.lwjgl.glfw.GLFW;
 import tamaized.ae2jeiintegration.integration.modules.jei.GenericEntryStackHelper;
 
@@ -43,8 +43,8 @@ public class ViewerJei implements IRecipeViewer {
         int amount = 0;
         boolean toInv = true;
 
-        if (Screen.hasControlDown()) amount = 1;
-        if (amount > 0 && Screen.hasShiftDown()) amount = 64;
+        if (HelperClientOnly.instance.hasControlDown()) amount = 1;
+        if (amount > 0 && HelperClientOnly.instance.hasShiftDown()) amount = 64;
 
         if (mouseKey == GLFW.GLFW_MOUSE_BUTTON_RIGHT) toInv = false;
 

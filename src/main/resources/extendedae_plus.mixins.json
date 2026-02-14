@@ -70,13 +70,8 @@
     "extendedae.common.TileExPatternProviderMixin",
     "extendedae.menu.ContainerExPatternProviderMixin",
     "extendedae.menu.MixinMenuAssemblerMatrixSlot",
-    "minecraft.MixinComponent",
-    "minecraft.MixinItemStack",
     "minecraft.MixinMenuLimitFix",
     "recipeViewer.emi.MixinEncodePatternTransfer",
-    "recipeViewer.emi.MixinHandlerRecipe",
-    "recipeViewer.emi.MixinRecipeFillButton",
-    "recipeViewer.emi.MixinRecipeFiller",
     "recipeViewer.jei.MixinEncodePatternTransfer",
     "recipeViewer.jei.accessor.AccessorBookmarkOverlay"
   ],
@@ -110,7 +105,9 @@
     "extendedae.client.gui.MixinExAccessTerminal",
     "extendedae.client.gui.MixinExInterfaceScaling",
     "extendedae.client.gui.MixinScreenAssemblerMatrixSlot",
+    "minecraft.MixinComponent",
     "minecraft.MixinComponentsClick",
+    "minecraft.MixinItemStack",
     "minecraft.PickFromWirelessMixin",
     "minecraft.accessor.AbstractContainerScreenAccessor",
     "minecraft.accessor.AccessorScreen",
@@ -118,6 +115,9 @@
     "recipeViewer.MixinEncodingHelper",
     "recipeViewer.emi.MixinBoMScreen",
     "recipeViewer.emi.MixinBoMTooltips",
+    "recipeViewer.emi.MixinHandlerRecipe",
+    "recipeViewer.emi.MixinRecipeFillButton",
+    "recipeViewer.emi.MixinRecipeFiller",
     "recipeViewer.emi.accessor.AccessorBoMScreenHover"
   ],
   "injectors": {

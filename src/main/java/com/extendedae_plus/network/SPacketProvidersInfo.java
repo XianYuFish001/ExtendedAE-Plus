@@ -1,15 +1,10 @@
 package com.extendedae_plus.network;
 
-import appeng.client.gui.AEBaseScreen;
-import appeng.menu.me.items.PatternEncodingTermMenu;
-import com.extendedae_plus.client.screen.ScreenProviderList;
-import com.extendedae_plus.client.screen.WrapperScreenAE;
 import com.extendedae_plus.common.impl.pattern.InfoProvider;
 import com.extendedae_plus.mixin.bridge.BridgeProviderList;
 import com.extendedae_plus.network.base.EAEPNetworkPacket;
 import com.extendedae_plus.network.base.SPacketGeneric;
-import dev.emi.emi.screen.BoMScreen;
-import net.minecraft.client.Minecraft;
+import com.extendedae_plus.network.helper.HelperHandlerClient;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -48,25 +43,8 @@ public record SPacketProvidersInfo(List<InfoProvider> info) implements SPacketGe
         PacketDistributor.sendToPlayer(player, new SPacketProvidersInfo(info));
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void handleClient(final LocalPlayer player) {
-        AEBaseScreen<? extends PatternEncodingTermMenu> screenCurrent = null;
-        var screenAE = switch (Minecraft.getInstance().screen) {
-            case BoMScreen screen -> {
-                if (!(screen.old instanceof AEBaseScreen<?> screenParent)
-                        || !(screenParent.getMenu() instanceof PatternEncodingTermMenu menu)) yield null;
-                screenCurrent = new WrapperScreenAE<>(menu, screen);
-                yield screenParent;
-            }
-            case AEBaseScreen<?> screen -> {
-                if (!(screen.getMenu() instanceof PatternEncodingTermMenu)) yield null;
-                screenCurrent = (AEBaseScreen<? extends PatternEncodingTermMenu>) screen;
-                yield screen;
-            }
-            case null, default -> null;
-        };
-        if (screenAE == null) return;
-        screenAE.switchToScreen(new ScreenProviderList<>(screenCurrent, this.info));
+        HelperHandlerClient.instance.providersInfo(this, player);
     }
 }

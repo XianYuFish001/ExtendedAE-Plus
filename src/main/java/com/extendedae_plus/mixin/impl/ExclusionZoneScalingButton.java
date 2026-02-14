@@ -4,9 +4,12 @@ import com.extendedae_plus.mixin.bridge.HelperProviderButtons;
 import dev.emi.emi.api.EmiExclusionArea;
 import dev.emi.emi.api.widget.Bounds;
 import net.minecraft.client.gui.screens.Screen;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.function.Consumer;
 
+@OnlyIn(Dist.CLIENT)
 public class ExclusionZoneScalingButton implements EmiExclusionArea<Screen> {
     @Override
     public void addExclusionArea(Screen screen, Consumer<Bounds> consumer) {

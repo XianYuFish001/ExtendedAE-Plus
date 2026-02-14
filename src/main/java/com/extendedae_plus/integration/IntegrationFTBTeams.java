@@ -26,7 +26,7 @@ public interface IntegrationFTBTeams {
         if (!ContextModLoaded.ftbTeams.isLoaded())
             return empty;
         try {
-            return (IntegrationFTBTeams) Class.forName("com.extendedae_plus.integration.impl.FTBTeams")
+            return (IntegrationFTBTeams) Class.forName("com.extendedae_plus.integration.instance.FTBTeams")
                     .getConstructor()
                     .newInstance();
         } catch (ClassNotFoundException

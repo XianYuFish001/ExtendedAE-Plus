@@ -7,9 +7,9 @@ import appeng.client.gui.widgets.Scrollbar;
 import appeng.core.AppEng;
 import com.extendedae_plus.common.registry.menu.labelLink.MenuLabelLink;
 import com.extendedae_plus.common.wireless.linkApi.Label;
+import com.extendedae_plus.mixin.impl.HelperClientOnly;
 import com.extendedae_plus.util.UtilKeyBuilder;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -70,7 +70,7 @@ public class ScreenLabelLink extends AEBaseScreen<MenuLabelLink> {
 
         var text = new ArrayList<Component>();
         var label = this.labels.get(hovered);
-        if (Screen.hasShiftDown())
+        if (HelperClientOnly.instance.hasShiftDown())
             this.appendAdvancedTooltip(text, label);
         else this.appendTooltip(text, label);
 

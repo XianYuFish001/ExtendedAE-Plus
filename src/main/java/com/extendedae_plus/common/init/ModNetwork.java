@@ -46,7 +46,7 @@ public class ModNetwork {
                 .filter(data -> data.annotationType().equals(Type.getType(EAEPNetworkPacket.class)))
                 .collect(Collectors.toMap(data -> (String) data.annotationData().get("value"), data -> {
                     try {
-                        return Class.forName(data.memberName());
+                        return Class.forName(data.memberName(), false, Thread.currentThread().getContextClassLoader());
                     } catch (ClassNotFoundException exception) {
                         throw new IllegalStateException("Failed to find Packet: " + data.memberName() + ", ", exception);
                     }

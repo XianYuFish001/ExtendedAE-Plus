@@ -20,10 +20,10 @@ import com.extendedae_plus.common.registry.dataComponent.DataEncoderProfile;
 import com.extendedae_plus.common.registry.settings.ModeEncodingTransfer;
 import com.extendedae_plus.mixin.bridge.BridgePlanToEncode;
 import com.extendedae_plus.mixin.bridge.BridgeProviderList;
+import com.extendedae_plus.mixin.impl.HelperClientOnly;
 import com.extendedae_plus.mixin.impl.IOerMEStorage;
 import com.extendedae_plus.network.SPacketEncodeFinished;
 import com.extendedae_plus.network.SPacketProvidersInfo;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
@@ -116,7 +116,7 @@ public abstract class MixinEncodingMenu extends MEStorageMenu implements BridgeP
         }
 
         if (EAEPConfig.independentUploadButton.getAsBoolean()) return;
-        if (!Screen.hasControlDown()) return;
+        if (!HelperClientOnly.instance.hasControlDown()) return;
 
         this.eaep$uploadDelayed = true;
     }
