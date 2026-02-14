@@ -24,6 +24,7 @@ architectury = "5786327"
 jech = "6681787"
 modernUI = "6956436"
 expandedAE = "6910849"
+kotlinForForge = "5.10.0"
 
 [libraries]
 ae2 = { group = "org.appliedenergistics", name = "appliedenergistics2", version.ref = "ae2" }
@@ -51,3 +52,4 @@ ftbLibrary = { group = "curse.maven", name = "ftb-library-forge-404465", version
 architectury = { group = "curse.maven", name = "architectury-api-419699", version.ref = "architectury" }
 modernUI = { group = "curse.maven", name = "modern-ui-352491", version.ref = "modernUI" }
 expandedAE = { group = "curse.maven", name = "expanded-ae-1213351", version.ref = "expandedAE" }
+kotlinForForge = { group = "thedarkcolour", name = "kotlinforforge-neoforge", version.ref = "kotlinForForge" }

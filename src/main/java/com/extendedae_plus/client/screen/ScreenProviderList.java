@@ -19,7 +19,8 @@ import com.extendedae_plus.client.render.widgets.button.EAEPActionButton;
 import com.extendedae_plus.client.render.widgets.button.EAEPActionItems;
 import com.extendedae_plus.common.impl.pattern.InfoProvider;
 import com.extendedae_plus.network.CPacketUploadTerminalPattern;
-import com.extendedae_plus.util.UtilKeyBuilder;
+import com.extendedae_plus.util.keyBuilder.Patterns;
+import com.extendedae_plus.util.keyBuilder.UtilKeyBuilder;
 import guideme.document.LytRect;
 import guideme.render.SimpleRenderContext;
 import net.minecraft.ChatFormatting;
@@ -121,7 +122,7 @@ public class ScreenProviderList<TMenu extends PatternEncodingTermMenu,
         this.fieldSearch.setPlaceholder(GuiText.SearchPlaceholder.text());
 
         this.fieldAlias = this.widgets.addTextField("field_alias");
-        this.fieldAlias.setPlaceholder(UtilKeyBuilder.of(UtilKeyBuilder.screen)
+        this.fieldAlias.setPlaceholder(UtilKeyBuilder.of(Patterns.screen)
                 .addStr("provider_list")
                 .addStr("alias")
                 .build());
@@ -256,7 +257,7 @@ public class ScreenProviderList<TMenu extends PatternEncodingTermMenu,
             return;
         }
 
-        MutableComponent candidateQuery = UtilKeyBuilder.of(UtilKeyBuilder.screenTooltip)
+        MutableComponent candidateQuery = UtilKeyBuilder.of(Patterns.screenTooltip)
                 .addStr("provider_list")
                 .addStr("candidate_keywords")
                 .build();
@@ -306,7 +307,7 @@ public class ScreenProviderList<TMenu extends PatternEncodingTermMenu,
 
         if (selectedQuery.isEmpty() || aliasToSet.isEmpty()) {
             if (player != null) player.displayClientMessage(
-                    UtilKeyBuilder.of(UtilKeyBuilder.message)
+                    UtilKeyBuilder.of(Patterns.message)
                             .addStr("provider_list")
                             .addStr("add_alias")
                             .addStr(selectedQuery.isEmpty(), "empty_query", "empty_alias")
@@ -317,7 +318,7 @@ public class ScreenProviderList<TMenu extends PatternEncodingTermMenu,
 
         if (AliasGetter.addOrUpdateAlias(searchKey, aliasToSet)) {
             if (player != null) player.displayClientMessage(
-                    UtilKeyBuilder.of(UtilKeyBuilder.message)
+                    UtilKeyBuilder.of(Patterns.message)
                             .addStr("provider_list")
                             .addStr("add_alias")
                             .addStr("success")
@@ -336,7 +337,7 @@ public class ScreenProviderList<TMenu extends PatternEncodingTermMenu,
             this.queryRefresh = true;
         } else {
             if (player != null) player.displayClientMessage(
-                    UtilKeyBuilder.of(UtilKeyBuilder.message)
+                    UtilKeyBuilder.of(Patterns.message)
                             .addStr("provider_list")
                             .addStr("add_alias")
                             .addStr("failed")
@@ -351,7 +352,7 @@ public class ScreenProviderList<TMenu extends PatternEncodingTermMenu,
         var player = Minecraft.getInstance().player;
         if (aliasToDelete.isEmpty()) {
             if (player != null) player.displayClientMessage(
-                    UtilKeyBuilder.of(UtilKeyBuilder.message)
+                    UtilKeyBuilder.of(Patterns.message)
                             .addStr("provider_list")
                             .addStr("delete_alias")
                             .addStr("empty_alias")
@@ -363,7 +364,7 @@ public class ScreenProviderList<TMenu extends PatternEncodingTermMenu,
         int removed = AliasGetter.removeAliases(aliasToDelete);
         if (removed > 0) {
             if (player != null) player.displayClientMessage(
-                    UtilKeyBuilder.of(UtilKeyBuilder.message)
+                    UtilKeyBuilder.of(Patterns.message)
                             .addStr("provider_list")
                             .addStr("delete_alias")
                             .addStr("success")
@@ -374,7 +375,7 @@ public class ScreenProviderList<TMenu extends PatternEncodingTermMenu,
             this.queries.clear();
         } else {
             if (player != null) player.displayClientMessage(
-                    UtilKeyBuilder.of(UtilKeyBuilder.message)
+                    UtilKeyBuilder.of(Patterns.message)
                             .addStr("provider_list")
                             .addStr("delete_alias")
                             .addStr("failed")

@@ -30,16 +30,16 @@ public final class EventClientInitialization {
     @SubscribeEvent
     public static void regScreens(RegisterMenuScreensEvent event) {
         event.register(
-                ModMenuTypes.providerController.get(),
+                ModMenuTypes.ControllerProvider.get(),
                 ScreenProviderController::new);
 
-        InitScreens.register(event, ModMenuTypes.ticker.get(),
+        InitScreens.register(event, ModMenuTypes.Ticker.get(),
                 ScreenTicker::new, getStylePath("ticker"));
-        InitScreens.register(event, ModMenuTypes.priorityTool.get(),
+        InitScreens.register(event, ModMenuTypes.PriorityTool.get(),
                 ScreenPriorityTool::new, getStylePath("priority_tool"));
-        InitScreens.register(event, ModMenuTypes.labelLink.get(),
+        InitScreens.register(event, ModMenuTypes.LabelLink.get(),
                 ScreenLabelLink::new, getStylePath("label_link"));
-        InitScreens.register(event, ModMenuTypes.labelLinkManageable.get(),
+        InitScreens.register(event, ModMenuTypes.LabelLinkManageable.get(),
                 ScreenLabelLinkManageable::new, getStylePath("label_link_manageable"));
     }
 
@@ -54,7 +54,7 @@ public final class EventClientInitialization {
     }
 
     public static void initModels() {
-        ItemProperties.register(ModItems.TICKING_CARD.get(), ExtendedAEPlus.getLocation("multiplier"),
+        ItemProperties.register(ModItems.CardTicking.get(), ExtendedAEPlus.getLocation("multiplier"),
                 (stack, world, entity, seed) -> DataTickingCard.fromStack(stack).multiplier());
 
         addCrafterModel("accelerator_4x_formed_v2", EAEPCraftingUnitType.ACCELERATOR_4x);

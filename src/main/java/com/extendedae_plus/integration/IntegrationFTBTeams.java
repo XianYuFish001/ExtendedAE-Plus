@@ -23,7 +23,7 @@ public interface IntegrationFTBTeams {
             }
         };
 
-        if (!ContextModLoaded.ftbTeams.isLoaded())
+        if (!ContextModLoaded.FTBTeams.isLoaded())
             return empty;
         try {
             return (IntegrationFTBTeams) Class.forName("com.extendedae_plus.integration.impl.FTBTeams")

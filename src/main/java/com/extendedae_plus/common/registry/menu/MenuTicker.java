@@ -34,7 +34,7 @@ public class MenuTicker extends UpgradeableMenu<PartTicker> {
     private Runnable refreshAction = () -> {};
 
     public MenuTicker(int containerID, Inventory invPlayer, PartTicker host) {
-        super(ModMenuTypes.ticker.get(), containerID, invPlayer, host);
+        super(ModMenuTypes.Ticker.get(), containerID, invPlayer, host);
         host.setLogic(this);
     }
 

@@ -39,12 +39,11 @@ public class EmiRecipeAdaptable implements EmiRecipe {
     }
 
     public static @Nullable JemiRecipe<?> unboxJemi(Object boxed) {
-        if (boxed instanceof JemiRecipe<?> recipeJemi)
-            return recipeJemi;
-        else if (boxed instanceof EmiRecipeAdaptable adaptable)
-            return unboxJemi(adaptable.recipe);
-        else
-            return null;
+        return switch (boxed) {
+            case JemiRecipe<?> recipeJemi -> recipeJemi;
+            case EmiRecipeAdaptable adapted -> unboxJemi(adapted.recipe);
+            case null, default -> null;
+        };
     }
 
     public void adapt(MaterialNode nodeParent, long batches) {

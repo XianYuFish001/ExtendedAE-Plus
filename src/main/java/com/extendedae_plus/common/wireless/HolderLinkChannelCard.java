@@ -57,8 +57,8 @@ public class HolderLinkChannelCard {
         if (upgradesInv == null) return null;
         var data = new AtomicReference<DataChannelCard>();
         upgradesInv.forEach(card -> {
-            if (data.get() == null && card.has(ModDataComponents.DATA_CHANNEL_CARD))
-                data.set(card.get(ModDataComponents.DATA_CHANNEL_CARD));
+            if (data.get() == null && card.has(ModDataComponents.CardChannel))
+                data.set(card.get(ModDataComponents.CardChannel));
         });
         return data.get();
     }

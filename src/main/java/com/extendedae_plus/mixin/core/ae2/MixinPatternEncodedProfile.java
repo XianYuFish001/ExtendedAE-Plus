@@ -4,7 +4,8 @@ import appeng.core.definitions.AEItems;
 import appeng.crafting.pattern.EncodedPatternItem;
 import com.extendedae_plus.EAEPConfig;
 import com.extendedae_plus.common.init.ModDataComponents;
-import com.extendedae_plus.util.UtilKeyBuilder;
+import com.extendedae_plus.util.keyBuilder.Patterns;
+import com.extendedae_plus.util.keyBuilder.UtilKeyBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -27,10 +28,10 @@ public class MixinPatternEncodedProfile {
                                             TooltipFlag advancedTooltips,
                                             CallbackInfo ci) {
         if (!EAEPConfig.showPatternEncoder.getAsBoolean()) return;
-        if (!stack.has(ModDataComponents.DATA_ENCODER_PROFILE)) return;
+        if (!stack.has(ModDataComponents.ProfileEncoder)) return;
 
-        var data = stack.get(ModDataComponents.DATA_ENCODER_PROFILE);
-        lines.add(UtilKeyBuilder.of(UtilKeyBuilder.tooltip)
+        var data = stack.get(ModDataComponents.ProfileEncoder);
+        lines.add(UtilKeyBuilder.of(Patterns.tooltip)
                 .item(AEItems.PROCESSING_PATTERN.get())
                 .addStr("encoder")
                 .args(data.name())

@@ -29,7 +29,7 @@ public class MixinButtonAppearancesInitialization<TEnum extends Enum<TEnum>> {
         if (!Icon.TOOLBAR_BUTTON_BACKGROUND.equals(cir.getReturnValue())) return;
         var appearance = ModSettings.findAppearance(this.buttonSetting, this.currentValue);
         if (appearance == null) return;
-        cir.setReturnValue(appearance.action().getAEIcon());
+        cir.setReturnValue(appearance.action.getAEIcon());
     }
 
     @Inject(method = "getItemOverlay", at = @At("RETURN"), cancellable = true)
@@ -37,7 +37,7 @@ public class MixinButtonAppearancesInitialization<TEnum extends Enum<TEnum>> {
         if (cir.getReturnValue() != null) return;
         var appearance = ModSettings.findAppearance(this.buttonSetting, this.currentValue);
         if (appearance == null) return;
-        cir.setReturnValue(appearance.item());
+        cir.setReturnValue(appearance.item);
     }
 
     @Inject(method = "getTooltipMessage", at = @At("RETURN"), cancellable = true)
@@ -48,7 +48,7 @@ public class MixinButtonAppearancesInitialization<TEnum extends Enum<TEnum>> {
             return;
         var appearance = ModSettings.findAppearance(this.buttonSetting, this.currentValue);
         if (appearance == null) return;
-        if (appearance.action().getName().getString().isEmpty()) return;
-        cir.setReturnValue(List.of(appearance.action().getName(), appearance.action().getTooltip()));
+        if (appearance.action.getName().getString().isEmpty()) return;
+        cir.setReturnValue(List.of(appearance.action.getName(), appearance.action.getTooltip()));
     }
 }

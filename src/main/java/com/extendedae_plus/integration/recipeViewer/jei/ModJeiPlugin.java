@@ -35,7 +35,7 @@ public class ModJeiPlugin implements IModPlugin {
         // Register NBT-based subtype interpreter so JEI treats different multipliers as distinct items
         registration.registerSubtypeInterpreter(
                 VanillaTypes.ITEM_STACK,
-                ModItems.TICKING_CARD.get(),
+                ModItems.CardTicking.get(),
                 new ISubtypeInterpreter<>() {
                     @Override
                     public @NotNull Object getSubtypeData(@NotNull ItemStack ingredient, @NotNull UidContext context) {

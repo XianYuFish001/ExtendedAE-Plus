@@ -1,0 +1,443 @@
+package com.extendedae_plus.dataGen
+
+import appeng.core.definitions.AEItems
+import com.extendedae_plus.ExtendedAEPlus
+import com.extendedae_plus.common.init.ModBlocks
+import com.extendedae_plus.common.init.ModItems
+import com.extendedae_plus.common.registry.block.EAEPCraftingUnitType
+import com.extendedae_plus.util.keyBuilder.ContainerDataGen
+import com.extendedae_plus.util.keyBuilder.Patterns
+import com.extendedae_plus.util.keyBuilder.UtilKeyBuilder
+import com.glodblock.github.extendedae.common.EAESingletons
+import net.minecraft.data.PackOutput
+import net.neoforged.neoforge.common.data.LanguageProvider
+
+class LangEN(output: PackOutput) : LanguageProvider(output, ExtendedAEPlus.MODID, "en_us") {
+    override fun addTranslations() {
+        ContainerDataGen.bind("en_us", this::add)
+
+        this.addItem(ModItems.Ticker, "Ticker")
+        this.addItem(ModItems.CellInfinity, "Devourer of Cosmic Silence")
+        this.addItem(ModItems.ControllerProvider, "Provider Controller")
+        this.addItem(ModItems.CardChannel, "Channel Card")
+        this.addItem(ModItems.CardAutoCompletion, "Auto Completion Card")
+        this.addItem(ModItems.PriorityTool, "Priority Override Tool")
+        this.addItem(ModItems.CardTicking, "Ticking Card")
+        UtilKeyBuilder.dataGen(ModItems.CardTicking)
+            .addStr("multiplier")
+            .buildInto("Ticking Card (x%s)")
+
+        this.addBlock(ModBlocks.WirelessTransceiver, "Wireless Transceiver")
+        this.addBlock(ModBlocks.PortUpload, "Assembly Matrix Upload Port")
+        this.addBlock(ModBlocks.CoreAdvancedCrafter, "Assembler Matrix Advanced Craft Core")
+        this.addBlock(ModBlocks.CoreAdvancedPattern, "Assembler Matrix Advanced Pattern Core")
+        this.addBlock(ModBlocks.CoreAdvancedSpeed, "Assembler Matrix Advanced Speed Core")
+        EAEPCraftingUnitType.entries.forEach {
+            this.addBlock(it.block, "${it.acceleratorThreads}x Crafting Accelerator")
+        }
+
+        UtilKeyBuilder.dataGen(Patterns.creativeTab)
+            .addStr("main")
+            .buildInto("ExtendedAE Plus")
+
+        UtilKeyBuilder.dataGen(Patterns.tooltip)
+            .item(ModItems.CardChannel)
+            .addStr("label")
+            .branch("unset", "Link Label: Unset")
+            .buildInto("Link Label: %s")
+        UtilKeyBuilder.dataGen(Patterns.tooltip)
+            .item(ModItems.CardChannel)
+            .branch("name", "Bound to: %s")
+            .branch("id", $$"Bound to UUID{%2$s}")
+            .buildInto("Unbound")
+        UtilKeyBuilder.dataGen(Patterns.tooltip)
+            .item(ModItems.CardTicking)
+            .branch("multiplier", "Multiplier: %s")
+            .branch("max", "Max: %s")
+        UtilKeyBuilder.dataGen(Patterns.tooltip)
+            .item(ModItems.Ticker)
+            .branch(
+                "advanced_tip", """
+                        Ticking multiplier calculation formula:
+                        §2§oBaseTickerEnergyCost * ((2147483647 / BaseTickerEnergyCost) ^ 0.1) ^ (log2(SpeedMultiplier))
+                        §fEnergy card energy consumption reduction calculation formula:
+                        §2§o0.9 * (0.5 / 0.9)^((EnergyCardCount - 1) / 7)"""
+            )
+            .buildInto(
+                """
+                        Apply the Ticking Card to enable acceleration
+                        Up to 1024x acceleration
+                        Accelerate will consume energy in ME network"""
+            )
+        UtilKeyBuilder.dataGen(Patterns.tooltip)
+            .item(ModItems.CellInfinity)
+            .addStr("description")
+            .branch("colored", "——Infinite space, infinite worlds")
+            .buildInto(
+                """
+                        §5Per novem sacra, §dad vanum sonus§r
+                        §8Iava, Lord of the Void§r, grants you this
+                        """
+            )
+        UtilKeyBuilder.dataGen(Patterns.tooltip)
+            .item(AEItems.PROCESSING_PATTERN.get())
+            .addStr("encoder")
+            .buildInto("Encoded by %s")
+        UtilKeyBuilder.dataGen(Patterns.tooltip)
+            .addStr("bom")
+            .addStr("help")
+            .buildInto(
+                """
+                        \n---------§aExtendedAE Plus§r---------
+                        Hold §6[Ctrl]§r and Right click a node,
+                        to encode & upload a pattern automatically"""
+            )
+        UtilKeyBuilder.dataGen(Patterns.tooltip)
+            .item(ModItems.CardAutoCompletion)
+            .branch("advanced_tip", "What you need is just copy one from NAE2")
+            .buildInto("Cancel the crafting task automatically when items in patterns be pushed")
+        UtilKeyBuilder.dataGen(Patterns.tooltip)
+            .item(ModItems.PriorityTool)
+            .buildInto("Simple Tool for machine priority overriding")
+
+        UtilKeyBuilder.dataGen(Patterns.screenTooltip)
+            .addStr("state_ticker")
+            .branch("blacklist", "§c§lTarget block blacklisted")
+            .branch("enabled", "Enabled")
+            .branch("disabled", "Disabled")
+            .buildInto("Ticker State")
+        UtilKeyBuilder.dataGen(Patterns.screenTooltip)
+            .addStr("smart_blocking")
+            .branch("enabled", "The same recipe will no longer block (requires the original blocking mode)")
+            .branch("disabled", "Open it please pwq")
+            .branch("disabled_by_super", "You know why it doesn't work")
+            .buildInto("Smart Blocking")
+        UtilKeyBuilder.dataGen(Patterns.screenTooltip)
+            .addStr("smart_doubling")
+            .branch("enabled", "Intelligently scale the processing pattern based on the volume of requests")
+            .branch("disabled", "Nothing be to do")
+            .buildInto("Smart Doubling")
+        UtilKeyBuilder.dataGen(Patterns.screenTooltip)
+            .addStr("upload_button")
+            .branch("auto_upload", "\n§a[Ctrl] §7Upload encoded pattern")
+            .buildInto("§7Upload encoded pattern")
+        UtilKeyBuilder.dataGen(Patterns.screenTooltip)
+            .addStr("toggle_slot_display")
+            .branch("enabled", "Hide slots")
+            .branch("disabled", "Display slots")
+            .buildInto("Toggle slots display")
+        UtilKeyBuilder.dataGen(Patterns.screenTooltip)
+            .addStr("provider_list")
+            .addStr("candidate_keywords")
+            .buildInto("§f§lKeywords")
+        UtilKeyBuilder.dataGen(Patterns.screenTooltip)
+            .addStr("priority_tool")
+            .branch("keep", "Keep")
+            .branch("increment", "Increment per apply")
+            .branch("decrement", "Decrement per apply")
+            .buildInto("Tool Mode")
+        UtilKeyBuilder.dataGen(Patterns.screenTooltip)
+            .addStr("recipe_alias")
+            .branch("add", "Add a Mapping")
+            .branch("remove", "Remove Mappings")
+            .buildInto("Alias Actions")
+        UtilKeyBuilder.dataGen(Patterns.screenTooltip)
+            .addStr("row_slots_visible")
+            .branch("visible", "Visible")
+            .branch("invisible", "Invisible")
+            .buildInto("Pattern Slot Visibility")
+        UtilKeyBuilder.dataGen(Patterns.screenTooltip)
+            .addStr("label_link")
+            .addStr("info_label")
+            .branch("public", "Public")
+            .buildInto("Owner: %s{%s}")
+        UtilKeyBuilder.dataGen(Patterns.screenTooltip)
+            .addStr("label_link")
+            .addStr("label_description")
+            .branch("empty", "Desc: Empty")
+            .buildInto("Desc: ")
+        UtilKeyBuilder.dataGen(Patterns.screenTooltip)
+            .addStr("label_type")
+            .branch("frequency", "Frequency")
+            .branch("label", "String Label")
+            .buildInto("Link Label Type")
+        UtilKeyBuilder.dataGen(Patterns.screenTooltip)
+            .addStr("label_mode")
+            .branch("public", "Public")
+            .branch("private", "Private/Team")
+            .buildInto("Link Label Mode")
+        UtilKeyBuilder.dataGen(Patterns.screenTooltip)
+            .addStr("label_add")
+            .buildInto("Reg Link Label")
+        UtilKeyBuilder.dataGen(Patterns.screenTooltip)
+            .addStr("label_locked")
+            .branch("locked", "Locked")
+            .branch("unlocked", "Unlocked")
+            .buildInto("Lock Device Label")
+        UtilKeyBuilder.dataGen(Patterns.screenTooltip)
+            .addStr("transceiver_mode")
+            .branch("master", "Master")
+            .branch("slave", "Slave")
+            .buildInto("Device Mode")
+        UtilKeyBuilder.dataGen(Patterns.screenTooltip)
+            .addStr("transfer_mode")
+            .branch("none", "None")
+            .branch("merge_adjacency", "Merge Adjacent Items")
+            .branch("independence", "Full Independence")
+            .buildInto("Recipe Transfer Merge Mode")
+
+        UtilKeyBuilder.dataGen(Patterns.message)
+            .addStr("provider_list")
+            .branch("remap_success", "[EAEP] Succeed to remap")
+            .branch("remap_failed", "[EAEP] Failed to remap")
+        UtilKeyBuilder.dataGen(Patterns.message)
+            .addStr("provider_list")
+            .addStr("add_alias")
+            .branch("empty_query", "[EAEP] Empty query, please input the KeywordToMap first")
+            .branch("empty_alias", "[EAEP] Empty alias, please input the AliasToMap")
+            .branch("success", "[EAEP] Alias{%s → %s}")
+            .branch("failed", "[EAEP] Failed to map Alias{%s}")
+        UtilKeyBuilder.dataGen(Patterns.message)
+            .addStr("provider_list")
+            .addStr("delete_alias")
+            .branch("empty_alias", "[EAEP] Empty alias, please input the AliasToDelete")
+            .branch("success", "[EAEP] Alias{%s × %s} was deleted")
+            .branch("failed", "[EAEP] Failed to delete Alias{%s}")
+        UtilKeyBuilder.dataGen(Patterns.message)
+            .addStr("pattern_uploading")
+            .addStr("duplicate_pattern")
+            .buildInto("[EAEP] Duplicate patterns")
+        UtilKeyBuilder.dataGen(Patterns.message)
+            .addStr("provider_to_upload")
+            .branch("selected", "[EAEP] PatternProvider{%s} was selected")
+            .branch("unset", "[EAEP] Please select a provider first")
+            .branch("failed", "[EAEP] Failed to upload patterns")
+            .branch("invalid_pattern", "[EAEP] Can't upload Non-Processing patterns")
+        UtilKeyBuilder.dataGen(Patterns.message)
+            .item(ModItems.ControllerProvider)
+            .addStr("global_switch")
+            .buildInto("[EAEP] The global setting is now in effect, affecting PatternProvider x%s")
+        UtilKeyBuilder.dataGen(Patterns.message)
+            .addStr("opened_provider_info")
+            .buildInto("[EAEP] Now opening PatternProvider{Location[%s], Dimension[%s]}")
+        UtilKeyBuilder.dataGen(Patterns.message)
+            .addStr("tips_mod_load")
+            .addStr("confirm")
+            .branch("hover", "Click to toggle config \"DependencyTip\" off")
+            .branch("callback", "§aSucceed to config")
+            .buildInto("\n§e[Don't Show me Again]")
+        UtilKeyBuilder.dataGen(Patterns.message)
+            .addStr("tips_mod_load")
+            .branch(
+                "expandedae", """
+                        §6[EAEP/DependencyTip]
+                        §fWhen EAEP and ExpandedAE are installed at the same time, the following and more functions may become unavailable:§7
+                          - Smart Doubling/Blocking
+                          - Over-16-thread Accelerator
+                          - Pattern Modify"""
+            )
+
+        UtilKeyBuilder.dataGen(Patterns.actionBar)
+            .item(AEItems.CERTUS_QUARTZ_KNIFE.get())
+            .addStr("block_name_coping")
+            .branch("success", "Copied BlockName{%s} to the clipboard")
+            .branch("failed", "Failed to copy BlockName{%s}")
+        UtilKeyBuilder.dataGen(Patterns.actionBar)
+            .item(ModItems.CardChannel)
+            .addStr("binding")
+            .branch("clear", "Binding Cleared")
+            .buildInto("Bound to: %s")
+
+        UtilKeyBuilder.dataGen(Patterns.screen)
+            .item(ModItems.Ticker)
+            .branch("enabled", "§2§lTicker Enabled")
+            .branch("needs_energy", "§6§lEnergy Insufficient")
+            .branch("disabled", "§0§lTicker Disabled")
+            .branch("blacklisted", "§c§lTarget Block Blacklisted")
+            .branch("speed_multiplier", "Speed Multiplier: %s")
+            .branch("energy_cost", "Energy Cost: %s/t")
+            .branch("power_ratio", "Power Ratio: %s")
+            .branch("cost_multiplier", "Additional Cost Multiplier: %s")
+        UtilKeyBuilder.dataGen(Patterns.screen)
+            .addStr("provider_list")
+            .branch("query", "Input to search...")
+            .branch("alias", "Input aliasToMap...")
+            .branch("add_alias", "Add a map")
+            .branch("delete_alias", "Delete a map")
+            .buildInto("Select a Provider to Upload")
+        UtilKeyBuilder.dataGen(Patterns.screen)
+            .item(ModItems.ControllerProvider)
+            .branch("blocking", "Toggle Blocking")
+            .branch("smart_blocking", "Toggle Smart Blocking")
+            .branch("smart_doubling", "Toggle Smart Doubling")
+            .branch("all_on", "All On")
+            .branch("all_off", "All Off")
+            .buildInto("Pattern Provider Management Panel")
+        UtilKeyBuilder.dataGen(Patterns.screen)
+            .item(EAESingletons.EX_PATTERN_PROVIDER.asItem())
+            .addStr("pages")
+            .buildInto("%s/%s Pages")
+        UtilKeyBuilder.dataGen(Patterns.screen)
+            .item(ModItems.PriorityTool)
+            .buildInto("Override Priority")
+        UtilKeyBuilder.dataGen(Patterns.screen)
+            .addStr("stacks_rename")
+            .buildInto("Rename")
+        UtilKeyBuilder.dataGen(Patterns.screen)
+            .addStr("label_link")
+            .branch("register", "Reg Link Label")
+            .branch("label_value", "Link Label")
+            .branch("label_description", "Link Label Description")
+            .buildInto("Choose a Link Label")
+
+        UtilKeyBuilder.dataGen(Patterns.keywordGroup)
+            .addStr("workstations")
+            .buildInto("§Keyword Group {§rRecipe[§l%s§6]}")
+
+        UtilKeyBuilder.dataGen(Patterns.config)
+            .branch("title", "ExtendedAE Plus Config")
+            .branch("ae", "AE2")
+            .branch("ticker", "Ticker")
+            .branch("assembler_matrix", "Assembler Matrix")
+        UtilKeyBuilder.dataGen(Patterns.config)
+            .addStr("pageMultiplier")
+            .branch(
+                "tooltip", """
+                        Expand the multiplier of the total slot capacity of the provider
+                        The base is 36, each page still displays 36 cells, and the magnification will increase the total number of pages/total capacity
+                        Recommended range 1-16"""
+            )
+            .buildInto("Ex Pattern Provider Slots Multiplier")
+        UtilKeyBuilder.dataGen(Patterns.config)
+            .addStr("overrideAE2WTPicking")
+            .branch("tooltip", "There should have something? Sorry I forgot")
+            .buildInto("Override AE2WT Picking")
+        UtilKeyBuilder.dataGen(Patterns.config)
+            .addStr("showEncoderPatternPlayer")
+            .branch("tooltip", "If true, tooltips in patterns will show the encoder")
+            .buildInto("Show Pattern Encoder")
+        UtilKeyBuilder.dataGen(Patterns.config)
+            .addStr("patternTerminalShowSlotsDefault")
+            .branch("tooltip", "If true, pattern access menu will display provider slots by default")
+            .buildInto("Show slots by default")
+        UtilKeyBuilder.dataGen(Patterns.config)
+            .addStr("independentUploadingButton")
+            .branch("tooltip", "If true, a button will appear in the pattern coding terminal for uploading patterns.")
+            .buildInto("Independent Upload Button")
+        UtilKeyBuilder.dataGen(Patterns.config)
+            .addStr("craftingPauseThreshold")
+            .branch(
+                "tooltip", """
+                        The larger the value, the fewer wait/notify times in the process of AE building the synthetic plan,
+                        which improves throughput but reduces scheduling responsiveness."""
+            )
+            .buildInto("AE Composition Calculation Pause Check Threshold")
+        UtilKeyBuilder.dataGen(Patterns.config)
+            .addStr("smartScalingMaxMultiplier")
+            .branch("tooltip", "The maximum multiplier for smart doubling (0 means no limit)")
+            .buildInto("Smart Doubling Maximum Multiplier")
+        UtilKeyBuilder.dataGen(Patterns.config)
+            .addStr("providerRoundRobinEnable")
+            .branch("tooltip", " Note: All related providers need to enable smart doubling, otherwise they may fail")
+            .buildInto("Enable Pattern Provider Polling Assignment")
+        UtilKeyBuilder.dataGen(Patterns.config)
+            .addStr("tickerBaseCost")
+            .buildInto("Base Ticker Energy Cost")
+        UtilKeyBuilder.dataGen(Patterns.config)
+            .addStr("tickerBlacklist")
+            .branch(
+                "tooltip", """
+                        Use Block Description Name/Block Tag
+                        For Example 'mekanism:enrichment_chamber', '#c:storage_blocks/unobtainium'"""
+            )
+            .buildInto("Ticker Blacklist")
+        UtilKeyBuilder.dataGen(Patterns.config)
+            .addStr("tickerExternalMultipliers")
+            .branch(
+                "tooltip", """
+                        Set additional energy multipliers for certain blocks,
+                        Template '<entry>\\[<multiplier>\\]'
+                        Use Block Description Name/Block Tag on <entry>
+                        For Example 'mekanism:enrichment_chamber[1.14]', '#c:storage_blocks/unobtainium[5.14]'"""
+            )
+            .buildInto("Ticker Additional Cost Multiplier")
+        UtilKeyBuilder.dataGen(Patterns.config)
+            .addStr("allowDiskEnergy")
+            .branch(
+                "tooltip", """
+                        If true，ticker will uses energy stored in disks first
+                        Note: AppliedFlux only"""
+            )
+            .buildInto("Allow Disk Energy")
+        UtilKeyBuilder.dataGen(Patterns.config)
+            .addStr("baseCoreCrafterThreads")
+            .buildInto("Advanced Craft Core Base Threads")
+        UtilKeyBuilder.dataGen(Patterns.config)
+            .addStr("coreCrafterThreadAmplification")
+            .branch(
+                "tooltip", """
+                        Advanced Craft Core Thread Amplification per 5 speed multiplier(see GuideME),
+                        0 means disabled"""
+            )
+            .buildInto("Advanced Craft Core Thread Amplification")
+        UtilKeyBuilder.dataGen(Patterns.config)
+            .addStr("maximumCoreCrafterThreads")
+            .branch("tooltip", "Tip: The maximum threads cannot be less than the base threads")
+            .buildInto("Advanced Craft Core Maximum Threads")
+        UtilKeyBuilder.dataGen(Patterns.config)
+            .addStr("corePatternSlotMultiplier")
+            .buildInto("Advanced Pattern Core Slot Multiplier")
+        UtilKeyBuilder.dataGen(Patterns.config)
+            .addStr("needsUploadingPort")
+            .branch("tooltip", "If true, patterns can only be uploaded to assembly matrix with upload port")
+            .buildInto("Needs Uploading Port")
+        UtilKeyBuilder.dataGen(Patterns.config)
+            .addStr("dependencyTips")
+            .branch("tooltip", "Controls whether EAEP prompts when special Mod relationships are found")
+            .buildInto("Dependency Tips")
+        UtilKeyBuilder.dataGen(Patterns.config)
+            .addStr("smartDoublingAdapt")
+            .buildInto("Smart Doubled Pattern Push Adapt (WIP)")
+
+        UtilKeyBuilder.dataGen(Patterns.jadeInfo)
+            .item(ModItems.WirelessTransceiver)
+            .addStr("label")
+            .branch("unset", "Link Label: Unset")
+            .buildInto("Link Label: %s")
+        UtilKeyBuilder.dataGen(Patterns.jadeInfo)
+            .item(ModItems.WirelessTransceiver)
+            .addStr("mode")
+            .branch("master", "Master Mode")
+            .branch("slave", "Slave Mode")
+        UtilKeyBuilder.dataGen(Patterns.jadeInfo)
+            .item(ModItems.WirelessTransceiver)
+            .addStr("master_location")
+            .branch("custom_name", $$"Master Node: %4$s{%1$s, %2$s, %3$s}")
+            .buildInto("Master Node: Transceiver{%s, %s, %s}")
+        UtilKeyBuilder.dataGen(Patterns.jadeInfo)
+            .item(ModItems.WirelessTransceiver)
+            .addStr("master_location")
+            .addStr("dim")
+            .buildInto("Dimension: %s")
+        UtilKeyBuilder.dataGen(Patterns.jadeInfo)
+            .item(ModItems.WirelessTransceiver)
+            .addStr("locked")
+            .buildInto("Locked")
+        UtilKeyBuilder.dataGen(Patterns.jadeInfo)
+            .item(ModItems.WirelessTransceiver)
+            .branch("name", "Owner: %s")
+            .branch("id", $$"Owner{%2$s}")
+            .buildInto("Public")
+
+        UtilKeyBuilder.dataGen(Patterns.jadeConfig)
+            .addStr("wireless_transceiver")
+            .branch("channels", "Wireless Transceiver: Channels")
+            .branch("label", "Wireless Transceiver: Link Label")
+            .branch("master_mode", "Wireless Transceiver: Mode")
+            .branch("master_location", "Wireless Transceiver: Master Location")
+            .branch("locked", "Wireless Transceiver: Locked")
+            .branch("placer", "Wireless Transceiver: Owner")
+
+        ContainerDataGen.destroy("en_us")
+    }
+}

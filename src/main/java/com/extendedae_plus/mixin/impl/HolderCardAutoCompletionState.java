@@ -47,7 +47,7 @@ public class HolderCardAutoCompletionState {
         if (upgradesInv == null) return;
         var state = new AtomicBoolean(false);
         upgradesInv.forEach(card -> {
-            if (!state.get() && card.is(ModItems.CARD_AUTO_COMPLETION))
+            if (!state.get() && card.is(ModItems.CardAutoCompletion))
                 state.set(true);
         });
         this.cardAvailable = state.get();

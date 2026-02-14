@@ -8,7 +8,8 @@ import com.extendedae_plus.integration.jade.CommonProviders;
 import com.extendedae_plus.integration.jade.CommonTooltips;
 import com.extendedae_plus.integration.jade.helper.IObjectedProvider;
 import com.extendedae_plus.integration.jade.helper.TooltipAppender;
-import com.extendedae_plus.util.UtilKeyBuilder;
+import com.extendedae_plus.util.keyBuilder.Patterns;
+import com.extendedae_plus.util.keyBuilder.UtilKeyBuilder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import snownee.jade.api.BlockAccessor;
@@ -58,8 +59,8 @@ public class WirelessTransceiver {
         MODE("master_mode", (accessor, tooltip, config, data) -> {
             if (data.contains("master_mode")) {
                 boolean masterMode = data.getBoolean("master_mode");
-                tooltip.add(UtilKeyBuilder.of(UtilKeyBuilder.jadeInfo)
-                        .item(ModItems.WIRELESS_TRANSCEIVER)
+                tooltip.add(UtilKeyBuilder.of(Patterns.jadeInfo)
+                        .item(ModItems.WirelessTransceiver)
                         .addStr("mode")
                         .addStr(masterMode, "master", "slave")
                         .build());

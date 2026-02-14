@@ -32,7 +32,7 @@ public abstract class MixinUpgradeablePartsCardSlot implements HelperPartLinkLog
     @Inject(method = "<init>", at = @At("TAIL"))
     private void onInit(IPartItem<?> partItem, CallbackInfo ci) {
         this.eaep$supportedChannelCard =
-                Upgrades.getMaxInstallable(ModItems.CHANNEL_CARD.get(), partItem) > 0;
+                Upgrades.getMaxInstallable(ModItems.CardChannel.get(), partItem) > 0;
 
         if (!this.eaep$supportedChannelCard) return;
         var self = (UpgradeablePart)(Object) this;

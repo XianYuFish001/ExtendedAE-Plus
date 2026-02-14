@@ -12,7 +12,8 @@ import com.extendedae_plus.mixin.bridge.BridgeProviderList;
 import com.extendedae_plus.mixin.bridge.HelperAssemblerMatrixModifier;
 import com.extendedae_plus.mixin.core.ae2.accessor.AccessorAccessMenu;
 import com.extendedae_plus.mixin.core.ae2.accessor.AccessorEncodingMenu;
-import com.extendedae_plus.util.UtilKeyBuilder;
+import com.extendedae_plus.util.keyBuilder.Patterns;
+import com.extendedae_plus.util.keyBuilder.UtilKeyBuilder;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixPattern;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -126,7 +127,7 @@ public final class PatternUploader {
                     }
                     return false;
                 })) {
-            player.displayClientMessage(UtilKeyBuilder.of(UtilKeyBuilder.message)
+            player.displayClientMessage(UtilKeyBuilder.of(Patterns.message)
                     .addStr("pattern_uploading")
                     .addStr("duplicate_pattern")
                     .build(), false);

@@ -2,6 +2,8 @@ package com.extendedae_plus.util;
 
 import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.common.init.ModItems;
+import com.extendedae_plus.util.keyBuilder.Patterns;
+import com.extendedae_plus.util.keyBuilder.UtilKeyBuilder;
 import lombok.Getter;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -32,8 +34,8 @@ public class UtilTextComponent {
         @SubscribeEvent
         private static void onRegister(FMLLoadCompleteEvent event) {
             List.of(
-                    ModItems.INFINITY_BIGINTEGER_CELL_ITEM.asItem().getDescriptionId(),
-                    UtilKeyBuilder.of(UtilKeyBuilder.tooltip).item(ModItems.INFINITY_BIGINTEGER_CELL_ITEM).addStr("description").addStr("colored").buildRaw()
+                    ModItems.CellInfinity.asItem().getDescriptionId(),
+                    UtilKeyBuilder.of(Patterns.tooltip).item(ModItems.CellInfinity).addStr("description").addStr("colored").buildRaw()
             ).forEach(RegistryColored::registerKey);
         }
 

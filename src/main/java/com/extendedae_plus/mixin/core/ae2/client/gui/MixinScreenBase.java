@@ -11,7 +11,8 @@ import appeng.menu.AEBaseMenu;
 import appeng.menu.slot.AppEngSlot;
 import com.extendedae_plus.mixin.bridge.ExPatternPageAccessor;
 import com.extendedae_plus.util.UtilGui;
-import com.extendedae_plus.util.UtilKeyBuilder;
+import com.extendedae_plus.util.keyBuilder.Patterns;
+import com.extendedae_plus.util.keyBuilder.UtilKeyBuilder;
 import com.glodblock.github.extendedae.client.gui.GuiExPatternProvider;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import net.minecraft.client.gui.GuiGraphics;
@@ -143,7 +144,7 @@ public abstract class MixinScreenBase<TMenu extends AEBaseMenu> extends Abstract
             } catch (Throwable ignored) {
             }
 
-            String pageText = UtilKeyBuilder.of(UtilKeyBuilder.screen)
+            String pageText = UtilKeyBuilder.of(Patterns.screen)
                     .item(EAESingletons.EX_PATTERN_PROVIDER.asItem())
                     .addStr("pages")
                     .args(cur, max)

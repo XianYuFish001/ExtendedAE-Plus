@@ -13,17 +13,17 @@ public class HostPriorityTool extends ItemMenuHost<ItemPriorityTool> {
         super(item, player, locator);
 
         var itemStack = this.getItemStack();
-        if (!itemStack.has(ModDataComponents.DATA_PRIORITY)) {
-            itemStack.set(ModDataComponents.DATA_PRIORITY,
+        if (!itemStack.has(ModDataComponents.Priority)) {
+            itemStack.set(ModDataComponents.Priority,
                     new DataPriority(0, DataPriority.ModeTool.KEEP));
         }
     }
 
     public @Nullable DataPriority getData() {
-        return this.getItemStack().get(ModDataComponents.DATA_PRIORITY);
+        return this.getItemStack().get(ModDataComponents.Priority);
     }
 
     public void setData(DataPriority data) {
-        this.getItemStack().set(ModDataComponents.DATA_PRIORITY, data);
+        this.getItemStack().set(ModDataComponents.Priority, data);
     }
 }

@@ -10,7 +10,8 @@ import com.extendedae_plus.client.render.widgets.button.EAEPServerCycleButton;
 import com.extendedae_plus.common.registry.menu.labelLink.MenuLabelLink;
 import com.extendedae_plus.common.wireless.linkApi.Label;
 import com.extendedae_plus.integration.IntegrationFTBTeams;
-import com.extendedae_plus.util.UtilKeyBuilder;
+import com.extendedae_plus.util.keyBuilder.Patterns;
+import com.extendedae_plus.util.keyBuilder.UtilKeyBuilder;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
@@ -37,7 +38,7 @@ public class ScreenLabelLinkManageable extends ScreenLabelLink {
 
         this.fieldLabelValue = this.initTextField("field_label_value");
         this.fieldLabelValue.setOnConfirm(this::onLabelRegister);
-        this.fieldLabelValue.setPlaceholder(UtilKeyBuilder.of(UtilKeyBuilder.screen)
+        this.fieldLabelValue.setPlaceholder(UtilKeyBuilder.of(Patterns.screen)
                 .addStr("label_link")
                 .addStr("label_value")
                 .build());
@@ -45,7 +46,7 @@ public class ScreenLabelLinkManageable extends ScreenLabelLink {
         this.fieldLabelDescription = this.initTextField("field_label_description");
         this.fieldLabelDescription.setOnConfirm(this::onLabelRegister);
         this.fieldLabelDescription.setMaxLength(100);
-        this.fieldLabelDescription.setPlaceholder(UtilKeyBuilder.of(UtilKeyBuilder.screen)
+        this.fieldLabelDescription.setPlaceholder(UtilKeyBuilder.of(Patterns.screen)
                 .addStr("label_link")
                 .addStr("label_description")
                 .build());
@@ -99,7 +100,7 @@ public class ScreenLabelLinkManageable extends ScreenLabelLink {
         super.drawBG(guiGraphics, offsetX, offsetY, mouseX, mouseY, partialTicks);
 
         guiGraphics.drawString(this.font,
-                UtilKeyBuilder.of(UtilKeyBuilder.screen)
+                UtilKeyBuilder.of(Patterns.screen)
                         .addStr("label_link")
                         .addStr("register")
                         .build(),

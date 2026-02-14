@@ -5,7 +5,8 @@ import appeng.api.parts.SelectedPart;
 import appeng.core.definitions.AEItems;
 import appeng.items.tools.quartz.QuartzCuttingKnifeItem;
 import com.extendedae_plus.integration.ContextModLoaded;
-import com.extendedae_plus.util.UtilKeyBuilder;
+import com.extendedae_plus.util.keyBuilder.Patterns;
+import com.extendedae_plus.util.keyBuilder.UtilKeyBuilder;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
@@ -91,7 +92,7 @@ public abstract class QuartzCuttingKnifeItemMixin {
         name = eap$cleanBlockName(name);
 
         // 复制到剪贴板并反馈
-        player.displayClientMessage(UtilKeyBuilder.of(UtilKeyBuilder.actionBar)
+        player.displayClientMessage(UtilKeyBuilder.of(Patterns.actionBar)
                         .item(AEItems.CERTUS_QUARTZ_KNIFE.get())
                         .addStr("block_name_coping")
                         .addStr(eap$tryCopyToClipboard(name), "success", "failed")
@@ -124,7 +125,7 @@ public abstract class QuartzCuttingKnifeItemMixin {
         }
 
         // 3. GregTech CEu 配方翻译
-        if (ContextModLoaded.gtceuModern.isLoaded()) {
+        if (ContextModLoaded.GtceuModern.isLoaded()) {
             String gtceuName = eap$handleGTCEuBlock(blockEntity);
             if (gtceuName != null && !gtceuName.isBlank()) {
                 return gtceuName;

@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MixinSettingsInitialization {
     @Inject(method = "getOrThrow", at = @At("HEAD"), cancellable = true)
     private static void findSettingsOnEAEPRegistries(String name, CallbackInfoReturnable<Setting<?>> cir) {
-        var eaep_settings = ModSettings.settings.get(name);
+        var eaep_settings = ModSettings.Settings.get(name);
         if (eaep_settings == null) return;
         cir.setReturnValue(eaep_settings);
     }

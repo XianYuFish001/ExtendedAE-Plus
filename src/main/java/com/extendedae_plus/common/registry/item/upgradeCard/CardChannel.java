@@ -12,7 +12,8 @@ import com.extendedae_plus.common.init.ModItems;
 import com.extendedae_plus.common.init.ModMenuTypes;
 import com.extendedae_plus.common.registry.dataComponent.DataChannelCard;
 import com.extendedae_plus.common.registry.menu.host.linkLabel.HostCardChannel;
-import com.extendedae_plus.util.UtilKeyBuilder;
+import com.extendedae_plus.util.keyBuilder.Patterns;
+import com.extendedae_plus.util.keyBuilder.UtilKeyBuilder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -49,8 +50,8 @@ public class CardChannel extends UpgradeCardItem implements IMenuItem {
 
         // 显示频道
         var label = DataChannelCard.getLabel(stack);
-        lines.add(UtilKeyBuilder.of(UtilKeyBuilder.tooltip)
-                .item(ModItems.CHANNEL_CARD)
+        lines.add(UtilKeyBuilder.of(Patterns.tooltip)
+                .item(ModItems.CardChannel)
                 .addStr("label")
                 .addStr(label.isEmpty(), "unset")
                 .args(label.getDisplayValue(), label.description().getString())
@@ -60,8 +61,8 @@ public class CardChannel extends UpgradeCardItem implements IMenuItem {
         UUID ownerUUID = DataChannelCard.getOwnerUUID(stack);
         String teamName = DataChannelCard.getOwnerName(stack);
 
-        lines.add(UtilKeyBuilder.of(UtilKeyBuilder.tooltip)
-                .item(ModItems.CHANNEL_CARD)
+        lines.add(UtilKeyBuilder.of(Patterns.tooltip)
+                .item(ModItems.CardChannel)
                 .addStr(!teamName.isEmpty(), "name")
                 .addStr(teamName.isEmpty() && ownerUUID != null, "id")
                 .args(teamName, ownerUUID != null ? ownerUUID.toString().substring(0, 8) : null)
@@ -73,7 +74,7 @@ public class CardChannel extends UpgradeCardItem implements IMenuItem {
         ItemStack stack = player.getItemInHand(hand);
         if (level.isClientSide()) return InteractionResultHolder.success(stack);
 
-        MenuOpener.open(ModMenuTypes.labelLink.get(), player, MenuLocators.forHand(player, hand));
+        MenuOpener.open(ModMenuTypes.LabelLink.get(), player, MenuLocators.forHand(player, hand));
         return InteractionResultHolder.consume(stack);
     }
 
@@ -91,7 +92,7 @@ public class CardChannel extends UpgradeCardItem implements IMenuItem {
                     .asItem();
         }
 
-        boolean available = Upgrades.getMaxInstallable(ModItems.CHANNEL_CARD, currentBlock) > 0;
+        boolean available = Upgrades.getMaxInstallable(ModItems.CardChannel, currentBlock) > 0;
         if (available) return InteractionResult.FAIL;
         else return super.useOn(context);
     }

@@ -34,19 +34,19 @@ public record DataTickingCard(int multiplier, int maxMultiplier) {
 
     public static Ingredient toIngredient(int multiplier, int maxMultiplier) {
         return DataComponentIngredient.of(false,
-                ModDataComponents.DATA_TICKING_CARD,
+                ModDataComponents.CardTicking,
                 new DataTickingCard(multiplier, maxMultiplier),
-                ModItems.TICKING_CARD);
+                ModItems.CardTicking);
     }
 
     public static ItemStack toStack(int multiplier, int maxMultiplier) {
-        var stack = ModItems.TICKING_CARD.toStack();
-        stack.set(ModDataComponents.DATA_TICKING_CARD, new DataTickingCard(multiplier, maxMultiplier));
+        var stack = ModItems.CardTicking.toStack();
+        stack.set(ModDataComponents.CardTicking, new DataTickingCard(multiplier, maxMultiplier));
         return stack;
     }
 
     public static DataTickingCard fromStack(ItemStack stack) {
-        if (!stack.has(ModDataComponents.DATA_TICKING_CARD)) return new DataTickingCard(1, 1);
-        return stack.get(ModDataComponents.DATA_TICKING_CARD);
+        if (!stack.has(ModDataComponents.CardTicking)) return new DataTickingCard(1, 1);
+        return stack.get(ModDataComponents.CardTicking);
     }
 }

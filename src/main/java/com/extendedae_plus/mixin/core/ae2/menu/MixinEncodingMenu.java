@@ -141,7 +141,7 @@ public abstract class MixinEncodingMenu extends MEStorageMenu implements BridgeP
         var pattern = cir.getReturnValue();
         if (pattern == null || pattern.isEmpty()) return;
 
-        pattern.set(ModDataComponents.DATA_ENCODER_PROFILE,
+        pattern.set(ModDataComponents.ProfileEncoder,
                 new DataEncoderProfile(this.getPlayer().getGameProfile()));
         cir.setReturnValue(pattern);
     }

@@ -77,7 +77,7 @@ public class BlockEntityUpload extends TileAssemblerMatrixWall
         super.exportSettings(mode, builder, player);
 
         if (mode != SettingsFrom.MEMORY_CARD) return;
-        builder.set(ModDataComponents.DATA_PORT_UPLOAD_SETTINGS, new DataSettings(
+        builder.set(ModDataComponents.SettingsPortUpload, new DataSettings(
                 this.host.getLabel(),
                 this.host.getPlacer(),
                 this.host.getPlacerName()
@@ -89,8 +89,8 @@ public class BlockEntityUpload extends TileAssemblerMatrixWall
         super.importSettings(mode, input, player);
 
         if (this.isClientSide()) return;
-        if (!input.has(ModDataComponents.DATA_PORT_UPLOAD_SETTINGS.get())) return;
-        var settings = input.get(ModDataComponents.DATA_PORT_UPLOAD_SETTINGS.get());
+        if (!input.has(ModDataComponents.SettingsPortUpload.get())) return;
+        var settings = input.get(ModDataComponents.SettingsPortUpload.get());
 
         this.host.setPlacer(settings.placer());
         this.host.setPlacerName(settings.placerName);

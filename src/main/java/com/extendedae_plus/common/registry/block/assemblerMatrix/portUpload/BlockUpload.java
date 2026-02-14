@@ -28,11 +28,11 @@ public class BlockUpload extends BlockAssemblerMatrixBase<BlockEntityUpload> {
 
     @Override
     public Item getPresentItem() {
-        return ModItems.PORT_UPLOAD.get();
+        return ModItems.PortUpload.get();
     }
 
     @Override
     public void openGui(BlockEntityUpload tile, Player player) {
-        MenuOpener.open(ModMenuTypes.labelLinkManageable.get(), player, MenuLocators.forBlockEntity(tile));
+        MenuOpener.open(ModMenuTypes.LabelLinkManageable.get(), player, MenuLocators.forBlockEntity(tile));
     }
 }

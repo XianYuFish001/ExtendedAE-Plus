@@ -7,14 +7,12 @@ import appeng.api.stacks.GenericStack;
 import appeng.crafting.pattern.AEProcessingPattern;
 import appeng.crafting.pattern.EncodedProcessingPattern;
 import com.extendedae_plus.mixin.extension.IScaledPattern;
-import com.extendedae_plus.util.extension.ExtensionAEItemKey;
-import lombok.experimental.ExtensionMethod;
+import com.extendedae_plus.util.extension.ExtensionMiscKt;
 import org.spongepowered.asm.mixin.*;
 
 import java.util.List;
 
 @Mixin(AEProcessingPattern.class)
-@ExtensionMethod(ExtensionAEItemKey.class)
 public abstract class MixinPatternDoubling implements IScaledPattern {
     @Shadow
     @Final
@@ -78,7 +76,7 @@ public abstract class MixinPatternDoubling implements IScaledPattern {
         }
 
         var multiplied = this.getClass().cast(new AEProcessingPattern(
-                this.definition.set(AEComponents.ENCODED_PROCESSING_PATTERN,
+                ExtensionMiscKt.set(this.definition, AEComponents.ENCODED_PROCESSING_PATTERN,
                                 new EncodedProcessingPattern(inputs, outputs))));
         if (saveInfo) {
             multiplied.eaep$setEnabled(true);

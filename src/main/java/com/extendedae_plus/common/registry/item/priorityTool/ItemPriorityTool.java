@@ -12,7 +12,8 @@ import com.extendedae_plus.common.init.ModDataComponents;
 import com.extendedae_plus.common.init.ModItems;
 import com.extendedae_plus.common.init.ModMenuTypes;
 import com.extendedae_plus.common.registry.menu.host.HostPriorityTool;
-import com.extendedae_plus.util.UtilKeyBuilder;
+import com.extendedae_plus.util.keyBuilder.Patterns;
+import com.extendedae_plus.util.keyBuilder.UtilKeyBuilder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -39,16 +40,16 @@ public class ItemPriorityTool extends AEBaseItem implements IMenuItem {
         var level = context.getLevel();
         if (level.isClientSide()) return InteractionResult.sidedSuccess(true);
 
-        var data = stack.get(ModDataComponents.DATA_PRIORITY);
+        var data = stack.get(ModDataComponents.Priority);
         if (data == null) {
-            MenuOpener.open(ModMenuTypes.priorityTool.get(), player,
+            MenuOpener.open(ModMenuTypes.PriorityTool.get(), player,
                     MenuLocators.forHand(player, context.getHand()));
             return InteractionResult.CONSUME;
         }
 
         var blockEntity = level.getBlockEntity(context.getClickedPos());
         if (blockEntity == null) {
-            MenuOpener.open(ModMenuTypes.priorityTool.get(), player,
+            MenuOpener.open(ModMenuTypes.PriorityTool.get(), player,
                     MenuLocators.forHand(player, context.getHand()));
             return InteractionResult.CONSUME;
         }
@@ -64,13 +65,13 @@ public class ItemPriorityTool extends AEBaseItem implements IMenuItem {
             default -> null;
         };
         if (priorityHost == null) {
-            MenuOpener.open(ModMenuTypes.priorityTool.get(), player,
+            MenuOpener.open(ModMenuTypes.PriorityTool.get(), player,
                     MenuLocators.forHand(player, context.getHand()));
             return InteractionResult.CONSUME;
         }
 
         priorityHost.setPriority(data.priority());
-        stack.set(ModDataComponents.DATA_PRIORITY, data.apply());
+        stack.set(ModDataComponents.Priority, data.apply());
         return InteractionResult.CONSUME;
     }
 
@@ -81,7 +82,7 @@ public class ItemPriorityTool extends AEBaseItem implements IMenuItem {
         if (level.isClientSide())
             return InteractionResultHolder.sidedSuccess(item, true);
 
-        if (!MenuOpener.open(ModMenuTypes.priorityTool.get(), player, MenuLocators.forHand(player, usedHand)))
+        if (!MenuOpener.open(ModMenuTypes.PriorityTool.get(), player, MenuLocators.forHand(player, usedHand)))
             return InteractionResultHolder.fail(item);
 
         return InteractionResultHolder.consume(item);
@@ -94,8 +95,8 @@ public class ItemPriorityTool extends AEBaseItem implements IMenuItem {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.add(UtilKeyBuilder.of(UtilKeyBuilder.tooltip)
-                .item(ModItems.PRIORITY_TOOL)
+        tooltipComponents.add(UtilKeyBuilder.of(Patterns.tooltip)
+                .item(ModItems.PriorityTool)
                 .build());
     }
 }

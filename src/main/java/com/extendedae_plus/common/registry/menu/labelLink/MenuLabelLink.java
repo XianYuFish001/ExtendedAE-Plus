@@ -8,6 +8,8 @@ import com.extendedae_plus.common.registry.menu.host.linkLabel.HostLabelLink;
 import com.extendedae_plus.common.wireless.linkApi.Label;
 import com.extendedae_plus.common.wireless.linkApi.RegistryLink;
 import com.extendedae_plus.network.SPacketLabelList;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -15,19 +17,21 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 public class MenuLabelLink extends AEBaseMenu {
-    public static final Consumer<MenuTypeBuilder<MenuLabelLink, HostLabelLink>> dataManagementSerializer =
-            builder -> builder.withInitialData(
-                    (host, buffer) -> {
-                        buffer.writeBoolean(host.isLockable());
-                        buffer.writeBoolean(host.isMasterable());
-                    }, (host, menu, buffer) -> {
-                        menu.setLockable(host.isLockable());
-                        menu.setMasterable(host.isMasterable());
-                    }
-            );
+    public static final Function1<MenuTypeBuilder<MenuLabelLink, HostLabelLink>, Unit> dataManagementSerializer =
+            builder -> {
+                builder.withInitialData(
+                        (host, buffer) -> {
+                            buffer.writeBoolean(host.isLockable());
+                            buffer.writeBoolean(host.isMasterable());
+                        }, (host, menu, buffer) -> {
+                            menu.setLockable(host.isLockable());
+                            menu.setMasterable(host.isMasterable());
+                        }
+                );
+                return Unit.INSTANCE;
+            };
 
     private static final String ACTION_SELECT = "select";
     private static final String ACTION_ADD = "add";
@@ -56,7 +60,7 @@ public class MenuLabelLink extends AEBaseMenu {
     }
 
     public MenuLabelLink(int id, Inventory playerInv, HostLabelLink host, boolean manageable) {
-        this(manageable ? ModMenuTypes.labelLinkManageable.get() : ModMenuTypes.labelLink.get(), id, playerInv, host);
+        this(manageable ? ModMenuTypes.LabelLinkManageable.get() : ModMenuTypes.LabelLink.get(), id, playerInv, host);
     }
 
     @Override

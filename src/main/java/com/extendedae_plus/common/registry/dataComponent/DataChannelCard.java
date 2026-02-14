@@ -38,12 +38,12 @@ public record DataChannelCard(Label.Data label, @Nullable UUID owner, String own
         var owner = transceiver.getPlacer();
         var ownerName = transceiver.getPlacerName();
 
-        card.set(ModDataComponents.DATA_CHANNEL_CARD,
+        card.set(ModDataComponents.CardChannel,
                 new DataChannelCard(label, owner, ownerName));
     }
 
     public static void setLabel(ItemStack stack, Label.Data label, boolean changeOwner) {
-        var data = stack.get(ModDataComponents.DATA_CHANNEL_CARD);
+        var data = stack.get(ModDataComponents.CardChannel);
 
         DataChannelCard newData;
         if (data != null)
@@ -52,16 +52,16 @@ public record DataChannelCard(Label.Data label, @Nullable UUID owner, String own
                 changeOwner ? label.placerName() : data.ownerName());
         else newData = new DataChannelCard(label, label.placer(), label.placerName());
 
-        stack.set(ModDataComponents.DATA_CHANNEL_CARD, newData);
+        stack.set(ModDataComponents.CardChannel, newData);
     }
 
     public static Label.Data getLabel(ItemStack stack) {
-        var data = stack.get(ModDataComponents.DATA_CHANNEL_CARD);
+        var data = stack.get(ModDataComponents.CardChannel);
         return data == null ? Label.Data.EMPTY : data.label;
     }
 
     public static Pair<@Nullable UUID, String> getOwner(ItemStack stack) {
-        var data = stack.get(ModDataComponents.DATA_CHANNEL_CARD);
+        var data = stack.get(ModDataComponents.CardChannel);
         UUID owner = null;
         try {
             owner = data.owner();
@@ -71,9 +71,9 @@ public record DataChannelCard(Label.Data label, @Nullable UUID owner, String own
     }
 
     public static void setOwner(ItemStack stack, @Nullable UUID owner, String ownerName) {
-        var data = stack.get(ModDataComponents.DATA_CHANNEL_CARD);
+        var data = stack.get(ModDataComponents.CardChannel);
         var label = data == null ? Label.Data.EMPTY : data.label();
-        stack.set(ModDataComponents.DATA_CHANNEL_CARD,
+        stack.set(ModDataComponents.CardChannel,
                 new DataChannelCard(label, owner, ownerName));
     }
 
@@ -81,13 +81,13 @@ public record DataChannelCard(Label.Data label, @Nullable UUID owner, String own
      * 设置频道卡的所有者UUID
      */
     public static void setOwnerUUID(ItemStack stack, UUID owner) {
-        var data = stack.get(ModDataComponents.DATA_CHANNEL_CARD);
+        var data = stack.get(ModDataComponents.CardChannel);
 
         DataChannelCard newData;
         if (data != null) newData = new DataChannelCard(data.label(), owner, data.ownerName());
         else newData = new DataChannelCard(Label.Data.EMPTY, owner, "");
 
-        stack.set(ModDataComponents.DATA_CHANNEL_CARD, newData);
+        stack.set(ModDataComponents.CardChannel, newData);
     }
 
     /**
@@ -96,7 +96,7 @@ public record DataChannelCard(Label.Data label, @Nullable UUID owner, String own
     @Nullable
     public static UUID getOwnerUUID(ItemStack stack) {
         try {
-            var data = stack.get(ModDataComponents.DATA_CHANNEL_CARD);
+            var data = stack.get(ModDataComponents.CardChannel);
             return data.owner();
         } catch (NullPointerException ignore) {
             return null;
@@ -108,20 +108,20 @@ public record DataChannelCard(Label.Data label, @Nullable UUID owner, String own
      * 设置团队名称（用于显示）
      */
     public static void setOwnerName(ItemStack stack, String teamName) {
-        var data = stack.get(ModDataComponents.DATA_CHANNEL_CARD);
+        var data = stack.get(ModDataComponents.CardChannel);
 
         DataChannelCard newData;
         if (data != null) newData = new DataChannelCard(data.label(), data.owner(), teamName);
         else newData = new DataChannelCard(Label.Data.EMPTY, null, teamName);
 
-        stack.set(ModDataComponents.DATA_CHANNEL_CARD, newData);
+        stack.set(ModDataComponents.CardChannel, newData);
     }
 
     /**
      * 获取团队名称
      */
     public static String getOwnerName(ItemStack stack) {
-        var data = stack.get(ModDataComponents.DATA_CHANNEL_CARD);
+        var data = stack.get(ModDataComponents.CardChannel);
         return data == null ? "" : data.ownerName();
     }
 
@@ -129,8 +129,8 @@ public record DataChannelCard(Label.Data label, @Nullable UUID owner, String own
      * 清除所有者信息
      */
     public static void clearOwner(ItemStack stack) {
-        var data = stack.get(ModDataComponents.DATA_CHANNEL_CARD);
-        if (data != null) stack.set(ModDataComponents.DATA_CHANNEL_CARD,
+        var data = stack.get(ModDataComponents.CardChannel);
+        if (data != null) stack.set(ModDataComponents.CardChannel,
                 new DataChannelCard(data.label(), null, ""));
     }
 }

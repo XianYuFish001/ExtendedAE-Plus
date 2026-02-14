@@ -63,7 +63,7 @@ public class ViewerJei implements IRecipeViewer {
             ProxyJeiRuntime.addFavorite(itemKey.toStack(), VanillaTypes.ITEM_STACK);
         else if (key instanceof AEFluidKey fluidKey)
             ProxyJeiRuntime.addFavorite(fluidKey.toStack(1000), NeoForgeTypes.FLUID_STACK);
-        else if (ContextModLoaded.mekanism.isLoaded() && ContextModLoaded.appliedMekanistics.isLoaded()) {
+        else if (ContextModLoaded.Mekanism.isLoaded() && ContextModLoaded.AppliedMekanistics.isLoaded()) {
             try {
                 var clazzTypeKey = Class.forName("me.ramidzkh.mekae2.ae2.MekanismKey");
                 if (!clazzTypeKey.isAssignableFrom(key.getClass())) return;

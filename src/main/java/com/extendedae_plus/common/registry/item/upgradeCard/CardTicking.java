@@ -4,7 +4,9 @@ import appeng.items.materials.UpgradeCardItem;
 import com.extendedae_plus.common.init.ModDataComponents;
 import com.extendedae_plus.common.init.ModItems;
 import com.extendedae_plus.common.registry.dataComponent.DataTickingCard;
-import com.extendedae_plus.util.UtilKeyBuilder;
+import com.extendedae_plus.util.keyBuilder.Patterns;
+import com.extendedae_plus.util.keyBuilder.PatternsKt;
+import com.extendedae_plus.util.keyBuilder.UtilKeyBuilder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -20,12 +22,12 @@ import java.util.List;
 public class CardTicking extends UpgradeCardItem {
     public CardTicking(int multiplier, int maxMultiplier) {
         super(new Properties()
-                .component(ModDataComponents.DATA_TICKING_CARD, new DataTickingCard(multiplier, maxMultiplier)));
+                .component(ModDataComponents.CardTicking, new DataTickingCard(multiplier, maxMultiplier)));
     }
 
     @Override
     public @NotNull Component getName(@NotNull ItemStack stack) {
-        return UtilKeyBuilder.of("item.%s.card_ticking%s")
+        return UtilKeyBuilder.of(PatternsKt.toKeyPattern("item.%s.card_ticking%s"))
                 .addStr("multiplier")
                 .args(DataTickingCard.fromStack(stack).multiplier())
                 .build();
@@ -34,13 +36,13 @@ public class CardTicking extends UpgradeCardItem {
     public List<Component> getTooltipLines(ItemStack stack) {
         var data = DataTickingCard.fromStack(stack);
         return List.of(
-                UtilKeyBuilder.of(UtilKeyBuilder.tooltip)
-                        .item(ModItems.TICKING_CARD)
+                UtilKeyBuilder.of(Patterns.tooltip)
+                        .item(ModItems.CardTicking)
                         .addStr("multiplier")
                         .args(data.multiplier())
                         .build(),
-                UtilKeyBuilder.of(UtilKeyBuilder.tooltip)
-                        .item(ModItems.TICKING_CARD)
+                UtilKeyBuilder.of(Patterns.tooltip)
+                        .item(ModItems.CardTicking)
                         .addStr("max")
                         .args(data.maxMultiplier()).build()
         );

@@ -3,7 +3,8 @@ package com.extendedae_plus.client.render.widgets.button;
 import appeng.client.gui.Icon;
 import appeng.client.gui.style.Blitter;
 import appeng.core.localization.ButtonToolTips;
-import com.extendedae_plus.util.UtilKeyBuilder;
+import com.extendedae_plus.util.keyBuilder.Patterns;
+import com.extendedae_plus.util.keyBuilder.UtilKeyBuilder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import org.jetbrains.annotations.Nullable;
@@ -147,7 +148,7 @@ public enum EAEPActionItems {
         }
 
         private Builder name(String... name) {
-            var builder = UtilKeyBuilder.of(UtilKeyBuilder.screenTooltip);
+            var builder = UtilKeyBuilder.of(Patterns.screenTooltip);
             if (name.length > 0) for (var key : name) builder.addStr(key);
             else builder.addStr(this.actionGroup);
             this.name = builder.build();
@@ -162,7 +163,7 @@ public enum EAEPActionItems {
 
         private Builder tooltip(String... tooltip) {
             if (this.name.getString().isEmpty()) this.name();
-            var builder = UtilKeyBuilder.of(UtilKeyBuilder.screenTooltip)
+            var builder = UtilKeyBuilder.of(Patterns.screenTooltip)
                     .addStr(this.actionGroup);
             for (var key : tooltip) builder.addStr(key);
             if (this.tooltip != null) ((MutableComponent) this.tooltip).append(builder.build());

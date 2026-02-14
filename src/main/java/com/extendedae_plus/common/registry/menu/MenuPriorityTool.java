@@ -16,7 +16,7 @@ public class MenuPriorityTool extends AEBaseMenu {
     public DataPriority.ModeTool mode = DataPriority.ModeTool.KEEP;
 
     public MenuPriorityTool(int id, Inventory playerInventory, HostPriorityTool host) {
-        super(ModMenuTypes.priorityTool.get(), id, playerInventory, host);
+        super(ModMenuTypes.PriorityTool.get(), id, playerInventory, host);
         this.host = host;
 
         var data = host.getData();

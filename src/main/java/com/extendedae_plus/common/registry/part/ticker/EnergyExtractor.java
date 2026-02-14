@@ -17,8 +17,8 @@ public class EnergyExtractor {
     public static long calculateMultiplier(IUpgradeInventory upgradeInventory) {
         var result = new int[] {1, 1024};
         upgradeInventory.forEach(card -> {
-            if (!card.has(ModDataComponents.DATA_TICKING_CARD)) return;
-            var data = card.get(ModDataComponents.DATA_TICKING_CARD);
+            if (!card.has(ModDataComponents.CardTicking)) return;
+            var data = card.get(ModDataComponents.CardTicking);
             result[0] *= data.multiplier();
             result[1] = Math.min(result[1], data.maxMultiplier());
         });
@@ -61,7 +61,7 @@ public class EnergyExtractor {
         MEStorage storage = host.getMainNode().getGrid().getStorageService().getInventory();
         IActionSource source = IActionSource.ofMachine(host);
         if (EAEPConfig.allowDiskEnergy.getAsBoolean()
-                && ContextModLoaded.appliedFlux.isLoaded()
+                && ContextModLoaded.AppliedFlux.isLoaded()
                 && tryExtractFE(source, energyService, storage, energyCost)) {
             return true;
         } else {

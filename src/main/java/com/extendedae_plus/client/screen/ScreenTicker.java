@@ -13,7 +13,8 @@ import com.extendedae_plus.common.init.ModSettings;
 import com.extendedae_plus.common.registry.menu.MenuTicker;
 import com.extendedae_plus.common.registry.part.ticker.PartTicker;
 import com.extendedae_plus.util.UtilGui;
-import com.extendedae_plus.util.UtilKeyBuilder;
+import com.extendedae_plus.util.keyBuilder.Patterns;
+import com.extendedae_plus.util.keyBuilder.UtilKeyBuilder;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -83,8 +84,8 @@ public class ScreenTicker extends UpgradeableScreen<MenuTicker> {
             costMultiplier = this.menu.costMultiplier;
         }
 
-        var builder = UtilKeyBuilder.of(UtilKeyBuilder.screen)
-                .item(ModItems.PART_TICKER)
+        var builder = UtilKeyBuilder.of(Patterns.screen)
+                .item(ModItems.Ticker)
                 .<String>newHashMap();
 
         builder.addStr(switch (this.menu.getTickerState()) {

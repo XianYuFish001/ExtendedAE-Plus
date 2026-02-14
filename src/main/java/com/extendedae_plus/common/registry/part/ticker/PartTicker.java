@@ -159,7 +159,7 @@ public class PartTicker extends UpgradeablePart {
     @Override
     public boolean onUseWithoutItem(Player player, Vec3 pos) {
         if (player.level().isClientSide()) return true;
-        return MenuOpener.open(ModMenuTypes.ticker.get(), player, MenuLocators.forPart(this));
+        return MenuOpener.open(ModMenuTypes.Ticker.get(), player, MenuLocators.forPart(this));
     }
 
     public void setLogic(MenuTicker logic) {

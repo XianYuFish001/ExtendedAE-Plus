@@ -30,7 +30,7 @@ public class MixinAdvEncoding extends AEBaseMenu {
                                     List<GenericStack> sparseOutputs,
                                     HashMap<AEKey, Direction> dirMap) {
         var stack = AdvPatternDetailsEncoder.encodeProcessingPattern(sparseInputs, sparseOutputs, dirMap);
-        stack.set(ModDataComponents.DATA_ENCODER_PROFILE, new DataEncoderProfile(this.getPlayer().getGameProfile()));
+        stack.set(ModDataComponents.ProfileEncoder, new DataEncoderProfile(this.getPlayer().getGameProfile()));
         return stack;
     }
 }

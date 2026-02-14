@@ -97,7 +97,7 @@ public class BlockEntityAdvancedPattern extends TileAssemblerMatrixPattern {
     }
 
     public PatternContainerGroup getTerminalGroup() {
-        AEItemKey icon = AEItemKey.of(ModItems.CORE_ADVANCED_PATTERN);
+        AEItemKey icon = AEItemKey.of(ModItems.CoreAdvancedPattern);
         Component name = this.hasCustomName() ? this.getCustomName() : icon.getDisplayName();
         return new PatternContainerGroup(icon, name, List.of(Component.translatable("gui.extendedae.assembler_matrix.pattern")));
     }

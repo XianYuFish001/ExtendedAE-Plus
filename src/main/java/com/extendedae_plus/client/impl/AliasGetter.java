@@ -5,7 +5,8 @@ import com.electronwill.nightconfig.core.file.FileConfig;
 import com.electronwill.nightconfig.toml.TomlFormat;
 import com.extendedae_plus.integration.ContextModLoaded;
 import com.extendedae_plus.integration.recipeViewer.emi.EmiRecipeAdaptable;
-import com.extendedae_plus.util.UtilKeyBuilder;
+import com.extendedae_plus.util.keyBuilder.Patterns;
+import com.extendedae_plus.util.keyBuilder.UtilKeyBuilder;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.mojang.logging.LogUtils;
@@ -133,7 +134,7 @@ public class AliasGetter {
         if (recipe == null) return;
         var keys = new HashMap<String, Integer>();
 
-        if (ContextModLoaded.emi.isLoaded()) {
+        if (ContextModLoaded.Emi.isLoaded()) {
             List<EmiIngredient> workstations = new ArrayList<>();
             Component categoryName = Component.empty();
 
@@ -176,7 +177,7 @@ public class AliasGetter {
                 );
 
                 var groupWorkstation = new KeywordGroup(workstationKeys,
-                        UtilKeyBuilder.of(UtilKeyBuilder.keywordGroup)
+                        UtilKeyBuilder.of(Patterns.keywordGroup)
                                 .addStr("workstations")
                                 .args(categoryName.getString())
                                 .build());
@@ -235,7 +236,7 @@ public class AliasGetter {
             if (searchKey == null || searchKey.isBlank()) return true;
 
             var jechMatches = false;
-            if (ContextModLoaded.jech.isLoaded()) {
+            if (ContextModLoaded.Jech.isLoaded()) {
                 try {
                     var methodContains = Class.forName("me.towdium.jecharacters.utils.Match")
                             .getMethod("contains", String.class, CharSequence.class);

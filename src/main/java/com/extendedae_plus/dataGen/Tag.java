@@ -37,7 +37,7 @@ public class Tag {
         @Override
         protected void addTags(HolderLookup.Provider provider) {
             this.tag(BlockTags.MINEABLE_WITH_PICKAXE)
-                    .add(ModBlocks.BLOCKS.stream()
+                    .add(ModBlocks.Blocks.stream()
                             .map(DeferredBlock::get)
                             .toArray(net.minecraft.world.level.block.Block[]::new));
         }

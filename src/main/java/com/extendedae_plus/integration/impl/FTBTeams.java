@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public final class FTBTeams implements IntegrationFTBTeams {
     public Optional<UUID> getTeamUUID(@Nullable UUID member) {
-        if (member == null || !ContextModLoaded.ftbTeams.isLoaded())
+        if (member == null || !ContextModLoaded.FTBTeams.isLoaded())
             return Optional.empty();
 
         return FTBTeamsAPI.api().getManager().getTeamForPlayerID(member)
@@ -20,7 +20,7 @@ public final class FTBTeams implements IntegrationFTBTeams {
     }
 
     public Component getTeamName(@Nullable UUID uuid) {
-        if (uuid == null || !ContextModLoaded.ftbTeams.isLoaded())
+        if (uuid == null || !ContextModLoaded.FTBTeams.isLoaded())
             return Component.empty();
 
         var manager = FTBTeamsAPI.api().getManager();

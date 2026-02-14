@@ -3,7 +3,8 @@ package com.extendedae_plus.integration.jade;
 import appeng.core.localization.InGameTooltip;
 import com.extendedae_plus.common.init.ModItems;
 import com.extendedae_plus.integration.jade.helper.TooltipAppender;
-import com.extendedae_plus.util.UtilKeyBuilder;
+import com.extendedae_plus.util.keyBuilder.Patterns;
+import com.extendedae_plus.util.keyBuilder.UtilKeyBuilder;
 import net.minecraft.core.BlockPos;
 
 public final class CommonTooltips {
@@ -26,8 +27,8 @@ public final class CommonTooltips {
                                                      tooltip,
                                                      config,
                                                      data) -> {
-        var builder = UtilKeyBuilder.of(UtilKeyBuilder.jadeInfo)
-                .item(ModItems.WIRELESS_TRANSCEIVER)
+        var builder = UtilKeyBuilder.of(Patterns.jadeInfo)
+                .item(ModItems.WirelessTransceiver)
                 .addStr("label");
 
         if (data.contains("unset"))
@@ -47,15 +48,15 @@ public final class CommonTooltips {
         if (!data.contains("pos")) return;
         var pos = BlockPos.of(data.getLong("pos"));
 
-        tooltip.add(UtilKeyBuilder.of(UtilKeyBuilder.jadeInfo)
-                .item(ModItems.WIRELESS_TRANSCEIVER)
+        tooltip.add(UtilKeyBuilder.of(Patterns.jadeInfo)
+                .item(ModItems.WirelessTransceiver)
                 .addStr("master_location")
                 .addStr(data.contains("name"), "custom_name")
                 .args(pos.getX(), pos.getY(), pos.getZ(), data.getString("dim"))
                 .build());
         if (data.contains("dim"))
-            tooltip.add(UtilKeyBuilder.of(UtilKeyBuilder.jadeInfo)
-                    .item(ModItems.WIRELESS_TRANSCEIVER)
+            tooltip.add(UtilKeyBuilder.of(Patterns.jadeInfo)
+                    .item(ModItems.WirelessTransceiver)
                     .addStr("master_location")
                     .addStr("dim")
                     .args(data.getString("dim"))
@@ -67,8 +68,8 @@ public final class CommonTooltips {
                                                        config,
                                                        data) -> {
         if (!data.contains("locked") || !data.getBoolean("locked")) return;
-        tooltip.add(UtilKeyBuilder.of(UtilKeyBuilder.jadeInfo)
-                .item(ModItems.WIRELESS_TRANSCEIVER)
+        tooltip.add(UtilKeyBuilder.of(Patterns.jadeInfo)
+                .item(ModItems.WirelessTransceiver)
                 .addStr("locked")
                 .build());
     };
@@ -81,8 +82,8 @@ public final class CommonTooltips {
         var placerName = data.contains("name") ? data.getString("name") : "";
         var placer = data.hasUUID("uuid") ? data.getUUID("uuid") : null;
 
-        tooltip.add(UtilKeyBuilder.of(UtilKeyBuilder.jadeInfo)
-                .item(ModItems.WIRELESS_TRANSCEIVER)
+        tooltip.add(UtilKeyBuilder.of(Patterns.jadeInfo)
+                .item(ModItems.WirelessTransceiver)
                 .addStr(!placerName.isEmpty(), "name")
                 .addStr(placerName.isEmpty() && placer != null, "id")
                 .args(placerName, placer)

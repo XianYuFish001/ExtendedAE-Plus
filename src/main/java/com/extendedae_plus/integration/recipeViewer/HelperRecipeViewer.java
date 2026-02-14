@@ -12,8 +12,8 @@ public class HelperRecipeViewer {
     private static IRecipeViewer viewer;
 
     public static void init() {
-        if (ContextModLoaded.emi.isLoaded()) viewer = new ViewerEmi();
-        else if (ContextModLoaded.jei.isLoaded()) viewer = new ViewerJei();
+        if (ContextModLoaded.Emi.isLoaded()) viewer = new ViewerEmi();
+        else if (ContextModLoaded.Jei.isLoaded()) viewer = new ViewerJei();
         else viewer = new ViewerEmpty();
     }
 

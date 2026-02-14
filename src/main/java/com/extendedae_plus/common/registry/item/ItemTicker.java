@@ -3,7 +3,8 @@ package com.extendedae_plus.common.registry.item;
 import appeng.items.parts.PartItem;
 import com.extendedae_plus.common.init.ModItems;
 import com.extendedae_plus.common.registry.part.ticker.PartTicker;
-import com.extendedae_plus.util.UtilKeyBuilder;
+import com.extendedae_plus.util.keyBuilder.Patterns;
+import com.extendedae_plus.util.keyBuilder.UtilKeyBuilder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -18,8 +19,8 @@ public class ItemTicker extends PartItem<PartTicker> {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltip, tooltipFlag);
-        tooltip.add(UtilKeyBuilder.of(UtilKeyBuilder.tooltip)
-                .item(ModItems.PART_TICKER)
+        tooltip.add(UtilKeyBuilder.of(Patterns.tooltip)
+                .item(ModItems.Ticker)
                 .addStr(tooltipFlag.hasShiftDown(), "advanced_tip")
                 .build());
     }

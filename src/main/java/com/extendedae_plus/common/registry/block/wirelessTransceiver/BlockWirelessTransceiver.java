@@ -46,7 +46,7 @@ public class BlockWirelessTransceiver extends AEBaseEntityBlock<BlockEntityWirel
         if (level.isClientSide())
             return InteractionResult.SUCCESS;
 
-        MenuOpener.open(ModMenuTypes.labelLinkManageable.get(), player,
+        MenuOpener.open(ModMenuTypes.LabelLinkManageable.get(), player,
                 MenuLocators.forBlockEntity(blockEntity));
         return InteractionResult.CONSUME;
     }

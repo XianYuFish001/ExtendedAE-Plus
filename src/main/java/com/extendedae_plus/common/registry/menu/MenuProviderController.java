@@ -21,7 +21,7 @@ public class MenuProviderController extends AbstractContainerMenu {
     }
 
     public MenuProviderController(int id, Inventory inv, BlockPos pos, Direction face) {
-        super(ModMenuTypes.providerController.get(), id);
+        super(ModMenuTypes.ControllerProvider.get(), id);
         this.pos = pos;
         this.clickedFace = face;
     }

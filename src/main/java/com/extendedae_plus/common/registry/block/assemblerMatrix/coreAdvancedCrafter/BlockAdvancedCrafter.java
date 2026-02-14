@@ -7,6 +7,6 @@ import net.minecraft.world.item.Item;
 public class BlockAdvancedCrafter extends BlockAssemblerMatrixBase<BlockEntityAdvancedCrafter> {
     @Override
     public Item getPresentItem() {
-        return ModItems.CORE_ADVANCED_CRAFTER.get();
+        return ModItems.CoreAdvancedCrafter.get();
     }
 }

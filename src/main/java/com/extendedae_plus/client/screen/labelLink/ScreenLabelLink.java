@@ -7,7 +7,8 @@ import appeng.client.gui.widgets.Scrollbar;
 import appeng.core.AppEng;
 import com.extendedae_plus.common.registry.menu.labelLink.MenuLabelLink;
 import com.extendedae_plus.common.wireless.linkApi.Label;
-import com.extendedae_plus.util.UtilKeyBuilder;
+import com.extendedae_plus.util.keyBuilder.Patterns;
+import com.extendedae_plus.util.keyBuilder.UtilKeyBuilder;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.Rect2i;
@@ -80,18 +81,18 @@ public class ScreenLabelLink extends AEBaseScreen<MenuLabelLink> {
     }
 
     private void appendAdvancedTooltip(List<Component> tooltip, Label.Data data) {
-        tooltip.add(UtilKeyBuilder.of(UtilKeyBuilder.screenTooltip)
+        tooltip.add(UtilKeyBuilder.of(Patterns.screenTooltip)
                 .addStr("label_type")
                 .addStr(data.frequency() != null, "frequency", "label")
                 .build());
-        tooltip.add(UtilKeyBuilder.of(UtilKeyBuilder.screenTooltip)
+        tooltip.add(UtilKeyBuilder.of(Patterns.screenTooltip)
                 .addStr("label_link")
                 .addStr("info_label")
                 .addStr(data.placer() == null, "public")
                 .args(data.placerName(), data.placer() == null ? ""
                         : data.placer().toString().substring(0, 8))
                 .build());
-        tooltip.add(UtilKeyBuilder.of(UtilKeyBuilder.screenTooltip)
+        tooltip.add(UtilKeyBuilder.of(Patterns.screenTooltip)
                 .addStr("label_link")
                 .addStr("label_description")
                 .addStr(data.description().getString().isBlank(), "empty")

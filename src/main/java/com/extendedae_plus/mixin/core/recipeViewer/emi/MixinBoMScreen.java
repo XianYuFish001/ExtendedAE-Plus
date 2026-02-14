@@ -5,14 +5,12 @@ import com.extendedae_plus.integration.recipeViewer.emi.EmiRecipeAdaptable;
 import com.extendedae_plus.mixin.MixinDependencies;
 import com.extendedae_plus.mixin.bridge.BridgePlanToEncode;
 import com.extendedae_plus.mixin.core.recipeViewer.emi.accessor.AccessorBoMScreenHover;
-import com.extendedae_plus.util.UtilObject;
-import com.extendedae_plus.util.extension.ExtensionEmi;
+import com.extendedae_plus.util.extension.ExtensionMiscKt;
 import dev.emi.emi.api.recipe.VanillaEmiRecipeCategories;
 import dev.emi.emi.api.recipe.handler.EmiCraftContext;
 import dev.emi.emi.bom.BoM;
 import dev.emi.emi.registry.EmiRecipeFiller;
 import dev.emi.emi.screen.BoMScreen;
-import lombok.experimental.ExtensionMethod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -26,7 +24,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @MixinDependencies("emi")
 @Mixin(BoMScreen.class)
-@ExtensionMethod(ExtensionEmi.class)
 public abstract class MixinBoMScreen {
     @Shadow
     public AbstractContainerScreen<?> old;
@@ -40,7 +37,7 @@ public abstract class MixinBoMScreen {
         if (player == null) return;
         if (!(player.containerMenu instanceof PatternEncodingTermMenu menu)) return;
 
-        var hovered = UtilObject.<BoMScreen>cast(this).getHoveredStack((int) mouseX, (int) mouseY);
+        var hovered = ExtensionMiscKt.<BoMScreen>cast(this).getHoveredStack((int) mouseX, (int) mouseY);
         if (!(hovered instanceof AccessorBoMScreenHover accessor)) return;
         var node = accessor.getNode();
         var recipe = node.recipe;
@@ -50,7 +47,7 @@ public abstract class MixinBoMScreen {
         menu.clear();
         ((BridgePlanToEncode) menu).eaep$plan();
 
-        recipe = EmiRecipeAdaptable.of(recipe, node, recipe.isNonProcessing() ? 1 : BoM.tree.batches);
+        recipe = EmiRecipeAdaptable.of(recipe, node, ExtensionMiscKt.isNonProcessing(recipe) ? 1 : BoM.tree.batches);
         EmiRecipeFiller.performFill(recipe,
                 this.old,
                 EmiCraftContext.Type.FILL_BUTTON,

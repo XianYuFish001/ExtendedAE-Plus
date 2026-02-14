@@ -43,23 +43,23 @@ public final class ModBlockEntities {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockEntityWirelessTransceiver>> WIRELESS_TRANSCEIVER =
             regCommonBlockEntity(BlockEntityWirelessTransceiver.class,
                     BlockEntityWirelessTransceiver::new,
-                    ModBlocks.WIRELESS_TRANSCEIVER);
+                    ModBlocks.WirelessTransceiver);
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockEntityUpload>> PORT_UPLOAD =
             regCommonBlockEntity(BlockEntityUpload.class,
                     BlockEntityUpload::new,
-                    ModBlocks.PORT_UPLOAD);
+                    ModBlocks.PortUpload);
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockEntityAdvancedCrafter>> CORE_ADVANCED_CRAFTER =
             regCommonBlockEntity(BlockEntityAdvancedCrafter.class,
                     BlockEntityAdvancedCrafter::new,
-                    ModBlocks.CORE_ADVANCED_CRAFTER);
+                    ModBlocks.CoreAdvancedCrafter);
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockEntityAdvancedPattern>> CORE_ADVANCED_PATTERN =
             regCommonBlockEntity(BlockEntityAdvancedPattern.class,
                     BlockEntityAdvancedPattern::new,
-                    ModBlocks.CORE_ADVANCED_PATTERN);
+                    ModBlocks.CoreAdvancedPattern);
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockEntityAdvancedSpeed>> CORE_ADVANCED_SPEED =
             regCommonBlockEntity(BlockEntityAdvancedSpeed.class,
                     BlockEntityAdvancedSpeed::new,
-                    ModBlocks.CORE_ADVANCED_SPEED);
+                    ModBlocks.CoreAdvancedSpeed);
 
     // 提供一个 CraftingBlockEntity 的类型，允许附着在本模组自定义加速器方块上，绕过 AE2 默认类型的“有效方块列表”校验
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CraftingBlockEntity>> EAEP_CRAFTING_UNIT =

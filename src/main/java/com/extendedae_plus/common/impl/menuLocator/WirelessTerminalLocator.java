@@ -18,7 +18,7 @@ public final class WirelessTerminalLocator {
     public static Optional<TerminalInfo> locate(Player player) {
         var inventory = player.getInventory();
 
-        if (ContextModLoaded.curios.isLoaded()) {
+        if (ContextModLoaded.Curios.isLoaded()) {
             try {
                 AtomicReference<TerminalInfo> info = new AtomicReference<>();
                 CuriosApi.getCuriosInventory(player).ifPresent(handler -> {
@@ -55,7 +55,7 @@ public final class WirelessTerminalLocator {
     public record TerminalInfo(ItemStack terminalStack, WirelessTerminalItem terminal,
                                LocatedSlotContext context) {
         public boolean isWTLibTerminal() {
-            if (ContextModLoaded.ae2wtlib.isLoaded())
+            if (ContextModLoaded.AE2wtlib.isLoaded())
                 return terminalStack.getItem() instanceof ItemWT;
             else return false;
         }

@@ -7,11 +7,10 @@ import com.extendedae_plus.ExtendedAEPlus;
 import com.extendedae_plus.common.init.ModItems;
 import com.extendedae_plus.common.registry.block.EAEPCraftingUnitType;
 import com.extendedae_plus.common.registry.dataComponent.DataTickingCard;
-import com.extendedae_plus.util.extension.ExtensionBuilderRecipe;
+import com.extendedae_plus.util.extension.ExtensionMiscKt;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import com.glodblock.github.extendedae.recipe.CrystalAssemblerRecipeBuilder;
 import com.glodblock.github.extendedae.util.EAETags;
-import lombok.experimental.ExtensionMethod;
 import me.ramidzkh.mekae2.data.RecipeProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -24,7 +23,6 @@ import net.minecraft.world.level.material.Fluids;
 
 import java.util.concurrent.CompletableFuture;
 
-@ExtensionMethod(value = ExtensionBuilderRecipe.class, suppressBaseMethods = false)
 public class Recipe extends RecipeProvider {
     public Recipe(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
         super(output, lookupProvider);
@@ -32,13 +30,13 @@ public class Recipe extends RecipeProvider {
 
     @Override
     protected void buildRecipes(RecipeOutput recipeOutput) {
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.CHANNEL_CARD)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.CardChannel)
                 .requires(AEItems.ADVANCED_CARD)
                 .requires(AEItems.SINGULARITY)
                 .requires(AEItems.FLUIX_PEARL)
                 .unlockedBy("has_card", has(AEItems.ADVANCED_CARD))
                 .save(recipeOutput);
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.PROVIDER_CONTROLLER)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.ControllerProvider)
                 .requires(AEItems.NETWORK_TOOL)
                 .requires(EAETags.EX_PATTERN_PROVIDER)
                 .unlockedBy("has_provider", has(EAETags.EX_PATTERN_PROVIDER))
@@ -68,12 +66,12 @@ public class Recipe extends RecipeProvider {
                 .requires(AEItems.CELL_COMPONENT_256K, 2)
                 .unlockedBy("has_accelerator", has(AEBlocks.CRAFTING_ACCELERATOR))
                 .save(recipeOutput);
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.CARD_AUTO_COMPLETION)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.CardAutoCompletion)
                 .requires(AEItems.ADVANCED_CARD)
                 .requires(Items.CRAFTER)
                 .unlockedBy("has_card", has(AEItems.ADVANCED_CARD))
                 .save(recipeOutput);
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.PRIORITY_TOOL)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.PriorityTool)
                 .requires(AEItems.MEMORY_CARD)
                 .requires(AEItems.ENGINEERING_PROCESSOR)
                 .unlockedBy("has_memory_card", has(AEItems.MEMORY_CARD))
@@ -120,7 +118,7 @@ public class Recipe extends RecipeProvider {
                 .define('d', Items.NETHER_STAR)
                 .unlockedBy("has_card", has(AEItems.SPEED_CARD))
                 .save(recipeOutput, ExtendedAEPlus.getLocation("entity_speed_card_16x"));
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.PART_TICKER)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.Ticker)
                 .pattern("ses")
                 .pattern("apf")
                 .pattern("ses")
@@ -131,7 +129,7 @@ public class Recipe extends RecipeProvider {
                 .define('f', AEItems.FORMATION_CORE)
                 .unlockedBy("has_singularity", has(AEItems.SINGULARITY))
                 .save(recipeOutput);
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.WIRELESS_TRANSCEIVER)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.WirelessTransceiver)
                 .pattern(" r ")
                 .pattern("rlr")
                 .pattern(" r ")
@@ -140,36 +138,36 @@ public class Recipe extends RecipeProvider {
                 .unlockedBy("has_singularity", has(AEItems.SINGULARITY))
                 .save(recipeOutput);
 
-        CrystalAssemblerRecipeBuilder.assemble(ModItems.PORT_UPLOAD)
+        CrystalAssemblerRecipeBuilder.assemble(ModItems.PortUpload)
                 .input(EAESingletons.ASSEMBLER_MATRIX_WALL)
-                .input(ModItems.WIRELESS_TRANSCEIVER)
+                .input(ModItems.WirelessTransceiver)
                 .input(AEItems.COLORED_LUMEN_PAINT_BALL.item(AEColor.LIME), 6)
                 .input(AEItems.CALCULATION_PROCESSOR)
                 .save(recipeOutput, ExtendedAEPlus.getLocation("assembler/assembler_matrix_upload"));
-        CrystalAssemblerRecipeBuilder.assemble(ModItems.INFINITY_BIGINTEGER_CELL_ITEM)
+        CrystalAssemblerRecipeBuilder.assemble(ModItems.CellInfinity)
                 .input(AEItems.SINGULARITY, 64)
                 .input(Items.NETHER_STAR, 2)
                 .input(AEItems.ITEM_CELL_256K)
                 .input(AEItems.FLUID_CELL_256K)
                 .fluid(Fluids.LAVA, 2000)
                 .save(recipeOutput, ExtendedAEPlus.getLocation("assembler/infinity_cell_item"));
-        CrystalAssemblerRecipeBuilder.assemble(ModItems.CORE_ADVANCED_CRAFTER)
+        CrystalAssemblerRecipeBuilder.assemble(ModItems.CoreAdvancedCrafter)
                 .input(EAESingletons.ASSEMBLER_MATRIX_CRAFTER, 6)
                 .input(EAESingletons.EX_ASSEMBLER, 8)
                 .input(AEItems.LOGIC_PROCESSOR, 6)
                 .input(AEItems.SINGULARITY, 6)
                 .input(Items.PURPLE_DYE, 4)
                 .save(recipeOutput, ExtendedAEPlus.getLocation("assembler/core_advanced_crafter"));
-        CrystalAssemblerRecipeBuilder.assemble(ModItems.CORE_ADVANCED_PATTERN)
+        CrystalAssemblerRecipeBuilder.assemble(ModItems.CoreAdvancedPattern)
                 .input(EAESingletons.ASSEMBLER_MATRIX_PATTERN, 6)
                 .input(EAETags.EX_PATTERN_PROVIDER, 8)
                 .input(AEItems.ENGINEERING_PROCESSOR, 6)
                 .input(AEItems.SINGULARITY, 6)
                 .input(Items.BLUE_DYE, 4)
                 .save(recipeOutput, ExtendedAEPlus.getLocation("assembler/core_advanced_pattern"));
-        CrystalAssemblerRecipeBuilder.assemble(ModItems.CORE_ADVANCED_SPEED)
+        ExtensionMiscKt.input(CrystalAssemblerRecipeBuilder.assemble(ModItems.CoreAdvancedSpeed)
                 .input(EAESingletons.ASSEMBLER_MATRIX_SPEED, 6)
-                .input(DataTickingCard.toIngredient(2, 16), 8)
+                , DataTickingCard.toIngredient(2, 16), 8)
                 .input(EAESingletons.CONCURRENT_PROCESSOR, 6)
                 .input(AEItems.SINGULARITY, 6)
                 .input(Items.RED_DYE, 4)

@@ -7,6 +7,6 @@ import net.minecraft.world.item.Item;
 public class BlockAdvancedSpeed extends BlockAssemblerMatrixBase<BlockEntityAdvancedSpeed> {
     @Override
     public Item getPresentItem() {
-        return ModItems.CORE_ADVANCED_SPEED.get();
+        return ModItems.CoreAdvancedSpeed.get();
     }
 }

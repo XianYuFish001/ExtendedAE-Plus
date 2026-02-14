@@ -7,6 +7,6 @@ import net.minecraft.world.item.Item;
 public class BlockAdvancedPattern extends BlockAssemblerMatrixBase<BlockEntityAdvancedPattern> {
     @Override
     public Item getPresentItem() {
-        return ModItems.CORE_ADVANCED_PATTERN.get();
+        return ModItems.CoreAdvancedPattern.get();
     }
 }

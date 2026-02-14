@@ -4,7 +4,8 @@ import appeng.core.definitions.AEBlocks;
 import com.extendedae_plus.mixin.bridge.HelperProviderSelectionApplier;
 import com.extendedae_plus.mixin.core.extendedae.accessor.AccessorExAccessScreen;
 import com.extendedae_plus.mixin.core.extendedae.accessor.AccessorHighlightButton;
-import com.extendedae_plus.util.UtilKeyBuilder;
+import com.extendedae_plus.util.keyBuilder.Patterns;
+import com.extendedae_plus.util.keyBuilder.UtilKeyBuilder;
 import com.glodblock.github.extendedae.client.button.HighlightButton;
 import com.glodblock.github.extendedae.common.EAESingletons;
 import net.minecraft.client.Minecraft;
@@ -51,7 +52,7 @@ public abstract class MixinHighlightButton {
 
         var player = Minecraft.getInstance().player;
         if (player == null) return;
-        player.displayClientMessage(UtilKeyBuilder.of(UtilKeyBuilder.message)
+        player.displayClientMessage(UtilKeyBuilder.of(Patterns.message)
                 .addStr("provider_to_upload")
                 .addStr("selected")
                 .args(selectedProviderID[0])

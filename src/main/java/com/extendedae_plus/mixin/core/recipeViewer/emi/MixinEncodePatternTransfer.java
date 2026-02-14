@@ -8,10 +8,9 @@ import appeng.menu.me.items.PatternEncodingTermMenu;
 import com.extendedae_plus.client.impl.AliasGetter;
 import com.extendedae_plus.integration.recipeViewer.emi.EmiRecipeAdaptable;
 import com.extendedae_plus.mixin.MixinDependencies;
-import com.extendedae_plus.util.extension.ExtensionEmi;
+import com.extendedae_plus.util.extension.ExtensionMiscKt;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.VanillaEmiRecipeCategories;
-import lombok.experimental.ExtensionMethod;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.Nullable;
@@ -24,7 +23,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 import java.util.function.Predicate;
 
-@ExtensionMethod(ExtensionEmi.class)
 @MixinDependencies("emi")
 @Mixin(EmiEncodePatternHandler.class)
 public abstract class MixinEncodePatternTransfer {
@@ -33,7 +31,7 @@ public abstract class MixinEncodePatternTransfer {
     private static void onTransfer(AEBaseMenu menu, RecipeHolder<?> holder,
                                    EmiRecipe emiRecipe, boolean doTransfer, CallbackInfoReturnable<?> cir) {
         if (!doTransfer) return;
-        if (emiRecipe.unbox().isNonProcessing()) return;
+        if (ExtensionMiscKt.isNonProcessing(EmiRecipeAdaptable.unbox(emiRecipe))) return;
 
         AliasGetter.tryCollectKeywords(emiRecipe);
     }
