@@ -67,7 +67,8 @@ public final class EventScreenActions {
         if (event.getKeyCode() == GLFW.GLFW_KEY_F) {
             // 仅当鼠标确实悬停在 JEI 配料上时触发
             // 大概会在一格有多个(?)stack的时候出bug, 但是真的会有那种时候吗?
-            var stack = HelperRecipeViewer.getHoveredStacks().getFirst();
+            var stacks = HelperRecipeViewer.getHoveredStacks();
+            var stack = stacks.isEmpty() ? null : stacks.getFirst();
             if (stack == null) return;
             var name = stack.what().getDisplayName().getString();
 
