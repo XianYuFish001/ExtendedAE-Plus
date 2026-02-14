@@ -27,8 +27,11 @@ public class ViewerJei implements IRecipeViewer {
     @Override
     public List<GenericStack> getHoveredStacks() {
         ITypedIngredient<?> hovered = ProxyJeiRuntime.getIngredientUnderMouse().orElse(null);
-        if (hovered != null)
-            return Collections.singletonList(GenericEntryStackHelper.ingredientToStack(hovered));
+        if (hovered != null) {
+            var stack = GenericEntryStackHelper.ingredientToStack(hovered);
+            if (stack == null) return Collections.emptyList();
+            return Collections.singletonList(stack);
+        }
         else return null;
     }
 
