@@ -31,8 +31,7 @@ public class ViewerJei implements IRecipeViewer {
             var stack = GenericEntryStackHelper.ingredientToStack(hovered);
             if (stack == null) return Collections.emptyList();
             return Collections.singletonList(stack);
-        }
-        else return null;
+        } else return Collections.emptyList();
     }
 
     @Override
