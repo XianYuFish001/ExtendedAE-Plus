@@ -10,6 +10,7 @@ import com.extendedae_plus.client.screen.ScreenProviderController;
 import com.extendedae_plus.client.screen.ScreenTicker;
 import com.extendedae_plus.client.screen.labelLink.ScreenLabelLink;
 import com.extendedae_plus.client.screen.labelLink.ScreenLabelLinkManageable;
+import com.extendedae_plus.common.init.InitObject;
 import com.extendedae_plus.common.init.ModItems;
 import com.extendedae_plus.common.init.ModMenuTypes;
 import com.extendedae_plus.common.registry.block.EAEPCraftingUnitType;
@@ -50,13 +51,13 @@ public final class EventClientInitialization {
         regStandaloneModel(event, "block/crafting/accelerator_64x_formed_v2");
         regStandaloneModel(event, "block/crafting/accelerator_256x_formed_v2");
         regStandaloneModel(event, "block/crafting/accelerator_1024x_formed_v2");
-        initModels();
-    }
 
-    public static void initModels() {
         ItemProperties.register(ModItems.TICKING_CARD.get(), ExtendedAEPlus.getLocation("multiplier"),
                 (stack, world, entity, seed) -> DataTickingCard.fromStack(stack).multiplier());
+    }
 
+    @InitObject(dist = Dist.CLIENT)
+    public static void initModels() {
         addCrafterModel("accelerator_4x_formed_v2", EAEPCraftingUnitType.ACCELERATOR_4x);
         addCrafterModel("accelerator_16x_formed_v2", EAEPCraftingUnitType.ACCELERATOR_16x);
         addCrafterModel("accelerator_64x_formed_v2", EAEPCraftingUnitType.ACCELERATOR_64x);
