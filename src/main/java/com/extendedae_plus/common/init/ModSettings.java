@@ -36,6 +36,7 @@ public class ModSettings {
                     .bindAll(EAEPActionItems.blockingEnabled,
                             EAEPActionItems.blockingDisabled,
                             EAEPActionItems.blockingUnable)
+                    .setInvalidValue(StateSmartBlocking.DISABLED_BY_SUPER)
                     .build();
     public static final Setting<YesNo> smartDoubling =
             register("smart_doubling", YesNo.class)

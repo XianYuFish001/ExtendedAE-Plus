@@ -33,23 +33,31 @@ public abstract class MixinAdvProviderSettings {
     public abstract void updatePatterns();
     @Shadow
     public abstract boolean isBlocking();
+    @Shadow
+    public abstract boolean isClientSide();
 
     @Shadow
     @Final
     private List<IPatternDetails> patterns;
+    @Shadow
+    @Final
+    private AdvPatternProviderLogicHost host;
 
     @Inject(method = "<init>(Lappeng/api/networking/IManagedGridNode;Lnet/pedroksl/advanced_ae/common/logic/AdvPatternProviderLogicHost;I)V", at = @At("TAIL"))
     private void onInit(IManagedGridNode mainNode, AdvPatternProviderLogicHost host, int patternInventorySize, CallbackInfo ci) {
         var configBuilder = (ConfigManager) this.getConfigManager();
-        configBuilder.registerSetting(ModSettings.smartBlocking, StateSmartBlocking.DISABLED);
+        configBuilder.registerSetting(ModSettings.smartBlocking, StateSmartBlocking.DISABLED_BY_SUPER);
         configBuilder.registerSetting(ModSettings.smartDoubling, YesNo.NO);
 
-        if (YesNo.NO.equals(this.getConfigManager().getSetting(Settings.BLOCKING_MODE)))
-            configBuilder.putSetting(ModSettings.smartBlocking, StateSmartBlocking.DISABLED_BY_SUPER);
+        if (this.host.getBlockEntity() == null || this.isClientSide()) return;
+
+        if (YesNo.YES.equals(this.getConfigManager().getSetting(Settings.BLOCKING_MODE)))
+            configBuilder.putSetting(ModSettings.smartBlocking, StateSmartBlocking.DISABLED);
     }
 
     @Inject(method = "configChanged", at = @At("HEAD"))
     private void onSettingsChanged(IConfigManager manager, Setting<?> setting, CallbackInfo ci) {
+        if (this.isClientSide()) return;
         ProviderSettingsImplementations.onSettingsChanged(manager, setting, this::updatePatterns);
     }
 

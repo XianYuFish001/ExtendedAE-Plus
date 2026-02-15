@@ -48,8 +48,6 @@ public abstract class MixinScreenProvider<C extends PatternProviderMenu>
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void onInit(C menu, Inventory playerInventory, Component title, ScreenStyle style, CallbackInfo ci) {
-        // 初始化后立刻对齐当前@GuiSync状态，避免首帧显示不一致
-
         this.eaep$buttonSmartBlocking = ButtonImplementations.buttonBlocking(menu);
         this.eaep$buttonSmartDoubling = ButtonImplementations.buttonDoubling(menu);
 

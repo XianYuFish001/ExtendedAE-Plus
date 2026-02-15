@@ -3,6 +3,8 @@ package com.extendedae_plus.common.wireless.host;
 import appeng.api.networking.IGridNode;
 import com.extendedae_plus.common.wireless.linkApi.ILinkHost;
 import com.extendedae_plus.common.wireless.linkApi.Label;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -17,6 +19,8 @@ public final class HostGeneric implements ILinkHost {
 
     private Label label = Label.EMPTY;
     private @Nullable UUID placer = null;
+    @Getter
+    @Setter
     private String placerName = "";
 
     public HostGeneric(Supplier<BlockEntity> getterBlockEntity,
@@ -67,16 +71,9 @@ public final class HostGeneric implements ILinkHost {
         this.placer = placer;
     }
 
-    public String getPlacerName() {
-        return this.placerName;
-    }
-
     @Override
     public void setLabel(Label label) {
         this.label = label;
     }
 
-    public void setPlacerName(String placerName) {
-        this.placerName = placerName;
-    }
 }
