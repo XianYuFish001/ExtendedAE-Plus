@@ -1,15 +1,26 @@
 package com.extendedae_plus.mixin.core.ae2.logic;
 
+import appeng.api.crafting.IPatternDetails;
 import appeng.helpers.patternprovider.PatternProviderLogic;
+import com.extendedae_plus.EAEPConfig;
+import com.extendedae_plus.mixin.extension.IScaledPattern;
+import com.extendedae_plus.util.extension.ExtensionScaledPattern;
+import lombok.experimental.ExtensionMethod;
+import net.pedroksl.advanced_ae.common.logic.AdvPatternProviderLogic;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
+
+import java.util.List;
 
 /**
  * 自适应调整样板大小 感觉性能影响比较大
  * 测试中好像本来也不会堵, 难道是最近修了?
  * (未完成)
  */
-@Mixin(PatternProviderLogic.class)
-public abstract class MixinPatternScaledAdapt {
+@ExtensionMethod(ExtensionScaledPattern.class)
+@Mixin({PatternProviderLogic.class, AdvPatternProviderLogic.class})
+public abstract class MixinProviderPatternScaled {
 //    @Shadow
 //    protected abstract Set<Direction> getActiveSides();
 //    @Shadow
@@ -53,13 +64,14 @@ public abstract class MixinPatternScaledAdapt {
 //        return adapted;
 //    }
 //
-//    @Redirect(method = "pushPattern", at = @At(value = "INVOKE", target = "Ljava/util/List;contains(Ljava/lang/Object;)Z"))
-//    private boolean allowScaled(List<IPatternDetails> instance, Object object) {
-//        if (!EAEPConfig.smartDoublingAdapt.get()) return instance.contains(object);
-//
-//        var extension = ExtensionScaledPattern.of(object);
-//        if (extension.map(ExtensionScaledPattern::eaep$multiplier).orElse(0L) <= 0)
-//            return instance.contains(object);
-//        return true;
-//    }
+    @Redirect(method = "pushPattern", at = @At(value = "INVOKE", target = "Ljava/util/List;contains(Ljava/lang/Object;)Z"))
+    private boolean allowScaled(List<IPatternDetails> instance, Object object) {
+        if (!EAEPConfig.smartDoublingAdapt.get()) return instance.contains(object);
+
+        if (object.of(false)
+                .map(IScaledPattern::eaep$multiplier)
+                .orElse(0L) <= 0)
+            return instance.contains(object);
+        return true;
+    }
 }

@@ -9,6 +9,7 @@ import appeng.crafting.pattern.EncodedProcessingPattern;
 import com.extendedae_plus.mixin.extension.IScaledPattern;
 import com.extendedae_plus.util.extension.ExtensionAEItemKey;
 import lombok.experimental.ExtensionMethod;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.*;
 
 import java.util.List;
@@ -32,6 +33,8 @@ public abstract class MixinPatternDoubling implements IScaledPattern {
     private boolean eaep$enabled;
     @Unique
     private long eaep$multiplier;
+    @Unique
+    private IPatternDetails eaep$original;
 
     @Override
     public long eaep$multiplier() {
@@ -56,6 +59,11 @@ public abstract class MixinPatternDoubling implements IScaledPattern {
     @Override
     public List<GenericStack> eaep$getOutputs() {
         return this.sparseOutputs;
+    }
+
+    @Override
+    public @Nullable IPatternDetails eaep$original() {
+        return this.eaep$original;
     }
 
     /**
@@ -83,6 +91,7 @@ public abstract class MixinPatternDoubling implements IScaledPattern {
         if (saveInfo) {
             multiplied.eaep$setEnabled(true);
             multiplied.eaep$multiplier = multiplier;
+            multiplied.eaep$original = this;
         }
         return multiplied;
     }

@@ -26,11 +26,13 @@ public interface IScaledPattern extends IPatternDetails {
 
     List<GenericStack> eaep$getOutputs();
 
+    @Nullable IPatternDetails eaep$original();
+
     /// @param multiplier Negative: Divide
     IPatternDetails eaep$create(long multiplier, boolean saveInfo);
 
     default IPatternDetails eaep$create(long multiplier) {
-        return eaep$create(multiplier, true);
+        return this.eaep$create(multiplier, true);
     }
 
     default @Nullable IPatternDetails eaep$create(ICraftingService iServiceCrafting) {

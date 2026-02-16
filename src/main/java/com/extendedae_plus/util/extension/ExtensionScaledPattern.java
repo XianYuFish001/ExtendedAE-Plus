@@ -31,8 +31,15 @@ public class ExtensionScaledPattern {
                 extension.eaep$getOutputs());
     }
 
+    public static IPatternDetails original(IPatternDetails instance) {
+        return of(instance, true)
+                .map(IScaledPattern::eaep$original)
+                .orElse(instance);
+    }
+
     public static IPatternDetails create(IPatternDetails instance, ICraftingService serviceCrafting) {
         return of(instance, true)
+                .filter(IScaledPattern::eaep$enabled)
                 .map(extension -> extension.eaep$create(serviceCrafting))
                 .orElse(instance);
     }

@@ -8,6 +8,7 @@ import com.extendedae_plus.mixin.core.ae2.accessor.AccessorItemKey;
 import com.extendedae_plus.mixin.extension.IScaledPattern;
 import net.minecraft.core.Direction;
 import net.pedroksl.advanced_ae.common.patterns.AdvProcessingPattern;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -35,6 +36,8 @@ public abstract class MixinAdvPatternDoubling implements IScaledPattern {
     private boolean eaep$enabled;
     @Unique
     private long eaep$multiplier;
+    @Unique
+    private IPatternDetails eaep$original;
 
     @Override
     public long eaep$multiplier() {
@@ -62,6 +65,11 @@ public abstract class MixinAdvPatternDoubling implements IScaledPattern {
     }
 
     @Override
+    public @Nullable IPatternDetails eaep$original() {
+        return this.eaep$original;
+    }
+
+    @Override
     public IPatternDetails eaep$create(long multiplier, boolean saveInfo) {
         List<GenericStack> inputs;
         List<GenericStack> outputs;
@@ -80,6 +88,7 @@ public abstract class MixinAdvPatternDoubling implements IScaledPattern {
         if (saveInfo) {
             multiplied.eaep$setEnabled(true);
             multiplied.eaep$multiplier = multiplier;
+            multiplied.eaep$original = this;
         }
         return multiplied;
     }
