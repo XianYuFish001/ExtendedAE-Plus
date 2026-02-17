@@ -230,6 +230,10 @@ public class LangEN extends LanguageProvider {
                           - Smart Doubling/Blocking
                           - Over-16-thread Accelerator
                           - Pattern Modify""");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.message)
+                .addStr("auto_completion")
+                .addStr("non_tail")
+                .buildInto("[EAEP/AutoCompletion] There is an auto-complete pattern %s that is NOT at the top of the crafting chain, check your patterns");
 
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.actionBar)
                 .item(AEItems.CERTUS_QUARTZ_KNIFE.get())

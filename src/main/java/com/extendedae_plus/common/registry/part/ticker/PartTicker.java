@@ -108,6 +108,8 @@ public class PartTicker extends UpgradeablePart {
 
     @Override
     public void addToWorld() {
+        super.addToWorld();
+
         var level = this.getLevel();
         var blockEntity = this.getBlockEntity();
         var side = this.getSide();

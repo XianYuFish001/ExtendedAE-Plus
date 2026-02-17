@@ -1,4 +1,4 @@
-package com.extendedae_plus.mixin.core.ae2.smartDoubling;
+package com.extendedae_plus.mixin.core.ae2.logic.smartDoubling;
 
 import appeng.api.crafting.IPatternDetails;
 import appeng.api.networking.crafting.ICraftingService;

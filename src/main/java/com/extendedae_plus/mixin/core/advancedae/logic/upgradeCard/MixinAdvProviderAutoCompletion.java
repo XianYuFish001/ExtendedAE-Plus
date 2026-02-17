@@ -4,7 +4,7 @@ import appeng.api.crafting.IPatternDetails;
 import appeng.api.networking.IManagedGridNode;
 import appeng.api.stacks.KeyCounter;
 import com.extendedae_plus.mixin.bridge.HelperProviderUpgradesInv;
-import com.extendedae_plus.mixin.impl.HolderCardAutoCompletionState;
+import com.extendedae_plus.mixin.impl.HelperAutoCompletion;
 import net.pedroksl.advanced_ae.common.logic.AdvPatternProviderLogic;
 import net.pedroksl.advanced_ae.common.logic.AdvPatternProviderLogicHost;
 import org.spongepowered.asm.mixin.Final;
@@ -22,13 +22,16 @@ public class MixinAdvProviderAutoCompletion {
     @Final
     private IManagedGridNode mainNode;
     @Unique
-    private HolderCardAutoCompletionState eaep$cardLogic = HolderCardAutoCompletionState.EMPTY;
+    private HelperAutoCompletion eaep$cardLogic = HelperAutoCompletion.EMPTY;
 
     @Inject(method = "<init>(Lappeng/api/networking/IManagedGridNode;Lnet/pedroksl/advanced_ae/common/logic/AdvPatternProviderLogicHost;I)V",
             at = @At("TAIL"))
     private void onInit(IManagedGridNode mainNode, AdvPatternProviderLogicHost host, int patternInventorySize, CallbackInfo ci) {
-        this.eaep$cardLogic = new HolderCardAutoCompletionState(
-                this.mainNode, ((HelperProviderUpgradesInv) this)::eaep$getUpgradeInventory);
+        this.eaep$cardLogic = new HelperAutoCompletion(
+                this.mainNode,
+                ((HelperProviderUpgradesInv) this)::eaep$getUpgradeInventory,
+                host::getBlockEntity
+        );
         ((HelperProviderUpgradesInv) this).eaep$addAction(this.eaep$cardLogic::onUpgradesChanged);
     }
 

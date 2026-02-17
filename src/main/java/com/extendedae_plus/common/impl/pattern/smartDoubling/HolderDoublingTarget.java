@@ -6,7 +6,7 @@ import java.util.Deque;
 /**
  * Thread-local stack holder for requested amounts to support nested requests.
  */
-public final class RequestedAmountHolder {
+public final class HolderDoublingTarget {
     private static final ThreadLocal<Deque<Long>> HOLDER = ThreadLocal.withInitial(ArrayDeque::new);
 
     /**

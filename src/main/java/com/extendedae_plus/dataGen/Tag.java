@@ -36,10 +36,11 @@ public class Tag {
 
         @Override
         protected void addTags(HolderLookup.Provider provider) {
-            this.tag(BlockTags.MINEABLE_WITH_PICKAXE)
-                    .add(ModBlocks.BLOCKS.stream()
-                            .map(DeferredBlock::get)
-                            .toArray(net.minecraft.world.level.block.Block[]::new));
+            var blocks = ModBlocks.BLOCKS.stream()
+                    .map(DeferredBlock::get)
+                    .toArray(net.minecraft.world.level.block.Block[]::new);
+            this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(blocks);
+            this.tag(BlockTags.NEEDS_STONE_TOOL).add(blocks);
         }
     }
 }

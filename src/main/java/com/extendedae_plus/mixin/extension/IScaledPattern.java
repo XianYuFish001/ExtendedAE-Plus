@@ -5,7 +5,7 @@ import appeng.api.networking.crafting.ICraftingService;
 import appeng.api.stacks.GenericStack;
 import appeng.me.service.CraftingService;
 import com.extendedae_plus.EAEPConfig;
-import com.extendedae_plus.common.impl.pattern.smartDoubling.RequestedAmountHolder;
+import com.extendedae_plus.common.impl.pattern.smartDoubling.HolderDoublingTarget;
 import com.extendedae_plus.mixin.core.ae2.accessor.AccessorNetworkProviders;
 import com.google.common.math.LongMath;
 import org.jetbrains.annotations.Nullable;
@@ -36,8 +36,8 @@ public interface IScaledPattern extends IPatternDetails {
     }
 
     default @Nullable IPatternDetails eaep$create(ICraftingService iServiceCrafting) {
-        var amountRequested = RequestedAmountHolder.get();
-        RequestedAmountHolder.pop();
+        var amountRequested = HolderDoublingTarget.get();
+        HolderDoublingTarget.pop();
         if (amountRequested < 1) return null;
 
         int multiplierMax = EAEPConfig.smartDoublingMaxMultiplier.get();

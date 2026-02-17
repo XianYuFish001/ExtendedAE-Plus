@@ -2,7 +2,10 @@ package com.extendedae_plus.mixin.core.extendedae.common;
 
 import com.extendedae_plus.common.registry.block.assemblerMatrix.coreAdvancedCrafter.BlockEntityAdvancedCrafter;
 import com.extendedae_plus.mixin.bridge.HelperAssemblerMatrixModifier;
+import com.extendedae_plus.mixin.bridge.HelperMatrixFunctionAdditional;
+import com.extendedae_plus.util.UtilObject;
 import com.glodblock.github.extendedae.common.me.matrix.ClusterAssemblerMatrix;
+import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixBase;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixCrafter;
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import it.unimi.dsi.fastutil.objects.ReferenceSet;
@@ -10,6 +13,9 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClusterAssemblerMatrix.class)
 public class MixinClusterAssemblerMatrix implements HelperAssemblerMatrixModifier {
@@ -27,6 +33,12 @@ public class MixinClusterAssemblerMatrix implements HelperAssemblerMatrixModifie
 
     @Unique
     private boolean eaep$uploadCore = false;
+
+    @Inject(method = "addTileEntity", at = @At("RETURN"))
+    private void addAdditional(TileAssemblerMatrixBase blockEntity, CallbackInfo ci) {
+        if (!(blockEntity instanceof HelperMatrixFunctionAdditional helper)) return;
+        helper.add(UtilObject.cast(this));
+    }
 
     @Override
     public void eaep$addCrafter(TileAssemblerMatrixCrafter crafter) {

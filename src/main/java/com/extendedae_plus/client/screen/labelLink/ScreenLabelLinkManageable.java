@@ -9,7 +9,6 @@ import com.extendedae_plus.client.render.widgets.button.EAEPCycleButton;
 import com.extendedae_plus.client.render.widgets.button.EAEPServerCycleButton;
 import com.extendedae_plus.common.registry.menu.labelLink.MenuLabelLink;
 import com.extendedae_plus.common.wireless.linkApi.Label;
-import com.extendedae_plus.integration.IntegrationFTBTeams;
 import com.extendedae_plus.util.UtilKeyBuilder;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.Rect2i;
@@ -132,8 +131,7 @@ public class ScreenLabelLinkManageable extends ScreenLabelLink {
 
         UUID placer = null;
         if (this.buttonLabelMode.getAction() == EAEPActionItems.labelPrivate)
-            placer = IntegrationFTBTeams.instance.getTeamUUID(this.getPlayer().getUUID())
-                    .orElse(this.getPlayer().getUUID());
+            placer = this.getPlayer().getUUID();
 
         Label.Data data;
         if (this.buttonLabelType.getAction() == EAEPActionItems.labelLabel) {

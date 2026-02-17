@@ -102,6 +102,13 @@ public class Label {
             else return Either.right(this.label);
         }
 
+        public Data convertPlacer() {
+            return IntegrationFTBTeams.instance
+                    .getTeamUUID(this.placer)
+                    .map(uuid -> new Data(this.frequency, this.label, uuid, this.placerName, this.description))
+                    .orElse(this);
+        }
+
         static {
             PacketStreamable.register(Label.Data.class, STREAM_CODEC);
         }

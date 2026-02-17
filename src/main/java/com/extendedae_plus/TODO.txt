@@ -1,8 +1,6 @@
 TODO
     <bug>
-        smartDoubling数量判定错误
-        自动完成抄pfaa
-        ticker不通电
+        smartDoubling数量判定错误  本地测不出来
     <feature>
         改键说明:
             planCrafting shift -> ctrl

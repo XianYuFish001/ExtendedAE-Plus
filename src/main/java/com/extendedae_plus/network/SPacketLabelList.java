@@ -24,7 +24,9 @@ public record SPacketLabelList(List<MenuLabelLink.LabelMapped> labels) implement
     );
 
     public static void send(MenuLabelLink menu) {
-        var placer = IntegrationFTBTeams.instance.getTeamUUID(menu.getPlayer().getUUID()).orElse(menu.getPlayer().getUUID());
+        var placer = IntegrationFTBTeams.instance
+                .getTeamUUID(menu.getPlayer().getUUID())
+                .orElse(menu.getPlayer().getUUID());
 
         var serial = new int[]{Integer.MIN_VALUE};
         var labels = RegistryLink.getLabels().stream()

@@ -107,6 +107,7 @@ public class MenuLabelLink extends AEBaseMenu {
             return;
         }
 
+        data = data.convertPlacer();
         data.pack();
         if (this.host.setLabelData(data, false))
             this.selectedLabel = data;

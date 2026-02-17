@@ -1,6 +1,8 @@
 package com.extendedae_plus.mixin.core.ae2.accessor;
 
 import appeng.api.crafting.IPatternDetails;
+import appeng.api.stacks.GenericStack;
+import appeng.crafting.CraftingLink;
 import appeng.crafting.execution.ExecutingCraftingJob;
 import com.extendedae_plus.mixin.bridge.HelperCraftingJob;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,6 +14,18 @@ import java.util.Map;
 public interface AccessorExecutingCraftingJob extends HelperCraftingJob {
     @Accessor("tasks")
     Map<IPatternDetails, HelperJobProgress> getTasks();
+
+    @Accessor("link")
+    CraftingLink getLink();
+
+    @Accessor("finalOutput")
+    GenericStack getOutputFinal();
+
+    @Accessor("playerId")
+    Integer getPlayerID();
+
+    @Accessor("remainingAmount")
+    long getRemainingAmount();
 
     @Mixin(targets = "appeng.crafting.execution.ExecutingCraftingJob$TaskProgress")
     interface AccessorTaskProgress extends HelperJobProgress {

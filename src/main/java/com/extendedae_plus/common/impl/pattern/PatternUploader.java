@@ -14,14 +14,16 @@ import com.extendedae_plus.mixin.core.ae2.accessor.AccessorAccessMenu;
 import com.extendedae_plus.mixin.core.ae2.accessor.AccessorEncodingMenu;
 import com.extendedae_plus.util.UtilKeyBuilder;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixPattern;
+import com.google.common.collect.MultimapBuilder;
+import com.google.common.collect.Multimaps;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public final class PatternUploader {
     public static Map<PatternContainerGroup, List<PatternContainer>> collectProvider(AEBaseMenu menu) {
@@ -92,54 +94,71 @@ public final class PatternUploader {
 
     /**
      * @return - True:  succeed
-     *         - False: failed
-     *         - Null:  duplicate
+     * - False: failed
+     * - Null:  duplicate
      */
-    public static @Nullable Boolean uploadToMatrix(ServerPlayer player, AEBaseMenu menu) {
-        if (!(menu instanceof AccessorEncodingMenu accessor)) return false;
+    public static ResultUploadMatrix uploadToMatrix(ServerPlayer player, AEBaseMenu menu) {
+        if (!(menu instanceof AccessorEncodingMenu accessor)) return ResultUploadMatrix.FAILED;
         var patternStack = accessor.getSlotEncoded().getItem();
         if (!(PatternDetailsHelper.decodePattern(patternStack, player.level())
                 instanceof IMolecularAssemblerSupportedPattern patternDetails))
-            return false;
+            return ResultUploadMatrix.NON_CRAFTING;
 
         var grid = menu.getTarget() instanceof IActionHost actionHost
                 && actionHost.getActionableNode() != null
                 ? actionHost.getActionableNode().getGrid() : null;
-        if (grid == null) return false;
+        if (grid == null) return ResultUploadMatrix.FAILED;
 
         var cores = new ArrayList<TileAssemblerMatrixPattern>();
         cores.addAll(grid.getActiveMachines(TileAssemblerMatrixPattern.class));
         cores.addAll(grid.getActiveMachines(BlockEntityAdvancedPattern.class));
-        if (cores.isEmpty()) return false;
+        if (cores.isEmpty()) return ResultUploadMatrix.FAILED;
 
-        if (EAEPConfig.needsUploadingPort.get()
-                && !(cores.getFirst() instanceof HelperAssemblerMatrixModifier cluster
-                && cluster.eaep$hasUploadCore())) return false;
+        var byCluster = cores.stream().collect(Multimaps.toMultimap(
+                TileAssemblerMatrixPattern::getCluster,
+                Function.identity(),
+                () -> MultimapBuilder.hashKeys().arrayListValues().build()
+        )).asMap();
 
-        if (cores.stream()
-                .map(TileAssemblerMatrixPattern::getPatternInventory)
-                .anyMatch(inv -> {
-                    for (var stack : inv) {
-                        if (patternDetails.equals(
-                                PatternDetailsHelper.decodePattern(stack, player.level())))
-                            return true;
-                    }
-                    return false;
-                })) {
-            player.displayClientMessage(UtilKeyBuilder.of(UtilKeyBuilder.message)
-                    .addStr("pattern_uploading")
-                    .addStr("duplicate_pattern")
-                    .build(), false);
-            return null;
-        }
+        for (var entry : byCluster.entrySet()) {
+            var cluster = entry.getKey();
+            var coresGrouped = entry.getValue();
 
-        for (var core : cores) {
-            if (patternStack.isEmpty()) {
-                accessor.getSlotEncoded().clearStack();
-                break;
+            if (EAEPConfig.needsUploadingPort.get()
+                    && !(cluster instanceof HelperAssemblerMatrixModifier helper
+                    && helper.eaep$hasUploadCore()))
+                continue;
+
+            if (cores.stream()
+                    .map(TileAssemblerMatrixPattern::getPatternInventory)
+                    .anyMatch(inv -> {
+                        for (var stack : inv) {
+                            if (patternDetails.equals(
+                                    PatternDetailsHelper.decodePattern(stack, player.level())))
+                                return true;
+                        }
+                        return false;
+                    })) {
+                player.displayClientMessage(UtilKeyBuilder.of(UtilKeyBuilder.message)
+                        .addStr("pattern_uploading")
+                        .addStr("duplicate_pattern")
+                        .build(), false);
+                return ResultUploadMatrix.DUPLICATE;
             }
-            patternStack = core.getPatternInventory().addItems(patternStack);
+
+            for (var core : coresGrouped) {
+                if (patternStack.isEmpty()) {
+                    accessor.getSlotEncoded().clearStack();
+                    break;
+                }
+                patternStack = core.getPatternInventory().addItems(patternStack);
+            }
         }
-        return patternStack.isEmpty();
+
+        return patternStack.isEmpty() ? ResultUploadMatrix.SUCCESS : ResultUploadMatrix.FAILED;
+    }
+
+    public enum ResultUploadMatrix {
+        SUCCESS, FAILED, DUPLICATE, NON_CRAFTING, NO_CORE
     }
 }

@@ -6,7 +6,7 @@ import appeng.api.stacks.KeyCounter;
 import appeng.helpers.patternprovider.PatternProviderLogic;
 import appeng.helpers.patternprovider.PatternProviderLogicHost;
 import com.extendedae_plus.mixin.bridge.HelperProviderUpgradesInv;
-import com.extendedae_plus.mixin.impl.HolderCardAutoCompletionState;
+import com.extendedae_plus.mixin.impl.HelperAutoCompletion;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,13 +22,16 @@ public class MixinProviderAutoCompletion {
     @Final
     private IManagedGridNode mainNode;
     @Unique
-    private HolderCardAutoCompletionState eaep$cardLogic = HolderCardAutoCompletionState.EMPTY;
+    private HelperAutoCompletion eaep$cardLogic = HelperAutoCompletion.EMPTY;
 
     @Inject(method = "<init>(Lappeng/api/networking/IManagedGridNode;Lappeng/helpers/patternprovider/PatternProviderLogicHost;I)V",
             at = @At("TAIL"))
     private void onInit(IManagedGridNode mainNode, PatternProviderLogicHost host, int patternInventorySize, CallbackInfo ci) {
-        this.eaep$cardLogic = new HolderCardAutoCompletionState(
-                this.mainNode, ((HelperProviderUpgradesInv) this)::eaep$getUpgradeInventory);
+        this.eaep$cardLogic = new HelperAutoCompletion(
+                this.mainNode,
+                ((HelperProviderUpgradesInv) this)::eaep$getUpgradeInventory,
+                host::getBlockEntity
+        );
         ((HelperProviderUpgradesInv) this).eaep$addAction(this.eaep$cardLogic::onUpgradesChanged);
     }
 

@@ -60,7 +60,7 @@ public abstract class MixinEncodingMenu extends MEStorageMenu implements BridgeP
     @Unique
     private Map<PatternContainerGroup, List<PatternContainer>> eaep$providerList;
     @Unique
-    private boolean eaep$encodeActionDelayed;
+    private boolean eaep$encodeDelayed;
     @Unique
     private boolean eaep$uploadDelayed;
 
@@ -95,15 +95,15 @@ public abstract class MixinEncodingMenu extends MEStorageMenu implements BridgeP
 
     @Override
     public void eaep$plan() {
-        this.eaep$encodeActionDelayed = true;
+        this.eaep$encodeDelayed = true;
     }
 
     @Override
     public boolean eaep$planned() {
         try {
-            return this.eaep$encodeActionDelayed;
+            return this.eaep$encodeDelayed;
         } finally {
-            this.eaep$encodeActionDelayed = false;
+            this.eaep$encodeDelayed = false;
         }
     }
 
@@ -153,12 +153,13 @@ public abstract class MixinEncodingMenu extends MEStorageMenu implements BridgeP
 
         if (!(this.getPlayer() instanceof ServerPlayer player)) return;
 
-        var flagMatrixUpload = PatternUploader.uploadToMatrix(player, this);
-        if (flagMatrixUpload == null) {
-            this.encodedPatternSlot.clearStack();
-            this.eaep$fillBlankPattern(1);
-        } else if (!flagMatrixUpload) {
-            SPacketProvidersInfo.send(((ServerPlayer) this.getPlayer()), this);
+        switch (PatternUploader.uploadToMatrix(player, this)) {
+            case DUPLICATE -> {
+                this.encodedPatternSlot.clearStack();
+                this.eaep$fillBlankPattern(1);
+            }
+            case NON_CRAFTING ->
+                    SPacketProvidersInfo.send(((ServerPlayer) this.getPlayer()), this);
         }
     }
 

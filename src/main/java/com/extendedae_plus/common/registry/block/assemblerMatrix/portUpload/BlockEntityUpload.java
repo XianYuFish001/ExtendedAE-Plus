@@ -11,6 +11,7 @@ import com.extendedae_plus.common.wireless.host.HostGeneric;
 import com.extendedae_plus.common.wireless.linkApi.IBlockEntityLabel;
 import com.extendedae_plus.common.wireless.linkApi.Label;
 import com.extendedae_plus.mixin.bridge.HelperAssemblerMatrixModifier;
+import com.extendedae_plus.mixin.bridge.HelperMatrixFunctionAdditional;
 import com.glodblock.github.extendedae.common.me.matrix.ClusterAssemblerMatrix;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixWall;
 import com.mojang.logging.LogUtils;
@@ -35,7 +36,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class BlockEntityUpload extends TileAssemblerMatrixWall
-        implements IBlockEntityLabel, HostLabelLink {
+        implements IBlockEntityLabel, HostLabelLink, HelperMatrixFunctionAdditional {
     private static final Logger LOGGER = LogUtils.getLogger();
     
     private final HostGeneric host;
@@ -54,8 +55,7 @@ public class BlockEntityUpload extends TileAssemblerMatrixWall
     }
 
     @Override
-    public void updateStatus(ClusterAssemblerMatrix cluster) {
-        super.updateStatus(cluster);
+    public void add(ClusterAssemblerMatrix cluster) {
         if (cluster instanceof HelperAssemblerMatrixModifier clusterHelper)
             clusterHelper.eaep$markUploadCore();
     }

@@ -38,8 +38,7 @@ public class ExtensionScaledPattern {
     }
 
     public static IPatternDetails create(IPatternDetails instance, ICraftingService serviceCrafting) {
-        return of(instance, true)
-                .filter(IScaledPattern::eaep$enabled)
+        return of(instance, false)
                 .map(extension -> extension.eaep$create(serviceCrafting))
                 .orElse(instance);
     }

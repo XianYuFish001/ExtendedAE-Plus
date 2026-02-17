@@ -229,6 +229,10 @@ public class LangZH extends LanguageProvider {
                           - 智能阻挡&倍增
                           - 单个超过16线程的并行处理器
                           - 样板数量快速修改""");
+        UtilKeyBuilder.ofDataGen(UtilKeyBuilder.message)
+                .addStr("auto_completion")
+                .addStr("non_tail")
+                .buildInto("[EAEP/自动完成] 存在非合成链顶端的自动完成样板 %s, 检查你的样板");
 
         UtilKeyBuilder.ofDataGen(UtilKeyBuilder.actionBar)
                 .item(AEItems.CERTUS_QUARTZ_KNIFE.get())
