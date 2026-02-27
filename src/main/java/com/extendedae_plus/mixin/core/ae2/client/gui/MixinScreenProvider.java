@@ -5,9 +5,10 @@ import appeng.client.gui.implementations.PatternProviderScreen;
 import appeng.client.gui.style.ScreenStyle;
 import appeng.menu.implementations.PatternProviderMenu;
 import com.extendedae_plus.client.render.widgets.button.*;
-import com.extendedae_plus.mixin.MixinDependencies;
-import com.extendedae_plus.mixin.bridge.HelperProviderButtons;
+import com.extendedae_plus.mixin.helper.HelperProviderButtons;
 import com.extendedae_plus.network.CPacketScalePatterns;
+import com.fish.fishlib.mixin.MixinDependencies;
+import com.fish.fishlib.util.UtilJava;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -57,7 +58,7 @@ public abstract class MixinScreenProvider<C extends PatternProviderMenu>
         this.addToLeftToolbar(this.eaep$buttonSmartDoubling);
 
         EAEPActionItems.actions.get("scaling").forEach(action ->
-                this.eaep$scalingButtons.add(new EAEPActionButton(action, CPacketScalePatterns::send)));
+                this.eaep$scalingButtons.add(new EAEPActionButton(action, UtilJava.consumerKotlin(CPacketScalePatterns::send))));
 
         this.eaep$scalingButtons.forEach(button -> {
             this.addRenderableWidget(button);

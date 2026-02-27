@@ -1,6 +1,10 @@
 TODO
     <bug>
     <feature>
+        helperOverride:
+            cardChannel以override onload取代轮询
+            使用注解标记, 自动检测对应类中是否存在target方法, 若已存在则不加载helperOverride (不想做喵)
+        取代optional
         改键说明:
             planCrafting shift -> ctrl
             statusCPU shift -> ctrl
@@ -17,12 +21,3 @@ TODO
             controller
 
 TODO 速记
-    Kotlin化:
-        重构keyBuilder:
-            正在大规模替换
-            pattern替换完之后首字母大写
-            记得不同的方法:
-                ofdatagen
-                adder collection啥的
-        即将Packets
-        挑软柿子

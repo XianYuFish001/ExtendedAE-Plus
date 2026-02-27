@@ -37,12 +37,12 @@ public abstract class MixinAdvPatternDoubling implements IScaledPattern {
     private long eaep$multiplier;
 
     @Override
-    public long eaep$multiplier() {
+    public long getEaep$multiplier() {
         return this.eaep$multiplier;
     }
 
     @Override
-    public boolean eaep$enabled() {
+    public boolean getEaep$enabled() {
         return this.eaep$enabled;
     }
 

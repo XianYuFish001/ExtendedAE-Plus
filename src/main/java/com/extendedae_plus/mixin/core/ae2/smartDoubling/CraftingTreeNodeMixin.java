@@ -3,7 +3,7 @@ package com.extendedae_plus.mixin.core.ae2.smartDoubling;
 import appeng.api.stacks.KeyCounter;
 import appeng.crafting.CraftingTreeNode;
 import appeng.crafting.inv.CraftingSimulationState;
-import com.extendedae_plus.common.impl.pattern.smartDoubling.RequestedAmountHolder;
+import com.extendedae_plus.common.impl.pattern.smartDoubling.HolderCraftingAmount;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -16,6 +16,6 @@ public class CraftingTreeNodeMixin {
                     target = "Lappeng/crafting/CraftingTreeNode;addContainerItems(Lappeng/api/stacks/AEKey;JLappeng/api/stacks/KeyCounter;)V"))
     private void captureRequestedAmount(CraftingSimulationState inv, long requestedAmount, KeyCounter containerItems, CallbackInfo ci) {
         // push the requestedAmount before addContainerItems is called
-       RequestedAmountHolder.push(requestedAmount);
+       HolderCraftingAmount.push(requestedAmount);
     }
 }

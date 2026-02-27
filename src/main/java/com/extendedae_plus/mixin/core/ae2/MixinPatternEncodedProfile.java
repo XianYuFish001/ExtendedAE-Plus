@@ -3,9 +3,9 @@ package com.extendedae_plus.mixin.core.ae2;
 import appeng.core.definitions.AEItems;
 import appeng.crafting.pattern.EncodedPatternItem;
 import com.extendedae_plus.EAEPConfig;
-import com.extendedae_plus.common.init.ModDataComponents;
-import com.extendedae_plus.util.keyBuilder.Patterns;
-import com.extendedae_plus.util.keyBuilder.UtilKeyBuilder;
+import com.extendedae_plus.common.init.EAEPDataComponents;
+import com.extendedae_plus.util.UtilKeyBuilder;
+import com.fish.fishlib.util.keyBuilder.Patterns;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -27,11 +27,12 @@ public class MixinPatternEncodedProfile {
                                             List<Component> lines,
                                             TooltipFlag advancedTooltips,
                                             CallbackInfo ci) {
-        if (!EAEPConfig.showPatternEncoder.getAsBoolean()) return;
-        if (!stack.has(ModDataComponents.ProfileEncoder)) return;
+        if (!EAEPConfig.INSTANCE.getShowPatternEncoder()) return;
+        if (!stack.has(EAEPDataComponents.ProfileEncoder)) return;
 
-        var data = stack.get(ModDataComponents.ProfileEncoder);
-        lines.add(UtilKeyBuilder.of(Patterns.tooltip)
+        var data = stack.get(EAEPDataComponents.ProfileEncoder);
+        if (data == null) return;
+        lines.add(UtilKeyBuilder.INSTANCE.of(Patterns.Tooltip)
                 .item(AEItems.PROCESSING_PATTERN.get())
                 .addStr("encoder")
                 .args(data.name())

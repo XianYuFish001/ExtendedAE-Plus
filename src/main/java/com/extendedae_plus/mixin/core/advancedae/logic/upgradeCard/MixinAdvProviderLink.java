@@ -4,7 +4,7 @@ import appeng.api.networking.IGridNode;
 import appeng.api.networking.IManagedGridNode;
 import appeng.api.networking.ticking.TickRateModulation;
 import com.extendedae_plus.common.wireless.HolderLinkChannelCard;
-import com.extendedae_plus.mixin.bridge.HelperProviderUpgradesInv;
+import com.extendedae_plus.mixin.helper.HelperProviderUpgradesInv;
 import net.pedroksl.advanced_ae.common.logic.AdvPatternProviderLogic;
 import net.pedroksl.advanced_ae.common.logic.AdvPatternProviderLogicHost;
 import org.spongepowered.asm.mixin.Final;
@@ -22,7 +22,7 @@ public class MixinAdvProviderLink {
     @Final
     private IManagedGridNode mainNode;
     @Unique
-    private HolderLinkChannelCard eaep$linkLogic = HolderLinkChannelCard.EMPTY;
+    private HolderLinkChannelCard eaep$linkLogic = HolderLinkChannelCard.Empty;
 
     @Inject(method = "<init>(Lappeng/api/networking/IManagedGridNode;Lnet/pedroksl/advanced_ae/common/logic/AdvPatternProviderLogicHost;I)V", at = @At("TAIL"))
     private void onInit(IManagedGridNode mainNode, AdvPatternProviderLogicHost host, int patternInventorySize, CallbackInfo ci) {

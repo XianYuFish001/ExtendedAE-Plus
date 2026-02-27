@@ -25,7 +25,7 @@ public class PickFromWirelessMixin {
 
     @Inject(method = "pickBlock", at = @At("HEAD"), cancellable = true)
     private void onPickBlock(CallbackInfo ci) {
-        if (EAEPConfig.overrideAE2WTPicking.getAsBoolean() && eaep$overridePicking())
+        if (EAEPConfig.INSTANCE.getOverrideAE2WTPicking() && eaep$overridePicking())
             ci.cancel();
     }
 

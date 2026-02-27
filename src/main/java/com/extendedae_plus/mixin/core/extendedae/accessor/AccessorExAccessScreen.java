@@ -11,7 +11,7 @@ import java.util.HashMap;
 @Mixin(GuiExPatternTerminal.class)
 public interface AccessorExAccessScreen {
     @Accessor("searchField")
-    AETextField getSearchField();
+    AETextField getFieldSearch();
 
     @Accessor("infoMap")
     HashMap<Long, GuiExPatternTerminal.PatternProviderInfo> getInfoMap();

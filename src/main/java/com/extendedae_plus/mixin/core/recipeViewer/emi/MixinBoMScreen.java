@@ -1,11 +1,12 @@
 package com.extendedae_plus.mixin.core.recipeViewer.emi;
 
 import appeng.menu.me.items.PatternEncodingTermMenu;
-import com.extendedae_plus.integration.recipeViewer.emi.EmiRecipeAdaptable;
-import com.extendedae_plus.mixin.MixinDependencies;
-import com.extendedae_plus.mixin.bridge.BridgePlanToEncode;
+import com.extendedae_plus.integration.impl.recipeViewer.emi.EmiRecipeAdaptable;
 import com.extendedae_plus.mixin.core.recipeViewer.emi.accessor.AccessorBoMScreenHover;
-import com.extendedae_plus.util.extension.ExtensionMiscKt;
+import com.extendedae_plus.mixin.helper.BridgePlanToEncode;
+import com.fish.fishlib.mixin.MixinDependencies;
+import com.fish.fishlib.util.extension.ExtensionMiscKt;
+import com.fish.fishlib.util.extension.ExtensionStdKt;
 import dev.emi.emi.api.recipe.VanillaEmiRecipeCategories;
 import dev.emi.emi.api.recipe.handler.EmiCraftContext;
 import dev.emi.emi.bom.BoM;
@@ -37,7 +38,7 @@ public abstract class MixinBoMScreen {
         if (player == null) return;
         if (!(player.containerMenu instanceof PatternEncodingTermMenu menu)) return;
 
-        var hovered = ExtensionMiscKt.<BoMScreen>cast(this).getHoveredStack((int) mouseX, (int) mouseY);
+        var hovered = ExtensionStdKt.<BoMScreen>cast(this).getHoveredStack((int) mouseX, (int) mouseY);
         if (!(hovered instanceof AccessorBoMScreenHover accessor)) return;
         var node = accessor.getNode();
         var recipe = node.recipe;

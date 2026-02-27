@@ -3,7 +3,7 @@ package com.extendedae_plus.mixin.core.advancedae.logic;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
 import appeng.menu.AEBaseMenu;
-import com.extendedae_plus.common.init.ModDataComponents;
+import com.extendedae_plus.common.init.EAEPDataComponents;
 import com.extendedae_plus.common.registry.dataComponent.DataEncoderProfile;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Inventory;
@@ -30,7 +30,7 @@ public class MixinAdvEncoding extends AEBaseMenu {
                                     List<GenericStack> sparseOutputs,
                                     HashMap<AEKey, Direction> dirMap) {
         var stack = AdvPatternDetailsEncoder.encodeProcessingPattern(sparseInputs, sparseOutputs, dirMap);
-        stack.set(ModDataComponents.ProfileEncoder, new DataEncoderProfile(this.getPlayer().getGameProfile()));
+        stack.set(EAEPDataComponents.ProfileEncoder, new DataEncoderProfile(this.getPlayer().getGameProfile()));
         return stack;
     }
 }

@@ -8,6 +8,7 @@ import com.extendedae_plus.EAEPConfig;
 import com.extendedae_plus.client.render.widgets.button.EAEPActionButton;
 import com.extendedae_plus.client.render.widgets.button.EAEPActionItems;
 import com.extendedae_plus.network.CPacketRequestUploading;
+import kotlin.Unit;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -28,9 +29,12 @@ public abstract class MixinScreenEncodingButtonUpload<TMenu extends PatternEncod
                         Component title,
                         ScreenStyle style,
                         CallbackInfo ci) {
-        if (!EAEPConfig.independentUploadButton.get()) return;
-        var buttonUpload = new EAEPActionButton(EAEPActionItems.patternUpload,
-                $ -> PacketDistributor.sendToServer(CPacketRequestUploading.INSTANCE));
+        if (!EAEPConfig.INSTANCE.getIndependentUploadButton()) return;
+        var buttonUpload = new EAEPActionButton(EAEPActionItems.PatternUpload,
+                $ -> {
+                    PacketDistributor.sendToServer(CPacketRequestUploading.INSTANCE);
+                    return Unit.INSTANCE;
+                });
         buttonUpload.setScale(0.75F);
         this.widgets.add("external.screen_encode.button_upload", buttonUpload);
     }

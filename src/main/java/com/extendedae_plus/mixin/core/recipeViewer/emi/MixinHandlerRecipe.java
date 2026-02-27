@@ -1,6 +1,6 @@
 package com.extendedae_plus.mixin.core.recipeViewer.emi;
 
-import com.extendedae_plus.integration.recipeViewer.emi.EmiRecipeAdaptable;
+import com.extendedae_plus.integration.impl.recipeViewer.emi.EmiRecipeAdaptable;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;

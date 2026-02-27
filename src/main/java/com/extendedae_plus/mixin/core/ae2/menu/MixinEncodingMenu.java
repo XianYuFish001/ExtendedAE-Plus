@@ -14,12 +14,12 @@ import appeng.menu.slot.RestrictedInputSlot;
 import appeng.util.ConfigManager;
 import com.extendedae_plus.EAEPConfig;
 import com.extendedae_plus.common.impl.pattern.PatternUploader;
-import com.extendedae_plus.common.init.ModDataComponents;
-import com.extendedae_plus.common.init.ModSettings;
+import com.extendedae_plus.common.init.EAEPDataComponents;
+import com.extendedae_plus.common.init.EAEPSettings;
 import com.extendedae_plus.common.registry.dataComponent.DataEncoderProfile;
 import com.extendedae_plus.common.registry.settings.ModeEncodingTransfer;
-import com.extendedae_plus.mixin.bridge.BridgePlanToEncode;
-import com.extendedae_plus.mixin.bridge.BridgeProviderList;
+import com.extendedae_plus.mixin.helper.BridgePlanToEncode;
+import com.extendedae_plus.mixin.helper.BridgeProviderList;
 import com.extendedae_plus.mixin.impl.IOerMEStorage;
 import com.extendedae_plus.network.SPacketEncodeFinished;
 import com.extendedae_plus.network.SPacketProvidersInfo;
@@ -80,7 +80,7 @@ public abstract class MixinEncodingMenu extends MEStorageMenu implements BridgeP
 
         if (this.isClientSide()) {
             if (!(this.getConfigManager() instanceof ConfigManager manager)) return;
-            manager.registerSetting(ModSettings.modeTransfer, ModeEncodingTransfer.NONE);
+            manager.registerSetting(EAEPSettings.modeTransfer, ModeEncodingTransfer.NONE);
             return;
         }
         this.eaep$providerList = PatternUploader.collectProvider(this);
@@ -115,7 +115,7 @@ public abstract class MixinEncodingMenu extends MEStorageMenu implements BridgeP
             return;
         }
 
-        if (EAEPConfig.independentUploadButton.getAsBoolean()) return;
+        if (EAEPConfig.INSTANCE.getIndependentUploadButton()) return;
         if (!Screen.hasControlDown()) return;
 
         this.eaep$uploadDelayed = true;
@@ -141,7 +141,7 @@ public abstract class MixinEncodingMenu extends MEStorageMenu implements BridgeP
         var pattern = cir.getReturnValue();
         if (pattern == null || pattern.isEmpty()) return;
 
-        pattern.set(ModDataComponents.ProfileEncoder,
+        pattern.set(EAEPDataComponents.ProfileEncoder,
                 new DataEncoderProfile(this.getPlayer().getGameProfile()));
         cir.setReturnValue(pattern);
     }

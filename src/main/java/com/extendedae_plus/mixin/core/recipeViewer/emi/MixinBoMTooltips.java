@@ -1,8 +1,8 @@
 package com.extendedae_plus.mixin.core.recipeViewer.emi;
 
-import com.extendedae_plus.mixin.MixinDependencies;
-import com.extendedae_plus.util.keyBuilder.Patterns;
-import com.extendedae_plus.util.keyBuilder.UtilKeyBuilder;
+import com.extendedae_plus.util.UtilKeyBuilder;
+import com.fish.fishlib.mixin.MixinDependencies;
+import com.fish.fishlib.util.keyBuilder.Patterns;
 import dev.emi.emi.screen.BoMScreen;
 import dev.emi.emi.screen.tooltip.EmiTooltip;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -21,7 +21,7 @@ public class MixinBoMTooltips {
             index = 2, remap = false)
     private List<ClientTooltipComponent> modifyBoMHelpTooltip(List<ClientTooltipComponent> components) {
         var componentsMutable = new ArrayList<>(components);
-        componentsMutable.addAll(EmiTooltip.splitTranslate(UtilKeyBuilder.of(Patterns.tooltip)
+        componentsMutable.addAll(EmiTooltip.splitTranslate(UtilKeyBuilder.INSTANCE.of(Patterns.Tooltip)
                 .addStr("bom")
                 .addStr("help")
                 .buildRaw()));

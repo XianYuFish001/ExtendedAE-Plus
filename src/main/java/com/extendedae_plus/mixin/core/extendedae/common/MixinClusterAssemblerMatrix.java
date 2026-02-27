@@ -1,8 +1,10 @@
 package com.extendedae_plus.mixin.core.extendedae.common;
 
-import com.extendedae_plus.common.registry.block.assemblerMatrix.coreAdvancedCrafter.BlockEntityAdvancedCrafter;
-import com.extendedae_plus.mixin.bridge.HelperAssemblerMatrixModifier;
+import com.extendedae_plus.common.registry.block.assemblerMatrix.coreAdvancedCrafter.TileAdvancedCrafter;
+import com.extendedae_plus.mixin.helper.BridgeMatrixFunctionExternal;
+import com.extendedae_plus.mixin.helper.HelperAssemblerMatrixModifier;
 import com.glodblock.github.extendedae.common.me.matrix.ClusterAssemblerMatrix;
+import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixBase;
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixCrafter;
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import it.unimi.dsi.fastutil.objects.ReferenceSet;
@@ -10,6 +12,9 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClusterAssemblerMatrix.class)
 public class MixinClusterAssemblerMatrix implements HelperAssemblerMatrixModifier {
@@ -28,9 +33,15 @@ public class MixinClusterAssemblerMatrix implements HelperAssemblerMatrixModifie
     @Unique
     private boolean eaep$uploadCore = false;
 
+    @Inject(method = "addTileEntity", at = @At("RETURN"))
+    private void functionExternal(TileAssemblerMatrixBase tile, CallbackInfo ci) {
+        if (!(tile instanceof BridgeMatrixFunctionExternal tileExternal)) return;
+        tileExternal.add(this);
+    }
+
     @Override
     public void eaep$addCrafter(TileAssemblerMatrixCrafter crafter) {
-        if (crafter.usedThread() < BlockEntityAdvancedCrafter.getMaxThread())
+        if (crafter.usedThread() < TileAdvancedCrafter.getMaxThread())
             this.availableCrafters.add(crafter);
         else this.busyCrafters.add(crafter);
     }

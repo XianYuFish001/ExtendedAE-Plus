@@ -9,7 +9,7 @@ import appeng.core.localization.GuiText;
 import appeng.helpers.patternprovider.PatternProviderLogicHost;
 import appeng.menu.SlotSemantics;
 import appeng.menu.implementations.PatternProviderMenu;
-import com.extendedae_plus.mixin.MixinDependencies;
+import com.fish.fishlib.mixin.MixinDependencies;
 import com.mojang.logging.LogUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;

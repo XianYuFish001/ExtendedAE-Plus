@@ -4,7 +4,7 @@ import appeng.api.stacks.AEKey;
 import appeng.integration.modules.itemlists.EncodingHelper;
 import appeng.menu.me.common.GridInventoryEntry;
 import appeng.menu.me.common.MEStorageMenu;
-import com.extendedae_plus.integration.recipeViewer.HelperRecipeViewer;
+import com.extendedae_plus.integration.impl.recipeViewer.HelperRecipeViewer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -21,9 +21,8 @@ public class MixinEncodingHelper {
     private static void epp$addJeiIngredientPriorities(MEStorageMenu menu, Comparator<GridInventoryEntry> comparator, CallbackInfoReturnable<Map<AEKey, Integer>> cir){
         Map<AEKey, Integer> result = cir.getReturnValue();
         AtomicInteger index = new AtomicInteger(Integer.MAX_VALUE);
-        HelperRecipeViewer.getFavorites().forEach(favorite -> {
-            if (favorite != null) result.put(favorite.what(), index.getAndDecrement());
-        });
+        HelperRecipeViewer.getFavorites().forEach(favorite ->
+                result.put(favorite.what(), index.getAndDecrement()));
         cir.setReturnValue(result);
     }
 }

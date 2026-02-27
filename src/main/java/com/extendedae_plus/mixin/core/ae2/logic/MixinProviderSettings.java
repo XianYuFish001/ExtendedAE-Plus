@@ -11,10 +11,10 @@ import appeng.helpers.patternprovider.PatternProviderLogic;
 import appeng.helpers.patternprovider.PatternProviderLogicHost;
 import appeng.helpers.patternprovider.PatternProviderTarget;
 import appeng.util.ConfigManager;
-import com.extendedae_plus.common.init.ModSettings;
+import com.extendedae_plus.common.init.EAEPSettings;
 import com.extendedae_plus.common.registry.settings.StateSmartBlocking;
-import com.extendedae_plus.mixin.MixinDependencies;
 import com.extendedae_plus.mixin.impl.ProviderSettingsImplementations;
+import com.fish.fishlib.mixin.MixinDependencies;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -30,28 +30,36 @@ import java.util.Set;
 @Mixin(value = PatternProviderLogic.class, priority = 1100)
 public abstract class MixinProviderSettings {
     @Shadow
+    @Final
+    private List<IPatternDetails> patterns;
+    @Shadow
+    @Final
+    private PatternProviderLogicHost host;
+
+    @Shadow
     public abstract IConfigManager getConfigManager();
     @Shadow
     public abstract void updatePatterns();
     @Shadow
     public abstract boolean isBlocking();
-
     @Shadow
-    @Final
-    private List<IPatternDetails> patterns;
+    public abstract boolean isClientSide();
 
     @Inject(method = "<init>(Lappeng/api/networking/IManagedGridNode;Lappeng/helpers/patternprovider/PatternProviderLogicHost;I)V", at = @At("TAIL"))
     private void onInit(IManagedGridNode mainNode, PatternProviderLogicHost host, int patternInventorySize, CallbackInfo ci) {
         var configBuilder = (ConfigManager) this.getConfigManager();
-        configBuilder.registerSetting(ModSettings.smartBlocking, StateSmartBlocking.DISABLED);
-        configBuilder.registerSetting(ModSettings.smartDoubling, YesNo.NO);
+        configBuilder.registerSetting(EAEPSettings.smartBlocking, StateSmartBlocking.DISABLED_BY_SUPER);
+        configBuilder.registerSetting(EAEPSettings.smartDoubling, YesNo.NO);
 
-        if (YesNo.NO.equals(this.getConfigManager().getSetting(Settings.BLOCKING_MODE)))
-            configBuilder.putSetting(ModSettings.smartBlocking, StateSmartBlocking.DISABLED_BY_SUPER);
+        if (this.host.getBlockEntity() == null || this.isClientSide()) return;
+
+        if (YesNo.YES.equals(this.getConfigManager().getSetting(Settings.BLOCKING_MODE)))
+            configBuilder.putSetting(EAEPSettings.smartBlocking, StateSmartBlocking.DISABLED);
     }
 
     @Inject(method = "configChanged", at = @At("HEAD"))
     private void onSettingsChanged(IConfigManager manager, Setting<?> setting, CallbackInfo ci) {
+        if (this.host.getBlockEntity() == null || this.isClientSide()) return;
         ProviderSettingsImplementations.onSettingsChanged(manager, setting, this::updatePatterns);
     }
 

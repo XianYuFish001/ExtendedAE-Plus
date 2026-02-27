@@ -6,7 +6,7 @@ import appeng.client.gui.style.ScreenStyle;
 import appeng.client.gui.widgets.UpgradesPanel;
 import appeng.core.localization.GuiText;
 import appeng.menu.SlotSemantics;
-import com.extendedae_plus.mixin.MixinDependencies;
+import com.fish.fishlib.mixin.MixinDependencies;
 import com.mojang.logging.LogUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;

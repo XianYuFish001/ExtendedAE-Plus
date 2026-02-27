@@ -1,6 +1,6 @@
 package com.extendedae_plus.mixin.core.recipeViewer.jei.accessor;
 
-import com.extendedae_plus.mixin.MixinDependencies;
+import com.fish.fishlib.mixin.MixinDependencies;
 import mezz.jei.gui.bookmarks.BookmarkList;
 import mezz.jei.gui.overlay.bookmarks.BookmarkOverlay;
 import org.spongepowered.asm.mixin.Mixin;

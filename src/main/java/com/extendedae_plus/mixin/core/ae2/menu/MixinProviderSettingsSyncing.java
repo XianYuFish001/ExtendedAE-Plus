@@ -4,11 +4,11 @@ import appeng.api.config.YesNo;
 import appeng.helpers.patternprovider.PatternProviderLogic;
 import appeng.menu.guisync.GuiSync;
 import appeng.menu.implementations.PatternProviderMenu;
-import com.extendedae_plus.common.init.ModSettings;
+import com.extendedae_plus.common.init.EAEPSettings;
 import com.extendedae_plus.common.registry.settings.StateSmartBlocking;
-import com.extendedae_plus.mixin.MixinDependencies;
-import com.extendedae_plus.mixin.bridge.SyncerSmartBlocking;
-import com.extendedae_plus.mixin.bridge.SyncerSmartDoubling;
+import com.extendedae_plus.mixin.helper.SyncerSmartBlocking;
+import com.extendedae_plus.mixin.helper.SyncerSmartDoubling;
+import com.fish.fishlib.mixin.MixinDependencies;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -36,8 +36,8 @@ public class MixinProviderSettingsSyncing implements SyncerSmartBlocking, Syncer
         if (((PatternProviderMenu)(Object) this).isClientSide()) return;
 
         var configManager = this.logic.getConfigManager();
-        this.eaep$stateBlocking = configManager.getSetting(ModSettings.smartBlocking);
-        this.eaep$stateDoubling = configManager.getSetting(ModSettings.smartDoubling);
+        this.eaep$stateBlocking = configManager.getSetting(EAEPSettings.smartBlocking);
+        this.eaep$stateDoubling = configManager.getSetting(EAEPSettings.smartDoubling);
     }
 
     @Override

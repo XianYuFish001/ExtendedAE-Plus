@@ -5,8 +5,9 @@ import appeng.client.gui.style.ScreenStyle;
 import com.extendedae_plus.client.render.widgets.button.ButtonImplementations;
 import com.extendedae_plus.client.render.widgets.button.EAEPActionButton;
 import com.extendedae_plus.client.render.widgets.button.EAEPActionItems;
-import com.extendedae_plus.mixin.bridge.HelperProviderButtons;
+import com.extendedae_plus.mixin.helper.HelperProviderButtons;
 import com.extendedae_plus.network.CPacketInterfaceScaling;
+import com.fish.fishlib.util.UtilJava;
 import com.glodblock.github.extendedae.client.gui.GuiExInterface;
 import com.glodblock.github.extendedae.container.ContainerExInterface;
 import com.mojang.datafixers.util.Pair;
@@ -41,7 +42,7 @@ public class MixinExInterfaceScaling extends UpgradeableScreen<ContainerExInterf
                         ScreenStyle style,
                         CallbackInfo ci) {
         EAEPActionItems.actions.get("scaling").forEach(action ->
-                this.eaep$scalingButtons.add(new EAEPActionButton(action, CPacketInterfaceScaling::send)));
+                this.eaep$scalingButtons.add(new EAEPActionButton(action, UtilJava.consumerKotlin(CPacketInterfaceScaling::send))));
 
         this.eaep$toolboxAvailable = this.menu.getToolbox().isPresent();
 

@@ -1,7 +1,7 @@
 package com.extendedae_plus.mixin.core.ae2.menu;
 
 import appeng.menu.AEBaseMenu;
-import com.extendedae_plus.util.UtilGson;
+import com.fish.fishlib.util.UtilGson;
 import com.google.gson.Gson;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Final;
@@ -24,7 +24,7 @@ public class MixinBaseMenu {
         @Inject(method = "<init>", at = @At("TAIL"))
         private void onInit(CallbackInfo ci) {
             this.gson = this.gson.newBuilder()
-                    .registerTypeAdapter(Component.class, UtilGson.adapterComponent)
+                    .registerTypeAdapter(Component.class, UtilGson.INSTANCE.getAdapterComponent())
                     .create();
         }
     }

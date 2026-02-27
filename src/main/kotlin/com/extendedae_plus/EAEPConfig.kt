@@ -1,172 +1,157 @@
 package com.extendedae_plus
 
-import com.extendedae_plus.common.init.InitObject
 import com.extendedae_plus.common.registry.part.ticker.ParserTickerConfig
+import com.fish.fishlib.common.InitObject
+import com.fish.fishlib.config.HelperConfig
+import com.fish.fishlib.config.HelperConfig.Companion.bind
+import com.fish.fishlib.config.section
+import com.fish.fishlib.config.spec
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.fml.ModContainer
 import net.neoforged.fml.config.ModConfig
 import net.neoforged.fml.event.config.ModConfigEvent
-import net.neoforged.neoforge.common.ModConfigSpec
 import java.util.regex.Pattern
 
 object EAEPConfig {
-    // Spec
+    // Helper
 
-    private val specCommon: Triple<ModConfig.Type, ModConfigSpec, String>
-    private val specClient: Triple<ModConfig.Type, ModConfigSpec, String>
-    private val specServer: Triple<ModConfig.Type, ModConfigSpec, String>
+    private val HelperCommon: HelperConfig = HelperConfig(this::SpecCommon)
+    private val HelperClient: HelperConfig = HelperConfig(this::SpecClient)
+    private val HelperServer: HelperConfig = HelperConfig(this::SpecServer)
 
     // Common
 
-    lateinit var exProviderPageMultiplier: ModConfigSpec.IntValue
-    lateinit var modDependencyTips: ModConfigSpec.BooleanValue
+    var EXProviderPageMultiplier: Int by HelperCommon
+    var ModDependencyTips: Boolean by HelperCommon
 
     // Client
 
-    lateinit var independentUploadButton: ModConfigSpec.BooleanValue
-    lateinit var showPatternEncoder: ModConfigSpec.BooleanValue
-    lateinit var accessTerminalSlotsVisibleDefault: ModConfigSpec.BooleanValue
-    lateinit var allowDiskEnergy: ModConfigSpec.BooleanValue
-    lateinit var overrideAE2WTPicking: ModConfigSpec.BooleanValue
+    var IndependentUploadButton: Boolean by HelperClient
+    var ShowPatternEncoder: Boolean by HelperClient
+    var AccessTerminalSlotsVisibleDefault: Boolean by HelperClient
+    var AllowDiskEnergy: Boolean by HelperClient
+    var OverrideAE2WTPicking: Boolean by HelperClient
 
     // Server
 
     // - AE
 
-    lateinit var providerRoundRobin: ModConfigSpec.BooleanValue
-    lateinit var smartDoublingMaxMultiplier: ModConfigSpec.IntValue
-    lateinit var smartDoublingAdapt: ModConfigSpec.BooleanValue // 没机会写完
-    lateinit var craftingPauseThreshold: ModConfigSpec.IntValue
+    var ProviderRoundRobin: Boolean by HelperServer
+    var SmartDoublingMaxMultiplier: Int by HelperServer
+    var SmartDoublingAdapt: Boolean by HelperServer // 没机会写完
+    var CraftingPauseThreshold: Int by HelperServer
 
     // - Ticker
 
-    lateinit var baseTickerEnergyCost: ModConfigSpec.IntValue
-    lateinit var tickerBlacklist: ModConfigSpec.ConfigValue<MutableList<out String>>
-    lateinit var tickerExternalMultiplier: ModConfigSpec.ConfigValue<MutableList<out String>>
+    var BaseTickerEnergyCost: Int by HelperServer
+    var TickerBlacklist: MutableList<out String> by HelperServer
+    var TickerExternalMultiplier: MutableList<out String> by HelperServer
 
     // - Assembler Matrix
 
-    lateinit var baseCoreCrafterThreads: ModConfigSpec.IntValue
-    lateinit var coreCrafterThreadAmplification: ModConfigSpec.IntValue
-    lateinit var maximumCoreCrafterThreads: ModConfigSpec.IntValue
-    lateinit var corePatternSlotMultiplier: ModConfigSpec.IntValue
-    lateinit var needsUploadingPort: ModConfigSpec.BooleanValue
+    var BaseCoreCrafterThreads: Int by HelperServer
+    var CoreCrafterThreadAmplification: Int by HelperServer
+    var MaximumCoreCrafterThreads: Int by HelperServer
+    var CorePatternSlotMultiplier: Int by HelperServer
+    var NeedsUploadingPort: Boolean by HelperServer
 
-    init {
-        this.specCommon = this.spec("common", ModConfig.Type.COMMON) { spec ->
-            this.exProviderPageMultiplier = spec
-                .defineInRange("pageMultiplier", 1, 1, 64)
-            this.modDependencyTips = spec
-                .define("dependencyTips", true)
+    // Spec
+
+    private val SpecCommon by spec(ModConfig.Type.COMMON) { spec ->
+        spec.defineInRange("pageMultiplier", 1, 1, 64)
+            .bind(HelperCommon, ::EXProviderPageMultiplier)
+        spec.define("dependencyTips", true)
+            .bind(HelperCommon, ::ModDependencyTips)
+    }
+
+    private val SpecClient by spec(ModConfig.Type.CLIENT) { spec ->
+        spec.define("independentUploadingButton", false)
+            .bind(HelperClient, ::IndependentUploadButton)
+        spec.define("showEncoderPatternPlayer", true)
+            .bind(HelperClient, ::ShowPatternEncoder)
+        spec.define("patternTerminalShowSlotsDefault", true)
+            .bind(HelperClient, ::AccessTerminalSlotsVisibleDefault)
+        spec.define("overrideAE2WTPicking", false)
+            .bind(HelperClient, ::OverrideAE2WTPicking)
+    }
+
+    private val SpecServer by spec(ModConfig.Type.SERVER) { spec ->
+        spec.section("ae") { section ->
+            section.define("providerRoundRobinEnable", true)
+                .bind(HelperServer, ::ProviderRoundRobin)
+            section.defineInRange("smartScalingMaxMultiplier", 0, 0, 1048576)
+                .bind(HelperServer, ::SmartDoublingMaxMultiplier)
+            section.define("smartDoublingAdapt", false)
+                .bind(HelperServer, ::SmartDoublingAdapt)
+            section.defineInRange("craftingPauseThreshold", 100, 100, Integer.MAX_VALUE)
+                .bind(HelperServer, ::CraftingPauseThreshold)
         }
 
-        this.specClient = this.spec("client", ModConfig.Type.CLIENT) { spec ->
-            this.independentUploadButton = spec
-                .define("independentUploadingButton", false)
-            this.showPatternEncoder = spec
-                .define("showEncoderPatternPlayer", true)
-            this.accessTerminalSlotsVisibleDefault = spec
-                .define("patternTerminalShowSlotsDefault", true)
-            this.overrideAE2WTPicking = spec
-                .define("overrideAE2WTPicking", false)
+        spec.section("ticker") { section ->
+            section.defineInRange("tickerBaseCost", 512, 0, Integer.MAX_VALUE)
+                .bind(HelperServer, ::BaseTickerEnergyCost)
+            section.define("allowDiskEnergy", true)
+                .bind(HelperServer, ::AllowDiskEnergy)
+            section.defineListAllowEmpty(
+                listOf("tickerBlacklist"),
+                ::ArrayList,
+                ::String
+            ) { it is CharSequence && Pattern.matches("^#?\\w+:\\w+$", it) }
+                .bind(HelperServer, ::TickerBlacklist)
+            section.defineListAllowEmpty(
+                listOf("tickerExternalMultiplier"),
+                ::ArrayList,
+                ::String
+            ) { it is CharSequence && Pattern.matches("^#?\\w+:\\w+\\[[\\d.]+]$", it) }
+                .bind(HelperServer, ::TickerExternalMultiplier)
         }
 
-        this.specServer = this.spec("server", ModConfig.Type.SERVER) { spec ->
-            spec.section("ae") { section ->
-                this.providerRoundRobin = section
-                    .define("providerRoundRobinEnable", true)
-                this.smartDoublingMaxMultiplier = section
-                    .defineInRange("smartScalingMaxMultiplier", 0, 0, 1048576)
-                this.smartDoublingAdapt = section
-                    .define("smartDoublingAdapt", false)
-                this.craftingPauseThreshold = section
-                    .defineInRange("craftingPauseThreshold", 100, 100, Integer.MAX_VALUE)
-            }
-
-            spec.section("ticker") { section ->
-                this.baseTickerEnergyCost = section
-                    .defineInRange("tickerBaseCost", 512, 0, Integer.MAX_VALUE)
-                this.allowDiskEnergy = section
-                    .define("allowDiskEnergy", true)
-                this.tickerBlacklist = section.defineListAllowEmpty(
-                    listOf("tickerBlacklist"),
-                    ::ArrayList,
-                    ::String
-                ) { it is CharSequence && Pattern.matches("^#?\\w+:\\w+$", it) }
-                this.tickerExternalMultiplier = section.defineListAllowEmpty(
-                    listOf("tickerExternalMultiplier"),
-                    ::ArrayList,
-                    ::String
-                ) { it is CharSequence && Pattern.matches("^#?\\w+:\\w+\\[[\\d.]+]$", it) }
-            }
-
-            spec.section("assembler_matrix") { section ->
-                this.baseCoreCrafterThreads = section
-                    .worldRestart()
-                    .defineInRange("baseCoreCrafterThreads", 32, 1, 64)
-                this.coreCrafterThreadAmplification = section
-                    .worldRestart()
-                    .defineInRange("coreCrafterThreadAmplification", 32, 0, 64)
-                this.maximumCoreCrafterThreads = section
-                    .worldRestart()
-                    .defineInRange("maximumCoreCrafterThreads", 128, 1, 256)
-                this.corePatternSlotMultiplier = section
-                    .worldRestart()
-                    .defineInRange("corePatternSlotMultiplier", 4, 1, 16)
-                this.needsUploadingPort = section
-                    .define("needsUploadingPort", true)
-            }
+        spec.section("assembler_matrix") { section ->
+            section
+                .worldRestart()
+                .defineInRange("baseCoreCrafterThreads", 32, 1, 64)
+                .bind(HelperServer, ::BaseCoreCrafterThreads)
+            section
+                .worldRestart()
+                .defineInRange("coreCrafterThreadAmplification", 32, 0, 64)
+                .bind(HelperServer, ::CoreCrafterThreadAmplification)
+            section
+                .worldRestart()
+                .defineInRange("maximumCoreCrafterThreads", 128, 1, 256)
+                .bind(HelperServer, ::MaximumCoreCrafterThreads)
+            section
+                .worldRestart()
+                .defineInRange("corePatternSlotMultiplier", 4, 1, 16)
+                .bind(HelperServer, ::CorePatternSlotMultiplier)
+            section.define("needsUploadingPort", true)
+                .bind(HelperServer, ::NeedsUploadingPort)
         }
     }
 
     @InitObject
     private fun init(eventBus: IEventBus, containerMod: ModContainer) {
-        val register: Triple<ModConfig.Type, ModConfigSpec, String>.() -> Unit = {
-            containerMod.registerConfig(
-                this.first,
-                this.second,
-                "extendedae_plus/${this.third}.toml"
-            )
-        }
-
-        register(this.specCommon)
-        register(this.specClient)
-        register(this.specServer)
+        val path = ExtendedAEPlus.MODID
+        HelperCommon.init(containerMod, path)
+        HelperClient.init(containerMod, path)
+        HelperServer.init(containerMod, path)
 
         eventBus.addListener<ModConfigEvent.Loading> { this.reload(it.config) }
         eventBus.addListener<ModConfigEvent.Reloading> { this.reload(it.config) }
     }
 
     private fun reload(config: ModConfig) = when (config.spec) {
-        this.specCommon.second -> {
+        SpecCommon -> {
 
         }
 
-        this.specClient.second -> {
+        SpecClient -> {
 
         }
 
-        this.specServer.second -> {
+        SpecServer -> {
             ParserTickerConfig.parseSettings()
         }
 
         else -> Unit
-    }
-
-    private inline fun spec(
-        spec: String, type: ModConfig.Type, modifier: (ModConfigSpec.Builder) -> Unit
-    ): Triple<ModConfig.Type, ModConfigSpec, String> {
-        val builder = ModConfigSpec.Builder()
-        modifier(builder)
-        return Triple(type, builder.build(), spec)
-    }
-
-    private inline fun ModConfigSpec.Builder.section(
-        section: String, modifier: (ModConfigSpec.Builder) -> Unit
-    ): ModConfigSpec.Builder {
-        this.push(section)
-        modifier(this)
-        this.pop()
-        return this
     }
 }

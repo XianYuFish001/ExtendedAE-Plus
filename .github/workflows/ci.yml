@@ -2,9 +2,13 @@ name: Build CI
 
 on:
   push:
-    branches: [ "1.21.1" ]
+    branches:
+      - "1.21.1"
+      - "1.21.1kotlin"
   pull_request:
-    branches: [ "1.21.1" ]
+    branches:
+      - "1.21.1"
+      - "1.21.1kotlin"
 
 jobs:
   build:

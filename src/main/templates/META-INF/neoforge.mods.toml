@@ -32,6 +32,12 @@ ordering="NONE"
 side="BOTH"
 
 [[dependencies."${mod_id}"]]
+modId = "fishlib"
+type = "required"
+ordering = "BEFORE"
+side = "BOTH"
+
+[[dependencies."${mod_id}"]]
 modId="extendedae"
 type="required"
 versionRange="*"

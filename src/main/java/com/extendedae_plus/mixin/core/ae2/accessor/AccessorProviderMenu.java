@@ -2,7 +2,7 @@ package com.extendedae_plus.mixin.core.ae2.accessor;
 
 import appeng.helpers.patternprovider.PatternProviderLogic;
 import appeng.menu.implementations.PatternProviderMenu;
-import com.extendedae_plus.mixin.bridge.HelperProviderMenu;
+import com.extendedae_plus.mixin.helper.HelperProviderMenu;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 

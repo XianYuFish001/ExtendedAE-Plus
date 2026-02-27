@@ -1,6 +1,6 @@
 package com.extendedae_plus.mixin.core.advancedae.accessor;
 
-import com.extendedae_plus.mixin.bridge.HelperProviderMenu;
+import com.extendedae_plus.mixin.helper.HelperProviderMenu;
 import net.pedroksl.advanced_ae.common.logic.AdvPatternProviderLogic;
 import net.pedroksl.advanced_ae.gui.advpatternprovider.AdvPatternProviderMenu;
 import org.spongepowered.asm.mixin.Mixin;

@@ -16,6 +16,6 @@ public abstract class CraftingCalculationMixin {
     // 增大此值可以减少 wait/notify 的频率（提升吞吐量但降低响应速度）。
     @ModifyConstant(method = "handlePausing", constant = @Constant(intValue = 100))
     private int modifyIncTimeThreshold(int original) {
-        return EAEPConfig.craftingPauseThreshold.get();
+        return EAEPConfig.INSTANCE.getCraftingPauseThreshold();
     }
 }

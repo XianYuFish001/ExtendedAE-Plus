@@ -3,7 +3,7 @@ package com.extendedae_plus.mixin.core.ae2.parts.upgradeCard;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.parts.storagebus.StorageBusPart;
-import com.extendedae_plus.mixin.bridge.HelperPartLinkLogic;
+import com.extendedae_plus.mixin.helper.HelperPartLinkLogic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

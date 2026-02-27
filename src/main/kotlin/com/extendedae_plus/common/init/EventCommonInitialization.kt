@@ -7,36 +7,38 @@ import appeng.items.parts.PartModelsHelper
 import appeng.menu.locator.MenuLocators
 import com.extendedae_plus.ExtendedAEPlus
 import com.extendedae_plus.common.impl.menuLocator.CuriosItemLocator
-import com.extendedae_plus.common.registry.block.EAEPCraftingUnitType
+import com.extendedae_plus.common.registry.block.EAEPCraftingUnit
 import com.extendedae_plus.common.registry.item.infinityBigIntegerCell.InfinityBigIntegerCellHandler
 import com.extendedae_plus.common.registry.part.ticker.PartTicker
-import com.extendedae_plus.util.UtilCodec
-import com.mojang.logging.LogUtils
+import com.fish.fishlib.util.extension.invoke
+import com.fish.fishlib.util.extension.invokeReversed
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent
+import org.slf4j.LoggerFactory
 
 @EventBusSubscriber(modid = ExtendedAEPlus.MODID)
 object EventCommonInitialization {
-    private val LOGGER = LogUtils.getLogger()
+    private val Logger = LoggerFactory.getLogger("EAEP/Init/Common")
 
     @SubscribeEvent
     fun onCapabilitiesRegistering(event: RegisterCapabilitiesEvent) {
-        ModBlockEntities.registerBlockEntityCapability(event)
+        EAEPTiles.regTileCapability(event)
     }
 
     @SubscribeEvent
     private fun onCommonSetup(event: FMLCommonSetupEvent) {
-        partModel()
+        this.partModel()
 
         event.enqueueWork {
-            ModUpgradeCards.init()
-            cellHandler()
-            locator()
-            blockEntity()
-        }.whenComplete { _: Void, exception: Throwable? ->
-            if (exception != null) LOGGER.error("Common Initialize failed ", exception)
+            EAEPUpgradeCards.init()
+            this.cellHandler()
+            this.locator()
+            this.tile()
+        }.whenComplete { _, exception ->
+            if (exception != null)
+                Logger.error("Failed to initialize", exception)
         }
     }
 
@@ -47,8 +49,8 @@ object EventCommonInitialization {
     private fun locator() {
         MenuLocators.register(
             CuriosItemLocator::class.java,
-            UtilCodec.encodeReversed(CuriosItemLocator.STREAM_CODEC),
-            CuriosItemLocator.STREAM_CODEC::decode
+            CuriosItemLocator.streamCodec::encode.invokeReversed(),
+            CuriosItemLocator.streamCodec::decode
         )
     }
 
@@ -56,13 +58,13 @@ object EventCommonInitialization {
         PartModels.registerModels(PartModelsHelper.createModels(PartTicker::class.java))
     }
 
-    private fun blockEntity() {
-        ModBlockEntities.bindAEBlockEntity()
+    private fun tile() {
+        EAEPTiles.bindTileAE()
 
-        EAEPCraftingUnitType.entries.forEach { unit: EAEPCraftingUnitType ->
-            unit.block.get().setBlockEntity(
+        EAEPCraftingUnit.entries.forEach {
+            it.block().setBlockEntity(
                 CraftingBlockEntity::class.java,
-                ModBlockEntities.EAEP_CRAFTING_UNIT.get(),
+                EAEPTiles.UnitCraftingUniversal.get(),
                 null, null
             )
         }

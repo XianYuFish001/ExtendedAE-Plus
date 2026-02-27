@@ -3,8 +3,9 @@ package com.extendedae_plus.mixin.core.advancedae.client.gui;
 import appeng.client.gui.AEBaseScreen;
 import appeng.client.gui.style.ScreenStyle;
 import com.extendedae_plus.client.render.widgets.button.*;
-import com.extendedae_plus.mixin.bridge.HelperProviderButtons;
+import com.extendedae_plus.mixin.helper.HelperProviderButtons;
 import com.extendedae_plus.network.CPacketScalePatterns;
+import com.fish.fishlib.util.UtilJava;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -42,7 +43,7 @@ public abstract class MixinScreenAdvProviderSmall extends AEBaseScreen<SmallAdvP
         this.addToLeftToolbar(this.eaep$buttonSmartDoubling);
 
         EAEPActionItems.actions.get("scaling").forEach(action ->
-                this.eaep$scalingButtons.add(new EAEPActionButton(action, CPacketScalePatterns::send)));
+                this.eaep$scalingButtons.add(new EAEPActionButton(action, UtilJava.consumerKotlin(CPacketScalePatterns::send))));
         this.eaep$scalingButtons.forEach(button -> {
             this.addRenderableWidget(button);
             button.setVisibility(true);

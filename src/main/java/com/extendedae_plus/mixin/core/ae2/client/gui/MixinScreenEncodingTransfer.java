@@ -6,8 +6,9 @@ import appeng.client.gui.style.ScreenStyle;
 import appeng.menu.me.items.PatternEncodingTermMenu;
 import com.extendedae_plus.client.render.widgets.button.EAEPActionItems;
 import com.extendedae_plus.client.render.widgets.button.EAEPCycleButton;
-import com.extendedae_plus.common.init.ModSettings;
+import com.extendedae_plus.common.init.EAEPSettings;
 import com.extendedae_plus.common.registry.settings.ModeEncodingTransfer;
+import com.fish.fishlib.util.UtilJava;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,20 +30,20 @@ public class MixinScreenEncodingTransfer<TMenu extends PatternEncodingTermMenu> 
                         ScreenStyle style,
                         CallbackInfo ci) {
         var buttonTransferMode = new EAEPCycleButton.Builder()
-                .globalTask(this::eaep$switchTransferMode)
-                .addPart(EAEPActionItems.mergeNone)
-                .addPart(EAEPActionItems.mergeAdjacency)
-                .addPart(EAEPActionItems.mergeIndependence)
+                .globalTask(UtilJava.consumerKotlin(this::eaep$switchTransferMode))
+                .addPart(EAEPActionItems.MergeNone)
+                .addPart(EAEPActionItems.MergeAdjacency)
+                .addPart(EAEPActionItems.MergeIndependence)
                 .build();
         this.addToLeftToolbar(buttonTransferMode);
     }
     
     @Unique
     private void eaep$switchTransferMode(EAEPActionItems action) {
-        this.menu.getConfigManager().putSetting(ModSettings.modeTransfer, switch (action) {
-            case mergeNone -> ModeEncodingTransfer.NONE;
-            case mergeAdjacency -> ModeEncodingTransfer.MERGE_ADJACENCY;
-            case mergeIndependence -> ModeEncodingTransfer.INDEPENDENCE;
+        this.menu.getConfigManager().putSetting(EAEPSettings.modeTransfer, switch (action) {
+            case MergeNone -> ModeEncodingTransfer.NONE;
+            case MergeAdjacency -> ModeEncodingTransfer.MERGE_ADJACENCY;
+            case MergeIndependence -> ModeEncodingTransfer.INDEPENDENCE;
             case null, default -> null;
         });
     }

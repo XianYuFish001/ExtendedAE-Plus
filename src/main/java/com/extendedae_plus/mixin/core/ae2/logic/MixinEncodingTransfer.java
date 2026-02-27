@@ -3,7 +3,7 @@ package com.extendedae_plus.mixin.core.ae2.logic;
 import appeng.api.stacks.GenericStack;
 import appeng.integration.modules.itemlists.EncodingHelper;
 import appeng.menu.me.items.PatternEncodingTermMenu;
-import com.extendedae_plus.common.init.ModSettings;
+import com.extendedae_plus.common.init.EAEPSettings;
 import com.google.common.math.LongMath;
 import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,7 +20,7 @@ public class MixinEncodingTransfer {
     private static void onTransferAdding(List<GenericStack> stacks, GenericStack newStack, CallbackInfo ci) {
         var player = Minecraft.getInstance().player;
         if (player == null || !(player.containerMenu instanceof PatternEncodingTermMenu menu)) return;
-        switch (menu.getConfigManager().getSetting(ModSettings.modeTransfer)) {
+        switch (menu.getConfigManager().getSetting(EAEPSettings.modeTransfer)) {
             case INDEPENDENCE -> {
                 stacks.add(newStack);
                 ci.cancel();

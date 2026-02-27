@@ -2,6 +2,7 @@ package com.extendedae_plus.mixin.core.ae2;
 
 import appeng.menu.guisync.SynchronizedField;
 import com.extendedae_plus.common.impl.guiSync.PacketStreamable;
+import kotlin.jvm.JvmClassMappingKt;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,20 +20,21 @@ public class MixinSyncedField {
         @Final
         private Class<?> fieldType;
 
-        @SuppressWarnings("unchecked")
         @Inject(method = "writeValue", at = @At("HEAD"), cancellable = true)
         private void writeValue(RegistryFriendlyByteBuf data, Object value, CallbackInfo ci) {
-            PacketStreamable.getStreamCodec(this.fieldType).ifPresent(streamCodec -> {
-                streamCodec.encode(data, value);
-                ci.cancel();
-            });
+            var streamCodec =
+                    PacketStreamable.getStreamCodec(JvmClassMappingKt.getKotlinClass(this.fieldType));
+            if (streamCodec == null) return;
+            streamCodec.encode(data, value);
+            ci.cancel();
         }
 
-        @SuppressWarnings("unchecked")
         @Inject(method = "readValue", at = @At("HEAD"), cancellable = true)
         private void readValue(RegistryFriendlyByteBuf data, CallbackInfoReturnable<Object> cir) {
-            PacketStreamable.getStreamCodec(this.fieldType)
-                    .ifPresent(streamCodec -> cir.setReturnValue(streamCodec.decode(data)));
+            var streamCodec =
+                    PacketStreamable.getStreamCodec(JvmClassMappingKt.getKotlinClass(this.fieldType));
+            if (streamCodec == null) return;
+            cir.setReturnValue(streamCodec.decode(data));
         }
     }
 }

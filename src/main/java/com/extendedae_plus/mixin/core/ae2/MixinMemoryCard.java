@@ -31,6 +31,6 @@ public class MixinMemoryCard {
                                    @Nullable Player player,
                                    CallbackInfoReturnable<Set<DataComponentType<?>>> cir) {
         if (!(importTo instanceof IConfigurableObject object)) return;
-        ProviderSettingsImplementations.flagChanging.add(object.getConfigManager());
+        ProviderSettingsImplementations.flagChanging.remove(object.getConfigManager());
     }
 }

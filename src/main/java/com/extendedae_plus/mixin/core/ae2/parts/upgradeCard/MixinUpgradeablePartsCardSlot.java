@@ -5,9 +5,9 @@ import appeng.api.upgrades.IUpgradeInventory;
 import appeng.api.upgrades.UpgradeInventories;
 import appeng.api.upgrades.Upgrades;
 import appeng.parts.automation.UpgradeablePart;
-import com.extendedae_plus.common.init.ModItems;
+import com.extendedae_plus.common.init.EAEPItems;
 import com.extendedae_plus.common.wireless.HolderLinkChannelCard;
-import com.extendedae_plus.mixin.bridge.HelperPartLinkLogic;
+import com.extendedae_plus.mixin.helper.HelperPartLinkLogic;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import org.spongepowered.asm.mixin.*;
@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(UpgradeablePart.class)
 public abstract class MixinUpgradeablePartsCardSlot implements HelperPartLinkLogic {
     @Unique
-    private HolderLinkChannelCard eaep$linkLogic = HolderLinkChannelCard.EMPTY;
+    private HolderLinkChannelCard eaep$linkLogic = HolderLinkChannelCard.Empty;
     @Unique
     private boolean eaep$supportedChannelCard = false;
 
@@ -32,7 +32,7 @@ public abstract class MixinUpgradeablePartsCardSlot implements HelperPartLinkLog
     @Inject(method = "<init>", at = @At("TAIL"))
     private void onInit(IPartItem<?> partItem, CallbackInfo ci) {
         this.eaep$supportedChannelCard =
-                Upgrades.getMaxInstallable(ModItems.CardChannel.get(), partItem) > 0;
+                Upgrades.getMaxInstallable(EAEPItems.CardChannel.get(), partItem) > 0;
 
         if (!this.eaep$supportedChannelCard) return;
         var self = (UpgradeablePart)(Object) this;

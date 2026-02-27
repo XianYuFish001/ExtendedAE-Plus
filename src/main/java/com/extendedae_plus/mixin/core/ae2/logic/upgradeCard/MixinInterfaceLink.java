@@ -25,7 +25,7 @@ public class MixinInterfaceLink {
     @Final
     private IUpgradeInventory upgrades;
     @Unique
-    private HolderLinkChannelCard eaep$linkLogic = HolderLinkChannelCard.EMPTY;
+    private HolderLinkChannelCard eaep$linkLogic = HolderLinkChannelCard.Empty;
 
     @Shadow
     private void onUpgradesChanged() {}

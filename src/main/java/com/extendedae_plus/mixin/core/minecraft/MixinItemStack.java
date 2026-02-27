@@ -27,6 +27,6 @@ public class MixinItemStack {
 
         if (!ExtendedAEPlus.MODNAME.equals(texts.getLast().getString())) return;
         texts.removeLast();
-        texts.add(UtilTextComponent.modNameColorful.copy().withStyle(ChatFormatting.ITALIC));
+        texts.add(UtilTextComponent.ModNameColorful.copy().withStyle(ChatFormatting.ITALIC));
     }
 }

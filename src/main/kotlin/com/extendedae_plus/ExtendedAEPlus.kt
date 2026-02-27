@@ -1,6 +1,7 @@
 package com.extendedae_plus
 
-import com.extendedae_plus.common.init.InitObject
+import com.fish.fishlib.common.InitializerObject
+import com.fish.fishlib.network.InitializerPacket
 import net.minecraft.resources.ResourceLocation
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.fml.ModContainer
@@ -9,7 +10,8 @@ import net.neoforged.fml.common.Mod
 @Mod(ExtendedAEPlus.MODID)
 class ExtendedAEPlus(eventBus: IEventBus, containerMod: ModContainer) {
     init {
-        InitObject(eventBus, containerMod)
+        InitializerObject(eventBus, containerMod)
+        InitializerPacket(containerMod)
     }
 
     companion object {

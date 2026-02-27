@@ -1,8 +1,8 @@
 package com.extendedae_plus.mixin.core.recipeViewer.emi;
 
 import appeng.client.gui.me.items.PatternEncodingTermScreen;
-import com.extendedae_plus.integration.recipeViewer.emi.EmiRecipeAdaptable;
-import com.extendedae_plus.mixin.bridge.BridgePlanToEncode;
+import com.extendedae_plus.integration.impl.recipeViewer.emi.EmiRecipeAdaptable;
+import com.extendedae_plus.mixin.helper.BridgePlanToEncode;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.handler.EmiCraftContext;
 import dev.emi.emi.api.recipe.handler.EmiRecipeHandler;

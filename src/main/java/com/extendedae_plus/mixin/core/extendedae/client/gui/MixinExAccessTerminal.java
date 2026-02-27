@@ -7,12 +7,13 @@ import appeng.menu.AEBaseMenu;
 import com.extendedae_plus.EAEPConfig;
 import com.extendedae_plus.client.render.widgets.button.EAEPActionItems;
 import com.extendedae_plus.client.render.widgets.button.EAEPCycleButton;
-import com.extendedae_plus.mixin.bridge.HelperProviderSelectionApplier;
 import com.extendedae_plus.mixin.core.extendedae.accessor.AccessorExAccessScreenRows;
+import com.extendedae_plus.mixin.helper.HelperProviderSelectionApplier;
 import com.extendedae_plus.network.CPacketUploadInventoryPattern;
 import com.glodblock.github.extendedae.client.button.HighlightButton;
 import com.glodblock.github.extendedae.client.gui.GuiExPatternTerminal;
 import com.glodblock.github.extendedae.container.ContainerExPatternTerminal;
+import kotlin.Unit;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
@@ -39,15 +40,15 @@ public abstract class MixinExAccessTerminal extends AEBaseScreen<AEBaseMenu>
     @Shadow
     @Final
     private Scrollbar scrollbar;
+    @Shadow
+    @Final
+    private HashMap<Integer, HighlightButton> highlightBtns;
 
     @Shadow
     protected abstract void resetScrollbar();
     @Shadow
     protected abstract void refreshList();
 
-    @Shadow
-    @Final
-    private HashMap<Integer, HighlightButton> highlightBtns;
     @Unique
     @Nullable
     private Long eaep$selectedProvider = null;
@@ -65,11 +66,20 @@ public abstract class MixinExAccessTerminal extends AEBaseScreen<AEBaseMenu>
                         ScreenStyle style,
                         CallbackInfo ci) {
         var buttonRowSlotVisible = new EAEPCycleButton.Builder()
-                .addPart(EAEPActionItems.rowSlotsVisible, this::eaep$toggleRowSlotsVisible)
-                .addPart(EAEPActionItems.rowSlotsInvisible, this::eaep$toggleRowSlotsVisible)
+                .addPart(EAEPActionItems.RowSlotsVisible, action -> {
+                    this.eaep$toggleRowSlotsVisible(action);
+                    return Unit.INSTANCE;
+                })
+                .addPart(EAEPActionItems.RowSlotsInvisible, action -> {
+                    this.eaep$toggleRowSlotsVisible(action);
+                    return Unit.INSTANCE;
+                })
                 .build();
-        buttonRowSlotVisible.setStateIndex(
-                EAEPConfig.accessTerminalSlotsVisibleDefault.getAsBoolean() ? 0 : 1);
+
+        var rowVisible = EAEPConfig.INSTANCE.getAccessTerminalSlotsVisibleDefault();
+        buttonRowSlotVisible.setStateIndex(rowVisible ? 0 : 1);
+        this.eaep$rowSlotsVisible = rowVisible;
+
         this.addToLeftToolbar(buttonRowSlotVisible);
     }
 
@@ -123,7 +133,7 @@ public abstract class MixinExAccessTerminal extends AEBaseScreen<AEBaseMenu>
 
     @Unique
     private void eaep$toggleRowSlotsVisible(EAEPActionItems action) {
-        this.eaep$rowSlotsVisible = action.equals(EAEPActionItems.rowSlotsVisible);
+        this.eaep$rowSlotsVisible = action.equals(EAEPActionItems.RowSlotsVisible);
         this.refreshList();
     }
 

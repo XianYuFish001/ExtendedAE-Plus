@@ -4,7 +4,7 @@ import appeng.api.stacks.GenericStack;
 import appeng.menu.AEBaseMenu;
 import appeng.menu.me.crafting.CraftConfirmMenu;
 import appeng.menu.me.crafting.CraftingPlanSummary;
-import com.extendedae_plus.integration.recipeViewer.HelperRecipeViewer;
+import com.extendedae_plus.integration.impl.recipeViewer.HelperRecipeViewer;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;

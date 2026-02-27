@@ -7,6 +7,7 @@ import appeng.core.network.serverbound.InventoryActionPacket;
 import appeng.helpers.InventoryAction;
 import appeng.menu.me.items.PatternEncodingTermMenu;
 import com.extendedae_plus.client.screen.ScreenStacksRename;
+import kotlin.Unit;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -41,6 +42,7 @@ public class MixinScreenEncodingRenamer<TMenu extends PatternEncodingTermMenu>
                     var message = new InventoryActionPacket(
                             InventoryAction.SET_FILTER, this.hoveredSlot.index, newStack);
                     PacketDistributor.sendToServer(message);
+                    return Unit.INSTANCE;
                 }
         );
         this.switchToScreen(screen);

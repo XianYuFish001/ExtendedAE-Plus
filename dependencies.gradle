@@ -1,8 +1,11 @@
 configurations {
-    runtimeClassPath.extendsFrom localRuntime
+    runtimeClassPath.extendsFrom runtimeOnly
 }
 
 dependencies {
+    jarJar(libs.fishLib)
+    implementation libs.fishLib
+
     implementation libs.kotlinForForge
     implementation libs.ae2
     implementation libs.guideME
@@ -25,21 +28,26 @@ dependencies {
     compileOnly libs.kubejs
     compileOnly libs.rei
 
-    localRuntime libs.geckolib
-    localRuntime libs.appliedFlux
-    localRuntime libs.megaCells
-    localRuntime libs.mekanism
-    localRuntime libs.appliedMekanistics
-    localRuntime libs.curios
-    localRuntime libs.ftbTeams
-    localRuntime libs.ftbLibrary
-    localRuntime libs.architectury
-    localRuntime libs.modernUI
+    runtimeOnly libs.geckolib
+    runtimeOnly libs.appliedFlux
+    runtimeOnly libs.megaCells
+    runtimeOnly libs.mekanism
+    runtimeOnly libs.appliedMekanistics
+    runtimeOnly libs.curios
+    runtimeOnly libs.ftbTeams
+    runtimeOnly libs.ftbLibrary
+    runtimeOnly libs.architectury
+    runtimeOnly libs.modernUI
 
-//    localRuntime fileTree(dir: 'libs', includes: ['*.jar'])
+    compileOnly fileTree(dir: 'libs', includes: ['*.jar'])
 }
 
 repositories {
+    mavenLocal()
+    maven {
+        name = "FishMaven"
+        url = uri("https://repo.repsy.io/xianyu_fish/fishmaven")
+    }
     maven {
         name = "TerraformersMC"
         url = uri("https://maven.terraformersmc.com/")

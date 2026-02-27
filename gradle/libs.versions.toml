@@ -25,6 +25,7 @@ jech = "6681787"
 modernUI = "6956436"
 expandedAE = "6910849"
 kotlinForForge = "5.10.0"
+fishLib = "1.0.2"
 
 [libraries]
 ae2 = { group = "org.appliedenergistics", name = "appliedenergistics2", version.ref = "ae2" }
@@ -53,3 +54,4 @@ architectury = { group = "curse.maven", name = "architectury-api-419699", versio
 modernUI = { group = "curse.maven", name = "modern-ui-352491", version.ref = "modernUI" }
 expandedAE = { group = "curse.maven", name = "expanded-ae-1213351", version.ref = "expandedAE" }
 kotlinForForge = { group = "thedarkcolour", name = "kotlinforforge-neoforge", version.ref = "kotlinForForge" }
+fishLib = { group = "com.fish.fishlib", name = "FishLib", version.ref = "fishLib" }

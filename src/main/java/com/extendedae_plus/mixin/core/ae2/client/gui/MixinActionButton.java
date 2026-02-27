@@ -3,8 +3,8 @@ package com.extendedae_plus.mixin.core.ae2.client.gui;
 import appeng.client.gui.widgets.ActionButton;
 import appeng.core.localization.ButtonToolTips;
 import com.extendedae_plus.EAEPConfig;
-import com.extendedae_plus.util.keyBuilder.Patterns;
-import com.extendedae_plus.util.keyBuilder.UtilKeyBuilder;
+import com.extendedae_plus.util.UtilKeyBuilder;
+import com.fish.fishlib.util.keyBuilder.Patterns;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,9 +17,9 @@ public class MixinActionButton {
     private void eaep$modifyButtonTooltips(ButtonToolTips displayName,
                                            ButtonToolTips displayValue,
                                            CallbackInfoReturnable<Component> cir) {
-        if (displayValue == ButtonToolTips.EncodeDescription && !EAEPConfig.independentUploadButton.getAsBoolean())
+        if (displayValue == ButtonToolTips.EncodeDescription && !EAEPConfig.INSTANCE.getIndependentUploadButton())
             cir.setReturnValue(cir.getReturnValue().copy().append(
-                    UtilKeyBuilder.of(Patterns.screenTooltip)
+                    UtilKeyBuilder.INSTANCE.of(Patterns.ScreenTooltip)
                             .addStr("upload_button")
                             .addStr("auto_upload")
                             .build()));

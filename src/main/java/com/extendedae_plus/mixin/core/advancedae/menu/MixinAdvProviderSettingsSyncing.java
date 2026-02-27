@@ -2,10 +2,10 @@ package com.extendedae_plus.mixin.core.advancedae.menu;
 
 import appeng.api.config.YesNo;
 import appeng.menu.guisync.GuiSync;
-import com.extendedae_plus.common.init.ModSettings;
+import com.extendedae_plus.common.init.EAEPSettings;
 import com.extendedae_plus.common.registry.settings.StateSmartBlocking;
-import com.extendedae_plus.mixin.bridge.SyncerSmartBlocking;
-import com.extendedae_plus.mixin.bridge.SyncerSmartDoubling;
+import com.extendedae_plus.mixin.helper.SyncerSmartBlocking;
+import com.extendedae_plus.mixin.helper.SyncerSmartDoubling;
 import net.pedroksl.advanced_ae.common.logic.AdvPatternProviderLogic;
 import net.pedroksl.advanced_ae.gui.advpatternprovider.AdvPatternProviderMenu;
 import org.spongepowered.asm.mixin.Final;
@@ -34,8 +34,8 @@ public class MixinAdvProviderSettingsSyncing implements SyncerSmartBlocking, Syn
         if (((AdvPatternProviderMenu)(Object) this).isClientSide()) return;
 
         var configManager = this.logic.getConfigManager();
-        this.eaep$stateBlocking = configManager.getSetting(ModSettings.smartBlocking);
-        this.eaep$stateDoubling = configManager.getSetting(ModSettings.smartDoubling);
+        this.eaep$stateBlocking = configManager.getSetting(EAEPSettings.smartBlocking);
+        this.eaep$stateDoubling = configManager.getSetting(EAEPSettings.smartDoubling);
     }
 
     @Override

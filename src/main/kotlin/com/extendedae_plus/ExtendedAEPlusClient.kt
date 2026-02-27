@@ -6,7 +6,7 @@ import net.neoforged.fml.common.Mod
 import net.neoforged.neoforge.client.gui.ConfigurationScreen
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory
 
-@Mod(value = ExtendedAEPlus.MODID, dist = [Dist.CLIENT])
+@Mod(ExtendedAEPlus.MODID, dist = [Dist.CLIENT])
 class ExtendedAEPlusClient(container: ModContainer) {
     init {
         container.registerExtensionPoint(
