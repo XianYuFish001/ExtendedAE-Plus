@@ -6,6 +6,7 @@ import com.extendedae_plus.common.init.EAEPItems
 import com.extendedae_plus.common.registry.dataComponent.DataTickingCard
 import com.extendedae_plus.util.UtilKeyBuilder
 import com.fish.fishlib.util.keyBuilder.Patterns
+import com.fish.fishlib.util.keyBuilder.bindAdder
 import com.fish.fishlib.util.keyBuilder.toKeyPattern
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
@@ -36,7 +37,7 @@ class CardTicking(multiplier: Int, maxMultiplier: Int) : UpgradeCardItem(
         DataTickingCard.fromStack(stack).let {
             UtilKeyBuilder.of(Patterns.Tooltip)
                 .item(EAEPItems.CardTicking)
-                .bindCollection(lines)
+                .bindAdder(lines::add)
                 .addStr("multiplier")
                 .args(it.multiplier)
                 .buildInto()

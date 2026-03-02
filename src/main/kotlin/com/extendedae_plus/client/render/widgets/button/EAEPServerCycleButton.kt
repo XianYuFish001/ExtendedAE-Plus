@@ -55,15 +55,15 @@ class EAEPServerCycleButton(
             return this
         }
 
-        fun setSyncer(syncer: SyncerBooleanGeneric): Builder {
-            this.syncerState = syncer
-            return this
-        }
-
-        fun <TEnum : Enum<TEnum>> setSyncer(syncer: SyncerEnumGeneric<TEnum>): Builder {
-            this.syncerState = syncer
-            return this
-        }
+//        fun setSyncer(syncer: SyncerBooleanGeneric): Builder {
+//            this.syncerState = syncer
+//            return this
+//        }
+//
+//        fun <TEnum : Enum<TEnum>> setSyncer(syncer: SyncerEnumGeneric<TEnum>): Builder {
+//            this.syncerState = syncer
+//            return this
+//        }
 
         fun build() = EAEPServerCycleButton(
             this.states,
@@ -74,15 +74,16 @@ class EAEPServerCycleButton(
         )
     }
 
-    fun interface SyncerBooleanGeneric : (() -> Int) {
-        fun get(): Boolean
+}
 
-        override operator fun invoke() = if (this.get()) 1 else 0
-    }
+fun interface SyncerEnumGeneric<TEnum : Enum<TEnum>> : (() -> Int) {
+    fun get(): TEnum
 
-    fun interface SyncerEnumGeneric<TEnum : Enum<TEnum>> : (() -> Int) {
-        fun get(): TEnum
+    override operator fun invoke() = this.get().ordinal
+}
 
-        override operator fun invoke() = this.get().ordinal
-    }
+fun interface SyncerBooleanGeneric : (() -> Int) {
+    fun get(): Boolean
+
+    override operator fun invoke() = if (this.get()) 1 else 0
 }

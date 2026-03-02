@@ -8,7 +8,9 @@ import appeng.api.upgrades.UpgradeInventories;
 import appeng.helpers.InterfaceLogic;
 import appeng.helpers.InterfaceLogicHost;
 import com.extendedae_plus.common.wireless.HolderLinkChannelCard;
+import com.extendedae_plus.mixin.helper.HelperHolderCardLink;
 import net.minecraft.world.item.Item;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -16,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = InterfaceLogic.class)
-public class MixinInterfaceLink {
+public class MixinInterfaceLink implements HelperHolderCardLink {
     @Shadow
     @Final
     protected IManagedGridNode mainNode;
@@ -37,25 +39,20 @@ public class MixinInterfaceLink {
         this.upgrades = UpgradeInventories.forMachine(is, Math.min(this.upgrades.size() + 2, 8), this::onUpgradesChanged);
     }
 
+    @Override
+    public @NotNull HolderLinkChannelCard eaep$holder() {
+        return this.eaep$linkLogic;
+    }
+
     @Inject(method = "hasWorkToDo", at = @At("TAIL"), cancellable = true)
     private void testAdditionalWork(CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValue()) return;
-        cir.setReturnValue(this.eaep$linkNeedsInitialize());
-    }
-
-    @Inject(method = "updateStorage", at = @At("HEAD"))
-    private void doAdditionalWork(CallbackInfoReturnable<Boolean> cir) {
-        this.eaep$linkLogic.onTickingInitialize();
+        cir.setReturnValue(this.eaep$linkLogic.needsInitialize());
     }
 
     @Inject(method = "onUpgradesChanged", at = @At("HEAD"))
     private void onUpgradesChanged(CallbackInfo ci) {
         this.eaep$linkLogic.onUpgradesChanged();
-    }
-
-    @Unique
-    public boolean eaep$linkNeedsInitialize() {
-        return this.eaep$linkLogic.needsInitialize();
     }
 
     @Mixin(targets = "appeng.helpers.InterfaceLogic$Ticker")
@@ -66,16 +63,11 @@ public class MixinInterfaceLink {
 
         @Inject(method = "tickingRequest", at = @At("HEAD"))
         private void onTicking(IGridNode node, int ticksSinceLastCall, CallbackInfoReturnable<TickRateModulation> cir) {
-            try {
-                if ((boolean) this$0.getClass()
-                        .getMethod("eaep$linkNeedsInitialize")
-                        .invoke(this$0)) {
-                    var methodDoWork = this$0.getClass().getDeclaredMethod("doWork");
-                    methodDoWork.setAccessible(true);
-                    methodDoWork.invoke(this$0);
-                }
-            } catch (Throwable ignore) {
-            }
+            if (!(this$0 instanceof HelperHolderCardLink helper)) return;
+            var logic = helper.eaep$holder();
+
+            if (!logic.needsInitialize()) return;
+            logic.onTickingInitialize();
         }
     }
 }

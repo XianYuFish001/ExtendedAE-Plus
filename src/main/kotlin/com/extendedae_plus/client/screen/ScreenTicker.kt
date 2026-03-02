@@ -15,7 +15,8 @@ import com.extendedae_plus.common.registry.part.ticker.PartTicker.StateTicker
 import com.extendedae_plus.util.UtilGui.renderFakeItemScalable
 import com.extendedae_plus.util.UtilKeyBuilder
 import com.fish.fishlib.util.keyBuilder.Patterns
-import com.fish.fishlib.util.keyBuilder.getMap
+import com.fish.fishlib.util.keyBuilder.map
+import com.fish.fishlib.util.keyBuilder.newHashMap
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.player.Inventory
@@ -109,6 +110,6 @@ class ScreenTicker(
         builder.args("%.2fx".format(costMultiplier))
             .buildInto("cost_multiplier")
 
-        builder.getMap()?.forEach(this::setTextContent)
+        builder.map?.forEach(this::setTextContent)
     }
 }

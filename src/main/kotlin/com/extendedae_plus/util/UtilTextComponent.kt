@@ -69,8 +69,7 @@ object UtilTextComponent {
         }
 
         @JvmStatic
-        fun find(key: String): Optional<ComponentColorful> =
-            Optional.ofNullable(byKey[key] ?: literal[key])
+        fun find(key: String) = Optional.ofNullable(byKey[key] ?: literal[key])
     }
 
     class ComponentColorful @JvmOverloads constructor(
@@ -156,17 +155,17 @@ object UtilTextComponent {
     }
 
     class ClickEventCustomizable @JvmOverloads constructor(
-        private val onClick: Runnable,
-        private val callback: Component? = null
+        private val callback: Component? = null,
+        private val onClick: () -> Unit
     ) : ClickEvent(
         Action.COPY_TO_CLIPBOARD, ""
     ) {
         fun trigger() {
-            this.onClick.run()
+            this.onClick()
 
-            val player = Minecraft.getInstance().player
-            if (player == null || this.callback == null) return
-            player.displayClientMessage(this.callback, false)
+            this.callback?.let {
+                Minecraft.getInstance().player?.displayClientMessage(it, false)
+            }
         }
 
         override fun hashCode() = this.onClick.hashCode()

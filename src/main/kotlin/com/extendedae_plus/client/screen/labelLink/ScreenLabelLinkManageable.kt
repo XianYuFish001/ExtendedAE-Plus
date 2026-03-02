@@ -3,10 +3,7 @@ package com.extendedae_plus.client.screen.labelLink
 import appeng.client.gui.style.PaletteColor
 import appeng.client.gui.style.ScreenStyle
 import appeng.client.gui.widgets.ConfirmableTextField
-import com.extendedae_plus.client.render.widgets.button.EAEPActionButton
-import com.extendedae_plus.client.render.widgets.button.EAEPActionItems
-import com.extendedae_plus.client.render.widgets.button.EAEPCycleButton
-import com.extendedae_plus.client.render.widgets.button.EAEPServerCycleButton
+import com.extendedae_plus.client.render.widgets.button.*
 import com.extendedae_plus.common.registry.menu.labelLink.MenuLabelLink
 import com.extendedae_plus.common.wireless.linkApi.Label
 import com.extendedae_plus.util.UtilKeyBuilder
@@ -67,13 +64,13 @@ class ScreenLabelLinkManageable(
             .addPart(EAEPActionItems.LabelUnlocked)
             .addPart(EAEPActionItems.LabelLocked)
             .setTask(menu::toggleLock)
-            .setSyncer(menu::isLocked)
+            .setSyncer(SyncerBooleanGeneric(menu::isLocked))
             .build()
         this.buttonMaster = EAEPServerCycleButton.Builder()
             .addPart(EAEPActionItems.TransceiverSlave)
             .addPart(EAEPActionItems.TransceiverMaster)
             .setTask(menu::toggleMaster)
-            .setSyncer(menu::isMaster)
+            .setSyncer(SyncerBooleanGeneric(menu::isMaster))
             .build()
         if (menu.isLockable) this.widgets.add("button_lock", this.buttonLock)
         if (menu.isMasterable) this.widgets.add("button_master", this.buttonMaster)

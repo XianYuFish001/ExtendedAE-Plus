@@ -1,0 +1,14 @@
+{
+  "values": [
+    "extendedae_plus:wireless_transceiver",
+    "extendedae_plus:assembler_matrix_upload",
+    "extendedae_plus:assembler_matrix_advanced_crafter",
+    "extendedae_plus:assembler_matrix_advanced_pattern",
+    "extendedae_plus:assembler_matrix_advanced_speed",
+    "extendedae_plus:accelerator_4x",
+    "extendedae_plus:accelerator_16x",
+    "extendedae_plus:accelerator_64x",
+    "extendedae_plus:accelerator_256x",
+    "extendedae_plus:accelerator_1024x"
+  ]
+}

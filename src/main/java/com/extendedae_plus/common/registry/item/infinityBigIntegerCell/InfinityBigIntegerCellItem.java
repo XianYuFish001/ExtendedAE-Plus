@@ -5,6 +5,7 @@ import appeng.api.storage.cells.ICellWorkbenchItem;
 import com.extendedae_plus.common.impl.storage.infinityCell.InfinityConstants;
 import com.extendedae_plus.common.init.EAEPItems;
 import com.extendedae_plus.util.UtilKeyBuilder;
+import com.fish.fishlib.util.keyBuilder.ExtensionKeyBuilderKt;
 import com.fish.fishlib.util.keyBuilder.Patterns;
 import com.google.common.base.Preconditions;
 import net.minecraft.ChatFormatting;
@@ -26,10 +27,11 @@ public class InfinityBigIntegerCellItem extends Item implements ICellWorkbenchIt
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag tooltipFlag) {
-        UtilKeyBuilder.INSTANCE.of(Patterns.Tooltip)
-                .item(EAEPItems.CellInfinity)
-                .addStr("description")
-                .bindAdder(tooltip::add)
+        ExtensionKeyBuilderKt.bindAdder(
+                        UtilKeyBuilder.INSTANCE.of(Patterns.Tooltip)
+                                .item(EAEPItems.CellInfinity)
+                                .addStr("description"),
+                        tooltip::add)
                 .buildInto()
                 .buildInto("colored");
 

@@ -3,7 +3,6 @@ package com.extendedae_plus.client.render.widgets.button
 import appeng.api.config.YesNo
 import appeng.client.gui.AEBaseScreen
 import appeng.core.network.serverbound.ConfigButtonPacket
-import com.extendedae_plus.client.render.widgets.button.EAEPServerCycleButton.SyncerBooleanGeneric
 import com.extendedae_plus.common.init.EAEPSettings
 import com.extendedae_plus.common.registry.settings.StateSmartBlocking
 import com.extendedae_plus.mixin.helper.HelperProviderButtons

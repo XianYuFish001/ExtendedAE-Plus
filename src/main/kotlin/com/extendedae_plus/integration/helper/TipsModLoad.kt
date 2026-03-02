@@ -6,8 +6,9 @@ import com.extendedae_plus.util.UtilKeyBuilder
 import com.extendedae_plus.util.UtilTextComponent
 import com.fish.fishlib.util.keyBuilder.BuilderAdder
 import com.fish.fishlib.util.keyBuilder.Patterns
+import com.fish.fishlib.util.keyBuilder.containerComponent
+import com.fish.fishlib.util.keyBuilder.newContainerComponent
 import net.minecraft.client.Minecraft
-import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.HoverEvent
 import net.minecraft.world.entity.player.Player
 import net.neoforged.bus.api.SubscribeEvent
@@ -55,23 +56,21 @@ enum class TipsModLoad(builderInfo: (BuilderInfo) -> Unit) {
         }
 
         fun client(tipClient: (BuilderAdder<*>) -> Unit): BuilderInfo {
-            val value = Component.empty()
             val builder = UtilKeyBuilder.of(Patterns.Message)
                 .addStr("tips_mod_load")
-                .bindAdder(value::append)
+                .newContainerComponent()
             tipClient(builder)
             builder.buildInto("confirm") { button ->
                 button.withStyle { style ->
                     style
                         .withClickEvent(
                             UtilTextComponent.ClickEventCustomizable(
-                                { EAEPConfig.ModDependencyTips = false },
                                 UtilKeyBuilder.of(Patterns.Message)
                                     .addStr("tips_mod_load")
                                     .addStr("confirm")
                                     .addStr("callback")
                                     .build()
-                            )
+                            ) { EAEPConfig.ModDependencyTips = false }
                         )
                         .withHoverEvent(
                             HoverEvent(
@@ -85,7 +84,12 @@ enum class TipsModLoad(builderInfo: (BuilderInfo) -> Unit) {
                         )
                 }
             }
-            return this.clientOriginal { it.displayClientMessage(value, false) }
+            return this.clientOriginal {
+                it.displayClientMessage(
+                    builder.containerComponent ?: return@clientOriginal,
+                    false
+                )
+            }
         }
 
         fun server(tipServer: (Logger) -> Unit): BuilderInfo {

@@ -24,7 +24,7 @@ public class MixinBaseMenu {
         @Inject(method = "<init>", at = @At("TAIL"))
         private void onInit(CallbackInfo ci) {
             this.gson = this.gson.newBuilder()
-                    .registerTypeAdapter(Component.class, UtilGson.INSTANCE.getAdapterComponent())
+                    .registerTypeAdapter(Component.class, UtilGson.adapterComponent)
                     .create();
         }
     }

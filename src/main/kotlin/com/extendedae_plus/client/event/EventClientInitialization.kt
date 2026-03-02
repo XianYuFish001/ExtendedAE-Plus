@@ -6,7 +6,6 @@ import appeng.init.client.InitScreens
 import com.extendedae_plus.ExtendedAEPlus
 import com.extendedae_plus.client.render.crafting.EAEPCraftingCubeModelProvider
 import com.extendedae_plus.client.screen.ScreenPriorityTool
-import com.extendedae_plus.client.screen.ScreenProviderController
 import com.extendedae_plus.client.screen.ScreenTicker
 import com.extendedae_plus.client.screen.labelLink.ScreenLabelLink
 import com.extendedae_plus.client.screen.labelLink.ScreenLabelLinkManageable
@@ -31,11 +30,6 @@ import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent
 object EventClientInitialization {
     @SubscribeEvent
     fun regScreens(event: RegisterMenuScreensEvent) {
-        event.register(
-            EAEPMenuTypes.ControllerProvider(),
-            ::ScreenProviderController
-        )
-
         InitScreens.register(
             event,
             EAEPMenuTypes.Ticker(),

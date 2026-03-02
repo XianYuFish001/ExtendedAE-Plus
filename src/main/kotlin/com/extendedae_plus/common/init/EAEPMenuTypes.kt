@@ -6,7 +6,6 @@ import appeng.menu.implementations.MenuTypeBuilder.MenuFactory
 import com.extendedae_plus.ExtendedAEPlus
 import com.extendedae_plus.ExtendedAEPlus.Companion.getLocation
 import com.extendedae_plus.common.registry.menu.MenuPriorityTool
-import com.extendedae_plus.common.registry.menu.MenuProviderController
 import com.extendedae_plus.common.registry.menu.MenuTicker
 import com.extendedae_plus.common.registry.menu.host.HostPriorityTool
 import com.extendedae_plus.common.registry.menu.host.link.HostLabelLink
@@ -15,18 +14,12 @@ import com.extendedae_plus.common.registry.part.ticker.PartTicker
 import com.fish.fishlib.common.InitObject
 import net.minecraft.core.registries.Registries
 import net.minecraft.world.inventory.MenuType
-import net.neoforged.neoforge.common.extensions.IMenuTypeExtension
 import net.neoforged.neoforge.registries.DeferredHolder
 import net.neoforged.neoforge.registries.DeferredRegister
 
 object EAEPMenuTypes {
     @InitObject
     val Register: DeferredRegister<MenuType<*>> = DeferredRegister.create(Registries.MENU, ExtendedAEPlus.MODID)
-
-    @JvmField
-    val ControllerProvider: DeferredHolder<MenuType<*>, MenuType<MenuProviderController>> = Register.register(
-        "provider_controller"
-    ) { -> IMenuTypeExtension.create(::MenuProviderController) }
 
     @JvmField
     val Ticker = this.regAEMenu(

@@ -7,18 +7,16 @@ import net.minecraft.client.renderer.Rect2i
 import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
 import java.util.regex.Pattern
-import kotlin.math.floor
 import kotlin.math.max
 
-abstract class EAEPButton(onPress: (EAEPButton) -> Unit) : IconButton(onPress@{ button ->
-    if (button !is EAEPButton) return@onPress
-    onPress(button)
+abstract class EAEPButton(onPress: (EAEPButton) -> Unit) : IconButton(onPress@{
+    onPress(it as? EAEPButton ?: return@onPress)
 }) {
     var scale = 1f
         set(value) {
             field = value
-            this.width = floor((this.widthOriginal * value)).toInt()
-            this.height = floor((this.heightOriginal * value)).toInt()
+            this.width = (this.widthOriginal * value).toInt()
+            this.height = (this.heightOriginal * value).toInt()
         }
     private val widthOriginal = this.width
     private val heightOriginal = this.height
@@ -37,8 +35,8 @@ abstract class EAEPButton(onPress: (EAEPButton) -> Unit) : IconButton(onPress@{ 
     override fun getTooltipArea(): Rect2i {
         val area = super.getTooltipArea()
         if (this.scale == 1f) return area
-        area.width = floor((area.width * this.scale)).toInt()
-        area.height = floor((area.height * this.scale)).toInt()
+        area.width = (this.widthOriginal * this.scale).toInt()
+        area.height = (this.heightOriginal * this.scale).toInt()
         return area
     }
 

@@ -88,6 +88,19 @@ enum class EAEPActionItems(builder: (Builder) -> Builder) {
 
     val aeIcon get() = icon.aeIcon
 
+    companion object {
+        @JvmField
+        val actions = HashMap<String, MutableList<EAEPActionItems>>()
+
+        init {
+            for (action in entries) {
+                if (!action.group.isEmpty()) actions.computeIfAbsent(
+                    action.group
+                ) { ArrayList() } += action
+            }
+        }
+    }
+
     private class Builder {
         var icon = EAEPIcon.fromAEIcon(Icon.TOOLBAR_BUTTON_BACKGROUND)
         var actionGroup = ""
@@ -148,19 +161,6 @@ enum class EAEPActionItems(builder: (Builder) -> Builder) {
         fun toggleTooltip(): Builder {
             this.tooltipVisible = this.nameVisible && !this.tooltipVisible
             return this
-        }
-    }
-
-    companion object {
-        @JvmField
-        val actions = HashMap<String, MutableList<EAEPActionItems>>()
-
-        init {
-            for (action in entries) {
-                if (!action.group.isEmpty()) actions.computeIfAbsent(
-                    action.group
-                ) { ArrayList() }.add(action)
-            }
         }
     }
 }

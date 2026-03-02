@@ -11,6 +11,7 @@ import com.extendedae_plus.common.wireless.linkApi.Label
 import com.extendedae_plus.util.UtilKeyBuilder
 import com.fish.fishlib.util.extension.unit
 import com.fish.fishlib.util.keyBuilder.Patterns
+import com.fish.fishlib.util.keyBuilder.bindAdder
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.renderer.Rect2i
 import net.minecraft.network.chat.Component
@@ -75,7 +76,7 @@ open class ScreenLabelLink(
     private fun appendAdvancedTooltip(tooltip: MutableList<Component>, data: Label.Data) =
         UtilKeyBuilder.of(Patterns.ScreenTooltip)
             .addStr("label_type")
-            .bindCollection(tooltip)
+            .bindAdder(tooltip::add)
             .addStr(data.frequency != null, "frequency", "label")
             .buildInto()
             .addStr("info_label")

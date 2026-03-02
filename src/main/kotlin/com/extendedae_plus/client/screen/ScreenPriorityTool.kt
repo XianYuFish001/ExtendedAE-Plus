@@ -5,7 +5,7 @@ import appeng.client.gui.NumberEntryType
 import appeng.client.gui.style.ScreenStyle
 import com.extendedae_plus.client.render.widgets.button.EAEPActionItems
 import com.extendedae_plus.client.render.widgets.button.EAEPServerCycleButton
-import com.extendedae_plus.client.render.widgets.button.EAEPServerCycleButton.SyncerEnumGeneric
+import com.extendedae_plus.client.render.widgets.button.SyncerEnumGeneric
 import com.extendedae_plus.common.registry.menu.MenuPriorityTool
 import com.extendedae_plus.network.CPacketPriorityToolOperation
 import net.minecraft.network.chat.Component

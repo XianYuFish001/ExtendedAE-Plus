@@ -4,6 +4,7 @@ import com.extendedae_plus.common.impl.guiSync.PacketStreamable
 import com.extendedae_plus.integration.helper.ManagerIntegration
 import com.extendedae_plus.integration.impl.point.IntegrationFTBTeams
 import com.fish.fishlib.util.extension.optional
+import com.fish.fishlib.util.extension.orNull
 import com.fish.fishlib.util.extension.predicated
 import com.mojang.datafixers.util.Either
 import com.mojang.serialization.Codec
@@ -18,7 +19,7 @@ import java.lang.ref.WeakReference
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
-class Label internal constructor(@JvmField val data: Data) {
+class Label internal constructor(val data: Data) {
     internal var master = WeakReference<ILinkHost?>(null)
     internal val listeners = HashSet<WeakReference<ILinkListener?>>()
 
@@ -32,13 +33,13 @@ class Label internal constructor(@JvmField val data: Data) {
         val label: String,
         val placer: UUID?,
         val placerName: String,
-        private val description: Component
+        private val desc: Component
     ) : PacketStreamable {
         fun pack() = RegistryLink.registerOrGetLabel(this)
 
         fun convertPlacer() = ManagerIntegration<IntegrationFTBTeams>()
             ?.getTeamUUID(this.placer)?.let {
-                Data(this.frequency, this.label, it, this.placerName, this.description)
+                Data(this.frequency, this.label, it, this.placerName, this.desc)
             } ?: this
 
         val displayValue: String
@@ -54,7 +55,7 @@ class Label internal constructor(@JvmField val data: Data) {
         fun description(): Component =
             if (this.isEmpty)
                 Component.empty()
-            else this.description
+            else this.desc
 
         fun toEither(): Either<Long?, String> =
             if (this.label.isBlank())
@@ -82,7 +83,7 @@ class Label internal constructor(@JvmField val data: Data) {
 
         override fun toString(): String {
             var value = ""
-            var description = ", description=" + this.description.string
+            var description = ", description=" + this.desc.string
             if (this.isEmpty) {
                 value = "empty"
                 description = ""
@@ -105,7 +106,7 @@ class Label internal constructor(@JvmField val data: Data) {
                     UUIDUtil.CODEC.lenientOptionalFieldOf("placer").forGetter(Data::placer.optional()),
                     Codec.STRING.fieldOf("placer_name").forGetter(Data::placerName),
                     ComponentSerialization.CODEC.lenientOptionalFieldOf("description")
-                        .forGetter { Optional.ofNullable(it.description()) }
+                        .forGetter(Data::description.optional())
                 ).apply(it) { value, placer, placerName, description ->
                     Data(
                         value.left().getOrNull(),
@@ -122,17 +123,16 @@ class Label internal constructor(@JvmField val data: Data) {
                 ByteBufCodecs.either(ByteBufCodecs.VAR_LONG, ByteBufCodecs.STRING_UTF8), Data::toEither,
                 ByteBufCodecs.optional(UUIDUtil.STREAM_CODEC), Data::placer.optional(),
                 ByteBufCodecs.STRING_UTF8, Data::placerName,
-                ComponentSerialization.OPTIONAL_STREAM_CODEC, { Optional.ofNullable(it.description()) },
-                { value, placer, placerName, description ->
-                    Data(
-                        value.left().orElse(null),
-                        value.right().orElse(""),
-                        placer.orElse(null),
-                        placerName,
-                        description.orElse(Component.empty())
-                    )
-                }
-            ).predicated(Data::isEmpty, ::Empty)
+                ComponentSerialization.OPTIONAL_STREAM_CODEC, Data::description.optional()
+            ) { value, placer, placerName, description ->
+                Data(
+                    value.left().orNull(),
+                    value.right().orElse(""),
+                    placer.getOrNull(),
+                    placerName,
+                    description.orElse(Component.empty())
+                )
+            }.predicated(Data::isEmpty, ::Empty)
 
             @JvmField
             val Empty = Data(null, "", null, "", Component.empty())

@@ -43,7 +43,7 @@ object ImplFTBTeams : IntegrationFTBTeams {
 
         fun getTeamForPlayerID(member: UUID) = this.manager.flatMap(
             { it.getTeamForPlayerID(member) },
-            { _ -> Optional.empty() }
+            { null }
         )?.getOrNull()
 
         fun getTeamByID(uuid: UUID) = this.manager.flatMap(

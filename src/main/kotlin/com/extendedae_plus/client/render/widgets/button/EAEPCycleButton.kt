@@ -59,10 +59,10 @@ open class EAEPCycleButton(
         private var iteratorState: IteratorState? = null
 
         fun addPart(action: EAEPActionItems, packet: CustomPacketPayload) =
-            this.addPart(action, Runnable { PacketDistributor.sendToServer(packet) })
+            this.addPart(action) { -> PacketDistributor.sendToServer(packet) }
 
-        fun addPart(action: EAEPActionItems, onPress: Runnable) =
-            this.addPart(action) { onPress.run() }
+        fun addPart(action: EAEPActionItems, onPress: () -> Unit) =
+            this.addPart(action) { _ -> onPress() }
 
         @JvmOverloads
         fun addPart(
