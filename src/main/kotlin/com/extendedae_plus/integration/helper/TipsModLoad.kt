@@ -19,21 +19,20 @@ import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-enum class TipsModLoad(builderInfo: (BuilderInfo) -> Unit) {
-    ExpandedAE({ info ->
-        info
-            .client {
-                it.addStr("expandedae").buildInto()
-            }
-            .server(
+enum class TipsModLoad(builderInfo: BuilderInfo.() -> Unit) {
+    ExpandedAE({
+        client {
+            it.addStr("expandedae").buildInto()
+        }
+        server(
+            """
+                Using this mod with ExpandedAE may cause the following and more functions to become unavailable:
+                  - Smart Doubling/Blocking
+                  - Over-16-thread Accelerators
+                  - Pattern Modification
+                (Turn the config `DependencyTips` off to disable this tip)
                 """
-                    Using this mod with ExpandedAE may cause the following and more functions to become unavailable:
-                      - Smart Doubling/Blocking
-                      - Over-16-thread Accelerator
-                      - Pattern Modify
-                    (Toggle Config `DependencyTips` off to disable this tip)
-                    """
-            )
+        )
     });
 
     private val tipClient: (Player) -> Unit

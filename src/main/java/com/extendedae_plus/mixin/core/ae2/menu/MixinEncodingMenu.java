@@ -153,12 +153,14 @@ public abstract class MixinEncodingMenu extends MEStorageMenu implements BridgeP
 
         if (!(this.getPlayer() instanceof ServerPlayer player)) return;
 
-        var flagMatrixUpload = PatternUploader.uploadToMatrix(player, this);
-        if (flagMatrixUpload == null) {
-            this.encodedPatternSlot.clearStack();
-            this.eaep$fillBlankPattern(1);
-        } else if (!flagMatrixUpload) {
-            SPacketProvidersInfo.send(((ServerPlayer) this.getPlayer()), this);
+        switch (PatternUploader.uploadToMatrix(player, this)) {
+            case Duplicate -> {
+                this.encodedPatternSlot.clearStack();
+                this.eaep$fillBlankPattern(1);
+            }
+
+            case Unsupported ->
+                    SPacketProvidersInfo.send(((ServerPlayer) this.getPlayer()), this);
         }
     }
 

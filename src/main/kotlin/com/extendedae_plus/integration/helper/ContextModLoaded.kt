@@ -5,7 +5,7 @@ import net.neoforged.fml.ModList
 
 enum class ContextModLoaded(
     private val modID: String,
-    private val required: Boolean? = null
+    private val flagDep: FlagDependency = FlagDependency.None
 ) {
     Emi("emi"),
     Jei("jei"),
@@ -18,7 +18,7 @@ enum class ContextModLoaded(
     Mekanism("mekanism"),
     AppliedMekanistics("appmek"),
     GtceuModern("gtceu"),
-    ExpandedAE("expandedae", false),
+    ExpandedAE("expandedae", FlagDependency.Discouraged),
     ;
 
     var loaded = false
@@ -26,14 +26,22 @@ enum class ContextModLoaded(
 
     operator fun invoke() = this.loaded
 
-    fun shouldTip() = this.required != null && this.required != this.loaded
+    fun shouldTip() = when (this.flagDep) {
+        FlagDependency.None -> false
+        FlagDependency.Required -> !this()
+        FlagDependency.Discouraged, FlagDependency.Incompatible -> this()
+    }
 
     companion object {
-        @InitObject(priority = 0)
+        @InitObject(0)
         private fun init() {
-            for (context in entries) {
-                context.loaded = ModList.get().isLoaded(context.modID)
+            entries.forEach {
+                it.loaded = ModList.get().isLoaded(it.modID)
             }
         }
     }
+}
+
+enum class FlagDependency {
+    Required, None, Discouraged, Incompatible
 }

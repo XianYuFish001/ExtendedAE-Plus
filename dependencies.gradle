@@ -3,7 +3,7 @@ configurations {
 }
 
 dependencies {
-    jarJar(libs.fishLib)
+    jarJar libs.fishLib
     implementation libs.fishLib
 
     implementation libs.kotlinForForge

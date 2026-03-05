@@ -1,19 +1,16 @@
 TODO
     <bug>
+        uploadMatrix判断错误
+        clientOnly
     <feature>
         helperOverride:
             cardChannel以override onload取代轮询
             使用注解标记, 自动检测对应类中是否存在target方法, 若已存在则不加载helperOverride (不想做喵)
-        改键说明:
-            planCrafting shift -> ctrl
-            statusCPU shift -> ctrl
         再好好想想没迁移的feature
         ScreenLabelLink的键盘操作
         为一些static项添加自动clear(所以这些static项都在哪呢(
         添加一些功能开关
         重构智能倍增:
             智能倍增考虑容器容量
-        重构gui(我是大懒狗):
-            controller
 
 TODO 速记

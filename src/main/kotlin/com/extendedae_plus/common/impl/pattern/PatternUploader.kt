@@ -13,6 +13,7 @@ import com.extendedae_plus.mixin.core.ae2.accessor.AccessorEncodingMenu
 import com.extendedae_plus.mixin.helper.BridgeProviderList
 import com.extendedae_plus.mixin.helper.HelperAssemblerMatrixModifier
 import com.extendedae_plus.util.UtilKeyBuilder
+import com.fish.fishlib.util.extension.ifTrue
 import com.fish.fishlib.util.keyBuilder.Patterns
 import com.glodblock.github.extendedae.common.tileentities.matrix.TileAssemblerMatrixPattern
 import net.minecraft.server.level.ServerPlayer
@@ -78,56 +79,58 @@ object PatternUploader {
             slot.set(ItemStack.EMPTY)
     }
 
-    /**
-     * @return - True:  succeed
-     *         - False: failed
-     *         - Null:  duplicate
-     */
     @JvmStatic
-    fun uploadToMatrix(player: ServerPlayer, menu: AEBaseMenu?): Boolean? {
-        if (menu !is AccessorEncodingMenu) return false
-        var patternStack = menu.getSlotEncoded().getItem()
+    fun uploadToMatrix(player: ServerPlayer, menu: AEBaseMenu?): ResultMatrixUploading {
+        if (menu !is AccessorEncodingMenu) return ResultMatrixUploading.Failed
+        var patternStack = menu.slotEncoded.item
 
         val pattern = PatternDetailsHelper.decodePattern(patternStack, player.level())
-        if (pattern !is IMolecularAssemblerSupportedPattern) return false
+        if (pattern !is IMolecularAssemblerSupportedPattern) return ResultMatrixUploading.Unsupported
 
-        val grid = (menu.target as? IActionHost)?.actionableNode?.grid ?: return false
+        val grid = (menu.target as? IActionHost)?.actionableNode?.grid ?: return ResultMatrixUploading.Failed
 
         val cores = ArrayList<TileAssemblerMatrixPattern>()
         cores.addAll(grid.getActiveMachines(TileAssemblerMatrixPattern::class.java))
         cores.addAll(grid.getActiveMachines(TileAdvancedPattern::class.java))
-        if (cores.isEmpty()) return false
+        if (cores.isEmpty()) return ResultMatrixUploading.Failed
 
-        if (EAEPConfig.NeedsUploadingPort
-            && ((cores.firstOrNull() as? HelperAssemblerMatrixModifier)
-                ?.`eaep$hasUploadCore`() != true)
-        ) return false
-
-        if (cores.map(TileAssemblerMatrixPattern::getPatternInventory)
-                .any { inv ->
-                    for (stack in inv) {
-                        if (pattern == PatternDetailsHelper.decodePattern(stack, player.level()))
-                            return@any true
-                    }
-                    false
+        cores
+            .map(TileAssemblerMatrixPattern::getPatternInventory)
+            .any {
+                for (stack in it) {
+                    if (pattern == PatternDetailsHelper.decodePattern(stack, player.level()))
+                        return@any true
                 }
-        ) {
-            player.displayClientMessage(
-                UtilKeyBuilder.of(Patterns.Message)
-                    .addStr("pattern_uploading")
-                    .addStr("duplicate_pattern")
-                    .build(), false
-            )
-            return null
-        }
-
-        for (core in cores) {
-            if (patternStack.isEmpty) {
-                menu.getSlotEncoded().clearStack()
-                break
+                return@any false
             }
-            patternStack = core.patternInventory.addItems(patternStack)
-        }
-        return patternStack.isEmpty
+            .ifTrue {
+                player.displayClientMessage(
+                    UtilKeyBuilder.of(Patterns.Message)
+                        .addStr("pattern_uploading")
+                        .addStr("duplicate_pattern")
+                        .build(), false
+                )
+                return ResultMatrixUploading.Duplicate
+            }
+
+        cores
+            .groupBy(TileAssemblerMatrixPattern::getCluster)
+            .flatMap { (cluster, cores) ->
+                if (!EAEPConfig.NeedsUploadingPort
+                        || (cluster as? HelperAssemblerMatrixModifier)?.`eaep$hasUploadCore`() != true)
+                    return@flatMap emptyList()
+                cores
+            }.forEach { core ->
+                if (patternStack.isEmpty) {
+                    menu.slotEncoded.clearStack()
+                    return ResultMatrixUploading.Success
+                }
+                patternStack = core.patternInventory.addItems(patternStack)
+            }
+        return ResultMatrixUploading.Failed
+    }
+
+    enum class ResultMatrixUploading {
+        Success, Failed, Unsupported, Duplicate
     }
 }

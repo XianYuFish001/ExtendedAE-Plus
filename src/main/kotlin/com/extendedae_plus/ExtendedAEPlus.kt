@@ -1,5 +1,6 @@
 package com.extendedae_plus
 
+import com.extendedae_plus.integration.helper.ManagerIntegration
 import com.fish.fishlib.common.InitializerObject
 import com.fish.fishlib.network.InitializerPacket
 import net.minecraft.resources.ResourceLocation
@@ -12,6 +13,7 @@ class ExtendedAEPlus(eventBus: IEventBus, containerMod: ModContainer) {
     init {
         InitializerObject(eventBus, containerMod)
         InitializerPacket(containerMod)
+        ManagerIntegration.init()
     }
 
     companion object {
