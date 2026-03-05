@@ -11,6 +11,8 @@ import appeng.blockentity.networking.CableBusBlockEntity
 import appeng.helpers.patternprovider.PatternProviderLogic
 import appeng.me.service.CraftingService
 import appeng.menu.me.crafting.CraftingCPUMenu
+import com.extendedae_plus.integration.helper.ManagerIntegration
+import com.extendedae_plus.integration.impl.point.IntegrationMekanism
 import com.extendedae_plus.mixin.core.ae2.accessor.AccessorProviderLogic
 import com.fish.fishlib.network.FishNetworkPacket
 import com.fish.fishlib.network.PacketStreamCodec
@@ -20,10 +22,8 @@ import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.MenuProvider
-import net.minecraft.world.entity.player.Player
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.Vec3
-import java.lang.reflect.InvocationTargetException
 
 /**
  * 客户端从 CraftingCPUScreen 发送：鼠标下条目对应的 AEKey。
@@ -107,17 +107,18 @@ data class CPacketOpenScreenCraftingNodeMachine(val what: AEKey) : CPacketGeneri
                 }
 
                 if (blockEntityTarget == null) continue
-                val blockEntityClassName = blockEntityTarget.javaClass.getName().lowercase()
-                if (blockEntityClassName.contains("mekanism") && blockEntityClassName.contains("tile")) {
-                    try {
-                        val methodOpenGui = blockEntityTarget.javaClass.getMethod("openGui", Player::class.java)
-                        methodOpenGui.invoke(blockEntityTarget, player as Player)
-                    } catch (_: NoSuchMethodException) {
-                    } catch (_: IllegalAccessException) {
-                    } catch (_: InvocationTargetException) {
-                    }
-                    return@forEach
-                }
+                ManagerIntegration<IntegrationMekanism>()?.openGui(blockEntityTarget, player)
+//                val blockEntityClassName = blockEntityTarget.javaClass.getName().lowercase()
+//                if (blockEntityClassName.contains("mekanism") && blockEntityClassName.contains("tile")) {
+//                    try {
+//                        val methodOpenGui = blockEntityTarget.javaClass.getMethod("openGui", Player::class.java)
+//                        methodOpenGui.invoke(blockEntityTarget, player as Player)
+//                    } catch (_: NoSuchMethodException) {
+//                    } catch (_: IllegalAccessException) {
+//                    } catch (_: InvocationTargetException) {
+//                    }
+//                    return@forEach
+//                }
             }
 
             if (delayedBlocks.isEmpty()) return@forEach

@@ -73,13 +73,14 @@ object EventScreenActions {
                 return
             }
 
-            val screen = Minecraft.getInstance().screen
-            if (screen is AccessorScreenStorage) {
-                screen.fieldSearch.value = name
-                screen.`eaep$setSearchText`(name)
-                event.setCanceled(true)
-            } else if (screen is AccessorExAccessScreen) {
-                screen.fieldSearch.value = name
+            when (val screen = Minecraft.getInstance().screen) {
+                is AccessorScreenStorage -> {
+                    screen.fieldSearch.value = name
+                    screen.`eaep$setSearchText`(name)
+                    event.setCanceled(true)
+                }
+
+                is AccessorExAccessScreen -> screen.fieldSearch.value = name
             }
             event.setCanceled(true)
         }

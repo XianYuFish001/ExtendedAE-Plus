@@ -16,7 +16,6 @@ import net.minecraft.network.codec.StreamCodec
 import net.neoforged.neoforge.registries.DeferredHolder
 import net.neoforged.neoforge.registries.DeferredRegister
 
-// TODO Interfaced CODEC
 object EAEPDataComponents {
     @InitObject
     val Register: DeferredRegister.DataComponents =
