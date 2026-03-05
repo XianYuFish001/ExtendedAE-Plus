@@ -1,18 +1,15 @@
-package com.extendedae_plus.integration.impl.jade.implementation
+package com.extendedae_plus.integration.impl.jade.impl
 
 import com.extendedae_plus.ExtendedAEPlus
 import com.extendedae_plus.common.registry.block.assemblerMatrix.portUpload.BlockUpload
 import com.extendedae_plus.common.registry.block.assemblerMatrix.portUpload.TileUpload
 import com.extendedae_plus.integration.impl.jade.CommonProviders
 import com.extendedae_plus.integration.impl.jade.CommonTooltips
-import com.extendedae_plus.integration.impl.jade.helper.IObjectedProvider
-import com.extendedae_plus.integration.impl.jade.helper.TooltipAppender
+import com.fish.fishlib.integration.jade.IObjectedAppenderBlock
+import com.fish.fishlib.integration.jade.IObjectedProvider
+import com.fish.fishlib.integration.jade.TooltipAppender
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.resources.ResourceLocation
 import snownee.jade.api.BlockAccessor
-import snownee.jade.api.IBlockComponentProvider
-import snownee.jade.api.ITooltip
-import snownee.jade.api.config.IPluginConfig
 
 class PortUpload {
     enum class Provider(
@@ -31,19 +28,14 @@ class PortUpload {
 
     enum class Tooltip(
         path: String,
-        private val appender: TooltipAppender
-    ) : IBlockComponentProvider {
+        override val appender: TooltipAppender
+    ) : IObjectedAppenderBlock {
         Channels("channels", CommonTooltips.linkChannels),
         Label("label", CommonTooltips.linkLabel),
         MasterLocation("master_location", CommonTooltips.locationMaster),
         Locked("locked", CommonTooltips.stateLocked),
         Placer("placer", CommonTooltips.infoPlacer);
 
-        private val uid: ResourceLocation = ExtendedAEPlus.getLocation("wireless_transceiver.$path")
-
-        override fun getUid() = this.uid
-
-        override fun appendTooltip(iTooltip: ITooltip, blockAccessor: BlockAccessor, iPluginConfig: IPluginConfig) =
-            this.appender.add(this.name, blockAccessor, iTooltip, iPluginConfig)
+        override val id = ExtendedAEPlus.getLocation("wireless_transceiver.$path")
     }
 }

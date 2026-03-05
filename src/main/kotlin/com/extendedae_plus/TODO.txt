@@ -1,7 +1,5 @@
 TODO
     <bug>
-        uploadMatrix判断错误
-        clientOnly
     <feature>
         helperOverride:
             cardChannel以override onload取代轮询

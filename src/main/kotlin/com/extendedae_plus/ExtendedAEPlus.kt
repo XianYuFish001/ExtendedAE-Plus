@@ -22,5 +22,7 @@ class ExtendedAEPlus(eventBus: IEventBus, containerMod: ModContainer) {
 
         @JvmStatic
         fun getLocation(path: String): ResourceLocation = ResourceLocation.fromNamespaceAndPath(MODID, path)
+
+        fun String.location() = this@Companion.getLocation(this)
     }
 }

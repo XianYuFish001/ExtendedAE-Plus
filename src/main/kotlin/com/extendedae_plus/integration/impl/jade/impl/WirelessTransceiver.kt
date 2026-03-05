@@ -1,4 +1,4 @@
-package com.extendedae_plus.integration.impl.jade.implementation
+package com.extendedae_plus.integration.impl.jade.impl
 
 import com.extendedae_plus.ExtendedAEPlus
 import com.extendedae_plus.common.init.EAEPItems
@@ -6,12 +6,11 @@ import com.extendedae_plus.common.registry.block.wirelessTransceiver.BlockWirele
 import com.extendedae_plus.common.registry.block.wirelessTransceiver.TileWirelessTransceiver
 import com.extendedae_plus.integration.impl.jade.CommonProviders
 import com.extendedae_plus.integration.impl.jade.CommonTooltips
-import com.extendedae_plus.integration.impl.jade.helper.IObjectedProvider
-import com.extendedae_plus.integration.impl.jade.helper.TooltipAppender
 import com.extendedae_plus.util.UtilKeyBuilder
+import com.fish.fishlib.integration.jade.IObjectedProvider
+import com.fish.fishlib.integration.jade.TooltipAppender
 import com.fish.fishlib.util.keyBuilder.Patterns
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.resources.ResourceLocation
 import snownee.jade.api.BlockAccessor
 import snownee.jade.api.IBlockComponentProvider
 import snownee.jade.api.ITooltip
@@ -61,12 +60,11 @@ class WirelessTransceiver {
         Locked("locked", CommonTooltips.stateLocked),
         Placer("placer", CommonTooltips.infoPlacer);
 
-        private val uid: ResourceLocation = ExtendedAEPlus.getLocation("wireless_transceiver.$path")
+        private val uid = ExtendedAEPlus.getLocation("wireless_transceiver.$path")
 
         override fun getUid() = this.uid
 
-        override fun appendTooltip(tooltip: ITooltip, accessor: BlockAccessor, config: IPluginConfig) {
+        override fun appendTooltip(tooltip: ITooltip, accessor: BlockAccessor, config: IPluginConfig) =
             this.adder.add(this.name, accessor, tooltip, config)
-        }
     }
 }

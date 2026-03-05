@@ -13,7 +13,6 @@ import snownee.jade.api.BlockAccessor
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
-private typealias BiConsumer<A, B> = (A, B) -> Unit
 private typealias Function<A, B> = (A) -> B
 
 object CommonProviders {
@@ -29,7 +28,7 @@ object CommonProviders {
     }
 
     @JvmField
-    val linkChannels: BiConsumer<CompoundTag, BlockAccessor> = provider@{ data: CompoundTag, accessor: BlockAccessor ->
+    val linkChannels = provider@{ data: CompoundTag, accessor: BlockAccessor ->
         val node = (accessor.blockEntity as? IGridConnectedBlockEntity)?.gridNode ?: return@provider
 
         var usedChannels = 0

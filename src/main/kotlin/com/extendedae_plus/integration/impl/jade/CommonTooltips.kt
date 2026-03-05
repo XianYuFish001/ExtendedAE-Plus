@@ -2,8 +2,8 @@ package com.extendedae_plus.integration.impl.jade
 
 import appeng.core.localization.InGameTooltip
 import com.extendedae_plus.common.init.EAEPItems
-import com.extendedae_plus.integration.impl.jade.helper.TooltipAppender
 import com.extendedae_plus.util.UtilKeyBuilder
+import com.fish.fishlib.integration.jade.TooltipAppender
 import com.fish.fishlib.util.keyBuilder.Patterns
 import net.minecraft.core.BlockPos
 
