@@ -171,14 +171,14 @@ class PartTicker(partItem: IPartItem<*>) : UpgradeablePart(partItem) {
 
     private inner class TickerTicker : IGridTickable {
         override fun getTickingRequest(node: IGridNode) =
-            TickingRequest(1, 1, false)
+            TickingRequest(20, 1, false)
 
         override fun tickingRequest(node: IGridNode, ticksSinceLastCall: Int): TickRateModulation {
             if (side == null) return TickRateModulation.SLEEP
-            if (configManager.getSetting(EAEPSettings.stateTicker) != StateTicker.Enabled) return TickRateModulation.SLEEP
+            if (configManager.getSetting(EAEPSettings.stateTicker) != StateTicker.Enabled) return TickRateModulation.URGENT
 
             val targetBlockEntity = level.getBlockEntity(blockEntity.blockPos.relative(side))
-            if (targetBlockEntity == null || !isActive) return TickRateModulation.SLOWER
+            if (targetBlockEntity == null || !isActive) return TickRateModulation.URGENT
 
             prepareTick(targetBlockEntity)
             return TickRateModulation.IDLE

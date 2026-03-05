@@ -4,7 +4,7 @@ import appeng.api.config.Setting;
 import appeng.client.gui.Icon;
 import appeng.client.gui.widgets.SettingToggleButton;
 import appeng.core.localization.ButtonToolTips;
-import com.extendedae_plus.common.init.EAEPSettings;
+import com.extendedae_plus.client.impl.BindingSettings;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import org.spongepowered.asm.mixin.Final;
@@ -27,7 +27,7 @@ public class MixinButtonAppearancesInitialization<TEnum extends Enum<TEnum>> {
     @Inject(method = "getIcon", at = @At("RETURN"), cancellable = true)
     private void findIconOnEAEPRegistries(CallbackInfoReturnable<Icon> cir) {
         if (!Icon.TOOLBAR_BUTTON_BACKGROUND.equals(cir.getReturnValue())) return;
-        var appearance = EAEPSettings.findAppearance(this.buttonSetting, this.currentValue);
+        var appearance = BindingSettings.findAppearance(this.buttonSetting, this.currentValue);
         if (appearance == null) return;
         cir.setReturnValue(appearance.action.getAeIcon());
     }
@@ -35,7 +35,7 @@ public class MixinButtonAppearancesInitialization<TEnum extends Enum<TEnum>> {
     @Inject(method = "getItemOverlay", at = @At("RETURN"), cancellable = true)
     private void findItemOnEAEPRegistries(CallbackInfoReturnable<Item> cir) {
         if (cir.getReturnValue() != null) return;
-        var appearance = EAEPSettings.findAppearance(this.buttonSetting, this.currentValue);
+        var appearance = BindingSettings.findAppearance(this.buttonSetting, this.currentValue);
         if (appearance == null) return;
         cir.setReturnValue(appearance.item);
     }
@@ -46,7 +46,7 @@ public class MixinButtonAppearancesInitialization<TEnum extends Enum<TEnum>> {
                 && !ButtonToolTips.NoSuchMessage.text().toString()
                 .equals(cir.getReturnValue().getFirst().toString()))
             return;
-        var appearance = EAEPSettings.findAppearance(this.buttonSetting, this.currentValue);
+        var appearance = BindingSettings.findAppearance(this.buttonSetting, this.currentValue);
         if (appearance == null) return;
         if (appearance.action.text.getString().isEmpty()) return;
         cir.setReturnValue(List.of(appearance.action.text, appearance.action.tooltip));

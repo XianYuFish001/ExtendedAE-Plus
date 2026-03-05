@@ -7,8 +7,8 @@ import appeng.core.network.serverbound.InventoryActionPacket;
 import appeng.helpers.InventoryAction;
 import appeng.menu.me.items.PatternEncodingTermMenu;
 import com.extendedae_plus.client.screen.ScreenStacksRename;
+import com.extendedae_plus.util.UtilClient;
 import kotlin.Unit;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -32,7 +32,7 @@ public class MixinScreenEncodingRenamer<TMenu extends PatternEncodingTermMenu>
         if (!this.menu.canModifyAmountForSlot(this.hoveredSlot)) return;
 
         if (!this.minecraft.options.keyPickItem.matchesMouse(btn)) return;
-        if (!Screen.hasControlDown()) return;
+        if (!UtilClient.ctrl()) return;
 
         var stack = this.hoveredSlot.getItem();
         var screen = new ScreenStacksRename<>(

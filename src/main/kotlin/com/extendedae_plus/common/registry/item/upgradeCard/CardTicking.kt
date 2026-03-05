@@ -38,12 +38,10 @@ class CardTicking(multiplier: Int, maxMultiplier: Int) : UpgradeCardItem(
             UtilKeyBuilder.of(Patterns.Tooltip)
                 .item(EAEPItems.CardTicking)
                 .bindAdder(lines::add)
-                .addStr("multiplier")
                 .args(it.multiplier)
-                .buildInto()
-                .addStr("max")
+                .buildInto("multiplier")
                 .args(it.maxMultiplier)
-                .buildInto()
+                .buildInto("max")
         }
     }
 }

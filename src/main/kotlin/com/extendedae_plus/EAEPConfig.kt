@@ -29,7 +29,6 @@ object EAEPConfig {
     var IndependentUploadButton: Boolean by HelperClient
     var ShowPatternEncoder: Boolean by HelperClient
     var AccessTerminalSlotsVisibleDefault: Boolean by HelperClient
-    var AllowDiskEnergy: Boolean by HelperClient
     var OverrideAE2WTPicking: Boolean by HelperClient
 
     // Server
@@ -44,6 +43,7 @@ object EAEPConfig {
     // - Ticker
 
     var BaseTickerEnergyCost: Int by HelperServer
+    var AllowDiskEnergy: Boolean by HelperServer
     var TickerBlacklist: MutableList<out String> by HelperServer
     var TickerExternalMultiplier: MutableList<out String> by HelperServer
 

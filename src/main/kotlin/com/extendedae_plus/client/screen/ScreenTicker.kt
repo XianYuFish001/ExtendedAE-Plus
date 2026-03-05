@@ -33,14 +33,15 @@ class ScreenTicker(
         menu.refreshAction = { this.textTooltip() }
 
         this.buttonStateSwitcher = SettingToggleButton(
-            EAEPSettings.stateTicker, StateTicker.Enabled,
-            { button, reversed ->
-                if (StateTicker.Blacklisted == this.menu.tickerState) return@SettingToggleButton
-                PacketDistributor.sendToServer(ConfigButtonPacket(
+            EAEPSettings.stateTicker, StateTicker.Enabled
+        ) { button, reversed ->
+            if (StateTicker.Blacklisted == this.menu.tickerState) return@SettingToggleButton
+            PacketDistributor.sendToServer(
+                ConfigButtonPacket(
                     button.setting, reversed
-                ))
-            }
-        )
+                )
+            )
+        }
         this.buttonRSMode = ServerSettingToggleButton(
             EAEPSettings.modeRedstoneOptional, RedstoneMode.IGNORE
         )
@@ -88,28 +89,32 @@ class ScreenTicker(
             costMultiplier = this.menu.costMultiplier
         }
 
-        val builder = UtilKeyBuilder.of(Patterns.Screen)
+        UtilKeyBuilder.of(Patterns.Screen)
             .item(EAEPItems.Ticker)
             .newHashMap<String>()
 
-        builder.addStr(
-            when (this.menu.tickerState) {
-                StateTicker.Blacklisted -> "blacklisted"
-                StateTicker.Disabled -> "disabled"
-                StateTicker.Enabled -> {
-                    if (this.menu.stateEnergy) "enabled" else "needs_energy"
+            .addStr(
+                when (this.menu.tickerState) {
+                    StateTicker.Blacklisted -> "blacklisted"
+                    StateTicker.Disabled -> "disabled"
+                    StateTicker.Enabled ->
+                        if (this.menu.stateEnergy) "enabled" else "needs_energy"
                 }
-            }
-        ).buildInto("state", plain = true)
-        builder.args(speedMultiplier)
+            ).buildInto("state", plain = true)
+            .restore()
+
+            .args(speedMultiplier)
             .buildInto("speed_multiplier")
-        builder.args(Platform.formatPower(energyCost, false))
+
+            .args(Platform.formatPower(energyCost, false))
             .buildInto("energy_cost")
-        builder.args("%.2f%%".format(remainingRatio))
+
+            .args("%.2f%%".format(remainingRatio))
             .buildInto("power_ratio")
-        builder.args("%.2fx".format(costMultiplier))
+
+            .args("%.2fx".format(costMultiplier))
             .buildInto("cost_multiplier")
 
-        builder.map?.forEach(this::setTextContent)
+            .map?.forEach(this::setTextContent)
     }
 }

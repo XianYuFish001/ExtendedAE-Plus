@@ -58,16 +58,16 @@ class LangEN(output: PackOutput) : LanguageProvider(output, ExtendedAEPlus.MODID
             .item(EAEPItems.Ticker)
             .branch(
                 "advanced_tip", """
-                        Ticking multiplier calculation formula:
-                        §2§oBaseTickerEnergyCost * ((2147483647 / BaseTickerEnergyCost) ^ 0.1) ^ (log2(SpeedMultiplier))
-                        §fEnergy card energy consumption reduction calculation formula:
-                        §2§o0.9 * (0.5 / 0.9)^((EnergyCardCount - 1) / 7)"""
+                Ticking multiplier calculation formula:
+                §2§oBaseTickerEnergyCost * ((2147483647 / BaseTickerEnergyCost) ^ 0.1) ^ (log2(SpeedMultiplier))
+                §fEnergy card energy consumption reduction calculation formula:
+                §2§o0.9 * (0.5 / 0.9)^((EnergyCardCount - 1) / 7)""".trimIndent()
             )
             .buildInto(
                 """
-                        Apply the Ticking Card to enable acceleration
-                        Up to 1024x acceleration
-                        Accelerate will consume energy in ME network"""
+                Apply the Ticking Card to enable acceleration
+                Up to 1024x acceleration
+                Accelerate will consume energy in ME network""".trimIndent()
             )
         UtilKeyBuilder.dataGen(Patterns.Tooltip)
             .item(EAEPItems.CellInfinity)
@@ -75,9 +75,8 @@ class LangEN(output: PackOutput) : LanguageProvider(output, ExtendedAEPlus.MODID
             .branch("colored", "——Infinite space, infinite worlds")
             .buildInto(
                 """
-                        §5Per novem sacra, §dad vanum sonus§r
-                        §8Iava, Lord of the Void§r, grants you this
-                        """
+                §5Per novem sacra, §dad vanum sonus§r
+                §8Iava, Lord of the Void§r, grants you this""".trimIndent()
             )
         UtilKeyBuilder.dataGen(Patterns.Tooltip)
             .item(AEItems.PROCESSING_PATTERN.get())
@@ -88,9 +87,10 @@ class LangEN(output: PackOutput) : LanguageProvider(output, ExtendedAEPlus.MODID
             .addStr("help")
             .buildInto(
                 """
-                        \n---------§aExtendedAE Plus§r---------
-                        Hold §6[Ctrl]§r and Right click a node,
-                        to encode & upload a pattern automatically"""
+
+                \n---------§aExtendedAE Plus§r---------
+                Hold §6[Ctrl]§r and Right click a node,
+                to encode & upload a pattern automatically""".trimIndent()
             )
         UtilKeyBuilder.dataGen(Patterns.Tooltip)
             .item(EAEPItems.CardAutoCompletion)
@@ -245,11 +245,11 @@ class LangEN(output: PackOutput) : LanguageProvider(output, ExtendedAEPlus.MODID
             .addStr("tips_mod_load")
             .branch(
                 "expandedae", """
-                        §6[EAEP/DependencyTip]
-                        §fWhen EAEP and ExpandedAE are installed at the same time, the following and more functions may become unavailable:§7
-                          - Smart Doubling/Blocking
-                          - Over-16-thread Accelerator
-                          - Pattern Modify"""
+                §6[EAEP/DependencyTip]
+                §fWhen EAEP and ExpandedAE are installed at the same time, the following and more functions may become unavailable:§7
+                  - Smart Doubling/Blocking
+                  - Over-16-thread Accelerator
+                  - Pattern Modify""".trimIndent()
             )
 
         UtilKeyBuilder.dataGen(Patterns.ActionBar)
@@ -318,9 +318,9 @@ class LangEN(output: PackOutput) : LanguageProvider(output, ExtendedAEPlus.MODID
             .addStr("pageMultiplier")
             .branch(
                 "tooltip", """
-                        Expand the multiplier of the total slot capacity of the provider
-                        The base is 36, each page still displays 36 cells, and the magnification will increase the total number of pages/total capacity
-                        Recommended range 1-16"""
+                Expand the multiplier of the total slot capacity of the provider
+                The base is 36, each page still displays 36 cells, and the magnification will increase the total number of pages/total capacity
+                Recommended range 1-16""".trimIndent()
             )
             .buildInto("Ex Pattern Provider Slots Multiplier")
         UtilKeyBuilder.dataGen(Patterns.Config)
@@ -343,8 +343,8 @@ class LangEN(output: PackOutput) : LanguageProvider(output, ExtendedAEPlus.MODID
             .addStr("craftingPauseThreshold")
             .branch(
                 "tooltip", """
-                        The larger the value, the fewer wait/notify times in the process of AE building the synthetic plan,
-                        which improves throughput but reduces scheduling responsiveness."""
+                The larger the value, the fewer wait/notify times in the process of AE building the synthetic plan,
+                which improves throughput but reduces scheduling responsiveness.""".trimIndent()
             )
             .buildInto("AE Composition Calculation Pause Check Threshold")
         UtilKeyBuilder.dataGen(Patterns.Config)
@@ -362,26 +362,26 @@ class LangEN(output: PackOutput) : LanguageProvider(output, ExtendedAEPlus.MODID
             .addStr("tickerBlacklist")
             .branch(
                 "tooltip", """
-                        Use Block Description Name/Block Tag
-                        For Example 'mekanism:enrichment_chamber', '#c:storage_blocks/unobtainium'"""
+                Use Block Description Name/Block Tag
+                For Example 'mekanism:enrichment_chamber', '#c:storage_blocks/unobtainium'""".trimIndent()
             )
             .buildInto("Ticker Blacklist")
         UtilKeyBuilder.dataGen(Patterns.Config)
             .addStr("tickerExternalMultipliers")
             .branch(
                 "tooltip", """
-                        Set additional energy multipliers for certain blocks,
-                        Template '<entry>\\[<multiplier>\\]'
-                        Use Block Description Name/Block Tag on <entry>
-                        For Example 'mekanism:enrichment_chamber[1.14]', '#c:storage_blocks/unobtainium[5.14]'"""
+                Set additional energy multipliers for certain blocks,
+                Template '<entry>\\[<multiplier>\\]'
+                Use Block Description Name/Block Tag on <entry>
+                For Example 'mekanism:enrichment_chamber[1.14]', '#c:storage_blocks/unobtainium[5.14]'""".trimIndent()
             )
             .buildInto("Ticker Additional Cost Multiplier")
         UtilKeyBuilder.dataGen(Patterns.Config)
             .addStr("allowDiskEnergy")
             .branch(
                 "tooltip", """
-                        If true，ticker will uses energy stored in disks first
-                        Note: AppliedFlux only"""
+                If true，ticker will uses energy stored in disks first
+                Note: AppliedFlux only""".trimIndent()
             )
             .buildInto("Allow Disk Energy")
         UtilKeyBuilder.dataGen(Patterns.Config)
@@ -391,8 +391,8 @@ class LangEN(output: PackOutput) : LanguageProvider(output, ExtendedAEPlus.MODID
             .addStr("coreCrafterThreadAmplification")
             .branch(
                 "tooltip", """
-                        Advanced Craft Core Thread Amplification per 5 speed multiplier(see GuideME),
-                        0 means disabled"""
+                Advanced Craft Core Thread Amplification per 5 speed multiplier(see GuideME),
+                0 means disabled""".trimIndent()
             )
             .buildInto("Advanced Craft Core Thread Amplification")
         UtilKeyBuilder.dataGen(Patterns.Config)

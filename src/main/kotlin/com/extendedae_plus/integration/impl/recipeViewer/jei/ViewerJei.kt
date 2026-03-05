@@ -7,6 +7,7 @@ import com.extendedae_plus.integration.helper.ManagerIntegration
 import com.extendedae_plus.integration.impl.point.IntegrationAppliedMek
 import com.extendedae_plus.integration.impl.recipeViewer.IRecipeViewer
 import com.extendedae_plus.mixin.core.recipeViewer.jei.accessor.AccessorBookmarkOverlay
+import com.extendedae_plus.util.UtilClient
 import com.fish.fishlib.util.extension.cast
 import com.fish.fishlib.util.extension.onlyIf
 import com.mojang.datafixers.util.Pair
@@ -16,7 +17,6 @@ import mezz.jei.api.neoforge.NeoForgeTypes
 import mezz.jei.api.runtime.IJeiRuntime
 import mezz.jei.common.Internal
 import mezz.jei.gui.bookmarks.IngredientBookmark
-import net.minecraft.client.gui.screens.Screen
 import org.lwjgl.glfw.GLFW
 import tamaized.ae2jeiintegration.integration.modules.jei.GenericEntryStackHelper
 import java.util.*
@@ -58,8 +58,8 @@ object ViewerJei : IRecipeViewer {
         var amount = 0
         var toInv = true
 
-        if (Screen.hasControlDown()) amount = 1
-        if (amount > 0 && Screen.hasShiftDown()) amount = 64
+        if (UtilClient.ctrl()) amount = 1
+        if (amount > 0 && UtilClient.shift()) amount = 64
 
         if (mouseKey == GLFW.GLFW_MOUSE_BUTTON_RIGHT) toInv = false
 

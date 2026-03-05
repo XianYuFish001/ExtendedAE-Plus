@@ -61,18 +61,16 @@ class LangZH(output: PackOutput) : LanguageProvider(output, ExtendedAEPlus.MODID
             .item(EAEPItems.Ticker)
             .branch(
                 "advanced_tip", """
-                        Ticking倍增耗能计算公式:
-                        §2§oTicker基础耗能 * ((2147483647 / Ticker基础耗能) ^ 0.1) ^ (log2(总加速倍率))
-                        §f能量卡耗能减免计算公式:
-                        §2§o0.9 * (0.5 / 0.9)^((能量卡数 - 1) / 7)
-                        """
+                Ticking倍增耗能计算公式:
+                §2§oTicker基础耗能 * ((2147483647 / Ticker基础耗能) ^ 0.1) ^ (log2(总加速倍率))
+                §f能量卡耗能减免计算公式:
+                §2§o0.9 * (0.5 / 0.9)^((能量卡数 - 1) / 7)""".trimIndent()
             )
             .buildInto(
                 """
-                        放入Ticking倍增卡以启用加速
-                        最高可达 1024 倍速
-                        加速将消耗 ME 网络能量，网络能量不足时无法加速
-                        """
+                放入Ticking倍增卡以启用加速
+                最高可达 1024 倍速
+                加速将消耗 ME 网络能量，网络能量不足时无法加速""".trimIndent()
             )
         UtilKeyBuilder.dataGen(Patterns.Tooltip)
             .item(EAEPItems.CellInfinity)
@@ -88,11 +86,10 @@ class LangZH(output: PackOutput) : LanguageProvider(output, ExtendedAEPlus.MODID
             .addStr("help")
             .buildInto(
                 """
-                        
-                        ---------§aExtendedAE Plus§r---------
-                        使用 §6[Ctrl + 中键]§r 点击一个节点,
-                        EMI会自动编写并上传该节点配方的样板
-                        """
+                
+                ---------§aExtendedAE Plus§r---------
+                使用 §6[Ctrl + 中键]§r 点击一个节点,
+                EMI会自动编写并上传该节点配方的样板""".trimIndent()
             )
         UtilKeyBuilder.dataGen(Patterns.Tooltip)
             .item(EAEPItems.CardAutoCompletion)
@@ -247,12 +244,11 @@ class LangZH(output: PackOutput) : LanguageProvider(output, ExtendedAEPlus.MODID
             .addStr("tips_mod_load")
             .branch(
                 "expandedae", """
-                        §6[EAEP/DependencyTip]
-                        §f将EAEP与ExpandedAE同时安装时, 可能导致以下及更多功能无法使用:§7
-                          - 智能阻挡&倍增
-                          - 单个超过16线程的并行处理器
-                          - 样板数量快速修改
-                          """
+                §6[EAEP/DependencyTip]
+                §f将EAEP与ExpandedAE同时安装时, 可能导致以下及更多功能无法使用:§7
+                  - 智能阻挡&倍增
+                  - 单个超过16线程的并行处理器
+                  - 样板数量快速修改""".trimIndent()
             )
 
         UtilKeyBuilder.dataGen(Patterns.ActionBar)
@@ -323,37 +319,33 @@ class LangZH(output: PackOutput) : LanguageProvider(output, ExtendedAEPlus.MODID
             .addStr("pageMultiplier")
             .branch(
                 "tooltip", """
-                        扩展样板供应器总槽位容量的倍率
-                        基础为36，每页仍显示36格，倍率会增加总页数/总容量
-                        建议范围 1-16
-                        """
+                扩展样板供应器总槽位容量的倍率
+                基础为36，每页仍显示36格，倍率会增加总页数/总容量
+                建议范围 1-16""".trimIndent()
             )
             .buildInto("扩展样板供应器槽位倍率")
         UtilKeyBuilder.dataGen(Patterns.Config)
             .addStr("overrideAE2WTPicking")
             .branch(
                 "tooltip", """
-                        是否覆盖AE2WT使用中键从终端选取方块的逻辑
-                        开启后选取方块的数量将不被限制在32个
-                        """
+                是否覆盖AE2WT使用中键从终端选取方块的逻辑
+                开启后选取方块的数量将不被限制在32个""".trimIndent()
             )
             .buildInto("覆盖AE2WT选取")
         UtilKeyBuilder.dataGen(Patterns.Config)
             .addStr("showEncoderPatternPlayer")
             .branch(
                 "tooltip", """
-                        是否显示样板编码玩家
-                        开启后将在样板 Tooltip 上添加样板的编码玩家
-                        """
+                是否显示样板编码玩家
+                开启后将在样板 Tooltip 上添加样板的编码玩家""".trimIndent()
             )
             .buildInto("显示样板编码玩家")
         UtilKeyBuilder.dataGen(Patterns.Config)
             .addStr("patternTerminalShowSlotsDefault")
             .branch(
                 "tooltip", """
-                        样板终端默认是否显示槽位
-                        影响进入界面时SlotsRow的默认可见性，仅影响客户端显示
-                        """
+                样板终端默认是否显示槽位
+                影响进入界面时SlotsRow的默认可见性，仅影响客户端显示""".trimIndent()
             )
             .buildInto("样板终端默认显示槽位")
         UtilKeyBuilder.dataGen(Patterns.Config)
@@ -368,19 +360,17 @@ class LangZH(output: PackOutput) : LanguageProvider(output, ExtendedAEPlus.MODID
             .addStr("smartScalingMaxMultiplier")
             .branch(
                 "tooltip", """
-                        智能倍增的最大倍数（0 表示不限制）
-                        此倍数是针对单次样板产出的放大倍数上限，用于限制一次推送中按倍增缩放的规模
-                        """
+                智能倍增的最大倍数（0 表示不限制）
+                此倍数是针对单次样板产出的放大倍数上限，用于限制一次推送中按倍增缩放的规模""".trimIndent()
             )
             .buildInto("智能倍增最大倍数")
         UtilKeyBuilder.dataGen(Patterns.Config)
             .addStr("providerRoundRobinEnable")
             .branch(
                 "tooltip", """
-                        智能倍增时是否对样板供应器轮询分配
-                        仅多个供应器有相同样板时生效，开启后请求会均分到所有可用供应器，关闭则全部分配给单一供应器
-                        注意：所有相关供应器需开启智能倍增，否则可能失效
-                        """
+                智能倍增时是否对样板供应器轮询分配
+                仅多个供应器有相同样板时生效，开启后请求会均分到所有可用供应器，关闭则全部分配给单一供应器
+                注意：所有相关供应器需开启智能倍增，否则可能失效""".trimIndent()
             )
             .buildInto("启用样板供应器轮询分配")
         UtilKeyBuilder.dataGen(Patterns.Config)
@@ -390,31 +380,28 @@ class LangZH(output: PackOutput) : LanguageProvider(output, ExtendedAEPlus.MODID
             .addStr("tickerBlacklist")
             .branch(
                 "tooltip", """
-                        匹配的方块将不会被加速
-                        允许匹配方块注册名与标签
-                        例如 'mekanism:enrichment_chamber', '#c:storage_blocks/unobtainium'
-                        """
+                匹配的方块将不会被加速
+                允许匹配方块注册名与标签
+                例如 'mekanism:enrichment_chamber', '#c:storage_blocks/unobtainium'""".trimIndent()
             )
             .buildInto("Ticker黑名单")
         UtilKeyBuilder.dataGen(Patterns.Config)
             .addStr("tickerExternalMultiplier")
             .branch(
                 "tooltip", """
-                        为某些方块设置额外能量倍率,
-                        格式 '<entry>\[<multiplier>\]'
-                        entry 允许匹配方块注册名与标签
-                        例如 'mekanism:enrichment_chamber[1.14]', '#c:storage_blocks/unobtainium[5.14]'
-                        """
+                为某些方块设置额外能量倍率,
+                格式 '<entry>\[<multiplier>\]'
+                entry 允许匹配方块注册名与标签
+                例如 'mekanism:enrichment_chamber[1.14]', '#c:storage_blocks/unobtainium[5.14]'""".trimIndent()
             )
             .buildInto("Ticker额外消耗倍率")
         UtilKeyBuilder.dataGen(Patterns.Config)
             .addStr("allowDiskEnergy")
             .branch(
                 "tooltip", """
-                        是否允许Ticker从磁盘提取能量
-                        开启后，Ticker将优先尝试从磁盘提取能量
-                        注意: 仅当Applied Flux模组存在时生效
-                        """
+                是否允许Ticker从磁盘提取能量
+                开启后，Ticker将优先尝试从磁盘提取能量
+                注意: 仅当Applied Flux模组存在时生效""".trimIndent()
             )
             .buildInto("允许Ticker提取磁盘能量")
         UtilKeyBuilder.dataGen(Patterns.Config)
@@ -424,10 +411,9 @@ class LangZH(output: PackOutput) : LanguageProvider(output, ExtendedAEPlus.MODID
             .addStr("coreCrafterThreadAmplification")
             .branch(
                 "tooltip", """
-                        每存在5速度增幅(具体见GuideME),
-                        高级合成核心线程数的涨幅,
-                        设置为0则不增长
-                        """
+                每存在5速度增幅(具体见GuideME),
+                高级合成核心线程数的涨幅,
+                设置为0则不增长""".trimIndent()
             )
             .buildInto("高级合成核心线程涨幅")
         UtilKeyBuilder.dataGen(Patterns.Config)

@@ -5,7 +5,7 @@ import appeng.menu.AEBaseMenu;
 import appeng.menu.me.crafting.CraftConfirmMenu;
 import appeng.menu.me.crafting.CraftingPlanSummary;
 import com.extendedae_plus.integration.impl.recipeViewer.HelperRecipeViewer;
-import net.minecraft.client.gui.screens.Screen;
+import com.extendedae_plus.util.UtilClient;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,7 +26,7 @@ public class MixinPlanCraftingFavorite extends AEBaseMenu {
     @Inject(method = "goBack", at = @At("RETURN"))
     private void goBack(CallbackInfo ci) {
         if (this.isServerSide()) return;
-        if (!Screen.hasControlDown()) return;
+        if (!UtilClient.ctrl()) return;
 
         if (this.plan == null) return;
         var entries = this.plan.getEntries();
