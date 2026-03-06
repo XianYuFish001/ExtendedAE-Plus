@@ -3,7 +3,6 @@ package com.extendedae_plus.util
 import com.extendedae_plus.ExtendedAEPlus
 import com.extendedae_plus.common.init.EAEPItems
 import com.fish.fishlib.util.keyBuilder.Patterns
-import lombok.Getter
 import net.minecraft.Util
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.ClickEvent
@@ -79,7 +78,6 @@ object UtilTextComponent {
 
         var text = ArrayList<Component>()
 
-        @Getter
         private var frames = 0
         private var initialized = false
 

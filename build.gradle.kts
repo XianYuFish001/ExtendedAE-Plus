@@ -6,7 +6,7 @@ plugins {
     `java-library`
     `maven-publish`
     idea
-    id("io.freefair.lombok") version("9.2.0")
+//    id("io.freefair.lombok") version("9.2.0")
     id("net.neoforged.moddev") version("2.0.140")
     kotlin("jvm") version("2.2.20")
 }

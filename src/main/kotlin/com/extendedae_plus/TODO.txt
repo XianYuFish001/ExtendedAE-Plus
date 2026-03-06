@@ -1,6 +1,7 @@
 TODO
     <bug>
     <feature>
+        test integration
         helperOverride:
             cardChannel以override onload取代轮询
             使用注解标记, 自动检测对应类中是否存在target方法, 若已存在则不加载helperOverride (不想做喵)
