@@ -10,7 +10,6 @@ dependencies {
     implementation libs.ae2
     implementation libs.guideME
     implementation libs.glodium
-    implementation libs.extendedAE
     implementation libs.advancedAE
     implementation libs.ae2wt
     implementation libs.jade
@@ -18,6 +17,18 @@ dependencies {
     implementation libs.emi
     implementation libs.jei
     implementation libs.ae2Jei
+
+    final var providersSrc = [
+            libs.extendedAEsrc
+    ]
+    final var providers = [
+            libs.extendedAE
+    ]
+    ((System.getenv("GITHUB_RUN_NUMBER") == null)
+            ? providersSrc
+            : providers)
+            .forEach { compileOnly it }
+    providers.forEach { runtimeOnly it }
 
     compileOnly libs.appliedFlux
     compileOnly libs.megaCells
