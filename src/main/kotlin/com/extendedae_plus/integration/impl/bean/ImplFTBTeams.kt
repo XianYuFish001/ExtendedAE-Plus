@@ -3,7 +3,7 @@ package com.extendedae_plus.integration.impl.bean
 import com.extendedae_plus.integration.helper.ContextModLoaded
 import com.extendedae_plus.integration.impl.point.IntegrationFTBTeams
 import com.fish.fishlib.integration.BeanIntegration
-import com.fish.fishlib.util.OneOf2
+import com.fish.fishlib.util.oneOf.OneOf2
 import dev.ftb.mods.ftbteams.api.FTBTeamsAPI
 import dev.ftb.mods.ftbteams.api.TeamManager
 import dev.ftb.mods.ftbteams.api.client.ClientTeamManager

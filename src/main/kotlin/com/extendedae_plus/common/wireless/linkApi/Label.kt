@@ -4,9 +4,8 @@ import com.extendedae_plus.common.impl.guiSync.PacketStreamable
 import com.extendedae_plus.integration.helper.ManagerIntegration
 import com.extendedae_plus.integration.impl.point.IntegrationFTBTeams
 import com.fish.fishlib.util.extension.optional
-import com.fish.fishlib.util.extension.orNull
 import com.fish.fishlib.util.extension.predicated
-import com.mojang.datafixers.util.Either
+import com.fish.fishlib.util.oneOf.OneOf2
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.core.UUIDUtil
@@ -57,10 +56,10 @@ class Label internal constructor(val data: Data) {
                 Component.empty()
             else this.desc
 
-        fun toEither(): Either<Long?, String> =
+        fun wrapLabel(): OneOf2<Long, String> =
             if (this.label.isBlank())
-                Either.left(this.frequency)
-            else Either.right(this.label)
+                OneOf2.a(this.frequency)
+            else OneOf2.b(this.label)
 
         override fun equals(other: Any?) = when (other) {
             is Data -> {
@@ -102,15 +101,15 @@ class Label internal constructor(val data: Data) {
             @JvmField
             val codec: Codec<Data> = RecordCodecBuilder.create {
                 it.group(
-                    Codec.either(Codec.LONG, Codec.STRING).fieldOf("value").forGetter(Data::toEither),
+                    OneOf2.mapCodec("value", Codec.LONG, Codec.STRING).forGetter(Data::wrapLabel),
                     UUIDUtil.CODEC.lenientOptionalFieldOf("placer").forGetter(Data::placer.optional()),
                     Codec.STRING.fieldOf("placer_name").forGetter(Data::placerName),
                     ComponentSerialization.CODEC.lenientOptionalFieldOf("description")
                         .forGetter(Data::description.optional())
                 ).apply(it) { value, placer, placerName, description ->
                     Data(
-                        value.left().getOrNull(),
-                        value.right().orElse(""),
+                        value.a,
+                        value.b ?: "",
                         placer.getOrNull(),
                         placerName,
                         description.orElse(Component.empty())
@@ -120,14 +119,14 @@ class Label internal constructor(val data: Data) {
 
             @JvmField
             val streamCodec: StreamCodec<RegistryFriendlyByteBuf, Data> = StreamCodec.composite(
-                ByteBufCodecs.either(ByteBufCodecs.VAR_LONG, ByteBufCodecs.STRING_UTF8), Data::toEither,
+                OneOf2.streamCodec(ByteBufCodecs.VAR_LONG, ByteBufCodecs.STRING_UTF8), Data::wrapLabel,
                 ByteBufCodecs.optional(UUIDUtil.STREAM_CODEC), Data::placer.optional(),
                 ByteBufCodecs.STRING_UTF8, Data::placerName,
                 ComponentSerialization.OPTIONAL_STREAM_CODEC, Data::description.optional()
             ) { value, placer, placerName, description ->
                 Data(
-                    value.left().orNull(),
-                    value.right().orElse(""),
+                    value.a,
+                    value.b ?: "",
                     placer.getOrNull(),
                     placerName,
                     description.orElse(Component.empty())
