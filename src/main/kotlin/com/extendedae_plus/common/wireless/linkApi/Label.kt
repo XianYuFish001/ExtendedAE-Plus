@@ -5,6 +5,7 @@ import com.extendedae_plus.integration.helper.ManagerIntegration
 import com.extendedae_plus.integration.impl.point.IntegrationFTBTeams
 import com.fish.fishlib.util.extension.optional
 import com.fish.fishlib.util.extension.predicated
+import com.fish.fishlib.util.extension.toOptional
 import com.fish.fishlib.util.oneOf.OneOf2
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
@@ -32,13 +33,13 @@ class Label internal constructor(val data: Data) {
         val label: String,
         val placer: UUID?,
         val placerName: String,
-        private val desc: Component
+        private val description: Component
     ) : PacketStreamable {
         fun pack() = RegistryLink.registerOrGetLabel(this)
 
         fun convertPlacer() = ManagerIntegration<IntegrationFTBTeams>()
             ?.getTeamUUID(this.placer)?.let {
-                Data(this.frequency, this.label, it, this.placerName, this.desc)
+                Data(this.frequency, this.label, it, this.placerName, this.description)
             } ?: this
 
         val displayValue: String
@@ -54,7 +55,7 @@ class Label internal constructor(val data: Data) {
         fun description(): Component =
             if (this.isEmpty)
                 Component.empty()
-            else this.desc
+            else this.description
 
         fun wrapLabel(): OneOf2<Long, String> =
             if (this.label.isBlank())
@@ -82,7 +83,7 @@ class Label internal constructor(val data: Data) {
 
         override fun toString(): String {
             var value = ""
-            var description = ", description=" + this.desc.string
+            var description = ", description=" + this.description.string
             if (this.isEmpty) {
                 value = "empty"
                 description = ""
@@ -104,8 +105,7 @@ class Label internal constructor(val data: Data) {
                     OneOf2.mapCodec("value", Codec.LONG, Codec.STRING).forGetter(Data::wrapLabel),
                     UUIDUtil.CODEC.lenientOptionalFieldOf("placer").forGetter(Data::placer.optional()),
                     Codec.STRING.fieldOf("placer_name").forGetter(Data::placerName),
-                    ComponentSerialization.CODEC.lenientOptionalFieldOf("description")
-                        .forGetter(Data::description.optional())
+                    ComponentSerialization.CODEC.lenientOptionalFieldOf("description").forGetter { it.description().toOptional() }
                 ).apply(it) { value, placer, placerName, description ->
                     Data(
                         value.a,
@@ -122,7 +122,7 @@ class Label internal constructor(val data: Data) {
                 OneOf2.streamCodec(ByteBufCodecs.VAR_LONG, ByteBufCodecs.STRING_UTF8), Data::wrapLabel,
                 ByteBufCodecs.optional(UUIDUtil.STREAM_CODEC), Data::placer.optional(),
                 ByteBufCodecs.STRING_UTF8, Data::placerName,
-                ComponentSerialization.OPTIONAL_STREAM_CODEC, Data::description.optional()
+                ComponentSerialization.OPTIONAL_STREAM_CODEC, { it.description().toOptional() }
             ) { value, placer, placerName, description ->
                 Data(
                     value.a,

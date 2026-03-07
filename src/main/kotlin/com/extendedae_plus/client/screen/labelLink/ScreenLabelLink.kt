@@ -75,17 +75,20 @@ open class ScreenLabelLink(
 
     private fun appendAdvancedTooltip(tooltip: MutableList<Component>, data: Label.Data) =
         UtilKeyBuilder.of(Patterns.ScreenTooltip)
-            .addStr("label_type")
             .bindAdder(tooltip::add)
-            .addStr(data.frequency != null, "frequency", "label")
-            .buildInto()
-            .addStr("info_label")
-            .addStr(data.placer != null, "public")
-            .args(data.placerName, data.placer?.toString()?.substring(0, 8) ?: "")
-            .buildInto()
-            .addStr("label_description")
-            .addStr(data.description().string.isBlank(), "empty")
-            .buildInto { it.append(data.description()) }
+            .section("label_type") { it
+                .addStr(data.frequency != null, "frequency", "label")
+                .buildInto()
+            }
+            .section("label_info") { it
+                .addStr(data.placer == null, "public")
+                .args(data.placerName, data.placer?.toString()?.substring(0, 8) ?: "")
+                .buildInto()
+            }
+            .section("label_description") { it
+                .addStr(data.description().string.isBlank(), "empty")
+                .buildInto { it.append(data.description()) }
+            }
             .unit()
 
     private fun appendTooltip(tooltip: MutableList<Component>, data: Label.Data) =

@@ -55,27 +55,24 @@ object BindingSettings {
     private class Builder<TEnum : Enum<TEnum>>(private val setting: Setting<TEnum>) {
         private val entries = ArrayList<Pair<TEnum, Appearance>>()
 
-        fun bindAll(vararg actions: EAEPActionItems): Builder<TEnum> {
+        fun bindAll(vararg actions: EAEPActionItems) = also {
             val values = this.setting.values.first().javaClass.enumConstants
             require(values.size == actions.size) { "Unbound setting values" }
 
             actions.forEachIndexed { index, value ->
                 this.entries += values[index] to Appearance(value, null)
             }
-            return this
         }
 
-        fun bind(vararg values: Pair<TEnum, EAEPActionItems>, item: List<Item>? = null): Builder<TEnum> {
+        fun bind(vararg values: Pair<TEnum, EAEPActionItems>, item: List<Item>? = null) = also {
             require(item == null || item.size == values.size) { "Unbound item value" }
             values
                 .mapIndexed { index, value ->
                     value.first to Appearance(value.second, item?.get(index))
                 }
                 .forEach(this.entries::add)
-            return this
         }
 
-        //            require(this.entries.size == this.setting.values.size) { "Unbound setting values" }
         fun build() = this.entries.forEach { (setting, appearance) ->
             Appearances[ValueEntry(this.setting.name, setting)] = appearance
         }

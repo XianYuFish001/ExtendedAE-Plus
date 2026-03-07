@@ -55,9 +55,9 @@ enum class EAEPActionItems(builder: (Builder) -> Builder) {
     LabelLabel({ it.icon(EAEPIcon.CharL).group("label_type").tooltip("label") }),
     LabelPublic({ it.icon(EAEPIcon.Connected).group("label_mode").tooltip("public") }),
     LabelPrivate({ it.icon(EAEPIcon.Disconnected).group("label_mode").tooltip("private") }),
-    LabelAdd({ it.icon(Icon.ENTER).group("label_add").name() }),
-    LabelLocked({ it.icon(Icon.LOCKED).group("label_locked").tooltip("locked") }),
-    LabelUnlocked({ it.icon(Icon.UNLOCKED).group("label_locked").tooltip("unlocked") }),
+    LabelAdd({ it.icon(Icon.ENTER).group("label_add") }),
+    LabelLocked({ it.icon(Icon.LOCKED).group("label_locked").tooltip("true") }),
+    LabelUnlocked({ it.icon(Icon.UNLOCKED).group("label_locked").tooltip("false") }),
 
     TransceiverMaster({ it.icon(EAEPIcon.SignalSend).group("transceiver_mode").tooltip("master") }),
     TransceiverSlave({ it.icon(EAEPIcon.SignalReceive).group("transceiver_mode").tooltip("slave") }),
@@ -109,58 +109,48 @@ enum class EAEPActionItems(builder: (Builder) -> Builder) {
         var tooltip: MutableComponent? = null
         var tooltipVisible = true
 
-        fun icon(icon: IButtonIcon): Builder {
+        fun icon(icon: IButtonIcon) = also {
             this.icon = icon
-            return this
         }
 
-        fun icon(icon: Icon): Builder {
-            return this.icon(EAEPIcon.fromAEIcon(icon))
-        }
+        fun icon(icon: Icon) = this.icon(EAEPIcon.fromAEIcon(icon))
 
-        fun group(group: String): Builder {
+        fun group(group: String) = also {
             this.actionGroup = group
-            return this
         }
 
-        fun name(name: Component): Builder {
+        fun name(name: Component) = also {
             this.name = name
-            return this
         }
 
-        fun name(vararg name: String): Builder {
+        fun name(vararg name: String) = also {
             val builder = UtilKeyBuilder.of(Patterns.ScreenTooltip)
-            if (name.isNotEmpty()) for (key in name) builder.addStr(key)
+            if (name.isNotEmpty()) name.forEach(builder::addStr)
             else builder.addStr(this.actionGroup)
-            this.name = builder.build()
-            return this
+            this.name(builder.build())
         }
 
-        fun tooltip(tooltip: MutableComponent): Builder {
+        fun tooltip(tooltip: MutableComponent) = also {
             if (this.name.string.isEmpty()) this.name()
             this.tooltip = tooltip
-            return this
         }
 
-        fun tooltip(vararg tooltip: String): Builder {
+        fun tooltip(vararg tooltip: String) = also {
             if (this.name.string.isEmpty()) this.name()
             val builder = UtilKeyBuilder.of(Patterns.ScreenTooltip)
                 .addStr(this.actionGroup)
-            for (key in tooltip) builder.addStr(key)
+            tooltip.forEach(builder::addStr)
             if (this.tooltip != null) this.tooltip!!.append(builder.build())
             else this.tooltip = builder.build()
-            return this
         }
 
-        fun toggleName(): Builder {
+        fun toggleName() = also {
             this.nameVisible = !this.nameVisible
             if (!this.nameVisible) this.tooltipVisible = false
-            return this
         }
 
-        fun toggleTooltip(): Builder {
+        fun toggleTooltip() = also {
             this.tooltipVisible = this.nameVisible && !this.tooltipVisible
-            return this
         }
     }
 }

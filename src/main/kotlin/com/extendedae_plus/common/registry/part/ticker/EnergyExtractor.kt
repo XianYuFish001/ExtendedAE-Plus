@@ -110,26 +110,28 @@ object EnergyExtractor {
             ?.keyFlux
             ?: return false
 
+        val amount = requiredPower.toLong() shl 1
+
         // 模拟提取 FE
         var feExtracted = StorageHelper.poweredExtraction(
             energyService,
             storage,
             feKey,
-            requiredPower.toLong() shl 1,
+            amount,
             source,
             Actionable.SIMULATE
         )
 
         // 执行实际提取
-        if (feExtracted >= requiredPower.toLong() shl 1) feExtracted = StorageHelper.poweredExtraction(
+        if (feExtracted >= amount) feExtracted = StorageHelper.poweredExtraction(
             energyService,
             storage,
             feKey,
-            requiredPower.toLong() shl 1,
+            amount,
             source,
             Actionable.MODULATE
         )
 
-        return feExtracted >= requiredPower.toLong() shl 1
+        return feExtracted >= amount
     }
 }

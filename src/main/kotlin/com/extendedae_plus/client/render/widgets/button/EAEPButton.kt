@@ -42,8 +42,7 @@ abstract class EAEPButton(onPress: (EAEPButton) -> Unit) : IconButton(onPress@{
 
     abstract val action: EAEPActionItems?
 
-    private val nonnullAction
-        get() = this.action ?: EAEPActionItems.BackingOut
+    private val nonnullAction get() = this.action ?: EAEPActionItems.BackingOut
 
     override fun getIcon() = this.nonnullAction.aeIcon
 
@@ -101,9 +100,12 @@ abstract class EAEPButton(onPress: (EAEPButton) -> Unit) : IconButton(onPress@{
         stackPose.popPose()
     }
 
-    override fun setHalfSize(halfSize: Boolean) {
-        // HalfSize is unsupported
-    }
+    @Deprecated(
+        "HalfSize is unsupported",
+        ReplaceWith("scale = 0.5f"),
+        DeprecationLevel.HIDDEN
+    )
+    override fun setHalfSize(halfSize: Boolean) = Unit
 
     override fun isHalfSize() = false
 
