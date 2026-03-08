@@ -1,10 +1,8 @@
-configurations {
-    runtimeClassPath.extendsFrom runtimeOnly
-}
-
 dependencies {
     jarJar libs.fishLib
-    implementation libs.fishLib
+    implementation(libs.fishLib) {
+        transitive = false
+    }
 
     implementation libs.kotlinForForge
     implementation libs.ae2
@@ -13,7 +11,6 @@ dependencies {
     implementation libs.advancedAE
     implementation libs.ae2wt
     implementation libs.jade
-    implementation libs.jech
     implementation libs.emi
     implementation libs.jei
     implementation libs.ae2Jei
@@ -30,6 +27,7 @@ dependencies {
             .forEach { compileOnly it }
     providers.forEach { runtimeOnly it }
 
+    compileOnly libs.jech
     compileOnly libs.appliedFlux
     compileOnly libs.megaCells
     compileOnly libs.mekanism
@@ -39,6 +37,7 @@ dependencies {
     compileOnly libs.kubejs
     compileOnly libs.rei
 
+    runtimeOnly libs.jech
     runtimeOnly libs.geckolib
     runtimeOnly libs.appliedFlux
     runtimeOnly libs.megaCells

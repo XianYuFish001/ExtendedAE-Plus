@@ -51,6 +51,8 @@ open class HolderCardAutoCompletionState(
     private fun taskProcess(
         processor: (() -> Unit, HelperCraftingJob) -> Unit
     ) {
+        if (!this.cardAvailable) return
+
         val serviceCrafting = this.mainNode?.grid?.craftingService ?: return
 
         val contextProcess = Tuple<(() -> Unit)?, HelperCraftingJob?>(null, null)

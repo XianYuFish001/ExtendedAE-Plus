@@ -19,12 +19,14 @@ data class CuriosItemLocator(
 ) : ItemMenuHostLocator {
     override fun hitResult() = this.resultHit
 
-    override fun locateItem(player: Player) = CuriosApi.getCuriosInventory(player)
-        .map { handler ->
-            handler.curios[type]
-                ?.stacks
-                ?.getStackInSlot(index)
-        }.orElse(ItemStack.EMPTY)
+    override fun locateItem(player: Player): ItemStack =
+        CuriosApi.getCuriosInventory(player)
+            .getOrNull()
+            ?.curios
+            ?.get(type)
+            ?.stacks
+            ?.getStackInSlot(index)
+            ?: ItemStack.EMPTY
 
     override fun toString() = "curiosSlot{$type, $index}"
 

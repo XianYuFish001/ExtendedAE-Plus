@@ -211,31 +211,13 @@ class TileWirelessTransceiver(
     @JvmRecord
     data class DataSettings(val masterMode: Boolean, val label: Label, val placer: UUID?, val placerName: String) {
         companion object {
-            val codec: Codec<DataSettings> =
-                RecordCodecBuilder.create { instance ->
-                    instance.group(
-                        Codec.BOOL.fieldOf("master_mode").forGetter(DataSettings::masterMode),
-                        Label.Data.codec.fieldOf("data_label").forGetter { it.label.data },
-                        UUIDUtil.CODEC.lenientOptionalFieldOf("placer").forGetter(DataSettings::placer.optional()),
-                        Codec.STRING.fieldOf("placer_name").forGetter(DataSettings::placerName)
-                    ).apply(
-                        instance
-                    ) { masterMode, data, placer, placerName ->
-                        DataSettings(
-                            masterMode,
-                            data.pack(),
-                            placer.getOrNull(),
-                            placerName
-                        )
-                    }
-                }
-
-            val streamCodec: StreamCodec<RegistryFriendlyByteBuf, DataSettings> = StreamCodec.composite(
-                ByteBufCodecs.BOOL, DataSettings::masterMode,
-                Label.Data.streamCodec, { it.label.data },
-                ByteBufCodecs.optional(UUIDUtil.STREAM_CODEC), DataSettings::placer.optional(),
-                ByteBufCodecs.STRING_UTF8, DataSettings::placerName,
-                { masterMode, data, placer, placerName ->
+            val codec: Codec<DataSettings> = RecordCodecBuilder.create { instance ->
+                instance.group(
+                    Codec.BOOL.fieldOf("master_mode").forGetter(DataSettings::masterMode),
+                    Label.Data.codec.fieldOf("data_label").forGetter { it.label.data },
+                    UUIDUtil.CODEC.lenientOptionalFieldOf("placer").forGetter(DataSettings::placer.optional()),
+                    Codec.STRING.fieldOf("placer_name").forGetter(DataSettings::placerName)
+                ).apply(instance) { masterMode, data, placer, placerName ->
                     DataSettings(
                         masterMode,
                         data.pack(),
@@ -243,7 +225,21 @@ class TileWirelessTransceiver(
                         placerName
                     )
                 }
-            )
+            }
+
+            val streamCodec: StreamCodec<RegistryFriendlyByteBuf, DataSettings> = StreamCodec.composite(
+                ByteBufCodecs.BOOL, DataSettings::masterMode,
+                Label.Data.streamCodec, { it.label.data },
+                ByteBufCodecs.optional(UUIDUtil.STREAM_CODEC), DataSettings::placer.optional(),
+                ByteBufCodecs.STRING_UTF8, DataSettings::placerName
+            ) { masterMode, data, placer, placerName ->
+                DataSettings(
+                    masterMode,
+                    data.pack(),
+                    placer.getOrNull(),
+                    placerName
+                )
+            }
         }
     }
 

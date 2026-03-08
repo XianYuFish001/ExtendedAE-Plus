@@ -130,10 +130,9 @@ object EAEPConfig {
 
     @InitObject
     private fun init(eventBus: IEventBus, containerMod: ModContainer) {
-        val path = ExtendedAEPlus.MODID
-        HelperCommon.init(containerMod, path)
-        HelperClient.init(containerMod, path)
-        HelperServer.init(containerMod, path)
+        HelperCommon.init(containerMod)
+        HelperClient.init(containerMod)
+        HelperServer.init(containerMod)
 
         eventBus.addListener<ModConfigEvent.Loading> { this.reload(it.config) }
         eventBus.addListener<ModConfigEvent.Reloading> { this.reload(it.config) }

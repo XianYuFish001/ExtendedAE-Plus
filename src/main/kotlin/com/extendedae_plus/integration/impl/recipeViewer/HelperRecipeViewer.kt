@@ -10,7 +10,7 @@ import net.neoforged.api.distmarker.OnlyIn
 @OnlyIn(Dist.CLIENT)
 object HelperRecipeViewer {
     private val viewer by lazy {
-        if (ContextModLoaded.Emi()) ViewerEmi()
+        if (ContextModLoaded.Emi()) ViewerEmi
         else if (ContextModLoaded.Jei()) ViewerJei
         else ViewerEmpty
     }

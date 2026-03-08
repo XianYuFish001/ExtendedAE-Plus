@@ -13,6 +13,7 @@ import com.extendedae_plus.network.SPacketProvidersInfo
 import com.extendedae_plus.network.SPacketSetProviderPage
 import com.fish.fishlib.network.HandlerClient
 import com.fish.fishlib.network.base.SPacketGeneric
+import com.fish.fishlib.util.extension.tryCast
 import com.glodblock.github.extendedae.client.gui.GuiExPatternProvider
 import dev.emi.emi.screen.BoMScreen
 import net.minecraft.client.Minecraft
@@ -35,8 +36,8 @@ enum class ImplHandlersClient(val handler: HandlerClient<out SPacketGeneric>) : 
         screen.setLabels(this.labels)
     }),
     ProvidersInfo(HandlerClient<SPacketProvidersInfo> {
-        var screenCurrent: AEBaseScreen<PatternEncodingTermMenu>
-        val screenAE: AEBaseScreen<*> = when (val screen = Minecraft.getInstance().screen) {
+        var screenCurrent: AEBaseScreen<out PatternEncodingTermMenu>
+        when (val screen = Minecraft.getInstance().screen) {
             is BoMScreen -> {
                 val old = screen.old as? AEBaseScreen<*> ?: return@HandlerClient
                 val menu = old.menu as? PatternEncodingTermMenu ?: return@HandlerClient
@@ -45,15 +46,13 @@ enum class ImplHandlersClient(val handler: HandlerClient<out SPacketGeneric>) : 
             }
 
             is PatternEncodingTermScreen<*> -> {
-                // TODO Refactor
-                if (screen.getMenu() !is PatternEncodingTermMenu) return@HandlerClient
-                screenCurrent = screen as AEBaseScreen<PatternEncodingTermMenu>
+                if (screen.menu !is PatternEncodingTermMenu) return@HandlerClient
+                screenCurrent = screen.tryCast() ?: return@HandlerClient
                 screen
             }
 
             else -> return@HandlerClient
-        }
-        screenAE.switchToScreen(
+        }.switchToScreen(
             ScreenProviderList(
                 screenCurrent,
                 this.info

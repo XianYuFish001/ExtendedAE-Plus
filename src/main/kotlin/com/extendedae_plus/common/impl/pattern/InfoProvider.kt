@@ -25,15 +25,14 @@ data class InfoProvider(
                 ComponentSerialization.TRUSTED_STREAM_CODEC, InfoProvider::name,
                 ByteBufCodecs.optional(AEKey.STREAM_CODEC), InfoProvider::icon.optional(),
                 ByteBufCodecs.INT, InfoProvider::serverID,
-                ByteBufCodecs.INT, InfoProvider::availableSlots,
-                { name, icon, id, slots ->
-                    InfoProvider(
-                        name,
-                        icon.getOrNull() as? AEItemKey,
-                        id,
-                        slots
-                    )
-                }
-            )
+                ByteBufCodecs.INT, InfoProvider::availableSlots
+            ) { name, icon, id, slots ->
+                InfoProvider(
+                    name,
+                    icon.getOrNull() as? AEItemKey,
+                    id,
+                    slots
+                )
+            }
     }
 }

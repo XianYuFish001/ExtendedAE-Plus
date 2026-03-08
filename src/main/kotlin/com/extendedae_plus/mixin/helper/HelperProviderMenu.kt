@@ -18,3 +18,4 @@ interface HelperProviderMenu {
             return logicVanilla?.patternInv ?: logicAdv?.patternInv
         }
 }
+

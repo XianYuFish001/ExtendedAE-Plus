@@ -36,10 +36,10 @@ data class SPacketLabelList(val labels: MutableList<LabelMapped>) : SPacketGener
                 ?.getTeamUUID(uuidPlayer)
                 ?: uuidPlayer
 
-            val serial = intArrayOf(Int.MIN_VALUE)
+            var serial = Int.MIN_VALUE
             val labels = RegistryLink.labels
                 .filter { it.data.placer == uuidWrapped || it.data.placer == null }
-                .mapTo(ArrayList()) { LabelMapped(serial[0]++, it.data) }
+                .mapTo(ArrayList()) { LabelMapped(serial++, it.data) }
             menu.setLabels(labels)
             PacketDistributor.sendToPlayer(menu.player as ServerPlayer, SPacketLabelList(labels))
         }

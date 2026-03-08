@@ -9,7 +9,7 @@ import dev.emi.emi.config.EmiConfig
 import dev.emi.emi.runtime.EmiFavorite
 import dev.emi.emi.runtime.EmiFavorites
 
-class ViewerEmi : IRecipeViewer {
+object ViewerEmi : IRecipeViewer {
     override fun getHoveredStacks(mouseX: Double, mouseY: Double) =
         EmiApi.getHoveredStack(mouseX.toInt(), mouseY.toInt(), false)
             .stack.emiStacks

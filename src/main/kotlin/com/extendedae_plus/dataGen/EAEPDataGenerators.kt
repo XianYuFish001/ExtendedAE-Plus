@@ -22,5 +22,7 @@ object EAEPDataGenerators {
         val providerItem = Tag.Item(output, providerLookup, helperFile, providerBlock)
         generator.addProvider(event.includeServer(), providerBlock)
         generator.addProvider(event.includeServer(), providerItem)
+
+//        generator.addProvider(event.includeServer(), event.datapack())
     }
 }
