@@ -14,9 +14,7 @@ import net.minecraft.data.PackOutput
 import net.neoforged.neoforge.common.data.LanguageProvider
 
 class LangZH(output: PackOutput) : LanguageProvider(output, ExtendedAEPlus.MODID, "zh_cn") {
-    override fun addTranslations() {
-        ContainerDataGen.bind("zh_cn", this::add)
-
+    override fun addTranslations() = ContainerDataGen.with("zh_cn", this::add) {
         this.addItem(EAEPItems.Ticker, "Ticker")
         this.addItem(EAEPItems.CellInfinity, "吞噬万籁的寂静")
         this.addItem(EAEPItems.ControllerProvider, "样板供应器管理工具")
@@ -475,7 +473,5 @@ class LangZH(output: PackOutput) : LanguageProvider(output, ExtendedAEPlus.MODID
         UtilKeyBuilder.dataGen($$"group%2$s.name".toKeyPattern())
             .branch("pattern_provider", "ME样板供应器")
             .branch("storage", "ME存储总线")
-
-        ContainerDataGen.destroy("zh_cn")
     }
 }

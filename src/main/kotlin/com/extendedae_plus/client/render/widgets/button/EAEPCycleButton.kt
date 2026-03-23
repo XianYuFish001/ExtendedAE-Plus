@@ -1,9 +1,9 @@
 package com.extendedae_plus.client.render.widgets.button
 
 import appeng.client.gui.AEBaseScreen
+import com.fish.fishlib.network.base.PacketGeneric.Companion.sendToServer
 import net.minecraft.client.Minecraft
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
-import net.neoforged.neoforge.network.PacketDistributor
 
 open class EAEPCycleButton(
     protected val states: List<EAEPActionItems>,
@@ -59,7 +59,7 @@ open class EAEPCycleButton(
         private var iteratorState: IteratorState? = null
 
         fun addPart(action: EAEPActionItems, packet: CustomPacketPayload) =
-            this.addPart(action) { -> PacketDistributor.sendToServer(packet) }
+            this.addPart(action) { -> packet.sendToServer() }
 
         fun addPart(action: EAEPActionItems, onPress: () -> Unit) =
             this.addPart(action) { _ -> onPress() }

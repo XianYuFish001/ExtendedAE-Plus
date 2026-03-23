@@ -5,6 +5,7 @@ import appeng.helpers.patternprovider.PatternProviderLogicHost
 import appeng.menu.locator.MenuHostLocator
 import appeng.menu.locator.MenuLocators
 import appeng.parts.AEBasePart
+import com.fish.fishlib.util.extension.tryCast
 import net.minecraft.world.entity.player.Player
 import net.pedroksl.advanced_ae.common.logic.AdvPatternProviderLogicHost
 
@@ -36,6 +37,20 @@ interface HelperProviderHost {
         get() = (this.hostVanilla?.blockEntity
             ?: this.hostAdv?.blockEntity)
             ?.blockPos
+
+    val level
+        get() = (this.hostVanilla?.blockEntity
+            ?: this.hostAdv?.blockEntity)
+            ?.level
+
+    val side
+        get() = (this.hostVanilla ?: this.hostAdv)
+            ?.tryCast<AEBasePart>()
+            ?.side
+
+    val invPattern
+        get() = this.hostVanilla?.terminalPatternInventory
+            ?: this.hostAdv?.terminalPatternInventory
 
     val targetIcon
         get() = this.hostVanilla?.terminalGroup?.icon()

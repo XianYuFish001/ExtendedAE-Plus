@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import java.util.HashMap;
 
 @Mixin(GuiExPatternTerminal.class)
-public interface AccessorExAccessScreen {
+public interface AccessorScreenExAccess {
     @Accessor("searchField")
     AETextField getFieldSearch();
 

@@ -1,7 +1,7 @@
 package com.extendedae_plus.client.render.widgets.button
 
+import com.fish.fishlib.network.base.PacketGeneric.Companion.sendToServer
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
-import net.neoforged.neoforge.network.PacketDistributor
 
 class EAEPServerCycleButton(
     states: List<EAEPActionItems>,
@@ -30,7 +30,7 @@ class EAEPServerCycleButton(
         private var syncerState: (() -> Int)? = null
 
         fun setTask(task: CustomPacketPayload) =
-            this.setTask { _ -> PacketDistributor.sendToServer(task) }
+            this.setTask { _ -> task.sendToServer() }
 
         fun setTask(task: Runnable) =
             this.setTask { _ -> task.run() }

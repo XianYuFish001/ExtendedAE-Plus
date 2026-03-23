@@ -3,17 +3,18 @@ package com.extendedae_plus.client.event
 import appeng.api.stacks.GenericStack
 import appeng.core.AEConfig
 import com.extendedae_plus.ExtendedAEPlus
+import com.extendedae_plus.client.EAEPKeyMappings
 import com.extendedae_plus.integration.impl.recipeViewer.HelperRecipeViewer
 import com.extendedae_plus.mixin.core.ae2.accessor.AccessorScreenStorage
-import com.extendedae_plus.mixin.core.extendedae.accessor.AccessorExAccessScreen
+import com.extendedae_plus.mixin.core.extendedae.accessor.AccessorScreenExAccess
 import com.extendedae_plus.network.CPacketPullFromNetwork
+import com.fish.fishlib.network.base.PacketGeneric.Companion.sendToServer
 import net.minecraft.client.Minecraft
 import net.neoforged.api.distmarker.Dist
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.neoforge.client.event.InputEvent
 import net.neoforged.neoforge.client.event.ScreenEvent
-import net.neoforged.neoforge.network.PacketDistributor
 import org.lwjgl.glfw.GLFW
 
 // TODO Refactor
@@ -38,21 +39,19 @@ object EventScreenActions {
         if (pulled.first > 0) {
             val stack = HelperRecipeViewer.getHoveredStacks().firstOrNull() ?: return
 
-            PacketDistributor.sendToServer(
-                CPacketPullFromNetwork(
-                    GenericStack(stack.what(), pulled.first.toLong()),
-                    true,
-                    pulled.second
-                )
-            )
+            CPacketPullFromNetwork(
+                GenericStack(stack.what(), pulled.first.toLong()),
+                true,
+                pulled.second
+            ).sendToServer()
             EventScreenActions.pulled = true
             return
         }
 
-        if (event.button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+        if (EAEPKeyMappings.TriggerCraft.matchesMouse(event.button)) {
             val stack = HelperRecipeViewer.getHoveredStacks().firstOrNull() ?: return
 
-            PacketDistributor.sendToServer(CPacketPullFromNetwork(stack, doPull = false, toInventory = false))
+            CPacketPullFromNetwork(stack, doPull = false, toInventory = false).sendToServer()
             event.setCanceled(true)
         }
     }
@@ -60,27 +59,23 @@ object EventScreenActions {
     @SubscribeEvent
     fun onKeyPressedPre(event: ScreenEvent.KeyPressed.Pre) {
         if (Minecraft.getInstance().player == null) return
-        if (event.keyCode == GLFW.GLFW_KEY_F) {
+        if (EAEPKeyMappings.FillToSearch.matches(event.keyCode, event.scanCode)) {
             // 仅当鼠标确实悬停在 JEI 配料上时触发
             // 大概会在一格有多个(?)stack的时候出bug, 但是真的会有那种时候吗?
             val stack = HelperRecipeViewer.getHoveredStacks().firstOrNull() ?: return
             val name = stack.what().displayName.string
 
-
             if (AEConfig.instance().isUseExternalSearch) {
                 HelperRecipeViewer.setSearchText(name)
                 event.setCanceled(true)
                 return
-            }
-
-            when (val screen = Minecraft.getInstance().screen) {
+            } else when (val screen = Minecraft.getInstance().screen) {
                 is AccessorScreenStorage -> {
                     screen.fieldSearch.value = name
                     screen.`eaep$setSearchText`(name)
-                    event.setCanceled(true)
                 }
 
-                is AccessorExAccessScreen -> screen.fieldSearch.value = name
+                is AccessorScreenExAccess -> screen.fieldSearch.value = name
             }
             event.setCanceled(true)
         }

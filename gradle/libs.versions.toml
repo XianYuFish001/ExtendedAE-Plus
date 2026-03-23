@@ -25,7 +25,7 @@ jech = "6681787"
 modernUI = "6956436"
 expandedAE = "6910849"
 kotlinForForge = "5.10.0"
-fishLib = "1.0.5"
+fishLib = "1.0.6"
 extendedAEsrc = "1.21-2.2.29-neoforge"
 
 [libraries]

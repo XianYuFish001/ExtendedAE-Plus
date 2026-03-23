@@ -1,3 +1,5 @@
+@file:Suppress("FunctionName")
+
 package com.extendedae_plus.util
 
 import net.neoforged.fml.loading.FMLEnvironment

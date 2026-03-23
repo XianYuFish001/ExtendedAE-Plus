@@ -8,9 +8,9 @@ import com.extendedae_plus.client.render.widgets.button.EAEPServerCycleButton
 import com.extendedae_plus.client.render.widgets.button.SyncerEnumGeneric
 import com.extendedae_plus.common.registry.menu.MenuPriorityTool
 import com.extendedae_plus.network.CPacketPriorityToolOperation
+import com.fish.fishlib.network.base.PacketGeneric.Companion.sendToServer
 import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.player.Inventory
-import net.neoforged.neoforge.network.PacketDistributor
 
 class ScreenPriorityTool(
     menu: MenuPriorityTool, playerInventory: Inventory, title: Component, style: ScreenStyle
@@ -43,9 +43,7 @@ class ScreenPriorityTool(
         this.buttonCycleMode.updateState()
     }
 
-    private fun savePriority() = PacketDistributor.sendToServer(
-        CPacketPriorityToolOperation(
-            this.priority.getIntValue().orElse(0), false
-        )
-    )
+    private fun savePriority() = CPacketPriorityToolOperation(
+        this.priority.getIntValue().orElse(0), false
+    ).sendToServer()
 }

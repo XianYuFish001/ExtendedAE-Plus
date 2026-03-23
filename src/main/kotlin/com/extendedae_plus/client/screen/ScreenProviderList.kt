@@ -24,6 +24,7 @@ import com.extendedae_plus.client.render.widgets.button.EAEPActionItems
 import com.extendedae_plus.common.impl.pattern.InfoProvider
 import com.extendedae_plus.network.CPacketUploadTerminalPattern
 import com.extendedae_plus.util.UtilKeyBuilder
+import com.fish.fishlib.network.base.PacketGeneric.Companion.sendToServer
 import com.fish.fishlib.util.keyBuilder.Patterns
 import guideme.document.LytRect
 import guideme.render.SimpleRenderContext
@@ -37,7 +38,6 @@ import net.minecraft.client.renderer.Rect2i
 import net.minecraft.locale.Language
 import net.minecraft.network.chat.Component
 import net.minecraft.sounds.SoundEvents
-import net.neoforged.neoforge.network.PacketDistributor
 import org.lwjgl.glfw.GLFW
 import kotlin.math.max
 
@@ -226,7 +226,7 @@ class ScreenProviderList<TMenu : PatternEncodingTermMenu, TScreen : AEBaseScreen
     private fun select(indexProvider: Int) {
         val info = this.providersFiltered[indexProvider]
 
-        PacketDistributor.sendToServer(CPacketUploadTerminalPattern(info.serverID))
+        CPacketUploadTerminalPattern(info.serverID).sendToServer()
         this.returnToParent()
     }
 

@@ -19,16 +19,7 @@ import net.minecraft.server.level.ServerPlayer
  */
 @FishNetworkPacket("open_screen_crafting_node_machine")
 @JvmRecord
-data class CPacketOpenScreenCraftingNodeMachine(val what: AEKey) : CPacketGeneric {
-    companion object {
-        @PacketStreamCodec
-        val streamCodec: StreamCodec<RegistryFriendlyByteBuf, CPacketOpenScreenCraftingNodeMachine> =
-            StreamCodec.composite(
-                AEKey.STREAM_CODEC, CPacketOpenScreenCraftingNodeMachine::what,
-                ::CPacketOpenScreenCraftingNodeMachine
-            )
-    }
-
+data class CPacketScreenNodeMachine(val what: AEKey) : CPacketGeneric {
     override fun handleServer(player: ServerPlayer) {
         val level = player.level()
 
@@ -47,5 +38,14 @@ data class CPacketOpenScreenCraftingNodeMachine(val what: AEKey) : CPacketGeneri
                     if (UtilMenu.open(level, pos, side, player)) return
                 }
             }
+    }
+
+    companion object {
+        @PacketStreamCodec
+        val streamCodec: StreamCodec<RegistryFriendlyByteBuf, CPacketScreenNodeMachine> =
+            StreamCodec.composite(
+                AEKey.STREAM_CODEC, CPacketScreenNodeMachine::what,
+                ::CPacketScreenNodeMachine
+            )
     }
 }

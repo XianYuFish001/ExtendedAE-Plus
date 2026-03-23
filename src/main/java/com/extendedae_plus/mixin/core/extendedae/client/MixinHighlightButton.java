@@ -1,8 +1,8 @@
 package com.extendedae_plus.mixin.core.extendedae.client;
 
 import appeng.core.definitions.AEBlocks;
-import com.extendedae_plus.mixin.core.extendedae.accessor.AccessorExAccessScreen;
 import com.extendedae_plus.mixin.core.extendedae.accessor.AccessorHighlightButton;
+import com.extendedae_plus.mixin.core.extendedae.accessor.AccessorScreenExAccess;
 import com.extendedae_plus.mixin.helper.HelperProviderSelectionApplier;
 import com.extendedae_plus.util.UtilKeyBuilder;
 import com.fish.fishlib.util.keyBuilder.Patterns;
@@ -22,7 +22,7 @@ public abstract class MixinHighlightButton {
         if (!(uncheckedButton instanceof AccessorHighlightButton accessorButton)) return;
 
         var screen = Minecraft.getInstance().screen;
-        if (!(screen instanceof AccessorExAccessScreen accessorTerminal
+        if (!(screen instanceof AccessorScreenExAccess accessorTerminal
                 && screen instanceof HelperProviderSelectionApplier helper)) return;
 
         var selectedProviderID = new Long[]{null};

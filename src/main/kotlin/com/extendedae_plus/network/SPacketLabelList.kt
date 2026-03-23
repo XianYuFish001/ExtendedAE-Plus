@@ -8,13 +8,15 @@ import com.extendedae_plus.integration.impl.point.IntegrationFTBTeams
 import com.extendedae_plus.network.helper.HandlersClient
 import com.fish.fishlib.network.FishNetworkPacket
 import com.fish.fishlib.network.PacketStreamCodec
+import com.fish.fishlib.network.base.PacketGeneric.Companion.sendToPlayer
 import com.fish.fishlib.network.base.SPacketGeneric
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
-import net.minecraft.server.level.ServerPlayer
-import net.neoforged.neoforge.network.PacketDistributor
 
+/**
+ * @see com.extendedae_plus.network.helper.ImplHandlersClient.LabelList
+ */
 @FishNetworkPacket("label_list")
 @JvmRecord
 data class SPacketLabelList(val labels: MutableList<LabelMapped>) : SPacketGeneric {
@@ -41,7 +43,7 @@ data class SPacketLabelList(val labels: MutableList<LabelMapped>) : SPacketGener
                 .filter { it.data.placer == uuidWrapped || it.data.placer == null }
                 .mapTo(ArrayList()) { LabelMapped(serial++, it.data) }
             menu.setLabels(labels)
-            PacketDistributor.sendToPlayer(menu.player as ServerPlayer, SPacketLabelList(labels))
+            SPacketLabelList(labels).sendToPlayer(menu.player)
         }
     }
 }

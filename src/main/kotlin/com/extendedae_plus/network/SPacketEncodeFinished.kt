@@ -7,6 +7,9 @@ import com.fish.fishlib.network.base.SPacketGeneric
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.codec.StreamCodec
 
+/**
+ * @see com.extendedae_plus.network.helper.ImplHandlersClient.EncodeFinished
+ */
 @FishNetworkPacket("encode_finished")
 object SPacketEncodeFinished : SPacketGeneric {
     override val handlerClient = HandlersClient.EncodeFinished()

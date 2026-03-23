@@ -6,13 +6,13 @@ import com.extendedae_plus.client.render.widgets.button.EAEPActionItems
 import com.fish.fishlib.network.FishNetworkPacket
 import com.fish.fishlib.network.PacketStreamCodec
 import com.fish.fishlib.network.base.CPacketGeneric
+import com.fish.fishlib.network.base.PacketGeneric.Companion.sendToServer
 import com.fish.fishlib.util.UtilMath
 import com.glodblock.github.extendedae.container.ContainerExInterface
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.server.level.ServerPlayer
-import net.neoforged.neoforge.network.PacketDistributor
 
 /**
  * C2S：调整 ME 接口配置槽位(标记物品)的数量。
@@ -40,7 +40,7 @@ data class CPacketInterfaceScaling(val scale: Int) : CPacketGeneric {
                 EAEPActionItems.Div5 -> -5
                 else -> return
             }
-            PacketDistributor.sendToServer(CPacketInterfaceScaling(scale))
+            CPacketInterfaceScaling(scale).sendToServer()
         }
     }
 

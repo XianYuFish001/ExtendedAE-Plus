@@ -33,6 +33,8 @@ object EAEPConfig {
 
     // Server
 
+    var CraftWhenToPullInsufficient: Boolean by HelperServer
+
     // - AE
 
     var ProviderRoundRobin: Boolean by HelperServer
@@ -76,6 +78,9 @@ object EAEPConfig {
     }
 
     private val SpecServer by spec(ModConfig.Type.SERVER) { spec ->
+        spec.define("craftWhenToPullInsufficient", true)
+            .bind(HelperServer, ::CraftWhenToPullInsufficient)
+
         spec.section("ae") { section ->
             section.define("providerRoundRobinEnable", true)
                 .bind(HelperServer, ::ProviderRoundRobin)

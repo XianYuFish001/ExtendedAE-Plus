@@ -13,9 +13,7 @@ import net.minecraft.data.PackOutput
 import net.neoforged.neoforge.common.data.LanguageProvider
 
 class LangEN(output: PackOutput) : LanguageProvider(output, ExtendedAEPlus.MODID, "en_us") {
-    override fun addTranslations() {
-        ContainerDataGen.bind("en_us", this::add)
-
+    override fun addTranslations() = ContainerDataGen.with("en_us", this::add) {
         this.addItem(EAEPItems.Ticker, "Ticker")
         this.addItem(EAEPItems.CellInfinity, "Devourer of Cosmic Silence")
         this.addItem(EAEPItems.ControllerProvider, "Provider Controller")
@@ -450,7 +448,5 @@ class LangEN(output: PackOutput) : LanguageProvider(output, ExtendedAEPlus.MODID
             .branch("master_location", "Wireless Transceiver: Master Location")
             .branch("locked", "Wireless Transceiver: Locked")
             .branch("placer", "Wireless Transceiver: Owner")
-
-        ContainerDataGen.destroy("en_us")
     }
 }

@@ -7,7 +7,7 @@ enum class HandlersClient {
     SlotPatternHighlight,
     LabelList,
     ProvidersInfo,
-    ProviderPage
+//    ProviderPage
 
     ;
 

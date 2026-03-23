@@ -14,6 +14,7 @@ import com.extendedae_plus.common.registry.menu.MenuTicker
 import com.extendedae_plus.common.registry.part.ticker.PartTicker.StateTicker
 import com.extendedae_plus.util.UtilGui.renderFakeItemScalable
 import com.extendedae_plus.util.UtilKeyBuilder
+import com.fish.fishlib.network.base.PacketGeneric.Companion.sendToServer
 import com.fish.fishlib.util.keyBuilder.Patterns
 import com.fish.fishlib.util.keyBuilder.map
 import com.fish.fishlib.util.keyBuilder.newHashMap
@@ -21,7 +22,6 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.item.ItemStack
-import net.neoforged.neoforge.network.PacketDistributor
 
 class ScreenTicker(
     menu: MenuTicker, playerInventory: Inventory, title: Component, style: ScreenStyle
@@ -36,11 +36,9 @@ class ScreenTicker(
             EAEPSettings.stateTicker, StateTicker.Enabled
         ) { button, reversed ->
             if (StateTicker.Blacklisted == this.menu.tickerState) return@SettingToggleButton
-            PacketDistributor.sendToServer(
-                ConfigButtonPacket(
-                    button.setting, reversed
-                )
-            )
+            ConfigButtonPacket(
+                button.setting, reversed
+            ).sendToServer()
         }
         this.buttonRSMode = ServerSettingToggleButton(
             EAEPSettings.modeRedstoneOptional, RedstoneMode.IGNORE

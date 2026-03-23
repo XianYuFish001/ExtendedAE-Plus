@@ -32,12 +32,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 // TODO Refactor 惨不忍睹啊(
 @Mixin(AEBaseScreen.class)
-public abstract class MixinScreenBase<TMenu extends AEBaseMenu> extends AbstractContainerScreen<TMenu> {
+public abstract class MixinScreenBaseSlotAmounts<TMenu extends AEBaseMenu> extends AbstractContainerScreen<TMenu> {
     @Shadow
     @Final
     protected ScreenStyle style;
 
-    public MixinScreenBase(TMenu menu, Inventory playerInventory, Component title) {
+    public MixinScreenBaseSlotAmounts(TMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
     }
 

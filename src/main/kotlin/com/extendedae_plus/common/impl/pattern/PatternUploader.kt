@@ -53,14 +53,14 @@ object PatternUploader {
             .find { it.key.hashCode() == hashGroup } ?: return
 
         if (menu !is AccessorEncodingMenu) return
-        val slot = menu.slotEncoded
-        val pattern = slot.item
+        val pattern = menu.slotEncoded.item
         if (!PatternDetailsHelper.isEncodedPattern(pattern)) return
 
         for (provider in providers.value) {
             if (provider.terminalPatternInventory.addItems(pattern).isEmpty) {
                 pattern.count = 0
                 menu.slotEncoded.set(ItemStack.EMPTY)
+                break
             }
         }
     }

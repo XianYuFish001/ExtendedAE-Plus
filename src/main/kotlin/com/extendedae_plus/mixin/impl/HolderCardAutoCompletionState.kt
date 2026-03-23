@@ -11,9 +11,9 @@ import com.extendedae_plus.common.init.EAEPItems
 import com.extendedae_plus.mixin.core.advancedae.accessor.AccessorCraftingLogicAdv
 import com.extendedae_plus.mixin.core.ae2.accessor.AccessorCraftingLogic
 import com.extendedae_plus.mixin.helper.HelperCraftingJob
+import com.fish.fishlib.network.base.PacketGeneric.Companion.sendToPlayer
 import net.minecraft.util.Tuple
 import net.minecraft.world.level.block.entity.BlockEntity
-import net.neoforged.neoforge.network.PacketDistributor
 import net.pedroksl.advanced_ae.common.cluster.AdvCraftingCPU
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -72,15 +72,13 @@ open class HolderCardAutoCompletionState(
         val player = IPlayerRegistry.getConnected(
             (tile()?.level?.server ?: return), helper.playerID ?: return
         ) ?: return
-        PacketDistributor.sendToPlayer(
-            player, CraftingJobStatusPacket(
-                helper.link.craftingID,
-                helper.outputFinal.what,
-                helper.outputFinal.amount,
-                helper.remainingAmount,
-                CraftingJobStatusPacket.Status.FINISHED
-            )
-        )
+        CraftingJobStatusPacket(
+            helper.link.craftingID,
+            helper.outputFinal.what,
+            helper.outputFinal.amount,
+            helper.remainingAmount,
+            CraftingJobStatusPacket.Status.FINISHED
+        ).sendToPlayer(player)
     }
 
     companion object {

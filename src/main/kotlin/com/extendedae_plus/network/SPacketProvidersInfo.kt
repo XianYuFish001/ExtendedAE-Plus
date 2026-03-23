@@ -5,13 +5,16 @@ import com.extendedae_plus.mixin.helper.BridgeProviderList
 import com.extendedae_plus.network.helper.HandlersClient
 import com.fish.fishlib.network.FishNetworkPacket
 import com.fish.fishlib.network.PacketStreamCodec
+import com.fish.fishlib.network.base.PacketGeneric.Companion.sendToPlayer
 import com.fish.fishlib.network.base.SPacketGeneric
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.server.level.ServerPlayer
-import net.neoforged.neoforge.network.PacketDistributor
 
+/**
+ * @see com.extendedae_plus.network.helper.ImplHandlersClient.ProvidersInfo
+ */
 @FishNetworkPacket("provider_info")
 @JvmRecord
 data class SPacketProvidersInfo(val info: MutableList<InfoProvider>) : SPacketGeneric {
@@ -49,7 +52,7 @@ data class SPacketProvidersInfo(val info: MutableList<InfoProvider>) : SPacketGe
                 ))
             }
 
-            PacketDistributor.sendToPlayer(player, SPacketProvidersInfo(info))
+            SPacketProvidersInfo(info).sendToPlayer(player)
         }
     }
 }

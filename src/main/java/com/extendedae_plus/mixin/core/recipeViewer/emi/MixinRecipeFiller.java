@@ -2,7 +2,9 @@ package com.extendedae_plus.mixin.core.recipeViewer.emi;
 
 import appeng.client.gui.me.items.PatternEncodingTermScreen;
 import com.extendedae_plus.integration.impl.recipeViewer.emi.EmiRecipeAdaptable;
+import com.extendedae_plus.mixin.event.EventScreen;
 import com.extendedae_plus.mixin.helper.BridgePlanToEncode;
+import com.fish.fishlib.util.UtilJava;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.handler.EmiCraftContext;
 import dev.emi.emi.api.recipe.handler.EmiRecipeHandler;
@@ -28,7 +30,15 @@ public class MixinRecipeFiller {
         var menu = screenEncode.getMenu();
         if (!(menu instanceof BridgePlanToEncode helper)) return;
         if (!helper.eaep$planned()) return;
-        menu.encode();
+
+        var delay = new int[]{5};
+        EventScreen.ticker(screen, UtilJava.consumerKotlin($ -> {
+            if (delay[0] > 0) delay[0]--;
+            else if (delay[0] == 0) {
+                delay[0]--;
+                menu.encode();
+            }
+        }));
     }
 
     @Redirect(method = "performFill",

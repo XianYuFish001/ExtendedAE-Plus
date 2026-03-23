@@ -6,44 +6,44 @@ import appeng.menu.locator.ItemMenuHostLocator
 import appeng.menu.locator.MenuLocators
 import com.extendedae_plus.common.impl.menuLocator.CuriosItemLocator
 import com.extendedae_plus.integration.helper.ContextModLoaded
+import com.fish.fishlib.util.extension.cast
 import de.mari_023.ae2wtlib.api.terminal.ItemWT
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import top.theillusivec4.curios.api.CuriosApi
-import java.util.concurrent.atomic.AtomicReference
+import kotlin.jvm.optionals.getOrNull
 
 object WirelessTerminalLocator {
-    fun locate(player: Player): TerminalInfo? {
+    fun locate(player: Player): InfoTerminal? {
         val inventory = player.getInventory()
 
-        if (ContextModLoaded.Curios()) {
-            try {
-                val info = AtomicReference<TerminalInfo>()
-                CuriosApi.getCuriosInventory(player).ifPresent { handler ->
-                    val resultOptional = handler.findFirstCurio { it.item is WirelessTerminalItem }
-                    if (resultOptional.isEmpty) return@ifPresent
-                    val result = resultOptional.get()
-                    info.set(
-                        TerminalInfo(
-                            result.stack(), result.stack().item as WirelessTerminalItem,
-                            LocatedSlotContext(
-                                player, false, -1,
-                                result.slotContext().identifier(), result.slotContext().index()
-                            )
+        if (ContextModLoaded.Curios())
+            CuriosApi.getCuriosInventory(player)
+                .getOrNull()
+                ?.let {
+                    val result = it
+                        .findFirstCurio { it.item is WirelessTerminalItem }
+                        .getOrNull()
+                        ?: return@let null
+                    InfoTerminal(
+                        result.stack(),
+                        result.stack().item.cast(),
+                        ContextSlotLocated(
+                            player,
+                            false,
+                            -1,
+                            result.slotContext().identifier(),
+                            result.slotContext().index()
                         )
                     )
-                }
-                if (info.get() != null) return info.get()
-            } catch (_: Throwable) {
-            }
-        }
+                }?.let { return it }
 
         (inventory.offhand[0].item as? WirelessTerminalItem)?.let {
-            return TerminalInfo(
+            return InfoTerminal(
                 inventory.offhand[0],
                 it,
-                LocatedSlotContext(
+                ContextSlotLocated(
                     player,
                     true,
                     -1,
@@ -56,10 +56,10 @@ object WirelessTerminalLocator {
         for (indexInv in inventory.items.indices) {
             val item = inventory.items[indexInv]
             (item.item as? WirelessTerminalItem)?.let {
-                return TerminalInfo(
+                return InfoTerminal(
                     item,
                     it,
-                    LocatedSlotContext(
+                    ContextSlotLocated(
                         player,
                         false,
                         indexInv,
@@ -74,10 +74,10 @@ object WirelessTerminalLocator {
     }
 
     @JvmRecord
-    data class TerminalInfo(
+    data class InfoTerminal(
         val terminalStack: ItemStack,
         val terminal: WirelessTerminalItem,
-        val context: LocatedSlotContext
+        val context: ContextSlotLocated
     ) {
         val isWTLibTerminal: Boolean
             get() {
@@ -101,14 +101,13 @@ object WirelessTerminalLocator {
 
         fun grid(): IGrid? {
             val menuLocator = this.menuLocator
-            if (this.isWTLibTerminal && menuLocator != null) {
-                return (terminal as ItemWT)
+
+            return if (this.isWTLibTerminal && menuLocator != null) {
+                (terminal as ItemWT)
                     .getMenuHost(context.player, menuLocator, null)!!
                     .getActionableNode()
                     ?.grid
-            }
-
-            return terminal.getLinkedGrid(
+            } else terminal.getLinkedGrid(
                 terminalStack,
                 context.player.level(),
                 null
@@ -117,7 +116,7 @@ object WirelessTerminalLocator {
     }
 
     @JvmRecord
-    data class LocatedSlotContext(
+    data class ContextSlotLocated(
         val player: Player,
         val offhand: Boolean,
         val invIndex: Int,

@@ -6,8 +6,9 @@ import appeng.api.stacks.GenericStack
 import appeng.api.storage.StorageHelper
 import appeng.me.helpers.PlayerSource
 import appeng.menu.me.crafting.CraftAmountMenu
+import com.extendedae_plus.EAEPConfig
 import com.extendedae_plus.common.impl.WirelessTerminalLocator
-import com.extendedae_plus.common.impl.WirelessTerminalLocator.TerminalInfo
+import com.extendedae_plus.common.impl.WirelessTerminalLocator.InfoTerminal
 import com.fish.fishlib.network.FishNetworkPacket
 import com.fish.fishlib.network.PacketStreamCodec
 import com.fish.fishlib.network.base.CPacketGeneric
@@ -20,11 +21,12 @@ import kotlin.math.max
 
 @FishNetworkPacket("pull_from_network")
 @JvmRecord
-data class CPacketPullFromNetwork(val stack: GenericStack, val doPull: Boolean, val toInventory: Boolean) :
-    CPacketGeneric {
+data class CPacketPullFromNetwork(
+    val stack: GenericStack, val doPull: Boolean, val toInventory: Boolean
+) : CPacketGeneric {
     override fun handleServer(player: ServerPlayer) {
         val what = this.stack.what()
-        if (what.type !== AEKeyType.items()) return
+        if (what.type != AEKeyType.items()) return
 
         val info = WirelessTerminalLocator.locate(player) ?: return
 
@@ -33,13 +35,14 @@ data class CPacketPullFromNetwork(val stack: GenericStack, val doPull: Boolean, 
 
         val grid = info.grid() ?: return
 
-        if (this.doPull && setItem(player, info)) return
+        if (this.doPull
+            && (setItem(player, info) || !EAEPConfig.CraftWhenToPullInsufficient)) return
 
         val craftingService = grid.craftingService
         if (craftingService.isCraftable(what)) openPlanMenu(player, info)
     }
 
-    private fun setItem(player: ServerPlayer, info: TerminalInfo): Boolean {
+    private fun setItem(player: ServerPlayer, info: InfoTerminal): Boolean {
         val itemKey = this.stack.what() as AEItemKey
         val amount = this.stack.amount()
 
@@ -94,7 +97,7 @@ data class CPacketPullFromNetwork(val stack: GenericStack, val doPull: Boolean, 
         return true
     }
 
-    private fun openPlanMenu(player: ServerPlayer, info: TerminalInfo) = info.menuLocator?.let {
+    private fun openPlanMenu(player: ServerPlayer, info: InfoTerminal) = info.menuLocator?.let {
         CraftAmountMenu.open(
             player,
             it,
